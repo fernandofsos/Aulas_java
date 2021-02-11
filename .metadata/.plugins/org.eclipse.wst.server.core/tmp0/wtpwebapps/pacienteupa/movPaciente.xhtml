@@ -1,0 +1,977 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich">
+<head>
+    <script type="text/javascript" charset="iso-8859-1" src="SCRIPTS/movimentacoesLeitos.js"></script>
+    <script type="text/javascript" charset="iso-8859-1" src="SCRIPTS/rotinasComuns.js"></script>
+    <script type="text/javascript" src="SCRIPTS/mascara.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="pragma" content="no-cache" />
+	<link rel="stylesheet" type="text/css" href="CSS/cssPaciente.css" />	
+</head>
+ <a4j:keepAlive beanName="movPacienteForm" />
+
+<rich:modalPanel id="panelStatus" autosized="true" >  
+ 	<h:panelGrid columns="2"> 
+ 		<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 		<h:outputText value="Carregando..." />
+ 	</h:panelGrid> 
+</rich:modalPanel> 
+
+<!-- *****  MODAL PANEL ALTA PACIENTE -->
+<rich:modalPanel id="panelAlta" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->	
+	<f:facet name="header">
+		<h:outputText value="ALTA DO PACIENTE"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="hidelink2" />
+			<rich:componentControl for="panelAlta" attachTo="hidelink2" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Alta">	      
+		<div class="dadosPaciente geralCampos">
+		    <div class="col400">
+		       	<label style="width: 60px; display: inline-block">Paciente: </label>
+				<h:outputText value="#{movPacienteForm.objLeitoOrigem.paciente}" style="font-weight: bold" />
+			</div>
+			<div class="col200">
+				<label>Prontuário: </label>
+				<h:outputText value="#{movPacienteForm.objLeitoOrigem.prontuario}" style="font-weight: bold" />
+			</div>
+			<div class="col400">
+				<label style="width: 60px; display: inline-block">Mãe: </label>
+				<h:outputText value="#{movPacienteForm.objLeitoOrigem.nmMae}"/>
+			</div>
+			<div class="col200">
+			    <div style="float: left; margin-right: 10px">
+					<label>Idade: </label>
+					<h:outputText value="#{movPacienteForm.objLeitoOrigem.idade}"/>
+				</div>
+				<div>
+					<label>Sexo: </label>
+					<h:outputText value="#{movPacienteForm.objLeitoOrigem.sexo}" />
+				</div>
+			</div>
+		</div>
+		<div class="dadosAlta geralCampos">
+		    <h:panelGroup styleClass="selecaoTipo" layout="block">
+		    	<h:selectOneRadio id="selectAltaObito" value="#{movPacienteForm.isnAcoes}">
+		    	     <f:selectItem id="tipoAlta" itemLabel="ALTA" itemValue="1"  />
+		    	     <f:selectItem id="tipoObito" itemLabel="ÓBITO" itemValue="2"/>
+		    	     <a4j:support ajaxSingle="true" event="onclick" reRender="motivoAlta" />
+		    	</h:selectOneRadio>		    	
+		    </h:panelGroup>
+		    
+		    <h:panelGroup styleClass="linhaFormulario" layout="block">		    
+				<label class="label largura100">Motivo da alta:</label>
+				<h:selectOneMenu id="motivoAlta" 
+								 value="#{movPacienteForm.isnMotivoAlta}"
+								 disabled = "#{movPacienteForm.isnAcoes==2}">
+					<f:selectItems value="#{movPacienteForm.sliMotivosAlta}" />
+					<a4j:support ajaxSingle="true" event="onchange" reRender="dropHospitalDestino" />
+				</h:selectOneMenu>			
+			</h:panelGroup>
+			
+			<h:panelGroup styleClass="linhaFormulario" layout="block">	
+				<label class="label largura100">Hospital destino:</label>
+				<h:selectOneMenu id="dropHospitalDestino" value="#{movPacienteForm.isnReferencia}" 
+								 disabled="#{! movPacienteForm.altaOutroHospital}">
+					<f:selectItems value="#{movPacienteForm.sliReferencia}" />
+				</h:selectOneMenu>
+			</h:panelGroup>			
+			<h:panelGroup styleClass="linhaFormulario" layout="block">		
+				<label class="label largura100">Observações:</label>
+				<h:inputTextarea value="#{movPacienteForm.strObs}" styleClass="campoObservacao" onkeyup="limitarTamanhoCampo(this,200)"/>
+			</h:panelGroup>
+			<hr></hr>
+			<div class="linhaFormulario" >
+			    <div style="float: left; margin-right: 40px">		
+					<label>Usuário/Conselho:</label>
+					<h:inputText value="#{movPacienteForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 80px"/>
+				</div>
+				<div style="float: left;">		
+					<label>Senha/Assinatura:</label>
+					<h:inputSecret value="#{movPacienteForm.senhaAssinatura}" maxlength="20" style="width: 80px"/>
+				</div>
+			</div>		
+		</div>
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkAlta" value="OK" 
+						   action="#{movPacienteForm.altaPaciente}"
+						   oncomplete="this.disabled=false; avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelAlta', false)" 
+						   reRender="dtEnfermarias,totaisClinica"
+						   style="margin-right: 10px" 
+						   styleClass="botaoModal"
+						   onclick="this.disabled=true" >				
+			</a4j:commandButton>			
+			<a4j:commandButton id="btnCancelAlta"  value="Cancelar"  styleClass="botaoModal">
+				<rich:componentControl for="panelAlta" attachTo="btnCancelAlta" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		</div>
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+<!-- FINAL DO MODAL PANEL ALTA PACIENTE -->   
+
+<rich:modalPanel id="panelLiberacoes" autosized="true" width="500" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->	
+	<f:facet name="header">
+		<h:outputText value="CONFIRMAR OPERAÇÃO"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="icoLibera" />
+			<rich:componentControl for="panelLiberacoes" attachTo="icoLibera" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Liberacao">	      				
+		<h:panelGroup styleClass="linhaFormulario" layout="block" rendered="#{movPacienteForm.acaoAExecutar==6}">
+		      <label class="font-size: 0.95em">DESEJA REMOVER A RESERVA DO LEITO?</label>   
+		</h:panelGroup>
+		
+		<h:panelGroup styleClass="linhaFormulario" layout="block" rendered="#{movPacienteForm.acaoAExecutar==7}">
+		      <label>DESEJA REMOVER A INTERDIÇÃO DO LEITO?</label>   
+		</h:panelGroup>
+		
+		<h:panelGroup styleClass="linhaFormulario" layout="block" rendered="#{movPacienteForm.acaoAExecutar==4}">
+		      <label>DESEJA DESFAZER A TRANSFERÊNCIA?</label>   
+		</h:panelGroup>
+		
+		<h:panelGroup styleClass="linhaFormulario" layout="block" rendered="#{movPacienteForm.acaoAExecutar==9}">
+		      <label>CONFIRMA O RETORNO PARA A CLINICA DE ORIGEM?</label>   
+		</h:panelGroup>
+		
+		<h:panelGroup styleClass="linhaFormulario" layout="block" rendered="#{movPacienteForm.acaoAExecutar==15}">
+		      <label>CONFIRMA O RETORNO DO PACIENTE?</label>   
+		</h:panelGroup>
+		
+		<h:panelGroup styleClass="linhaFormulario" layout="block" rendered="#{movPacienteForm.permiteTransferencia==11}">
+		      <label>LEITO OCUPADO! DESEJA FAZER A PERMUTA DE LEITO?</label>   
+		</h:panelGroup>
+		
+		<h:panelGroup styleClass="linhaFormulario" layout="block" rendered="#{movPacienteForm.permiteTransferencia==12}">
+		      <label><b>ATENÇÃO!</b> Leito destino está reservado, confirma a mudança de leito?</label>   
+		</h:panelGroup>
+		
+		<h:panelGroup styleClass="linhaFormulario" layout="block" rendered="#{movPacienteForm.permiteTransferencia==13}">
+		      <label>CONFIRMA A MUDANÇA DE LEITO?</label>   
+		</h:panelGroup>
+		
+		<h:panelGroup styleClass="linhaFormulario" layout="block" rendered="#{movPacienteForm.permiteTransferencia==14}">
+		      <label class="font-size: 0.95em">CONFIRMA A TRANSFERENCIA DO LEITO?</label>   
+		</h:panelGroup>
+		<hr></hr>
+		<div class="linhaFormulario">
+		    <div style="float: left; margin-right: 25px">		
+				<label>Usuário/Conselho:</label>
+				<h:inputText value="#{movPacienteForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 80px"/>
+			</div>
+			<div style="float: left;">		
+				<label>Senha/Assinatura:</label>
+				<h:inputSecret value="#{movPacienteForm.senhaAssinatura}" maxlength="20" style="width: 80px"/>
+			</div>
+		</div>	
+		<br/>
+		<br/>		
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkLibera" value="OK" 
+						   action="#{movPacienteForm.executarAcao}"
+						   oncomplete="this.disabled=false; avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelLiberacoes', false)" 
+						   reRender="dtEnfermarias,totaisClinica,dtTransferencia,dtTransporte,dtExtras"
+						   style="margin-right: 10px" 
+						   styleClass="botaoModal" 
+						   onclick="this.disabled=true"
+						   rendered="#{movPacienteForm.acaoAExecutar != 0}">				
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnPermutaLeito" value="Permutar" 
+	                   action="#{movPacienteForm.mudarLeitoOcupado}"	                   
+	                   style="margin-right: 10px"
+	                   reRender="dtEnfermarias,totaisClinica,dtExtras"
+	                   styleClass="botaoModal" 
+	                   rendered="#{movPacienteForm.permiteTransferencia==11}"
+	                   onclick="this.disabled=true"
+	                   oncomplete="this.disabled=false; avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelLiberacoes', false)">	                   				
+			</a4j:commandButton>	
+			
+			<a4j:commandButton id="btnConfirmaMudancaLeito" value="Mudar" 
+	                   action="#{movPacienteForm.confirmaMudancaLeito}"
+	                   style="margin-right: 10px"
+	                   styleClass="botaoModal" 
+	                   reRender="dtEnfermarias,dtTransferencia,totaisClinica,dtExtras"
+	                   onclick="this.disabled=true"
+	                   oncomplete="this.disabled=false; avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelLiberacoes', false)"
+	                   rendered="#{movPacienteForm.permiteTransferencia==12 || movPacienteForm.permiteTransferencia==13}">				
+			</a4j:commandButton>
+						
+			<a4j:commandButton id="btnConfirmaTransferencia" value="Transferencia" 
+	                   action="#{movPacienteForm.confirmarTransferencia}"
+	                   style="margin-right: 10px"
+	                   styleClass="botaoModal"
+	                   reRender="dtEnfermarias,dtTransferencia,totaisClinica,dtExtras"
+	                   onclick="this.disabled=true"
+	                   oncomplete="this.disabled=false; avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelLiberacoes', false)"
+	                   rendered="#{movPacienteForm.permiteTransferencia==14}" >				
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnCancelLibera"  value="Cancelar"  styleClass="botaoModal">
+				<rich:componentControl for="panelLiberacoes" attachTo="btnCancelLibera" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		</div>
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+
+<!--********************* MODAL PANEL TRANSFERENCIA  ************************-->
+<rich:modalPanel id="panelTransf" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->
+	<f:facet name="header">
+		<h:outputText value="Dados da Transferência"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="hidelink" />
+			<rich:componentControl for="panelTransf" attachTo="hidelink" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Transferencia">	   
+	    <h:panelGroup rendered="#{movPacienteForm.alertaMenos6Horas}">
+	    	<div id="divAlertaTransferencia">
+	        	<h:outputText value="Atenção! Paciente está sendo transferido com menos de 6 horas de permanência"></h:outputText>
+	    	</div>
+	    </h:panelGroup>
+		<div class="dadosPaciente geralCampos">
+		    <div class="col400">
+		       	<label style="width: 60px; display: inline-block">Paciente: </label>
+				<h:outputText value="#{movPacienteForm.objLeitoOrigem.paciente}" style="font-weight: bold" />
+			</div>
+			<div class="col200">
+				<label>Prontuário: </label>
+				<h:outputText value="#{movPacienteForm.objLeitoOrigem.prontuario}" style="font-weight: bold"/>
+			</div>
+			<div class="col400">
+				<label style="width: 60px; display: inline-block">Mãe: </label>
+				<h:outputText value="#{movPacienteForm.objLeitoOrigem.nmMae}"/>
+			</div>
+			<div class="col200">
+			    <div style="float: left; margin-right: 10px">
+					<label>Idade: </label>
+					<h:outputText value="#{movPacienteForm.objLeitoOrigem.idade}"/>
+				</div>
+				<div>
+					<label>Sexo: </label>
+					<h:outputText value="#{movPacienteForm.objLeitoOrigem.sexo}" />
+				</div>
+			</div>
+		</div>
+		<div class="geralCampos">
+		    <div class="linhaFormulario">		    
+				<label class="label largura100">Unidade de Destino:</label>
+				<h:selectOneMenu id="destinoTransf" value="#{movPacienteForm.isnClinicaTransf}" 
+			                 style="width: 150px; font-size:1.1em; margin-bottom: 8px">
+					<f:selectItems value="#{movPacienteForm.sliClinicaDestino}" />
+				</h:selectOneMenu>			
+            </div>
+            <div class="linhaFormulario">
+				<label class="label largura100">Observações:</label>
+				<h:inputTextarea id="obsTransf" value="#{movPacienteForm.strObs}" styleClass="campoObservacao" 
+				                 onkeyup="limitarTamanhoCampo(this,200)"/>
+			</div>	
+			<hr></hr>
+			<div class="linhaFormulario">
+			    <div style="float: left; margin-right: 20px">		
+					<label>Usuário/Conselho:</label>
+					<h:inputText value="#{movPacienteForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 80px"/>
+				</div>
+				<div style="float: left;">		
+					<label>Senha/Assinatura:</label>
+					<h:inputSecret value="#{movPacienteForm.senhaAssinatura}" maxlength="20" style="width: 80px"/>
+				</div>
+			</div>				
+		</div>
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkTransf" value="OK" 
+				action="#{movPacienteForm.transferePaciente}"
+				onclick="this.disabled=true"
+				oncomplete="this.disabled=false; avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelTransf', false)"
+				reRender="dtEnfermarias,dtTransferencia,totaisClinica,dtExtras"
+				style="margin-right: 10px" 
+				styleClass="botaoModal">				
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnCancelTransf" value="Cancelar" styleClass="botaoModal">
+				<rich:componentControl for="panelTransf" attachTo="btnCancelTransf" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		</div>
+		<!-- FIM CAMPOS DE BUSCA -->
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+
+<!--*********************INICIO PAC ************************-->
+<rich:modalPanel id="panelAcoes" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->
+	<f:facet name="header">
+		<h:panelGroup>
+			<h:outputText value="AÇÕES DO LEITO"></h:outputText>
+		</h:panelGroup>
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="fechar" />
+			<rich:componentControl for="panelAcoes" attachTo="fechar" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Acoes">
+	    <div class="geralCampos" >
+	    	<h:panelGroup styleClass="selecaoTipo" layout="block">
+		  		<h:selectOneRadio id="selectAcao"  value="#{movPacienteForm.isnAcoes}" >
+		   	    	<f:selectItem id="tipoReserva" itemLabel="RESERVAR LEITO" itemValue="1"  />
+		   	     	<f:selectItem id="tipoInterdicao" itemLabel="INTERDITAR LEITO" itemValue="2"/>
+		   	     	<a4j:support ajaxSingle="true" event="onclick" reRender="divDadosReserva,divDadosInterdicao" />
+		   		</h:selectOneRadio>		    	
+			</h:panelGroup> 
+				
+			<h:panelGrid id="divDadosReserva" >
+		    	<h:panelGroup rendered="#{movPacienteForm.isnAcoes==1}">
+		            <div class="linhaFormulario">    	
+		    			<div style="float: left; margin-right: 10px">
+		        			<label class="label largura80">Paciente:</label>
+		         			<h:inputText id="nomePaciente" value="#{movPacienteForm.nomePacienteReserva}" 
+		         			             style="width: 370px" maxlength="50" styleClass="inputText" />		         
+		    			</div>
+		    			<div>
+		        			<label class="label">Idade: </label>
+		         			<h:inputText id="idadePaciente" value="#{movPacienteForm.idadePacienteReserva}" 
+		                    	         style="width: 30px" maxlength="3" styleClass="inputText" />
+		    			</div>
+		    		</div>
+		    		<div class="linhaFormulario">
+		        		<label class="label largura80" >Diagnostico:</label>
+		         		<h:inputText id="diagnosticoPaciente" value="#{movPacienteForm.diagnosticoReserva}" 
+		                             style="width: 450px" maxlength="80" styleClass="inputText" />		         
+		    		</div>
+		    		<div class="linhaFormulario">
+		        		<label class="label largura80">H.Origem:</label>
+		         		<h:inputText id="origemPaciente" value="#{movPacienteForm.origemPacienteReserva}" 
+		         		             style="width: 450px" maxlength="50" styleClass="inputText"/>
+		    		</div>		    		
+		    		<div class="linhaFormulario">
+						<label class="label largura80">Obs.:</label>
+						<h:inputTextarea id="obsTransf" value="#{movPacienteForm.strObs}" 
+						         styleClass="campoObservacao" 
+				                 onkeyup="limitarTamanhoCampo(this,200)"/>
+					</div>	
+		    	</h:panelGroup>
+			</h:panelGrid>
+			<h:panelGrid id="divDadosInterdicao">
+		    	<h:panelGroup rendered="#{movPacienteForm.isnAcoes==2}">
+		    		<label>Motivo da Interdição <span style="color: red">*</span>:</label><br />
+		    		<h:inputTextarea id="motivoInterdicao" value="#{movPacienteForm.motivoInterdicao}" style="width: 550px" />
+		    	</h:panelGroup>
+			</h:panelGrid>
+			<hr></hr>
+			<div class="linhaFormulario" >
+			    <div style="float: left; margin-right: 40px">		
+					<label>Usuário/Conselho:</label>
+					<h:inputText value="#{movPacienteForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 80px"/>
+				</div>
+				<div style="float: left;">		
+					<label>Senha/Assinatura:</label>
+					<h:inputSecret value="#{movPacienteForm.senhaAssinatura}" maxlength="20" style="width: 80px"/>
+				</div>
+			</div>		
+		</div>			
+		<div style="text-align: center; margin-top: 10px">		    
+			<a4j:commandButton id="btnOkAcao" value="OK" 
+							onclick="this.disabled=true"
+							oncomplete="this.disabled=false; avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelAcoes')"
+							action="#{movPacienteForm.executarAcao}"							
+							styleClass="botaoModal"
+							style="margin-right: 10px" 
+							reRender="dtTransferencia,dtEnfermarias,totaisClinica,dtExtras">				
+			</a4j:commandButton>		
+			<a4j:commandButton id="btnCancelAcao" value="Cancelar" styleClass="botaoModal">
+				<rich:componentControl for="panelAcoes" attachTo="btnCancelAcao" operation="hide" event="onclick" />
+			</a4j:commandButton>		
+		</div>
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+
+<!--********************* PANEL  CENSO ************************-->
+<rich:modalPanel id="panelCenso" autosized="false" width="300" height="280" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->
+	<f:facet name="header">
+		<h:panelGroup>
+			<h:outputText value="IMPRIMIR CENSO"></h:outputText>
+		</h:panelGroup>
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="fecharPanelCenso" />
+			<rich:componentControl for="panelCenso" attachTo="fecharPanelCenso" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Censo">		
+		<div class="geralCampos" style="height: 180px">
+		   <div class="linhaFormulario">
+		   		<label class="alturaLabel">Data:</label>
+		    	<rich:calendar id="datCenso"
+		    	           	   value="#{movPacienteForm.dataCenso}" 		    	           	   
+		    	           	   datePattern="dd/MM/yyyy" >
+		    	     <a4j:support action="#{movPacienteForm.calcularDatasCenso}" event="onchanged" reRender="btnImprimir"/>      	   		    	           	   		    		  		
+				</rich:calendar>
+		   </div>
+		   <div class="linhaFormulario">
+		       <h:outputLabel>Observação: Censo de hoje está sujeito a alterações ao longo do dia.</h:outputLabel>
+		   </div>
+		</div>			
+		<div style="text-align: center; margin-top: 10px;">
+			<a4j:commandButton id="btnImprimir" value="Imprimir"
+			                   onclick="imprimirRelatorio(#{movPacienteForm.isnClinicaSelecionada},'#{movPacienteForm.dataCensoTexto}','#{movPacienteForm.dataAnteriorTexto}')"   							
+							   styleClass="botaoModal"
+							   style="margin-right: 10px" >
+				<rich:componentControl for="panelCenso" attachTo="btnImprimir" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		
+			<a4j:commandButton id="btnCancelCenso" value="Cancelar" styleClass="botaoModal">
+				<rich:componentControl for="panelCenso" attachTo="btnCancelCenso" operation="hide" event="onclick" />
+			</a4j:commandButton>		
+		</div>
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+
+<!--********************* MODAL PANEL TRANSPORTE  ************************-->
+<rich:modalPanel id="panelTransporte" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->
+	<f:facet name="header">
+		<h:outputText value="Transporte de Paciente"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="fechaTransporte" />
+			<rich:componentControl for="panelTransporte" attachTo="fechaTransporte" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Transporte"> 
+		<div class="dadosPaciente geralCampos">
+		    <div class="col400">
+		       	<label style="width: 60px; display: inline-block">Paciente: </label>
+				<h:outputText value="#{movPacienteForm.objLeitoOrigem.paciente}" style="font-weight: bold" />
+			</div>
+			<div class="col200">
+				<label>Prontuário: </label>
+				<h:outputText value="#{movPacienteForm.objLeitoOrigem.prontuario}" style="font-weight: bold"/>
+			</div>
+			<div class="col400">
+				<label style="width: 60px; display: inline-block">Mãe: </label>
+				<h:outputText value="#{movPacienteForm.objLeitoOrigem.nmMae}"/>
+			</div>
+			<div class="col200">
+			    <div style="float: left; margin-right: 10px">
+					<label>Idade: </label>
+					<h:outputText value="#{movPacienteForm.objLeitoOrigem.idade}"/>
+				</div>
+				<div>
+					<label>Sexo: </label>
+					<h:outputText value="#{movPacienteForm.objLeitoOrigem.sexo}" />
+				</div>
+			</div>
+		</div>
+		<div class="geralCampos">
+		    <h:panelGroup styleClass="linhaFormulario" layout="block">	
+				<label class="label largura100">Hospital destino:</label>
+				<h:selectOneMenu id="dropHospitalDestino" value="#{movPacienteForm.isnReferencia}">
+					<f:selectItems value="#{movPacienteForm.sliReferencia}" />
+				</h:selectOneMenu>
+			</h:panelGroup>
+            <div class="linhaFormulario">
+				<label class="label largura100">Motivo saída:</label>
+				<h:inputText id="inputMotivo" style="width: 400px" maxlength="80" value="#{movPacienteForm.motivoInterdicao}"  />
+			</div>	
+			<div class="linhaFormulario">
+				<label class="label largura100">Observacao:</label>
+				<h:inputTextarea id="obsTransf" value="#{movPacienteForm.strObs}" styleClass="campoObservacao" 
+				                 onkeyup="limitarTamanhoCampo(this,200)"/>
+			</div>	
+			<hr></hr>
+			<div class="linhaFormulario">
+			    <div style="float: left; margin-right: 40px">		
+					<label>Usuário/Conselho:</label>
+					<h:inputText value="#{movPacienteForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 80px" />
+				</div>
+				<div style="float: left;">		
+					<label>Senha/Assinatura:</label>
+					<h:inputSecret value="#{movPacienteForm.senhaAssinatura}" maxlength="20" style="width: 80px"/>
+				</div>
+			</div>				
+		</div>
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkTransp" value="OK" 
+				action="#{movPacienteForm.transportePaciente}"
+				onclick="this.disabled=true"
+				oncomplete="this.disabled=false; avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelTransporte', false)"
+				reRender="dtEnfermarias,dtTransporte,totaisClinica,dtExtras"
+				style="margin-right: 10px" 
+				styleClass="botaoModal">				
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnCancelTransp" value="Cancelar" styleClass="botaoModal">
+				<rich:componentControl for="panelTransporte" attachTo="btnCancelTransp" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		</div>
+		<!-- FIM CAMPOS DE BUSCA -->
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+   
+<h:form id="formMovPaciente">
+<a4j:status id="statusPanel" for="regiao"
+           onstart="Richfaces.showModalPanel('panelStatus');" 
+           onstop="#{rich:component('panelStatus')}.hide()" >
+</a4j:status> 
+ 	
+
+<div style="margin-left: auto; margin-right: auto; width: 1024px">   
+	<!--INICIO SELECAO DE CLINICA -->
+	<div class="topoPagina">
+	    <h:panelGroup styleClass="topoPaginaUnidade" layout="block" id="selecaoClinica" >
+	    	<div style="float: left; width: 290px">
+	        	<a4j:region id="regiao">
+	    			<h4 class="tituloPagina">MOVIMENTAÇÃO DE LEITOS</h4>
+					<label>Unidade: </label>
+					<h:selectOneMenu id="somSolicitacao" label="Solicitações"
+						value="#{movPacienteForm.isnClinicaSelecionada}" style="width: 200px">
+						<f:selectItems value="#{movPacienteForm.sliClinica}" />
+						<a4j:support id="sptClinica"
+							action="#{movPacienteForm.selecionaClinica}" 
+							event="onchange"							
+							reRender="dtEnfermarias,dtTransferencia,dtExtras,totaisClinica,areaRetorno,btnCenso,selecaoClinica,panelCenso,dtTransporte,aviso" 
+							ajaxSingle="true" />
+					</h:selectOneMenu>
+				</a4j:region>
+			</div>
+			<div style="float: left; width: 222px">
+			    <div style="float: left; width: 110px">
+					<a4j:commandButton value="PEP" id="btnLista"
+			    	                   onclick="telaPEP(#{movPacienteForm.isnClinicaSelecionada},#{FuncUtil.loginUsuario.isnUsuario})" 
+			        	               style="width: 100px; height: 25px; margin-bottom: 4px; ">			    	
+			    	</a4j:commandButton>
+			    </div>
+			    <div style="float: left;">
+				    <a4j:commandButton value="Imprimir Censo" id="btnCenso"				                       
+				                       onclick="Richfaces.showModalPanel('panelCenso')"					                       		        	                
+			            	           style="width: 100px; height: 25px; margin-bottom: 4px">			            
+			    	</a4j:commandButton>
+			    </div><br/>			    			    
+			    <a4j:commandButton value="Pagina principal" id="btnVoltar"
+			                       onclick="window.location='#{request.contextPath}/paginaPrincipal.jsf'" 
+			                       style="width: 100px; height: 25px">			    	
+			    </a4j:commandButton>
+			</div>
+		</h:panelGroup>		
+		<h:panelGroup id="totaisClinica" styleClass="topoPaginaTotais" layout="block">
+			<div class="totalLeito">
+				<h:graphicImage url="IMG/thumbDesocupado.gif" style="vertical-align: middle"/>
+				<label>Livres (<b>#{movPacienteForm.totaisLeitos[1]}</b>)</label>				
+			</div>
+			<div class="totalLeito">
+				<h:graphicImage url="IMG/thumbOcupado.gif" style="vertical-align: middle" />
+				<label>Ocupados (<b>#{movPacienteForm.totaisLeitos[0]}</b>)</label>				
+			</div>
+			<div class="totalLeito">
+				<h:graphicImage url="IMG/thumbInterditado.gif" style="vertical-align: middle"/>
+				<label>Interditados (<b>#{movPacienteForm.totaisLeitos[2]}</b>)</label>				
+			</div>
+			<div class="totalLeito">
+				<h:graphicImage url="IMG/thumbReservado.gif" style="vertical-align: middle"/>
+				<label>Reservados (<b>#{movPacienteForm.totaisLeitos[3]}</b>)</label>				
+			</div>
+			<div class="totalLeito">
+				<h:graphicImage url="IMG/thumbTransferido.gif" style="vertical-align: middle"/>
+				<label>Transferências (<b>#{movPacienteForm.totaisLeitos[4]}</b>)</label>				
+			</div>
+			<div class="totalLeito">
+				<h:graphicImage url="IMG/thumbOcupado.gif" style="vertical-align: middle" />
+				<label >Extras (<b>#{movPacienteForm.totaisLeitos[5]}</b>)</label>				
+			</div>
+		</h:panelGroup>
+	</div>	
+	
+	<rich:dragIndicator id="indicator" />
+	
+	<div style="overflow=auto">	
+		<div style="float: left; width: 780px">
+	    	<!--INICIO DATAGRID ENFERMARIA -->	
+	    	<h:panelGroup id="dtEnfermarias" layout="block">
+				<a4j:repeat value="#{movPacienteForm.objClinica.enfermaria}" var="enfermaria">
+			   	<h:panelGroup styleClass="areaEnfermaria" layout="block">	      		    
+	          		<h4 class="cabEnfermaria">#{enfermaria.dscEnfermaria} (#{enfermaria.sglSexo})</h4>	          
+	          		<div class="areaLeitos">
+	          			<a4j:repeat value="#{enfermaria.leito}" var="leito">	              
+	                		<a4j:outputPanel layout="block" styleClass="areaLeito">	                    
+	          					<rich:dragSupport id="imgLeito" dragIndicator="indicator" 
+		          					              dragType="#{leito.status}"
+		          				                  dragValue="#{leito}">         
+									<rich:dndParam name="label" value="#{leito.paciente}-#{leito.dscLeito}" />
+									<h:graphicImage url="#{leito.url}" rendered="#{leito.status=='O'}"
+									                ondblclick="telaPEPProntuario(#{movPacienteForm.isnClinicaSelecionada},#{leito.isnInternacao},#{leito.isnInternacaoLeito})"
+									                style="cursor:pointer"/>
+									<h:graphicImage url="#{leito.url}" rendered="#{leito.status!='O'}"></h:graphicImage>							
+									<br />
+									<h:outputLabel value="#{leito.enfermaria.dscEnfermaria}.#{leito.dscLeito}" />
+								</rich:dragSupport>	
+															
+								<rich:toolTip id="tpLeitos" direction="bottom-right" layout="block" styleClass="tooltip" 
+				  						rendered="#{leito.status!='D'}" horizontalOffset="5" verticalOffiset="5">
+									<f:facet name="defaultContent">
+										<strong>Aguarde...</strong>
+									</f:facet>
+									<h:panelGroup layout="block" rendered="#{leito.status=='O' || leito.status=='T' || leito.status=='C' || leito.status=='S'}" >
+										<div>
+											<label>Paciente: </label>
+											<h:outputText value="#{leito.paciente}" style="font-weight: bold" />
+										</div>										
+										<div >
+											<label>Mãe: </label>
+											<h:outputText value="#{leito.nmMae}" />
+										</div>	
+										<div style="border-bottom: solid 1px #bbb; margin-bottom: 4px; margin-top: 4px" />									
+										<div>
+											<div style="float: left; width: 140px">
+				    							<span>Prontuário: </span> 
+				    							<h:outputText value="#{leito.prontuario}" />								    
+											</div>							
+											<div style="float: left; width: 80px">
+												<span>Idade: </span>
+												<h:outputText value="#{leito.idade}"  />
+											</div>
+											<div style="float: left; width: 80px">
+												<span>Sexo: </span>											
+												<h:outputText value="#{leito.sexo}"  />
+											</div>
+										</div>
+										<div>
+											<label>Permanência: </label>
+											<h:outputText value="#{leito.permanencia}" />
+										</div>
+									</h:panelGroup>	
+									<h:panelGroup layout="block" rendered="#{leito.status=='I'}">
+										<div>	
+											<label>Data: </label>											
+											<h:outputText value="#{leito.prontuario}" style="font-weight: bold"/>
+										</div>
+										<div>
+				    						<label>Motivo: </label>  
+				    						<h:outputText value="#{leito.paciente}"  />								    
+										</div>
+									</h:panelGroup>
+									<h:panelGroup layout="block" rendered="#{leito.status=='R'}">
+										<div>	
+											<label>Data: </label>											
+											<h:outputText value="#{leito.prontuario}" />
+										</div>
+										<div>
+					    					<label>Paciente: </label>  
+											<h:outputText value="#{leito.paciente}" style="font-weight: bold" />								    
+										</div>							
+										<div>
+											<label>Diagnóstico: </label>
+											<h:outputText value="#{leito.nmMae}" />
+										</div>	
+										<div>
+											<label>Hosp.Origem: </label>
+											<h:outputText value="#{leito.sexo}" />
+										</div>	
+										<div>
+											<label>Solicitante: </label>
+											<h:outputText value="#{leito.idade}" />
+										</div>
+										<div>
+											<label>Observação: </label>
+											<h:outputText value="#{leito.observacoes}" />
+										</div>							
+									</h:panelGroup>
+								</rich:toolTip>	
+								<rich:dropSupport dropListener="#{movPacienteForm.moverLeito}" 
+								    dropValue="#{leito}"
+									acceptedTypes="O,T"								
+									oncomplete="avisosTransferencia(#{movPacienteForm.permiteTransferencia})"
+									reRender="dtEnfermarias,dtTransferencia,totaisClinica,panelLiberacoes">
+								</rich:dropSupport> 
+							</a4j:outputPanel>
+	          			</a4j:repeat>
+	          		</div>
+	      		</h:panelGroup>
+				</a4j:repeat>
+			</h:panelGroup>
+		
+			<h:panelGroup id="dtExtras" style="float: left; width: 780px" layout="block">
+				<h:panelGroup rendered="#{movPacienteForm.mostrarAreaExtra}" styleClass="areaEnfermaria" layout="block">
+				<h4 class="cabEnfermaria">LEITOS EXTRAS</h4>
+				<a4j:outputPanel layout="block" styleClass="areaLeitos">
+				<a4j:repeat value="#{movPacienteForm.lstLeitosExtras}" var="leitoExtra">				    
+				    <a4j:outputPanel layout="block" styleClass="areaLeito" id="dtGridExtras">
+						<!--INICIO DO EVENTO DRAGSUPORT-->
+						<rich:dragSupport dragIndicator="indicator"
+										  dragType="#{leitoExtra.status}" 
+										  dragValue="#{leitoExtra}">
+							<rich:dndParam name="label" value="#{leitoExtra.paciente}" />
+							<h:graphicImage url="#{leitoExtra.url}" width="48"></h:graphicImage>
+						</rich:dragSupport>
+						<br/>
+						<h:outputLabel value="#{leitoExtra.dscLeito}"></h:outputLabel>
+												
+						<!--FIM DO EVENTO DRAGSUPORT-->	
+						<rich:toolTip id="tpLeitoExtra" direction="bottom-right" layout="block" styleClass="tooltip">
+							<f:facet name="defaultContent">
+								<strong>Aguarde...</strong>
+							</f:facet>							
+							<div>
+								<label>Paciente:</label>
+								<h:outputText value="#{leitoExtra.paciente}" />
+							</div>
+							<div>
+								<label>Mãe:</label>
+								<h:outputText value="#{leitoExtra.nmMae}"/>
+							</div>
+							<div style="border-bottom: solid 1px #bbb; margin-bottom: 4px; margin-top: 4px" />
+							<div>
+								<div style="float: left; width: 140px">
+				    				<span>Prontuário: </span> 
+				    				<h:outputText value="#{leitoExtra.prontuario}" />								    
+								</div>							
+								<div style="float: left; width: 80px">
+									<span>Idade: </span>
+									<h:outputText value="#{leitoExtra.idade}"  />
+								</div>
+								<div style="float: left; width: 80px">
+									<span>Sexo: </span>											
+									<h:outputText value="#{leitoExtra.sexo}"  />
+								</div>
+							</div>							
+							<div>
+								<label>Permanencia:</label>
+								<h:outputText value="#{leitoExtra.permanencia}" />
+							</div>									
+						</rich:toolTip>
+				    </a4j:outputPanel>				    
+				</a4j:repeat>
+				<rich:dropSupport id="dropExtra"					
+								  dropValue="#{leito}" 
+								  acceptedTypes="T"	
+								  oncomplete="avisosTransferencia(#{movPacienteForm.permiteTransferencia})"
+								  dropListener="#{movPacienteForm.adicionarLeitoExtra}"				
+								  reRender="dtExtras,dtTransferencia,totaisClinica,panelLiberacoes">
+				</rich:dropSupport>
+				</a4j:outputPanel>				
+			</h:panelGroup>
+		</h:panelGroup>
+		<br style="clear: both"/>
+		<h:panelGroup id="aviso" style="font-size: 12px; font-family:arial">
+			<h:outputText rendered="#{movPacienteForm.isnClinicaSelecionada!=0}">* <b>#{movPacienteForm.totalLimiteTempo}</b> paciente(s) estão a mais de #{movPacienteForm.tempoLimiteClinica} dias na unidade.</h:outputText><br/>		
+			<h:outputText rendered="#{movPacienteForm.isnClinicaSelecionada!=0}">* Clique no leito para acessar PEP do paciente.</h:outputText>			
+		</h:panelGroup>				
+	</div>
+	
+		<div style="float: left; width: 230px" >
+			<h:panelGroup id="dtTransferencia" layout="block" styleClass="areaTransferencia">		    
+		    	<h4 class="cabTransferencia">Área de Transferência</h4>		  
+		    	<div class="leitosTransferencia">  		    
+					<a4j:repeat value="#{movPacienteForm.lstTransferencia}" var="leitoTransf">
+			   			<a4j:outputPanel styleClass="leitoTransferencia" layout="block">
+				 			<rich:dragSupport dragIndicator="indicator"
+											  dragType="#{leitoTransf.status}" 
+											  dragValue="#{leitoTransf}">
+								<rich:dndParam name="label" value="#{leitoTransf.paciente}-#{leitoTransf.dscLeito}" />							
+								<h:graphicImage url="#{leitoTransf.url}" width="48"></h:graphicImage>
+							</rich:dragSupport>
+							<br/>						
+							<h:outputLabel value="#{leitoTransf.enfermaria.dscEnfermaria}.#{leitoTransf.dscLeito}"/>
+		
+							<rich:toolTip direction="top-right" layout="block" styleClass="tooltip">
+								<f:facet name="defaultContent">
+									<strong>Aguarde...</strong>
+								</f:facet>
+								<div>
+									<label>Paciente: </label>
+									<h:outputText value="#{leitoTransf.paciente}" style="font-weight: bold; "/>
+								</div>
+								<div>
+									<label>Mãe: </label>
+									<h:outputText value="#{leitoTransf.nmMae}" />
+								</div>
+								<div style="border-bottom: solid 1px #bbb; margin-bottom: 4px; margin-top: 4px" />
+								<div>
+									<div style="float: left; width: 140px">
+					    				<span>Prontuário: </span> 
+					    				<h:outputText value="#{leitoTransf.prontuario}" />								    
+									</div>							
+									<div style="float: left; width: 80px">
+										<span>Idade: </span>
+										<h:outputText value="#{leitoTransf.idade}"  />
+									</div>
+									<div style="float: left; width: 80px">
+										<span>Sexo: </span>											
+										<h:outputText value="#{leitoTransf.sexo}"  />
+									</div>
+								</div>
+								<div>
+									<label>Permanencia: </label>
+									<h:outputText value="#{leitoTransf.permanencia}" />
+								</div>		
+								<div style="border-bottom: solid 1px #bbb; margin-bottom: 4px; margin-top: 4px" />
+								<div>								
+									<h:outputText value="#{leitoTransf.unidadeTransferencia}" />
+								</div>
+							</rich:toolTip>				
+						</a4j:outputPanel>			     
+					</a4j:repeat>
+				</div>			
+				<rich:dropSupport id="dropTransferencia"
+					dropListener="#{movPacienteForm.pegaDadosTransferencia}"
+					dropValue="#{leito}" 
+					acceptedTypes="O"
+					oncomplete="avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelTransf', true)"
+					reRender="dtTransferencia,panelTransf,dtExtras">
+				</rich:dropSupport>
+			</h:panelGroup>
+		
+			<!--INICO AREA DE ALTA -->
+			<a4j:outputPanel style="margin-bottom: 10px; height: 100px" layout="block">
+				<h:graphicImage url="IMG/AltasObitos.png"></h:graphicImage>
+				<rich:dropSupport id="dropAlta"				
+					dropListener="#{movPacienteForm.pegaDadosAltaPacinete}"
+					acceptedTypes="O"
+					oncomplete="avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelAlta', true)"
+					reRender="dtEnfermarias,panelAlta,dtExtras">				
+				</rich:dropSupport>
+			</a4j:outputPanel>		 			
+								
+			<!--INICIO AREA DE ACÕES -->		
+			<a4j:outputPanel style="margin-bottom: 10px; height: 100px" layout="block">
+				<h:graphicImage url="IMG/AreaDeAcoes.png"></h:graphicImage>
+				<rich:dropSupport id="dropAcoes"
+					oncomplete="avisosAcoes(#{movPacienteForm.acaoAExecutar})"
+					dropListener="#{movPacienteForm.pegaDadosAcoes}"						 
+					acceptedTypes="T,R,I,D,S"
+					reRender="dtEnfermarias,panelAcoes,panelLiberacoes,dtExtras">					
+				</rich:dropSupport>		
+			</a4j:outputPanel>
+		
+			<h:panelGroup id="areaRetorno">
+				<a4j:outputPanel style="margin-bottom: 15px; height: 50px" layout="block" 
+			                 rendered="#{movPacienteForm.centroCirurgico}">
+					<h:graphicImage url="IMG/RetornoUnidadeOrigem.png"></h:graphicImage>
+					<rich:dropSupport id="dropRetornoUnidade"
+									  oncomplete="avisosAcoes(#{movPacienteForm.acaoAExecutar})"
+									  dropListener="#{movPacienteForm.pegaDadosAcoes}"						 
+									  acceptedTypes="O"
+									  reRender="dtEnfermarias,panelLiberacoes">					
+					</rich:dropSupport>		
+				</a4j:outputPanel>
+			</h:panelGroup>
+		
+			<h:panelGroup id="dtTransporte">
+				<a4j:outputPanel layout="block" styleClass="areaTransferencia" rendered="#{! movPacienteForm.centroCirurgico}">	    
+		    		<h4 class="cabTransferencia">Pacientes em Trânsito</h4>		  
+		    		<div class="leitosTransferencia">  		    
+						<a4j:repeat value="#{movPacienteForm.lstTransporte}" var="leitoTransporte">
+			   				<a4j:outputPanel styleClass="areaLeito" layout="block">
+					 			<rich:dragSupport dragIndicator="indicator"
+									dragType="#{leitoTransporte.status}" 
+									dragValue="#{leitoTransporte}">
+									<rich:dndParam name="label" value="#{leitoTransporte.paciente}" />							
+									<h:graphicImage url="IMG/ambulance.png" width="16" style="vertical-align: middle; margin-right: 3px" />
+									<h:outputLabel value="#{leitoTransporte.paciente}"/>
+								</rich:dragSupport>
+		
+								<rich:toolTip direction="top-right" layout="block" styleClass="tooltip">
+									<f:facet name="defaultContent">
+										<strong>Aguarde...</strong>
+									</f:facet>
+									<div>
+										<label>Paciente: </label>
+										<h:outputText value="#{leitoTransporte.paciente}" style="font-weight: bold; "/>
+									</div>
+									<div>
+							    		<label>Dt Saída: </label>  
+							    		<h:outputText value="#{leitoTransporte.pacienteTransporte.datSaida}" />
+							    		<h:outputText value=" #{leitoTransporte.pacienteTransporte.horSaida}"/>								    
+									</div>							
+									<div>
+										<label>Hospital: </label>
+										<h:outputText value="#{leitoTransporte.pacienteTransporte.referencia.dscReferencia}" />
+									</div>
+									<div>
+										<label>Motivo: </label>											
+										<h:outputText value="#{leitoTransporte.pacienteTransporte.dscMotivo}" />
+									</div>
+									<div>
+										<label>Observação: </label>											
+										<h:outputText value="#{leitoTransporte.pacienteTransporte.dscObservacao}" />
+									</div>																	
+								</rich:toolTip>				
+							</a4j:outputPanel>			     
+						</a4j:repeat>
+					</div>			
+					<rich:dropSupport id="dropTransporte"
+									  dropListener="#{movPacienteForm.pegaDadosTransporte}"
+									  dropValue="#{leito}" 
+									  acceptedTypes="O"
+									  oncomplete="avisosValidacao(#{movPacienteForm.numeroAvisoValidacao}, 'panelTransporte', true)"
+									  reRender="dtExtras,dtTransferencia,panelTransporte">
+					</rich:dropSupport>
+				</a4j:outputPanel>
+			</h:panelGroup>
+		</div>
+	</div>
+	<br style="clear: both"/>
+	<div class="rodape">
+	    <div class="rodapeCol">
+		    <label>Sistema de Paciente - v1.0</label>
+		</div>
+	    <div class="rodapeCol" style="text-align: right">
+	       	<label>#{FuncUtil.nomeHospital}</label>
+	    </div>
+	</div>		
+</div>	
+</h:form>
+</html>

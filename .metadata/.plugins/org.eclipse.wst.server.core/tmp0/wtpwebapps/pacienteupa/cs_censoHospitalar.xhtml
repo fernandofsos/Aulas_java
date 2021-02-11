@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="conteudo">    
+	<!-- MODAL PANEL DE CLASSIFICAÇÃO DE RISCO -->
+	 <a4j:keepAlive beanName="censoHospitalarForm" />
+	 
+	<rich:modalPanel id="panelStatus" autosized="true">  
+ 		<h:panelGrid columns="2" width="180"> 
+ 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 			<h:outputText value="Atualizando, aguarde..." />
+ 		</h:panelGrid> 
+	</rich:modalPanel>      
+
+	 <h:form id="csCensoHospitalar" >
+	    <div class="cabAreaPesquisa">CENSO HOSPITALAR</div> 
+	    
+		<h:panelGroup styleClass="areaPesquisa" layout="block" id="totaisEmergencia" style="height:120px;" >
+            <a4j:region id="regiao">   		
+		    <div style="width:580px;float:left;border:1px solid white">  
+		    	
+		    	<div class="col270">
+		    		<label class="alturaLabel" style="text-align: right;">Data da Consulta:</label>
+		    		<rich:calendar id="datCenso" value="#{censoHospitalarForm.dataLeitura}" inputStyle="width:129px" datePattern="dd/MM/yyyy" >
+		    	          <a4j:support action="#{censoHospitalarForm.atualizarInformacoes}" event="onchanged"  reRender="#{censoHospitalarForm.idsRerender}" />     		
+					</rich:calendar>
+		    	</div>
+		    	
+		    	<div class="col300">
+		    		<label class="alturaLabel" style="text-align: right;margin-left:8px;">Cliníca/Unidade:</label>
+		    		<h:selectOneMenu id="selUnidade" value="#{censoHospitalarForm.isnClinicaSelecionada}" style="width: 150px">
+		    			<f:selectItems value="#{censoHospitalarForm.sliClinicas}"/>
+		    			<a4j:support action="#{censoHospitalarForm.atualizarInformacoes}" event="onchange"  reRender="#{censoHospitalarForm.idsRerender}" />
+		    		</h:selectOneMenu>
+		    	</div>
+		    	
+		    	<div style="width:570px;">	
+		    		           
+		        	<label style="float:left;text-align: right;margin-left:54px;">Ordem:</label>		        
+		        	<h:selectOneRadio id="rbtOrdem" value="#{censoHospitalarForm.tipoOrdenacao}" style="float:left;">
+		             	<f:selectItem itemLabel="Nome" itemValue="1"/>
+		             	<f:selectItem itemLabel="Prontuário" itemValue="2"/>
+		             	<f:selectItem itemLabel="Clínica" itemValue="3"/>
+		    	      	<f:selectItem itemLabel="Hora" itemValue="4"/>
+		        	</h:selectOneRadio>
+		        	
+		        	<a4j:commandButton id="btnAtualizar" value="Atualizar" 
+		       	           action="#{censoHospitalarForm.atualizarInformacoes}"
+		       	           style="height: 20px; margin-left: 25px;padding-left:5px;padding-right:5px;"
+		                   reRender="#{censoHospitalarForm.idsRerender}" />
+		    	</div>
+		    	
+		    </div>
+		    </a4j:region>
+		    <h:panelGroup layout="block" styleclass="col200" id="botoesImpressao">
+		    	<a4j:commandButton id="btnImprimir" value="Imprimir Censo Clinica"
+			   	                   style="height: 22px; margin-bottom: 5px; width:180px" 
+			   	                   onclick="imprimirRelatorio(#{censoHospitalarForm.isnClinicaSelecionada},'#{censoHospitalarForm.dataCenso}','#{censoHospitalarForm.dataAnteriorCenso}','#{FuncUtil.enderecoRelatorios}')" 
+			   	                   ajaxSingle="true" />
+			   	<br/>                   
+			   	<a4j:commandButton id="btnImprimir2" value="Imprimir Resumo Censo"
+			   	                   style="height: 22px; width:180px"
+			   	                   onclick="imprimirRelatorio(-1,'#{censoHospitalarForm.dataCenso}','#{censoHospitalarForm.dataAnteriorCenso}','#{FuncUtil.enderecoRelatorios}')" 
+			   	                   ajaxSingle="true" />
+		    </h:panelGroup>		    
+   		</h:panelGroup> 
+   			 		   		
+   		<rich:simpleTogglePanel style="border:0px;" bodyClass="panel" headerClass="headerPanel2" id="panResumo"
+   		                        switchType="client">
+   		 	<f:facet name="header">RESUMO - #{censoHospitalarForm.dataResumo}</f:facet>
+            <f:facet name="openMarker"><h:graphicImage value="IMG/down.png"></h:graphicImage></f:facet>
+            <f:facet name="closeMarker"><h:graphicImage value="IMG/up.png"></h:graphicImage></f:facet>
+   		    <!-- Resumo da Ocupação -->
+   			<rich:dataTable id="tblResumo"								 
+				var="unidade" 
+				rowClasses="linhaNormal,linhaDestaque"				
+				style="width: 100%; font-size: 13px"
+				value="#{censoHospitalarForm.lstClinicas}">
+				<f:facet name="header">
+					<rich:columnGroup>											
+						<h:column> <h:outputText value="Clínica/Unidade" /> </h:column>												
+						<h:column> <h:outputText value="Leitos" /> </h:column>
+						<h:column> <h:outputText value="Ocupados" /> </h:column>
+						<h:column> <h:outputText value="Interditados" /> </h:column>
+						<h:column> <h:outputText value="Reservados" /> </h:column>
+						<h:column> <h:outputText value="Livres" /> </h:column>
+						<h:column> <h:outputText value="Extras" /> </h:column>						
+						<h:column> <h:outputText value="Ocupação (%)"/> </h:column>						
+					</rich:columnGroup>
+				</f:facet>	
+				<rich:columnGroup style="font-size: 13px">
+					<rich:column>
+						<h:outputText value="#{unidade.dscClinica}"/>
+					</rich:column>								
+					<rich:column>
+				    	<center><h:outputText value="#{unidade.totalLeitos}" /></center>				
+					</rich:column>								
+					<rich:column>
+						<center><h:outputText value="#{unidade.totalOcupados}"/></center>
+					</rich:column>
+					<rich:column>
+						<center><h:outputText value="#{unidade.totalInterditados}"/></center>
+					</rich:column>
+					<rich:column>
+						<center><h:outputText value="#{unidade.totalReservados}"/></center>
+					</rich:column>								
+					<rich:column>
+				    	<center><h:outputText value="#{unidade.totalLivres}"/></center>
+					</rich:column>
+			    	<rich:column>
+				    	<center><h:outputText value="#{unidade.totalExtras}"/></center>
+					</rich:column>												
+					<rich:column>
+			    		<center> 
+					    	<h:outputText value="#{unidade.totalOcupados/unidade.totalLeitos*100}">
+					        	<f:convertNumber pattern="##0.00"/>
+					      	</h:outputText>
+					    </center>
+					</rich:column>
+				</rich:columnGroup>
+				<f:facet name="footer">                
+                    <rich:columnGroup>
+                    	<rich:column>Total</rich:column>
+                        <rich:column>
+                             <center><h:outputText value="#{censoHospitalarForm.totalLeitos}"/></center>
+                        </rich:column>
+                        <rich:column>
+                             <center><h:outputText value="#{censoHospitalarForm.totalOcupados}"/></center>
+                        </rich:column>
+                        <rich:column>
+                             <center><h:outputText value="#{censoHospitalarForm.totalInterditados}"/></center>
+                        </rich:column>
+                        <rich:column>
+                             <center><h:outputText value="#{censoHospitalarForm.totalReservados}"/></center>
+                        </rich:column>
+                        <rich:column>
+                            <center><h:outputText value="#{censoHospitalarForm.totalLivres}"/></center>
+                        </rich:column>
+                        <rich:column>
+                            <center><h:outputText value="#{censoHospitalarForm.totalExtras}"/></center>
+                        </rich:column>
+                        <rich:column>
+                            <center>
+                            	<h:outputText value="#{censoHospitalarForm.totalOcupados/censoHospitalarForm.totalLeitos*100}">
+                            		<f:convertNumber pattern="##0.00"/>
+                            	</h:outputText>
+                            </center>
+                        </rich:column>
+                    </rich:columnGroup>
+                </f:facet>				
+			</rich:dataTable>
+		</rich:simpleTogglePanel> 
+		<br/>
+		 <!--INTERNACOES-->
+         <rich:simpleTogglePanel style="border:0px;" bodyClass="panel" headerClass="headerPanel2" id="panInternacoes" switchType="client">
+            <f:facet name="header">INTERNAÇÕES - #{censoHospitalarForm.totalInternacoes} ocorrência(s)</f:facet>
+            <f:facet name="openMarker"><h:graphicImage value="IMG/down.png"></h:graphicImage></f:facet>
+            <f:facet name="closeMarker"><h:graphicImage value="IMG/up.png"></h:graphicImage></f:facet>
+            <rich:dataTable id="tblInternacoes"									 
+							var="movimento"
+							rowClasses="linhaNormal,linhaDestaque"		 
+							style="width: 100%"
+							value="#{censoHospitalarForm.lstInternacao}">
+				<f:facet name="header">
+					<rich:columnGroup>											
+						<h:column> <h:outputText value="Paciente" /> </h:column>												
+						<h:column> <h:outputText value="No.Pront." /> </h:column>
+						<h:column> <h:outputText value="Hora" /> </h:column>
+						<h:column> <h:outputText value="Origem" /> </h:column>						
+						<h:column> <h:outputText value="Clínica-Enf./Leito"/> </h:column>						
+					</rich:columnGroup>
+				</f:facet>			
+				
+				<rich:column>
+				    <h:outputText value="#{movimento.nomPaciente}"/>
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{movimento.numProntuario}"/>
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{movimento.horaInternacao}"/>
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{movimento.referenciaOrigem}"/>
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{movimento.leitoAtual}"/>
+				</rich:column>
+			</rich:dataTable>				
+        </rich:simpleTogglePanel>
+        <br/>
+         <!--ALTAS-->
+        <rich:simpleTogglePanel style="border:0px;" bodyClass="panel" headerClass="headerPanel2" 
+                                id="panAltas" switchType="client">            	
+           	<f:facet name="header">ALTAS - #{censoHospitalarForm.totalAltas} ocorrência(s)</f:facet>
+           	<f:facet name="openMarker"><h:graphicImage value="IMG/down.png"></h:graphicImage></f:facet>
+           	<f:facet name="closeMarker"><h:graphicImage value="IMG/up.png"></h:graphicImage></f:facet>
+            <rich:dataTable id="tblAltas"									 
+							var="movimento"	
+							rowClasses="linhaNormal,linhaDestaque"	 
+							style="width: 100%"
+							value="#{censoHospitalarForm.lstAltas}">
+				<f:facet name="header">
+					<rich:columnGroup>
+					<!--
+						<h:column> <h:outputText value="Desfazer" /> </h:column>	
+						-->										
+						<h:column> <h:outputText value="Paciente" /> </h:column>												
+						<h:column> <h:outputText value="No.Pront." /> </h:column>
+						<h:column> <h:outputText value="Clínica-Enf./Leito" /> </h:column>
+						<h:column> <h:outputText value="Hora" /> </h:column>
+						<h:column> <h:outputText value="Observação" /> </h:column>						
+						<h:column> <h:outputText value="Destino"/> </h:column>						
+					</rich:columnGroup>
+				</f:facet>
+				<!--
+				<rich:column width="5%">
+					<center>
+					
+					</center>
+			    </rich:column>
+			    -->
+				<rich:column>
+				    <h:outputText value="#{movimento.nomPaciente}"/>
+				</rich:column>					
+				<rich:column>
+					<h:outputText value="#{movimento.numProntuario}"/>
+				</rich:column>					
+				<rich:column>
+					<h:outputText value="#{movimento.leitoAtual}"/>
+				</rich:column>					
+				<rich:column>
+					<h:outputText value="#{movimento.horaAltaObito}"/>
+				</rich:column>									
+				<rich:column>
+					<h:outputText value="#{movimento.obsAltaObito}"/>
+				</rich:column>				
+				<rich:column>
+					<h:outputText value="#{movimento.referenciaDestino}"/>
+				</rich:column>					
+			</rich:dataTable>       
+        </rich:simpleTogglePanel>
+        <br/>
+        <rich:simpleTogglePanel style="border:0px;" bodyClass="panel" headerClass="headerPanel2" 
+                                id="panObitos" switchType="client">            	
+           	<f:facet name="header">ÓBITOS - #{censoHospitalarForm.totalObitos} ocorrências</f:facet>
+           	<f:facet name="openMarker"><h:graphicImage value="IMG/down.png"></h:graphicImage></f:facet>
+           	<f:facet name="closeMarker"><h:graphicImage value="IMG/up.png"></h:graphicImage></f:facet>
+            <rich:dataTable id="tblObitos"
+				var="movimento"		 
+				style="width: 100%"
+				rowClasses="linhaNormal,linhaDestaque"
+				value="#{censoHospitalarForm.lstObitos}">
+				<f:facet name="header">
+						<rich:columnGroup>											
+							<h:column> <h:outputText value="Paciente" /> </h:column>												
+							<h:column> <h:outputText value="No.Pront." /> </h:column>
+							<h:column> <h:outputText value="Clinica-Enf./Leito" /> </h:column>
+							<h:column> <h:outputText value="Hora" /> </h:column>
+							<h:column> <h:outputText value="Observação" /> </h:column>
+						</rich:columnGroup>
+					</f:facet>			
+					<rich:column>
+					    <h:outputText value="#{movimento.nomPaciente}"/>
+					</rich:column>				
+					<rich:column>
+						<h:outputText value="#{movimento.numProntuario}"/>
+					</rich:column>
+					<rich:column>
+				   		<h:outputText value="#{movimento.leitoAtual}"/>
+					</rich:column>					
+					<rich:column>
+				   		<h:outputText value="#{movimento.horaAltaObito}"/>
+					</rich:column>
+					<rich:column>
+						<h:outputText value="#{movimento.obsAltaObito}"/>
+					</rich:column>				
+			</rich:dataTable>          
+        </rich:simpleTogglePanel>
+         <br/>
+        <rich:simpleTogglePanel style="border:0px;" bodyClass="panel" headerClass="headerPanel2" 
+                                id="panTransferenciasd" switchType="client">            	
+           	<f:facet name="header">TRANSFERÊNCIAS - #{censoHospitalarForm.totalTransferencias} ocorrência(s)</f:facet>
+           	<f:facet name="openMarker"><h:graphicImage value="IMG/down.png"></h:graphicImage></f:facet>
+           	<f:facet name="closeMarker"><h:graphicImage value="IMG/up.png"></h:graphicImage></f:facet>            	            	                   
+            <rich:dataTable id="tblTransferenciasd"
+							var="movimento"		 
+							style="width: 100%"
+							rowClasses="linhaNormal,linhaDestaque"
+							value="#{censoHospitalarForm.lstTransferencia}">
+				<f:facet name="header">
+					<rich:columnGroup>
+					<!--	
+						<h:column> <h:outputText value="Desfazer" /> </h:column>	
+						-->									
+						<h:column> <h:outputText value="Paciente" /> </h:column>												
+						<h:column> <h:outputText value="No.Pront." /> </h:column>
+						<h:column> <h:outputText value="Leito Anterior" /> </h:column>
+						<h:column> <h:outputText value="Leito Destino" /> </h:column>
+						<h:column> <h:outputText value="Hora" /> </h:column>
+						<h:column> <h:outputText value="Observação" /> </h:column>
+					</rich:columnGroup>
+				</f:facet>
+				<br/>
+				<!--
+				<rich:column width="5%">
+					<center>
+						
+					</center>
+			    </rich:column>
+			    -->
+				<rich:column>
+				    <h:outputText value="#{movimento.nomPaciente}"/>
+				</rich:column>				
+				<rich:column>
+					<h:outputText value="#{movimento.numProntuario}"/>
+				</rich:column>
+				<rich:column>
+			   		<h:outputText value="#{movimento.leitoAtual}"/>
+				</rich:column>					
+				<rich:column>
+			   		<h:outputText value="#{movimento.leitoDestino}"/>
+				</rich:column>
+				<rich:column>
+			   		<h:outputText value="#{movimento.horaAltaObito}"/>
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{movimento.obsAltaObito}"/>
+				</rich:column>
+			</rich:dataTable>          
+        </rich:simpleTogglePanel>		
+        <br/>
+        <rich:simpleTogglePanel style="border:0px;" bodyClass="panel" headerClass="headerPanel2" 
+                                id="panTransferencias" switchType="client">            	
+           	<f:facet name="header">TRANSFERÊNCIAS OUTRO HOSPITAL - #{censoHospitalarForm.totalTransferenciasHospital} ocorrências</f:facet>
+           	<f:facet name="openMarker"><h:graphicImage value="IMG/down.png"></h:graphicImage></f:facet>
+           	<f:facet name="closeMarker"><h:graphicImage value="IMG/up.png"></h:graphicImage></f:facet>            	            	                   
+            <rich:dataTable id="tblTransferencias"
+				var="movimento"		 
+				style="width: 100%"
+				rowClasses="linhaNormal,linhaDestaque"
+				value="#{censoHospitalarForm.lstTransferenciaHospital}">
+				<f:facet name="header">
+					<rich:columnGroup>											
+						<h:column> <h:outputText value="Paciente" /> </h:column>												
+						<h:column> <h:outputText value="No.Pront." /> </h:column>
+						<h:column> <h:outputText value="Hora" /> </h:column>
+						<h:column> <h:outputText value="Origem" /> </h:column>
+						<h:column> <h:outputText value="Hospital Destino" /> </h:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column>
+				    <h:outputText value="#{movimento.nomPaciente}"/>
+				</rich:column>				
+				<rich:column>
+					<h:outputText value="#{movimento.numProntuario}"/>
+				</rich:column>
+				<rich:column>
+			   		<h:outputText value="#{movimento.horaAltaObito}"/>
+				</rich:column>
+				<rich:column>
+			   		<h:outputText value="#{movimento.referenciaOrigem}"/>
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{movimento.referenciaDestino}"/>
+				</rich:column>
+			</rich:dataTable>          
+        </rich:simpleTogglePanel>		
+		<br/>
+		<br/>
+		<br/>
+		
+		<a4j:status id="statusPanel" for="regiao"
+           onstart="Richfaces.showModalPanel('panelStatus');" 
+           onstop="#{rich:component('panelStatus')}.hide()">
+		</a4j:status> 
+	
+		<a4j:poll enabled="true" interval="300000" action="#{censoHospitalarForm.atualizarInformacoes}" 
+          		  reRender="#{censoHospitalarForm.idsRerender}" >
+		</a4j:poll>
+		
+		</h:form>
+		<script type="text/javascript">	    	
+			function imprimirRelatorio(clinica,dataCenso,dataAnterior,server) {			    
+			   window.open(server+"/relatorios/GeraRelCenso?p1=" + clinica + "&amp;p2=" + dataCenso + "&amp;p3=" + dataAnterior,"relatorio","width=900,height=600");				
+			}		
+		</script>  
+	</ui:define>
+</ui:composition>
+</html>

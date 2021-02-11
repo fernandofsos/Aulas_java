@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relDeclaracaoEncaminhamento" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="469"/>
+	<parameter name="ISN_DECLARACAO" class="java.lang.Integer"/>
+	<parameter name="DATAEXTENSO" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG_UPA" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG_BRASAO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select p.dsc_nome,
+CASE WHEN D.NUM_RG IS NULL OR D.NUM_RG LIKE '' THEN '*************' ELSE D.NUM_RG END as NUM_RG,
+CASE WHEN D.NUM_CPF IS NULL OR D.NUM_CPF LIKE '' THEN '*************' ELSE D.NUM_CPF END as NUM_CPF,
+d.dsc_servico,m.dsc_municipio,d.dsc_objetivo,u.dsc_usuario,u.num_conselho,c.sgl_conselho,
+(select vlr_parametro from medpoint.t_parametro where isn_parametro = 10) as endereco_completo,
+(SELECT VLR_PARAMETRO FROM MEDPOINT.T_PARAMETRO WHERE ISN_PARAMETRO = 13) AS DSC_UNIDADE
+from medpoint.t_as_declaracao d
+inner join medpoint.t_paciente p on p.isn_paciente = d.isn_paciente
+inner join medpoint.t_municipio m on m.isn_municipio = d.isn_municipio
+inner join seguranca.t_usuario u on u.isn_usuario = d.isn_usuario
+inner join medpoint.t_as_declaracao_tipo dt on dt.isn_as_declaracao_tipo = d.isn_as_declaracao_tipo
+LEFT join seguranca.t_conselho c on c.isn_conselho = u.isn_conselho
+where d.isn_as_declaracao = $P{ISN_DECLARACAO}]]>
+	</queryString>
+	<field name="dsc_nome" class="java.lang.String"/>
+	<field name="num_rg" class="java.lang.String"/>
+	<field name="num_cpf" class="java.lang.String"/>
+	<field name="dsc_servico" class="java.lang.String"/>
+	<field name="dsc_municipio" class="java.lang.String"/>
+	<field name="dsc_objetivo" class="java.lang.String"/>
+	<field name="dsc_usuario" class="java.lang.String"/>
+	<field name="num_conselho" class="java.lang.String"/>
+	<field name="sgl_conselho" class="java.lang.String"/>
+	<field name="endereco_completo" class="java.lang.String"/>
+	<field name="dsc_unidade" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="753" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="290" height="17"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="32" width="290" height="17"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORGANIZAÇÃO SOCIAL SAÚDE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="310" y="0" width="127" height="33"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_UPA}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="437" y="0" width="117" height="33"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_BRASAO}]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="0" y="49" width="554" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="16" width="290" height="17"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDADE DE PRONTO ATENDIMENTO - UPA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="147" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ENCAMINHAMENTO]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="38" y="243" width="483" height="267"/>
+				<textElement textAlignment="Justified">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["O Serviço Social da Unidade de Pronto Atendimento 24h, por meio deste instrumento, encaminha o(a) Sr.(a) "+$F{dsc_nome}+" portador(a) de IDENTIDADE Nº "+$F{num_rg}+", CPF Nº "+$F{num_cpf}+" para o serviço "+$F{dsc_servico}+" do município de "+$F{dsc_municipio}+", com o objetivo de "+$F{dsc_objetivo}+"."]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMMM yyyy" isBlankWhenNull="true">
+				<reportElement x="0" y="510" width="553" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fortaleza, "+$P{DATAEXTENSO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="161" y="633" width="233" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_usuario}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="161" y="632" width="233" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="310" y="33" width="245" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_unidade}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="161" y="648" width="233" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_conselho} == null ? " " : $F{num_conselho}+" "+$F{sgl_conselho}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="38" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="5" width="592" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{endereco_completo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="19" width="555" height="14"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Unidade mantida com recursos públicos, provenientes de seus impostos e contribuições sociais.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="18" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="4" width="555" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

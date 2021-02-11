@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+<head>
+	<title><h:outputText value="#{bundle.tituloAplicacao}" /></title>
+	<script src="/#{bundle.pathAplicacao}/js/custom.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/layout.css" />
+	<link rel="stylesheet" type="text/css" href="/#{bundle.pathAplicacao}/css/geral.css" />
+</head>
+<body>
+	<rich:spacer width="0" height="150" />
+	<h:form>
+		<div class="telalogin">
+			<div class="cabecalhoLogin">
+				<h:outputText value="Sistema de Segurança" styleClass="sistema" />
+			</div>
+			<div style="padding:10px;">
+				<div style="float:left;">
+					<h:graphicImage url="imagens/seguranca.png" />
+				</div>
+				<div style="float:left; margin:20px;">
+					<table style="width:100%;">
+					<tr>
+						<td colspan="2" align="center">
+							<a4j:outputPanel ajaxRendered="true">
+							    <rich:messages layout="table" globalOnly="true" errorClass="msgError" infoClass="msgInfo" warnClass="msgWarn" id="messages"/>
+							</a4j:outputPanel>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;vertical-align: middle;">
+							<h:outputText styleClass="labelForm" value="Login:" />
+						</td>
+						<td style="text-align: left;">
+							<h:inputText style="border: 1px; border-style:solid; border-color:#8EB9F2;" value="#{alteracaoRecuperacaoSenhaForm.usuarioBean.dscLogin}" onblur="upper(this);" onkeypress="upper(this)" id="login" maxlength="30"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align: center;">
+							<br /><a4j:commandButton actionListener="#{alteracaoRecuperacaoSenhaForm.recuperarSenha}" reRender="formulario" image="imagens/bntRecuperarSenha.png" style="border: 0; width: 154px; height: 29px;" id="bntRecuperarSenha" value="Recuperar Senha"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="padding-top:20px; text-align:right;">
+							<h:commandLink id ="bntVoltar" action="#{alteracaoRecuperacaoSenhaForm.logout}" >
+								<h:outputText value="Voltar" />
+							</h:commandLink>
+						</td>
+					</tr>
+					</table>
+					<mj:focus for="j_id6:login"></mj:focus>
+				</div>
+			</div>
+		</div>
+	</h:form>		
+</body>
+</html>

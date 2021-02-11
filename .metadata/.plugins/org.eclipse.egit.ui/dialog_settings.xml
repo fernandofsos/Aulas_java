@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="EGit.KnownHosts">
+		<item value="bitbucket.org"/>
+		<item value="github.com"/>
+		<item value="git.eclipse.org"/>
+		<item value="192.168.60.126"/>
+	</list>
+	<list key="RepositorySelectionPage.UsedUris">
+		<item value="http://192.168.60.126/root/pacienteupa.git"/>
+		<item value="http://192.168.60.126/root/paciente-schedule.git"/>
+		<item value="http://192.168.60.126/root/paciente-postgres.git"/>
+	</list>
+	<list key="CommitDialog.authorValues">
+		<item value="sergio &lt;sergio@nti-21&gt;"/>
+	</list>
+	<list key="CommitDialog.committerValues">
+		<item value="sergio &lt;sergio@nti-21&gt;"/>
+	</list>
+	<section name="org.eclipse.egit.ui.internal.staging.StagingView">
+		<item key="HORIZONTAL_SASH_FORM_WEIGHT" value="500,500"/>
+		<item key="STAGING_SASH_FORM_WEIGHT" value="500,500"/>
+		<item key="sortItemState" value="false"/>
+	</section>
+	<section name="GitCommitMessageComponent">
+		<list key="/home/sergio/git/pacienteupa/.git">
+			<item value="false"/>
+			<item value="sergio &lt;sergio@nti-21&gt;"/>
+			<item value="# WARNING: head commit changed in the meantime&#x0A;&#x0A;Ajuste nas consulas"/>
+			<item value="sergio &lt;sergio@nti-21&gt;"/>
+			<item value="0fe7551b8a08d8100dfaeac0b8d6ea70acc814d0"/>
+			<item value="0"/>
+			<item value="false"/>
+		</list>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.dialogs.CheckoutDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="652"/>
+		<item key="DIALOG_Y_ORIGIN" value="174"/>
+		<item key="DIALOG_WIDTH" value="623"/>
+		<item key="DIALOG_HEIGHT" value="487"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.push.PushResultDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="475"/>
+		<item key="DIALOG_Y_ORIGIN" value="141"/>
+		<item key="DIALOG_WIDTH" value="656"/>
+		<item key="DIALOG_HEIGHT" value="458"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
+		<list key="sashWeights">
+			<item value="600"/>
+			<item value="400"/>
+		</list>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.pull.PullResultDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="543"/>
+		<item key="DIALOG_Y_ORIGIN" value="240"/>
+		<item key="DIALOG_WIDTH" value="521"/>
+		<item key="DIALOG_HEIGHT" value="309"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
+	</section>
+</section>

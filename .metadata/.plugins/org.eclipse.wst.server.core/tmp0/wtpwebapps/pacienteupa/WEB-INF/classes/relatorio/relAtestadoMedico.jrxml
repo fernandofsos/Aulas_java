@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relReceitaLivre" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="365"/>
+	<parameter name="P3" class="java.lang.Integer"/>
+	<parameter name="DATAEXTENSO" class="java.lang.String"/>
+	<parameter name="QTDDIASEXTENSO" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG_UPA" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG_BRASAO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT PAC.DSC_NOME AS NOMEPACIENTE, DOC.QTD_DIAS AS NR_DIAS, USR.DSC_USUARIO AS NOMEMEDICO,
+USR.NUM_CONSELHO AS NUMCONSELHO, CNS.SGL_CONSELHO AS SGLCONSELHO,DOC.ISN_INTERNACAO_DOC,
+(SELECT VLR_PARAMETRO FROM MEDPOINT.T_PARAMETRO WHERE ISN_PARAMETRO = 10) AS ENDERECO_COMPLETO,
+(SELECT VLR_PARAMETRO FROM MEDPOINT.T_PARAMETRO WHERE ISN_PARAMETRO = 13) AS DSC_UNIDADE
+FROM MEDPOINT.T_INTERNACAO_DOC AS DOC
+LEFT JOIN MEDPOINT.T_INTERNACAO AS I ON I.ISN_INTERNACAO = DOC.ISN_INTERNACAO
+LEFT JOIN MEDPOINT.T_PACIENTE AS PAC ON PAC.ISN_PACIENTE = I.ISN_PACIENTE
+LEFT JOIN SEGURANCA.T_USUARIO AS USR ON USR.ISN_USUARIO = DOC.ISN_USUARIO
+LEFT JOIN SEGURANCA.T_CONSELHO AS CNS ON CNS.ISN_CONSELHO = USR.ISN_CONSELHO
+WHERE DOC.ISN_INTERNACAO_DOC = $P{P3}]]>
+	</queryString>
+	<field name="nomepaciente" class="java.lang.String"/>
+	<field name="nr_dias" class="java.lang.Integer"/>
+	<field name="nomemedico" class="java.lang.String"/>
+	<field name="numconselho" class="java.lang.String"/>
+	<field name="sglconselho" class="java.lang.String"/>
+	<field name="isn_internacao_doc" class="java.lang.Integer"/>
+	<field name="endereco_completo" class="java.lang.String"/>
+	<field name="dsc_unidade" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="18" width="290" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDADE DE PRONTO ATENDIMENTO - UPA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="34" width="290" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORGANIZAÇÃO SOCIAL SAÚDE]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="52" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="2" width="290" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<image>
+				<reportElement x="295" y="0" width="117" height="34"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_BRASAO}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="429" y="0" width="107" height="34"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_UPA}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="295" y="35" width="260" height="17"/>
+				<box leftPadding="4"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_unidade}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="715" splitType="Stretch">
+			<staticText>
+				<reportElement x="192" y="9" width="171" height="18"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ATESTADO MÉDICO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="39" width="555" height="658"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="54" y="98" width="456" height="290"/>
+				<textElement textAlignment="Justified">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atesto para os devidos fins que " +  $F{nomepaciente}
++ " foi atendido(a) neste serviço, necessitando de afastamento por "
++ $F{nr_dias} + " ("+$P{QTDDIASEXTENSO} +") dias das suas atividades profissionais."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="34" y="579" width="22" height="15"/>
+				<textElement/>
+				<text><![CDATA[CID:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="59" y="590" width="145" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="255" y="641" width="281" height="20"/>
+				<box topPadding="2">
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nomemedico}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="661" width="281" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{numconselho}+""+$F{sglconselho}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="204" y="536" width="51" height="15"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Fortaleza, ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="255" y="536" width="300" height="15"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{DATAEXTENSO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="429" y="697" width="126" height="8"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{isn_internacao_doc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="34" y="605" width="133" height="15"/>
+				<textElement/>
+				<text><![CDATA[Autorização do paciente:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="34" y="641" width="197" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="31" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="1" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="16" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="17" width="555" height="14"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Unidade mantida com recursos públicos, provenientes de seus impostos e contribuições sociais.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-17" y="2" width="590" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{endereco_completo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

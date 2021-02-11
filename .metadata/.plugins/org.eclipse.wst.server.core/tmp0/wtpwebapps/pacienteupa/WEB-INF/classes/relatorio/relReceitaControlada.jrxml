@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relReceitaControlada" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P1" class="java.lang.Integer"/>
+	<parameter name="P2" class="java.lang.Integer"/>
+	<parameter name="CAMINHO_IMG_BRASAO" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG_UPA" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT USR.DSC_USUARIO AS NOMEMEDICO, USR.NUM_CONSELHO AS NUMCONSELHO, CNS.SGL_CONSELHO AS SGLCONSELHO,
+	UF.SGL_UF AS UF, PAC.DSC_NOME AS NOMEPACIENTE, DOC.DSC_TEXTO AS PRESCRICAO, CURRENT_DATE AS DT_ATUAL,
+	I.DSC_ENDERECO || ', ' ||  I.DSC_BAIRRO || ', ' || MUN.DSC_MUNICIPIO AS ENDERECO,
+(SELECT VLR_PARAMETRO FROM MEDPOINT.T_PARAMETRO WHERE ISN_PARAMETRO = 10) AS ENDERECO_COMPLETO,
+	(SELECT VLR_PARAMETRO FROM MEDPOINT.T_PARAMETRO WHERE ISN_PARAMETRO = 11) AS ENDERECO_REDUZIDO,
+	(SELECT VLR_PARAMETRO FROM MEDPOINT.T_PARAMETRO WHERE ISN_PARAMETRO = 12) AS TELEFONE_UPA,
+(SELECT VLR_PARAMETRO FROM MEDPOINT.T_PARAMETRO WHERE ISN_PARAMETRO = 13) AS DSC_UNIDADE
+FROM MEDPOINT.T_INTERNACAO_DOC DOC
+	INNER JOIN MEDPOINT.T_INTERNACAO I ON I.ISN_INTERNACAO = DOC.ISN_INTERNACAO
+	INNER JOIN MEDPOINT.T_PACIENTE PAC ON PAC.ISN_PACIENTE = I.ISN_PACIENTE
+	INNER JOIN SEGURANCA.T_USUARIO USR ON USR.ISN_USUARIO = DOC.ISN_USUARIO
+	LEFT JOIN SEGURANCA.T_CONSELHO CNS ON CNS.ISN_CONSELHO = USR.ISN_CONSELHO
+	LEFT JOIN SEGURANCA.V_UF UF ON UF.ISN_UF = USR.ISN_UF_CONSELHO
+	LEFT JOIN MEDPOINT.T_MUNICIPIO MUN ON MUN.ISN_MUNICIPIO = I.ISN_MUNICIPIO
+WHERE I.ISN_INTERNACAO = $P{P1}
+	AND DOC.ISN_INTERNACAO_DOC = $P{P2}]]>
+	</queryString>
+	<field name="NOMEMEDICO" class="java.lang.String"/>
+	<field name="NUMCONSELHO" class="java.lang.String"/>
+	<field name="SGLCONSELHO" class="java.lang.String"/>
+	<field name="UF" class="java.lang.String"/>
+	<field name="NOMEPACIENTE" class="java.lang.String"/>
+	<field name="PRESCRICAO" class="java.lang.String"/>
+	<field name="DT_ATUAL" class="java.sql.Timestamp"/>
+	<field name="ENDERECO" class="java.lang.String"/>
+	<field name="ENDERECO_COMPLETO" class="java.lang.String"/>
+	<field name="ENDERECO_REDUZIDO" class="java.lang.String"/>
+	<field name="TELEFONE_UPA" class="java.lang.String"/>
+	<field name="DSC_UNIDADE" class="java.lang.String"/>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="76" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="57" width="390" height="15"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="32" width="218" height="15"/>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORGANIZAÇÃO SOCIAL SAÚDE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="310" y="0" width="80" height="32"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_UPA}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="412" y="32" width="218" height="15"/>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORGANIZAÇÃO SOCIAL SAÚDE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="2" width="218" height="15"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="50" width="390" height="1"/>
+			</line>
+			<line>
+				<reportElement x="412" y="50" width="390" height="1"/>
+			</line>
+			<image>
+				<reportElement x="218" y="0" width="85" height="32"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_BRASAO}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="722" y="0" width="80" height="32"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_UPA}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="630" y="0" width="85" height="32"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_BRASAO}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="0" y="17" width="218" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DSC_UNIDADE}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="412" y="17" width="218" height="15"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DSC_UNIDADE}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="57" width="383" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECEITUÁRIO DE CONTROLE ESPECIAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="2" width="218" height="15"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="412" y="57" width="390" height="15"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="412" y="57" width="383" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECEITUÁRIO DE CONTROLE ESPECIAL]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="438" splitType="Stretch">
+			<staticText>
+				<reportElement x="218" y="0" width="151" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO DO EMITENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="65" width="85" height="15"/>
+				<textElement/>
+				<text><![CDATA[Cidade: Fortaleza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="77" width="233" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[1ª VIA - RETENÇÃO DA FARMÁCIA OU DROGARIA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="0" width="390" height="75"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="233" y="77" width="157" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[2ª VIA - ORIENTAÇÃO AO PACIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="233" y="62" width="47" height="13"/>
+				<textElement/>
+				<text><![CDATA[Telefone:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="17" width="85" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Nome completo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="47" width="54" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="32" width="54" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Conselho:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="62" width="232" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Cidade: Fortaleza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="2" width="383" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO DO EMITENTE]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="412" y="0" width="390" height="75"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="414" y="3" width="384" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO DO EMITENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="77" width="233" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[1ª VIA - RETENÇÃO DA FARMÁCIA OU DROGARIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="646" y="76" width="157" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[2ª VIA - ORIENTAÇÃO AO PACIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="86" y="17" width="301" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMEMEDICO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="55" y="36" width="332" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NUMCONSELHO} != null && $F{SGLCONSELHO} != null?
+$F{NUMCONSELHO}+""+$F{SGLCONSELHO}:
+null]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="47" width="332" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ENDERECO_REDUZIDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="62" width="107" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TELEFONE_UPA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="17" width="301" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMEMEDICO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="415" y="32" width="54" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Conselho:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="17" width="85" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Nome completo:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="469" y="32" width="332" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NUMCONSELHO} != null && $F{SGLCONSELHO} != null?
+$F{NUMCONSELHO}+""+$F{SGLCONSELHO}:
+null]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="415" y="62" width="232" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Cidade: Fortaleza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="47" width="54" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="469" y="47" width="332" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ENDERECO_REDUZIDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="694" y="62" width="107" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TELEFONE_UPA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="647" y="62" width="47" height="13"/>
+				<textElement/>
+				<text><![CDATA[Telefone:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="90" width="390" height="195"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="1" y="93" width="48" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PACIENTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="106" width="61" height="13"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ENDEREÇO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="120" width="71" height="13"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PRESCRIÇÃO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="111" y="300" width="28" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DATA:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement stretchType="RelativeToBandHeight" x="412" y="90" width="390" height="195"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="414" y="93" width="42" height="13"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PACIENTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="120" width="71" height="13"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PRESCRIÇÃO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="107" width="61" height="13"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ENDEREÇO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="614" y="299" width="188" height="14"/>
+				<box topPadding="3">
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[ASSINATURA E CARIMBO DO MÉDICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="524" y="299" width="26" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DATA:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="46" y="93" width="345" height="13" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMEPACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="63" y="106" width="324" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ENDERECO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="133" width="390" height="152"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement markup="html">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRESCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="458" y="93" width="345" height="13" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMEPACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="475" y="107" width="328" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ENDERECO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="412" y="133" width="390" height="152"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement markup="html">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRESCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement positionType="FixRelativeToBottom" x="551" y="299" width="54" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{DT_ATUAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement positionType="FixRelativeToBottom" x="142" y="300" width="53" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{DT_ATUAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="202" y="299" width="188" height="14"/>
+				<box topPadding="3">
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[ASSINATURA E CARIMBO DO MÉDICO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="-1" y="313" width="194" height="124"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="201" y="313" width="188" height="124"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="411" y="313" width="194" height="124"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="613" y="313" width="188" height="124"/>
+			</rectangle>
+			<line>
+				<reportElement x="415" y="401" width="185" height="1"/>
+			</line>
+			<line>
+				<reportElement x="475" y="386" width="123" height="1"/>
+			</line>
+			<line>
+				<reportElement x="60" y="431" width="126" height="1"/>
+			</line>
+			<line>
+				<reportElement x="46" y="341" width="140" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="421" width="58" height="13"/>
+				<textElement/>
+				<text><![CDATA[TELEFONE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="615" y="315" width="183" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO DO FORNECEDOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="741" y="417" width="33" height="15"/>
+				<textElement/>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<line>
+				<reportElement x="46" y="417" width="89" height="1"/>
+			</line>
+			<line>
+				<reportElement x="472" y="431" width="126" height="1"/>
+			</line>
+			<line>
+				<reportElement x="439" y="371" width="84" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="413" y="376" width="60" height="13"/>
+				<textElement/>
+				<text><![CDATA[ENDEREÇO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="331" width="35" height="13"/>
+				<textElement/>
+				<text><![CDATA[NOME:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="361" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="206" y="417" width="91" height="15"/>
+				<textElement/>
+				<text><![CDATA[Ass. Farmacêutico]]></text>
+			</staticText>
+			<line>
+				<reportElement x="449" y="341" width="149" height="1"/>
+			</line>
+			<line>
+				<reportElement x="3" y="401" width="185" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="142" y="406" width="17" height="13"/>
+				<textElement/>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="361" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="331" width="35" height="13"/>
+				<textElement/>
+				<text><![CDATA[NOME:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="162" y="416" width="24" height="1"/>
+			</line>
+			<line>
+				<reportElement x="574" y="416" width="24" height="1"/>
+			</line>
+			<line>
+				<reportElement x="27" y="371" width="84" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="329" y="417" width="33" height="15"/>
+				<textElement/>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="413" y="406" width="43" height="13"/>
+				<textElement/>
+				<text><![CDATA[CIDADE:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="458" y="417" width="99" height="1"/>
+			</line>
+			<line>
+				<reportElement x="574" y="372" width="24" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="3" y="313" width="183" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO DO COMPRADOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="524" y="361" width="49" height="13"/>
+				<textElement/>
+				<text><![CDATA[EMISSOR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="203" y="315" width="183" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO DO FORNECEDOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="113" y="361" width="49" height="13"/>
+				<textElement/>
+				<text><![CDATA[EMISSOR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="557" y="406" width="17" height="13"/>
+				<textElement/>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="618" y="417" width="91" height="15"/>
+				<textElement/>
+				<text><![CDATA[Ass. Farmacêutico]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="406" width="43" height="13"/>
+				<textElement/>
+				<text><![CDATA[CIDADE:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="356" width="185" height="1"/>
+			</line>
+			<line>
+				<reportElement x="413" y="356" width="185" height="1"/>
+			</line>
+			<line>
+				<reportElement x="162" y="372" width="24" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="415" y="313" width="183" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO DO COMPRADOR]]></text>
+			</staticText>
+			<line>
+				<reportElement x="63" y="386" width="123" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="412" y="421" width="58" height="13"/>
+				<textElement/>
+				<text><![CDATA[TELEFONE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="376" width="60" height="13"/>
+				<textElement/>
+				<text><![CDATA[ENDEREÇO:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="37" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="22" width="390" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="25" width="390" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Unidade mantida com recursos públicos provenientes de seus impostos e contribuições sociais]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-20" y="7" width="421" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ENDERECO_COMPLETO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="4" width="390" height="1"/>
+			</line>
+			<line>
+				<reportElement x="412" y="22" width="390" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="412" y="25" width="390" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Unidade mantida com recursos públicos provenientes de seus impostos e contribuições sociais]]></text>
+			</staticText>
+			<line>
+				<reportElement x="412" y="4" width="390" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="401" y="7" width="419" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ENDERECO_COMPLETO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

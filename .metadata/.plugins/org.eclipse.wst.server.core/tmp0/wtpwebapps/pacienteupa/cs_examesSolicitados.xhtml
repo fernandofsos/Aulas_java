@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<link rel="stylesheet" type="text/css" href="CSS/layoutCsPaciente.css" />
+	</ui:define>
+	<ui:define name="conteudo">
+
+<a4j:keepAlive beanName="exameForm" />
+
+	<rich:modalPanel id="panelStatus" autosized="true">  
+ 		<h:panelGrid columns="2"> 
+ 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 			<h:outputText value="Carregando..." />
+ 		</h:panelGrid> 
+	</rich:modalPanel>
+
+<a4j:form id="formPesquisaId">
+   
+	<div class="cabAreaPesquisa">EXAMES SOLICITADOS / REALIZADOS</div>
+	<div class="areaPesquisa">
+		<div>
+			<label>Período:</label>
+			<rich:calendar value="#{exameForm.datIniInicio}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10" />
+				<h:outputText value=" a "/>
+			<rich:calendar value="#{exameForm.datIniFim}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10"/>		
+			
+			<t:commandLink id="atendimento" action="#{exameForm.relatorioExamesSolicitados}" target="_blank" style="border:white; width: 12px; height: 12px;" title="IMPRIMIR RELATÓRIO EXAMES" >
+				<h:graphicImage id="btnPesquisar" url="IMG/pesquisa.gif" style="border:0;" />
+			</t:commandLink>	
+		</div>			
+	</div>
+	
+	<br />
+	 
+    <a4j:status id="statusPanel"
+		   	onstart="Richfaces.showModalPanel('panelStatus');" 
+		    onstop="#{rich:component('panelStatus')}.hide()">
+	</a4j:status>	
+	
+	<script type="text/javascript">
+	     function avisosPesquisa(msg) {
+		     if(msg != '')
+		     {
+			     alert(msg);
+		     }
+	     }
+	</script>
+</a4j:form>	
+</ui:define>
+</ui:composition>
+</html>

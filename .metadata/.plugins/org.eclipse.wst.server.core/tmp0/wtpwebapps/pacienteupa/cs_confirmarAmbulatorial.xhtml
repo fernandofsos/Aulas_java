@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="headHtml">
+ 
+	</ui:define>	
+	<ui:define name="conteudo">
+	<a4j:keepAlive beanName="confirmarForm" />
+				<!-- MODAL PANEL DE PROFISSIONAL -->
+				<rich:modalPanel id="panProfissional" autosized="false" width="700" height="450" resizeable="false"
+					                 headerClass="headerPanel3">
+					<!-- BARRA DE TITULO MODAL-->
+			    	<f:facet name="header">
+						<h:panelGroup>
+			       			<h:outputText value="Pesquisa de Profissional"></h:outputText>
+			       		</h:panelGroup>
+			    	</f:facet>
+			    	<f:facet name="controls">
+			    	 	<h:panelGroup>
+			        		<h:graphicImage value="IMG/fechar.png" id="fechaPanel"/>
+			        		<rich:componentControl for="panProfissional" attachTo="fechaPanel" operation="hide" event="onclick" />
+			        	</h:panelGroup>
+			    	</f:facet>
+			    	
+			    	<h:form id="formProfissional">
+			    		<fieldset style="background-color: #F5F5F5">
+			                		
+				    		<div style="height: 30px;">
+							    <div class="colLeft" style="width: 15%;">     
+				       				<label class="font12" ><b>Nome:</b></label>
+				       			</div>
+				       			<div class="colLeft largura220">
+				       				<h:inputText value="#{confirmarForm.objMarcacao.usuarioProfissional.dscUsuario}" maxlength="50" styleClass="campoTexto largura200" onblur="this.value.toUpperCase();" style="width: 450px;" id="nmMedico"/>
+				       			</div>	       			       
+				    		</div>	    		
+				    		<div style="height: 20px">
+							    <div class="colLeft" style="width: 100%;">     
+				       				<a4j:commandButton style="width: 80px; height: 20px;" oncomplete="validaAgendamento('#{confirmarForm.msgAgendamento}');" id="pesquisar" value="Pesquisar" actionListener="#{confirmarForm.pesquisarProfissional}" reRender="formProfissional"/>
+				       			</div>
+				    		</div>
+			    		</fieldset>
+				    		
+				    	<div>
+							<rich:dataTable id="tabelaProfissional"
+									onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+									onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+									value="#{confirmarForm.listaMedicos}" 
+									var="listaProfissional" 
+									rows="10"
+									rowKeyVar="linha" 
+									style="width: 680px;cursor: pointer;">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText width="5%"/>
+										</h:column>
+										<h:column>
+											<h:outputText width="65%" value="Nome" />
+										</h:column>
+										<h:column>
+											<h:outputText width="30%" value="Especialidade" />
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								
+								<rich:column align="center" width="5%" sortable="true">
+									<a4j:commandLink action="#{confirmarForm.retornarProfissional}" reRender="cdAgendamento" oncomplete="#{rich:component('panProfissional')}.hide()">
+										<h:graphicImage id="imgSelecionar" url="IMG/selecionar.png" style="border:0;" />
+										<f:setPropertyActionListener value="#{listaProfissional}" target="#{confirmarForm.objUsuarioEspecialidade}"/>						
+									</a4j:commandLink>
+								</rich:column>
+								
+								<rich:column width="65%" sortable="true">
+									<h:outputText value="#{listaProfissional.usuarioBean.dscUsuario}" />
+								</rich:column>
+								
+								<rich:column width="30%" sortable="true">
+									<h:outputText value="#{listaProfissional.especialidadeBean.dscEspecialidade}" />
+								</rich:column>
+				
+				
+								<f:facet name="footer">
+									<rich:datascroller id="ds" ajaxSingle="false" />
+								</f:facet>
+							</rich:dataTable>
+						</div>
+			    		
+			    		<script>
+							function validaAgendamento(msg)
+							{
+								if(msg != '')
+								{
+									alert(msg);
+									return;
+								}
+							}
+			
+							function validaAgendamentoChegada(msg)
+							{
+								if(msg != '')
+								{
+									alert(msg);					
+								}
+								else
+								{
+									Richfaces.hideModalPanel('panChegada');
+								}
+								
+							}
+						</script>
+			    		
+			    	</h:form>    	
+			 	</rich:modalPanel>	
+				<!-- FINAL DO MODAL PANEL DE PROFISSIONAL -->   
+				
+				<h:form id="cdAgendamento" >
+			   		<div id="geral">
+					   	<label class="cabAreaPesquisa">AGENDAMENTO AMBULATORIAL</label>  	 
+						<div class="areaPesquisa">  
+							
+							<h:panelGroup layout="block" id="pnProfissional">
+				   	    		<table width="100%">
+			              			<tr>
+			              				<td width="10%" class="font12" align="left"><b>Médico:</b></td>
+			              				<td class="font12" width="50%">
+			              				<!--  	<h:inputHidden value="confirmarForm.isnMedico"/>	-->
+			              					 
+					       				<h:selectOneMenu id="idIsnMedico" 
+															 value="#{confirmarForm.isnMedico}">
+												<f:selectItem itemValue="" itemLabel="SELECIONE"/>			 	
+												<f:selectItems value="#{confirmarForm.listaMedicosSI}" />
+												<a4j:support event="onchange" reRender="cdAgendamento" actionListener="#{confirmarForm.pesquisar}"/>
+										</h:selectOneMenu>              					 
+			              					 
+			              				</td>
+			              			</tr>
+				   	    	
+				   	    			<tr>
+			              				<td width="10%" height="30px;" class="font12" align="left"><b>Período:</b></td>
+			              				<td class="font18" height="30px;">
+			              					<rich:calendar id="datPeriodoInicio" value="#{confirmarForm.dataInicio}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)">
+			              						<a4j:support event="onchanged" reRender="cdAgendamento" actionListener="#{confirmarForm.pesquisarMedicos}"/>
+			              						<a4j:support event="oninputblur" reRender="cdAgendamento" actionListener="#{confirmarForm.pesquisarMedicos}"/>
+			              					</rich:calendar>
+				       						<span class="font12">à</span>
+											<rich:calendar id="datPeriodoFim" value="#{confirmarForm.dataFim}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)" >
+			              						<a4j:support event="onchanged" reRender="cdAgendamento" actionListener="#{confirmarForm.pesquisarMedicos}"/>
+			              						<a4j:support event="oninputblur" reRender="cdAgendamento" actionListener="#{confirmarForm.pesquisarMedicos}"/>
+											</rich:calendar>
+			              				</td>
+			              			</tr>
+				   	    			
+				   	    			<tr>
+				   	    				<td colspan="2" height="40px">
+				   	    					<a4j:commandButton id="btnPesquisar"
+								  	    					value="Pesquisar"
+												   actionListener="#{confirmarForm.pesquisar}"
+													   oncomplete="validaAgendamento('#{confirmarForm.msgAgendamento}');"
+													   styleClass="botaoModal100"				 
+															style="margin-right: 10px;"
+															reRender="cdAgendamento">
+											</a4j:commandButton>
+<!-- 
+											<a4j:commandButton id="btnImprimir"
+								  	    					value="Imprimir"
+													   styleClass="botaoModal100"				 
+															style="margin-right: 10px;"
+															reRender="cdAgendamento">					
+											</a4j:commandButton>
+ -->																			
+											
+				   	    				</td>
+				   	    			</tr>   			  
+								</table>	 			       
+			    		</h:panelGroup>	 
+			    			    			
+			    			<div>
+			    				<h:panelGroup layout="block" rendered="#{not empty confirmarForm.listaSegundaFase}">
+									<br />    			
+			    				</h:panelGroup>
+			    			</div>
+			    			
+			 				<div>
+			    				<h:panelGroup id="panPesquisa2" layout="block">
+			    					<fieldset>
+				    					<legend>
+				    						<b><h:outputText value="Ambulatório" style="font-size: 15px;" /></b>
+				    					</legend>	
+					        			<rich:dataTable id="tblData2" value="#{confirmarForm.listaSegundaFase}" 
+					        							var="rst" style="width: 100%;" rows="10" 
+					        							rowKeyVar="linha" rendered="#{not empty confirmarForm.listaSegundaFase}" 
+					        							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+														onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+					        				<f:facet name="header">
+												<rich:columnGroup>
+													<rich:column style="text-align: center;width: 5%;">
+														Atend.
+													</rich:column>
+													<rich:column style="text-align: center;">
+														Prontuario
+													</rich:column>
+													<rich:column style="text-align: center;">
+														Nome
+													</rich:column>
+													<rich:column style="text-align: center;">
+														Data
+													</rich:column>
+													<rich:column style="text-align: center;">
+														Turno
+													</rich:column>
+													<rich:column style="text-align: center;">
+														Hr. Cheg
+													</rich:column>
+													<rich:column style="text-align: center;">
+														Prioritário
+													</rich:column>
+													<rich:column style="text-align: center;">
+														TAP
+													</rich:column>
+													<rich:column style="text-align: center;">
+														Especialidade
+													</rich:column>
+													<rich:column style="text-align: center;">
+														Situação
+													</rich:column>		
+													<rich:column style="text-align: center;">
+													</rich:column>		
+												</rich:columnGroup>	
+											</f:facet>
+												
+											<rich:column style="text-align: left;">
+												<h:outputText value="#{rst.isnMarcacao}"/>
+											</rich:column>
+											<rich:column style="text-align: left;">
+												<h:outputText value="#{rst.pacienteBean.numProntuario}" />
+											</rich:column>
+											<rich:column style="text-align: left;">
+												<h:outputText value="#{rst.dscNome}" />
+											</rich:column>
+											<rich:column style="text-align: center;">
+												<h:outputText value="#{rst.escalaBean.datEscala}" converter="ConversorDeDatas" />
+											</rich:column>
+											<rich:column style="text-align: center;">
+												<h:outputText value="MANHÃ" rendered="#{rst.escalaBean.isnTurno == 1}"/>
+												<h:outputText value="TARDE" rendered="#{rst.escalaBean.isnTurno == 2}"/>
+												<h:outputText value="NOITE" rendered="#{rst.escalaBean.isnTurno == 3}"/>
+											</rich:column>
+											<rich:column style="text-align: center;">
+												<h:outputText value="#{rst.horChegada}" converter="ConversorDeHoras" />
+												<h:outputText value="h" rendered="#{rst.horChegada != null}" />
+											</rich:column>
+											<rich:column style="text-align: left;">
+												<h:outputText value="SIM" rendered="#{rst.flgPrioritario == 'S'}" title="#{rst.dscPrioritario}" style="font-size: 11px;font-weight:bold;"/>
+												<h:outputText value="NÃO" rendered="#{rst.flgPrioritario == null or rst.flgPrioritario == 'N'}"/>
+											</rich:column>
+											<rich:column style="text-align: left;">
+												<h:outputText value="SIM" rendered="#{rst.flgTap == 'S'}"/>
+												<h:outputText value="NÃO" rendered="#{rst.flgTap == null or rst.flgTap == 'N'}"/>
+											</rich:column>
+											<rich:column style="text-align: left;">
+												<h:outputText value="#{rst.tipoConsultaBean.dscTipoConsulta}" />
+											</rich:column>
+											<rich:column style="text-align: left;">
+												<h:outputText value="#{rst.marcacaoSituacaoBean.dscMarcacaoSituacao}" style="font-size: 11px;" />
+											</rich:column>
+											<rich:column style="text-align: center;">
+												<a4j:commandLink action="#{confirmarForm.entrarNoConsultorio}" reRender="formProfissional,cdAgendamento" rendered="#{rst.isnMarcacaoSituacao == 3}" onclick="if (!confirm('Confirmar entrada do paciente ?')) return false;" oncomplete="validar('#{confirmarForm.mensagem}');">
+													<h:graphicImage id="imgAmbula" url="/IMG/ambulatorio.png" style="border:0;" />
+													<f:setPropertyActionListener value="#{rst}" target="#{confirmarForm.objMarcacao}"/>						
+												</a4j:commandLink>
+												<a4j:commandLink action="#{confirmarForm.concluirAtendimento}" reRender="formProfissional,cdAgendamento" rendered="#{rst.isnMarcacaoSituacao == 4}" onclick="if (!confirm('Deseja realmente concluir este atendimento ?')) return false;" oncomplete="validar('#{confirmarForm.mensagem}');">
+													<h:graphicImage id="imgAtendido" url="/IMG/atendido.png" style="border:0;" />
+													<f:setPropertyActionListener value="#{rst}" target="#{confirmarForm.objMarcacao}"/>						
+												</a4j:commandLink>												
+											</rich:column>
+											<f:facet name="footer">
+												<rich:datascroller id="idScroll" ajaxSingle="false" />
+											</f:facet>
+					        			</rich:dataTable>
+									</fieldset>				        			
+				        		</h:panelGroup>    			
+			    			</div>   			
+			    			
+						</div>
+					</div>	
+					
+					<a4j:status id="statusPanel"
+			           onstart="Richfaces.showModalPanel('panelStatus');" 
+			           onstop="#{rich:component('panelStatus')}.hide()">
+					</a4j:status>	
+				</h:form>	
+				
+				
+				
+				
+				<!-- MODAL PANEL DE CONFIRMAR CHEGADA -->
+				
+					<rich:modalPanel id="panChegada" autosized="false" width="400" height="250" resizeable="false" headerClass="headerPanel3">
+						<!-- BARRA DE TITULO MODAL-->
+				    	<f:facet name="header">
+							<h:panelGroup>
+				       			<h:outputText value="Triagem"></h:outputText>
+				       		</h:panelGroup>
+				    	</f:facet>
+				    	<f:facet name="controls">
+				    	 	<h:panelGroup>
+				        		<h:graphicImage value="IMG/fechar.png" id="fechaPanelChegada"/>
+				        		<rich:componentControl for="panChegada" attachTo="fechaPanelChegada" operation="hide" event="onclick" />
+				        	</h:panelGroup>
+				    	</f:facet>
+				    	
+				    	<h:form id="formChegada">
+				    		<fieldset style="background-color: #F5F5F5">
+					    		<div style="height: 30px;">
+								    <div class="colLeft" style="width: 25%;">     
+					       				<label class="font12" ><b>Prioritário:</b></label>
+					       			</div>
+					       			<div class="colLeft font14" style="">
+					       				<h:selectOneRadio value="#{confirmarForm.flgPrioritario}">
+											<f:selectItem itemValue="S" itemLabel="Sim"/>
+											<f:selectItem itemValue="N" itemLabel="Não"/>
+										<a4j:support event="onclick" reRender="formChegada"/>
+										</h:selectOneRadio>
+					       			</div>	       			       
+					    		</div>
+					    		<div style="height: 30px;">
+								    <div class="colLeft" style="width: 25%;">     
+					       				<label class="font12" ><b>TAP:</b></label>
+					       			</div>
+					       			<div class="colLeft font14" style="">
+					       				<h:selectOneRadio value="#{confirmarForm.flgTap}">
+											<f:selectItem itemValue="S" itemLabel="Sim"/>
+											<f:selectItem itemValue="N" itemLabel="Não"/>
+										</h:selectOneRadio>
+					       			</div>	       			       
+					    		</div>
+					    		<h:panelGroup layout="block" style="height:80px;" id="obsPrioritario" rendered="#{confirmarForm.flgPrioritario == 'S'}">
+					    		<div style="height: 30px;">
+								    <div class="colLeft" style="width: 25%;">     
+					       				<label class="font12" ><b>Obs. Prioritário:</b></label>
+					       			</div>
+					       			<div class="colLeft largura220">
+					       				<h:inputTextarea cols="45" rows="4" id="txtObs" onkeyup="verificaTamanho(this, 400, 'lblObservacao');" onblur="upper(this);" value="#{confirmarForm.objMarcacaoChegada.dscPrioritario}" style="text-transform:uppercase"/>
+			               				<br/><label id="lblObservacao">(400 caracteres restantes)</label>
+					       			</div>	       			       
+					    		</div> 
+					    		</h:panelGroup>  		
+					    		<div style="height: 30px">
+								    <div class="colLeft" style="width: 100%;">     
+					       				<a4j:commandButton style="width: 80px; height: 20px;" id="confirmaPresenca" value="Confirmar"  oncomplete="validaAgendamentoChegada('#{confirmarForm.msgAgendamento}');"  actionListener="#{confirmarForm.confirmaPresenca}" reRender="formProfissional,cdAgendamento"/>
+					       			</div>
+					    		</div>
+				    		</fieldset>
+				    		
+				    		
+				    		<script>
+					
+								function verificaTamanho(campo, tamMax, resposta)
+								{
+									var strLen;
+									strLen = 0;
+									if(campo.value.length > 0)
+									{
+										strLen = strLen + campo.value.length;
+									}
+									if (strLen == 1)
+								   	{
+									   	if(campo.value.substring(0,1) == " ")
+										{
+									       	campo.value = "";
+											strLen = strLen - 1;
+										}
+								   	}
+									if (strLen > tamMax)
+									{
+										campo.value = campo.value.substring(0,tamMax);
+										strLen = strLen - 1;
+										return;
+									}
+									if(resposta != null)
+									{	
+										if(document.forms['cdAgendamento'].elements[resposta] != null)
+										{
+											document.forms['cdAgendamento'].elements[resposta].value = (tamMax - strLen);
+										}
+										else
+										{
+											document.getElementById(resposta).innerHTML = '(' + (tamMax - strLen) + ' caracteres restantes)';
+										}
+									}
+								}
+
+							</script>
+				    		
+				    	</h:form>    	
+				 	</rich:modalPanel>
+				 	
+				 	<script type="text/javascript">
+				 		function validar(msg)
+								{
+									if(msg != '')
+									{
+										alert(msg);
+									}
+								}		
+				 	</script>
+				<!-- FINAL DO MODAL PANEL DE PROFISSIONAL -->   	
+	</ui:define>
+	</ui:composition>
+</html>

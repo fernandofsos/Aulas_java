@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
+    version="1.2">
+    
+    <!-- Application Configuration -->
+	<application>
+		<!-- Facelet Configuration -->
+		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
+		
+		<!--  bundle configuration -->
+		<message-bundle>ApplicationResources</message-bundle>		
+		<resource-bundle>
+			<base-name>ApplicationResources</base-name>
+			<var>bundle</var>			
+		</resource-bundle>		
+	</application>
+
+
+	<managed-bean>
+		<managed-bean-name>sistemaForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.SistemaForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<managed-bean-name>loginForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.LoginForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>formacaoForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.FormacaoForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>	
+	
+	<managed-bean>
+		<managed-bean-name>conselhoForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.ConselhoForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+			
+	<managed-bean>
+		<managed-bean-name>entidadeForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.EntidadeForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<managed-bean-name>telaAcaoForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.TelaAcaoForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+		
+	<managed-bean>
+		<managed-bean-name>setorForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.SetorForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>	
+	
+	<managed-bean>
+		<managed-bean-name>grupoForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.GrupoForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>usuarioForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.UsuarioForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>	
+	
+	<managed-bean>
+		<managed-bean-name>permissaoForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.PermissaoForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>	
+
+	<managed-bean>
+		<managed-bean-name>senhaForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.SenhaForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>alteracaoRecuperacaoSenhaForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.AlteracaoRecuperacaoSenhaForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>categoriaForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.CategoriaForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>gerenciarUsuarioForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.GerenciarUsuariosForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+		
+	<managed-bean>
+		<managed-bean-name>especialidadeForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.EspecialidadeForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>permissaoLocalForm</managed-bean-name>
+		<managed-bean-class>br.org.isgh.seguranca.forms.PermissaoLocalForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>formacao</from-outcome>
+			<to-view-id>/formacao.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>sistema</from-outcome>
+			<to-view-id>/sistema.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>conselho</from-outcome>
+			<to-view-id>/conselho.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>telaAcao</from-outcome>
+			<to-view-id>/telaAcao.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>entidade</from-outcome>
+			<to-view-id>/entidade.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>setor</from-outcome>
+			<to-view-id>/setor.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>grupo</from-outcome>
+			<to-view-id>/grupo.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>usuario</from-outcome>
+			<to-view-id>/usuario.xhtml</to-view-id>
+		</navigation-case>		
+		<navigation-case>
+			<from-outcome>permissao</from-outcome>
+			<to-view-id>/permissao.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>senha</from-outcome>
+			<to-view-id>/senha.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>categoria</from-outcome>
+			<to-view-id>/categoria.jsf</to-view-id>
+		</navigation-case>	
+		
+		<navigation-case>
+			<from-outcome>gerenciarUsuarios</from-outcome>
+			<to-view-id>/gerenciarUsuarios.jsf</to-view-id>
+		</navigation-case>	
+		
+		
+		<navigation-case>
+			<from-outcome>logout</from-outcome>
+			<to-view-id>/login.jsf</to-view-id>
+		</navigation-case>	
+		<navigation-case>
+			<from-outcome>alterarSenha</from-outcome>
+			<to-view-id>/alterarSenha.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>recuperarSenha</from-outcome>
+			<to-view-id>/recuperarSenha.jsf</to-view-id>
+		</navigation-case>	
+		<navigation-case>
+			<from-outcome>especialidade</from-outcome>
+			<to-view-id>/especialidade.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>permissaoLocal</from-outcome>
+			<to-view-id>/permissaoLocal.jsf</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>login.jsf</display-name>
+		<from-view-id>/login.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>sucesso</from-outcome>
+			<to-view-id>/principal.xhtml</to-view-id>
+		</navigation-case>	
+		<navigation-case>
+			<from-outcome>loginAlterarSenha</from-outcome>
+			<to-view-id>/alterarSenha.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>loginRecuperarSenha</from-outcome>
+			<to-view-id>/recuperarSenha.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>alterarSenha.jsf</display-name>
+		<from-view-id>/alterarSenha.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>alterarSenha</from-outcome>
+			<to-view-id>/alterarSenha.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>recuperarSenha.jsf</display-name>
+		<from-view-id>/recuperarSenha.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>recuperarSenha</from-outcome>
+			<to-view-id>/recuperarSenha.xhtml</to-view-id>
+		</navigation-case>		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>sistema.jsf</display-name>
+		<from-view-id>/sistema.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>sistema</from-outcome>
+			<to-view-id>/sistema.jsf</to-view-id>
+		</navigation-case>		
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>formacao.jsf</display-name>
+		<from-view-id>/formacao.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>formacao</from-outcome>
+			<to-view-id>/formacao.jsf</to-view-id>
+		</navigation-case>		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>conselho.jsf</display-name>
+		<from-view-id>/conselho.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>conselho</from-outcome>
+			<to-view-id>/conselho.jsf</to-view-id>
+		</navigation-case>		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>telaAcao.jsf</display-name>
+		<from-view-id>/telaAcao.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>telaAcao</from-outcome>
+			<to-view-id>/telaAcao.jsf</to-view-id>
+		</navigation-case>		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>setor.jsf</display-name>
+		<from-view-id>/setor.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>setor</from-outcome>
+			<to-view-id>/setor.jsf</to-view-id>
+		</navigation-case>		
+	</navigation-rule>	
+	
+	<navigation-rule>
+		<display-name>senha.jsf</display-name>
+		<from-view-id>/senha.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>senha</from-outcome>
+			<to-view-id>/senha.jsf</to-view-id>
+		</navigation-case>		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>categoria.jsf</display-name>
+		<from-view-id>/categoria.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>categoria</from-outcome>
+			<to-view-id>/categoria.jsf</to-view-id>
+		</navigation-case>		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>especialidade.jsf</display-name>
+		<from-view-id>/especialidade.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>especialidade</from-outcome>
+			<to-view-id>/especialidade.jsf</to-view-id>
+		</navigation-case>		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>permissao.jsf</display-name>
+		<from-view-id>/permissao.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>permissao</from-outcome>
+			<to-view-id>/permissao.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>grupo</from-outcome>
+			<to-view-id>/grupo.jsf</to-view-id>
+		</navigation-case>		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>grupo.jsf</display-name>
+		<from-view-id>/grupo.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>grupo</from-outcome>
+			<to-view-id>/grupo.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>permissao</from-outcome>
+			<to-view-id>/permissao.jsf</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>*</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>inicio</from-outcome>
+			<to-view-id>/principal.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<converter>
+	  <converter-id>simpleIndexConverter</converter-id>
+	  <converter-class>br.org.isgh.seguranca.util.jsf.SimpleIndexConverter</converter-class>
+	</converter>
+	<converter>
+	  <converter-id>multipleIndexConverter</converter-id>
+	  <converter-class>br.org.isgh.seguranca.util.jsf.MultipleIndexConverter</converter-class>
+	</converter>	
+	
+	<lifecycle>
+		<phase-listener>br.org.isgh.seguranca.util.AutorizacaoListener</phase-listener>
+	</lifecycle>	
+	
+</faces-config>

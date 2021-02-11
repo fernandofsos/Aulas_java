@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">	
+	<ui:define name="conteudo">
+	<a4j:keepAlive beanName="interconsultaForm" />
+	
+	<h:form id="cdInternacao" >
+   	<div>
+       <div class="quadroPaciente">
+     	  <div class="col385"  style="margin-right: 10px"> 
+          	 <label>Nome:</label><br/>
+		 	 <h:outputText styleClass="campoVazio400 col385" value="#{interconsultaForm.objInterconsulta.internacao.paciente.dscNome}" />
+          </div>
+          <div class="col385">
+             <label>Nome Mãe:</label><br/>
+		     <h:outputText styleClass="campoVazio400 col385" value="#{interconsultaForm.objInterconsulta.internacao.paciente.dscMae}" />
+          </div>
+          <div class="col385" style="margin-right: 10px">
+          	<div class="col190" style="margin-right: 5px"> 
+            	 <label>Sexo:</label><br/>
+		     	<h:outputText styleClass="campoVazio400 col180" value="#{interconsultaForm.objInterconsulta.internacao.paciente.sexo.dscSexo}" />
+          	</div>
+          	<div class="col190"> 
+           		 <label>Data Nascimento:</label><br/>
+		     	<h:outputText styleClass="campoVazio400 col190" value="#{interconsultaForm.objInterconsulta.internacao.paciente.datNascimento}" >
+		     		<f:convertDateTime pattern="dd/MM/yyyy" />
+		     	</h:outputText>
+          	</div>
+          </div>
+          <div class="col385">
+             <label>Enfermaria/Leito:</label><br/>
+		     <h:outputText styleClass="campoVazio400 col385" value="#{interconsultaForm.objInterconsulta.enfermaria}.#{interconsultaForm.objInterconsulta.leito}" />
+          </div>   
+       </div>
+       <br/>          		    		
+   	   <h3>SOLICITAÇÃO</h3>
+   	   <div class="quadroPaciente">
+   	       <div class="col385"> 
+   	           <label>Urgente:</label>               
+   			   <h:selectOneRadio id="radioCondPaciente" value="#{interconsultaForm.objInterconsulta.flgUrgente}" 
+   				                  readonly="true">
+					<f:selectItem id="condPaciente1" itemLabel="Sim" itemValue="S" />
+					<f:selectItem id="condPaciente2" itemLabel="Não" itemValue="N" />
+			   </h:selectOneRadio>	
+			   <br/>		   
+          	   <label>Médico solicitante:</label><br />
+		 	   <h:outputText styleClass="campoVazio largura300" 
+		 	                 value="#{interconsultaForm.objInterconsulta.profissionalSolic.dscUsuario}" />
+		 	   <br/><br/>
+               <label>Especialidade:</label><br/>
+               <h:outputText styleClass="campoVazio largura300" 
+		 	                 value="#{interconsultaForm.objInterconsulta.especialidade.dscEspecialidade}" />		  	   
+           </div> 
+     	   <div class="col385">
+         	   <label>Interconsulta:</label><br/>
+		 	   <h:inputTextarea style="width: 370px; height: 160px"
+		 	                    value="#{interconsultaForm.objInterconsulta.dscInterconsulta}" 
+		 	                    readonly="true"/>
+		   </div>                               
+	   </div>
+	   <br/>
+       <h3>PARECER</h3>
+       <div class="quadroPaciente">       
+   	   		<div class="col385">
+   	   		    <div style="float: left; margin-right: 10px">
+	    	   		<label>Data:</label>
+		    		<rich:calendar datePattern="dd/MM/yyyy" 
+					   id="inputdatProgramacao"								   								      
+					   enableManualInput="true"  
+					   oninputkeydown="formataData(this);"								   								   
+					   converter="ConversorDeDatas"								   					
+					   value="#{interconsultaForm.objInterconsulta.datParecer}" />
+				</div>
+				<div style="float: left;">
+            		<label>Hora:</label>
+		     		<h:inputText value="#{interconsultaForm.objInterconsulta.horReferencia}"
+		     					onkeyup="mascaraHora(this);"
+								maxlength="5"							
+								style="width: 50px" >
+						<f:validator validatorId="ValidadorHora" />
+					</h:inputText>			
+        		</div>	  
+        		<br style="clear:both"/><br/>
+        		<label>Referência:</label><br />
+		  	 	<h:selectOneMenu id="dropDownReferencia" 
+		  	 	                 value="#{interconsultaForm.objInterconsulta.referencia.isnReferencia}" 
+		  	 	                 style="width: 360px">
+				   	<f:selectItems value="#{interconsultaForm.sliReferencia}" />
+			 	</h:selectOneMenu>
+		        <br /><br/>	
+		     	<label>Profissional:</label><br />
+		  	 	<h:selectOneMenu id="dropDownProfissional" 
+		  	 	                 value="#{interconsultaForm.objInterconsulta.profissionalResp.isnUsuario}"
+		  	 	                 style="width: 360px">
+				   	<f:selectItems value="#{interconsultaForm.sliProfissional}" />
+			 	</h:selectOneMenu> 						
+        	</div>        	
+		 	<div class="col385">
+            	<label>Parecer:</label><br/>
+		     	<h:inputTextarea value="#{interconsultaForm.objInterconsulta.dscParecer}"
+		     	                 style="width: 370px; height: 160px"
+		     	                 onkeyup="limitarTamanhoCampo(this,1000)" />
+        	</div>        	
+        </div>	
+		<div style="margin-top: 10px; text-align: center">
+   			<a4j:commandButton id="btnGrava" 
+			  	    image="IMG/botaoGravar.gif"
+			  	    action="#{interconsultaForm.gravarExame}"
+			  	    oncomplete="avisosErros()"
+			  	    style='margin-right: 10px' />
+				  	    		  				
+			<h:commandButton id="InculirNotificacaoCidadao" 
+			  	    image="IMG/botaoCancelar.gif"
+					style='margin-right: 10px' 
+					action="cdInterconsultaCsInterconsulta" 
+					immediate="true">
+		   </h:commandButton>
+		</div>    
+		<br />
+		<br />
+		<br />    
+   	  </div> 
+	  <script type="text/javascript">
+	 		function avisosErros(erro) {		
+               if (erro==1) {
+                   alert("Informe a data do parecer.");
+               } else if (erro==2) {
+            	   alert("Informe a hora.");
+               }
+	  		}			
+		</script>	
+	</h:form>
+</ui:define>
+</ui:composition>
+</html>

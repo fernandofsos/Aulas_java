@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="conteudo">	
+	<style>
+		.input-date, .input-text{
+			height: 18px;
+			border: 1px solid #b0b0b0;
+			font-size: 11px !important;
+			text-transform: uppercase;
+			margin-left: 50px;
+		}
+		
+		.selection label{
+			font-size: 11px !important;
+			margin-left: 33px !important;
+		}
+		.selection{
+			font-size: 11px !important;
+			border: 1px solid #b0b0b0;
+			margin-left: 33px !important;
+		}
+
+	</style>
+	<!-- KEEPALIVE -->
+	<a4j:keepAlive beanName="plantaoDiariaForm"></a4j:keepAlive>
+	
+		<rich:modalPanel id="confirmationCancelamento" autosized="true" width="400" resizeable="false">
+		<f:facet name="header">
+	   		<h:panelGroup>
+				<h:graphicImage value="/IMG/alerta_small.png" style="border:0; margin-right:10px; vertical-align:middle;" />
+				<h:outputText value="Mensagem de Confirmação" style="font-size:12px; font-weight: bold;"/>
+			</h:panelGroup>
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidePanelConfirm" />
+				<rich:componentControl for="confirmationCancelamento" attachTo="hidePanelConfirm" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+   		<h:form id="frmConfirmCancel">
+			<fieldset class="fsPepResp">
+				<div>
+					<label id="lblConfirmCancel" style="font-size: 11px; color: black;">Essa ação não poderá ser desfeita. Deseja cancelar este plantão?</label>
+				</div>
+			</fieldset>
+			<br clear="all"/>
+			<div style="text-align:center; margin-top:10px">
+				<a4j:commandButton id="btnOkConfirmCancel" 
+									action="#{plantaoDiariaForm.cancelarPlantaoDiaria}" 
+									oncomplete="if(avisosValidacaoConsulta(#{plantaoDiariaForm.codigoErro})){alertCustomizado('Plantão cancelado com sucesso.');Richfaces.hideModalPanel('confirmationCancelamento');}"
+									reRender="dtPlantaoDiaria, totalRegs" 
+									value="Sim"  
+									styleClass="botaoModal" 
+									style="width:100px;">
+				</a4j:commandButton>
+				<a4j:commandButton id="btnCancelConfirmCancel"  value="Não"  styleClass="botaoModal" style="width:100px; margin-left: 20px;">
+					<rich:componentControl for="confirmationCancelamento" attachTo="btnCancelConfirmCancel" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+
+	</rich:modalPanel>
+	
+	<!-- MODAL CADASTRO DE PLANTAO -->
+	<rich:modalPanel id="panelEdicao" height="425" width="800" resizeable="false" headerClass="headerPanel3">
+		<f:facet name="header">
+			<h:outputText value="CADASTRAR PLANTÃO"></h:outputText>		
+		</f:facet>
+		
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="fechaCl" />
+				<rich:componentControl for="panelEdicao" attachTo="fechaCl" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form id="EdicaoClinica">
+			<div>
+				<div style="font-size: 12px;margin-bottom: 7px;">
+					<label>Data:</label>
+					<rich:calendar value="#{plantaoDiariaForm.dataCadastro}"
+									datePattern="dd/MM/yyyy"
+									enableManualInput="false"
+									cellWidth="26px"
+									cellHeight="24px"
+									inputClass="input-date"
+									style="font-size: 12px; width:210px; margin-left: 15px; margin-right: 3px;">
+						<a4j:support event="onchange" process="this" reRender="tableProfissional" action="#{plantaoDiariaForm.carregaLstPlantaoDiaria}" />
+					</rich:calendar>
+	      		</div> 
+				<div style="font-size: 12px; margin-bottom: 7px;">
+					<label>Período:</label>
+					<h:selectOneMenu styleClass="selection" value="#{plantaoDiariaForm.objPlantaoEscala.isnPlantaoEscala}">
+						<f:selectItems styleClass="label" value="#{plantaoDiariaForm.lstPeriodo}"/>
+						<a4j:support event="onchange" process="this" reRender="tableProfissional" action="#{plantaoDiariaForm.carregaLstPlantaoDiaria}" />
+					</h:selectOneMenu> 
+				</div>
+				<div style="font-size: 12px;margin-bottom: 7px;">
+					<label>Profissional:</label>
+					<h:inputText maxlength="100"
+									id="nomeProfissional"
+									styleClass="campoTexto campoTextoSemColar input-text"
+									value="#{plantaoDiariaForm.nomeProfissional}"
+									style="width:465px;  margin-right: 10px; margin-left:10px; text-transform:uppercase;"/>
+					<a4j:commandLink action="#{plantaoDiariaForm.adicionarProfissional}"
+										oncomplete="avisosValidacao(#{plantaoDiariaForm.avisoValidacao}, 'panelEdicao', true, '')"
+										reRender="tableProfissional, nomeProfissional"
+										title="ADICIONAR PROFISSIONAL">
+						<h:graphicImage value="IMG/add.png" style="border:0; vertical-align: top; margin-left: 5px; margin-top: -2px;"/>
+					</a4j:commandLink>
+				</div>
+				<rich:dataTable id="tableProfissional"
+								value="#{plantaoDiariaForm.lstPlantaoDiaria}" 
+								var="item" rows="8"
+								style="width:99%;" reRender="dsCultura">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<h:column>
+								<h:outputText value="Nome do Profissional" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Data de Cadastro" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Escala" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Remover" />
+							</h:column>
+						</rich:columnGroup>
+					</f:facet>
+					<rich:column width="50%" align="center">
+						<h:outputText value="#{item.nomeProfissional}"/>
+					</rich:column>
+					<rich:column width="15%" align="center">
+						<h:outputText value="#{item.datCadastro}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-3" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="28%" align="center">
+						<h:outputText rendered="#{item.plantaoEscala != null}" value="#{item.plantaoEscala.dscPeriodo} - #{item.plantaoEscala.horInicio} - #{item.plantaoEscala.horFinal}"/>
+						<h:outputText rendered="#{item.plantaoEscala == null}" value="#{plantaoDiariaForm.txtLabelPeriodo}"/>
+					</rich:column>
+					<rich:column width="7%" align="center">
+						<a4j:commandLink action="#{plantaoDiariaForm.removerProfissional}"
+							reRender="tableProfissional"
+							rendered="#{item.isnPlantaoDiaria == null}"
+							title="REMOVER PROFISSIONAL">
+							<h:graphicImage value="IMG/icone_excluir.gif" style="border:0; vertical-align: top"/>
+							<f:setPropertyActionListener target="#{plantaoDiariaForm.nomeProfissional}" value="#{item.nomeProfissional}"/>
+						</a4j:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="dsProfissional" ajaxSingle="false" />
+					</f:facet>
+				</rich:dataTable>					             
+			</div>
+			<div style="text-align: center; margin-top: 10px">
+				<a4j:commandButton id="btnCadastrar" value="Cadastrar" 
+						   action="#{plantaoDiariaForm.inserirPlantaoDiaria}"
+						   oncomplete="avisosValidacao(#{plantaoDiariaForm.avisoValidacao}, 'panelEdicao', false, '')"
+						   style="margin-right: 10px"
+						   reRender="idPlantaoForm:dtPlantaoDiaria, idPlantaoForm:totalRegs"
+						   styleClass="botaoModal">				
+				</a4j:commandButton>
+				
+				<a4j:commandButton id="btnCancel"  
+				                   value="Cancelar" 
+				                   styleClass="botaoModal"
+				                   style="margin-right: 10px">
+					<rich:componentControl for="panelEdicao" attachTo="btnCancel" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>	
+	</rich:modalPanel>
+	<!-- FIM MODAL CADASTRO DE PLANTAO -->
+	
+	<h:form id="idPlantaoForm">		
+		<div class="cabAreaPesquisa">PLANTÃO</div>
+		<div class="areaPesquisa">
+			<rich:spacer height="12px"/><br/>
+			<div style="width: 270px; float: left; margin-bottom: 6px;">
+				<label>Data de Cadastro:</label>
+				<rich:calendar value="#{plantaoDiariaForm.dataConsulta}"
+								datePattern="dd/MM/yyyy"
+								enableManualInput="false"
+								cellWidth="26px"
+								cellHeight="24px"
+								style="width:210px; margin-left: 15px; margin-right: 3px;">
+				</rich:calendar>
+			</div>
+			<div style="width: 50px; float: left;">
+	   			<a4j:commandButton image="IMG/pesquisa.gif" id="btnPesquisa" 
+	       		    	    action="#{plantaoDiariaForm.pesquisar}" 
+	    					oncomplete="avisosValidacaoConsulta(#{plantaoDiariaForm.codigoErro})"		    				
+	    					reRender="dtPlantaoDiaria, totalRegs" />
+	   			<rich:hotKey key="return" selector="#inputPesquisa" 
+			   	             handler="#{rich:element('btnPesquisa')}.click()"/>	
+			</div>
+			
+			<div style="margin-top: -10px;float: none;">
+		   		<label>Resultado:</label>
+		   		<h:outputText class="totalizador2" value="#{plantaoDiariaForm.totalPlantaoDiaria}" id="totalRegs"/> 
+		   	</div>
+		    <div style=" margin-top: -45px; float: right; margin-right: 345px;">	 
+				<a4j:commandButton value="Cadastrar plantão"
+								action="#{plantaoDiariaForm.novoPlantao}"
+			                   oncomplete="Richfaces.showModalPanel('panelEdicao')" 
+			                   reRender="panelEdicao"
+			                   styleClass="botaoNovoItem"
+			                   ajaxSingle="true">
+				</a4j:commandButton>
+			</div>
+		</div>
+		<br style="clear:both;"/>
+	    
+		<!-- DATATABLE -->
+		<rich:dataTable id="dtPlantaoDiaria"
+						onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+			            onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+						value="#{plantaoDiariaForm.lstPlantaoDiariaConsulta}" 
+						var="item"
+						width="100%"
+						reRender="ds"
+						rows="20" >
+			<f:facet name="header">
+				<rich:columnGroup>
+					<h:column><h:outputText value="Data de Cadastro" /></h:column>
+					<h:column><h:outputText value="Nome Profissional" /></h:column>
+					<h:column><h:outputText value="Escala" /></h:column>
+					<h:column><h:outputText value="Cancelar" /></h:column>					
+				</rich:columnGroup>
+			</f:facet>
+
+			<rich:column style="text-align: center">
+				<h:outputText value="#{item.datCadastro}">
+					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-3" />
+				</h:outputText>
+			</rich:column>
+			
+			<rich:column width="50%" align="center">
+				<h:outputText value="#{item.nomeProfissional}"/>
+			</rich:column>
+				
+			<rich:column width="28%" align="center">
+				<h:outputText rendered="#{item.plantaoEscala != null}" value="#{item.plantaoEscala.dscPeriodo} - #{item.plantaoEscala.horInicio} - #{item.plantaoEscala.horFinal}"/>
+				<h:outputText rendered="#{item.plantaoEscala == null}" value="#{plantaoDiariaForm.txtLabelPeriodo}"/>
+			</rich:column>
+			<rich:column width="7%" align="center">
+				<a4j:commandButton id="cancelarPlantao"
+								   value="Cancelar"
+								   oncomplete="Richfaces.showModalPanel('confirmationCancelamento')"
+								   style="margin-right: 2px;">
+					<f:setPropertyActionListener value="#{item}" target="#{plantaoDiariaForm.objPlantaoDiariaCancelamento}" />
+				</a4j:commandButton>
+			</rich:column>
+				
+			<!-- RODAPE DA TABELA -->	
+			<f:facet name="footer">
+		       	<rich:datascroller id="dsTb" ajaxSingle="false" />
+	        </f:facet>
+		</rich:dataTable>
+		<br/>
+		<br/>
+		<br/>
+	</h:form>
+	<script type="text/javascript">
+	<!--
+		function avisosValidacaoConsulta(erro) {
+			if (erro == 1) {
+				alertCustomizado("Preencha uma data válida.");
+		    	return false;
+			} else if (erro == 2) {
+				alertCustomizado("Erro no cancelamento. Contate o NTI.");
+		    	return false;
+			} else {
+		    	return true;
+			} 	
+	    }
+	
+		function avisosValidacao(erro, panel, show, msg) {
+			if (erro == 1) {
+				alertCustomizado("Data inválida.");
+		    	return false;
+			} else if (erro == 2) {
+				alertCustomizado("Não é possível cadastrar plantão para datas passadas.");
+		    	return false;
+			} else if(erro == 3) {
+				alertCustomizado("Preencha o campo profissional.");
+				return false;
+			} else if (erro == 4){
+				alertCustomizado("Escolha um período para realizar o cadastro.");
+				return false;
+			} else {
+		    	if (show) {
+		        	Richfaces.showModalPanel(panel);
+		        	return true;
+		    	} else {
+		    		Richfaces.hideModalPanel(panel);
+		    		return true;
+		    	}	 	
+			} 	
+	    }
+	
+	//-->
+	</script>	
+</ui:define>
+</ui:composition>
+
+</html>

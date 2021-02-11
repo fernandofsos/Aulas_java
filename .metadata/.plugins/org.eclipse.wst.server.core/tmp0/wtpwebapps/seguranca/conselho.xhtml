@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a4j="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:t="http://myfaces.apache.org/tomahawk"
+				xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+				template="crud_template.xhtml">
+	
+	<ui:param name="crudBean" value="#{conselhoForm}" />
+	
+	
+	<ui:define name="saveStateObjectsDefined">		
+		<t:saveState value="#{crudBean.entity}" />
+	</ui:define>
+	
+	
+	<ui:define name="requiredFieldsMessage">
+		<h:outputText value="#{bundle.todosCamposObrigatorios}" rendered="#{crudBean.updating}"/>
+		<h:outputText value="#{bundle.peloMenosUmCamposObrigatorio}" rendered="#{crudBean.searching}"/>
+	</ui:define>
+	
+	<ui:define name="content">
+		
+		<!-- Painel de Busca -->
+		<h:panelGroup id="panelGroupDePesquisa" style="height:100%;width:100%;" rendered="#{crudBean.searching}">
+			<f:subview id="viewBusca">
+				<table class="tabela">		
+					<tr>
+						<td class="tdCor" width="200px">Descrição *</td>
+						<td class="tdBranco">
+							<h:inputText size="80" maxlength="100" id="dscConselho" onblur="upper(this);" value="#{crudBean.searchObject.dscConselho}"/>						
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="tdCor" width="200px">Data do Cadastro *</td>
+						<td class="tdBranco">
+							<rich:calendar value="#{crudBean.searchObject.filtro.datCadastroInicio}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event,this);" maxlength="10"/>
+								<h:outputText value=" a "/>
+							<rich:calendar value="#{crudBean.searchObject.filtro.datCadastroFim}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event,this);" maxlength="10"/>						
+						</td>
+					</tr>
+				</table>
+				<mj:focus for="formulario:viewBusca:dscConselho" />
+			</f:subview>
+		</h:panelGroup>
+		
+		
+		<!-- Painel de Cadastro -->		
+		<h:panelGroup id="panelGroupDeEdicao" style="height:100%;width:100%;" rendered="#{crudBean.updating}">
+			<f:subview id="viewEdicao">
+				<h:panelGroup id="panelGroupDeAlterar" rendered="#{crudBean.editing}" style="height:100%">
+					<table class="tabela">
+						<tr>
+							<td class="tdCor" width="200px">Código </td>
+							<td class="tdBranco">
+								<h:outputText value="#{crudBean.entity.isnConselho}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tdCor" width="200px">Usuário de Inclusão </td>
+							<td class="tdBranco">
+								<h:outputText value="#{crudBean.entity.usuarioBean.dscUsuario}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tdCor" width="200px">Data de Inclusão </td>
+							<td class="tdBranco">
+								<h:outputText value="#{crudBean.entity.datCadastro}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tdCor" width="200px">Ativo</td>
+							<td class="tdBranco">
+								<div style="width:300px;">
+									<h:selectOneRadio value="#{crudBean.entity.flgAtivo}" styleClass="radioButton">
+													<f:selectItem itemValue="S" itemLabel="SIM"/>
+													<f:selectItem itemValue="N" itemLabel="NÃO"/>
+									</h:selectOneRadio>
+								</div>	
+							</td>
+						</tr>
+					</table>		
+				</h:panelGroup>
+				
+				<table class="tabela">
+					<tr>
+						<td class="tdCor" width="200px">Descrição *</td>
+						<td class="tdBranco">
+							<h:inputText size="80" maxlength="60" id="dscConselho" onblur="upper(this);" value="#{crudBean.entity.dscConselho}"  disabled="#{crudBean.editing}" />
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Sigla *</td>
+						<td class="tdBranco">
+							<h:inputText size="20" maxlength="10" id="sglConselho" onblur="upper(this);" value="#{crudBean.entity.sglConselho}"  rendered="#{crudBean.inserting}"/>
+							<h:outputText value="#{crudBean.entity.sglConselho}" rendered="#{crudBean.updating}"/>
+						</td>
+					</tr>
+				</table>
+						
+				
+				<mj:focus for="formulario:viewEdicao:dscConselho" />
+			</f:subview>
+		</h:panelGroup>
+	</ui:define>
+	
+	
+	<ui:define name="list">
+	<!-- Painel de resultado da busca-->
+		<h:panelGroup id="panelGroupDeListagem" style="height:100%;width:100%;" rendered="#{crudBean.searching}">
+			<f:subview id="viewListagem">
+				<rich:dataTable id="tblData" value="#{crudBean.searchResult}" binding="#{crudBean.tblData}" var="rst" style="width: 100%;" rowClasses="par,impar">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<rich:column style="width: 5%; text-align: center;">
+								Código
+							</rich:column>
+							<rich:column style="width: 44%; text-align: center;">
+								Descrição
+							</rich:column>
+							<rich:column style="width: 10%; text-align: center;">
+								Sigla
+							</rich:column>						
+							<rich:column style="width: 10%; text-align: center;">
+								Data de Inclusão
+							</rich:column>
+						    <rich:column style="width: 10%; text-align: center;">
+								Ativo
+							</rich:column>
+							<rich:column style="width: 3%; text-align: center;"/>
+						</rich:columnGroup>
+					</f:facet>
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.isnConselho}" />
+					</rich:column>
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.dscConselho}" />
+					</rich:column>
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.sglConselho}" />
+					</rich:column>
+					<rich:column style="text-align: center;">
+						<h:outputText value="#{rst.datCadastro}" />
+					</rich:column>
+					<rich:column style="text-align: center;">
+						<h:outputText value="#{rst.flgAtivo == 'S'?'SIM':'NÃO'}" />
+					</rich:column>
+					<rich:column style="text-align: center;">
+						<a4j:commandButton image="/imagens/icone_alterar.gif" style="border:white; width: 12px; height: 12px;" title="ALTERAR" actionListener="#{crudBean.preparaAlterar}" reRender="formulario, panelTitle" />
+					</rich:column>					
+				</rich:dataTable>
+			</f:subview>
+		</h:panelGroup>
+	</ui:define>		
+</ui:composition>

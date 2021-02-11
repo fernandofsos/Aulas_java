@@ -1,0 +1,2700 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich"
+	  xmlns:t="http://myfaces.apache.org/tomahawk">
+
+<head>
+	<!-- cd_prescricao_item_pep.xhtml -->
+	<a  href="#" id="inputFoco"></a>
+</head>
+
+<body>
+	<script src="js/sweetalert.min.js"></script>
+	<!-- script src="js/sweetalert2.all.min.js"></script -->
+	<!-- script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.js"></script -->
+	<script>
+	<!--
+		function setup(ed){
+			ed.onKeyUp.add(
+				function (ed, evt) {
+					document.getElementById('deslen').value = tinyMCE.activeEditor.getContent().length;
+					if(tinyMCE.activeEditor.getContent().length > 4000){
+						tinyMCE.activeEditor.setContent(tinyMCE.activeEditor.getContent().substring(0,4000));
+					}
+				}
+			);
+		};
+	//-->
+	</script>
+	<style>
+	<!--
+	    .rf-panel-header {
+	    	color: #0054BD;
+	    }
+	    .panel {
+	    	vertical-align: top;
+	    }
+	    .top {
+	     	width: 200px;
+	     	height: 100px;
+	    }
+	    .head2 {
+	     	height: 18px;
+	     	text-align: center;
+	     	vertical-align: middle;
+	     	padding: 4px 0;
+	    }
+	    .pbody {
+	     	height: 185px;
+	     	/*overflow: auto;*/
+	    }
+	    .tblResumo td{
+	    	width:50%;
+	    }
+	    .textEmpty{
+	    	font-size:110%;
+	    	font-weight:bold;
+	    	line-height:40px;
+	    	color:grey;
+	    }
+	    .scrolls{
+	        width:300px;
+	        height:80px;
+	        overflow:auto;
+	    }
+	    .col{
+	    	width:90%;
+	    }
+	    .fonte11 td {
+		    font-size: 12px;
+		}
+	    /* .areaPesquisa { 
+	    	padding: 10px; 
+	    	background: #BED6F8; 
+	    	margin: 0 0 10px 0; 
+	        border: solid 1px #bbb; 
+	        display:block
+	    } */
+	//-->    
+	</style>
+	<script>
+	<!--
+		function confirmaDeletar(){
+			if(confirm("Confirma deletar esse item?")) return true;
+			else return false;
+		}
+	
+		function confirmaSuspender(){
+			if(confirm("Confirma suspender esse item?")) return true;
+			else return false;
+		}
+	-->
+	</script>
+	<a4j:keepAlive beanName="emergenciaForm" />
+	<a4j:keepAlive beanName="prescricaoForm" />
+	<a4j:keepAlive beanName="templateForm" />
+	<a4j:keepAlive beanName="prescricaoPadraoForm" />
+	
+	<rich:modalPanel id="panelTempoFases" autosized="false" width="810" height="400" resizeable="false" headerClass="headerPanel3" >	  	
+	   	<f:facet name="controls">
+	   	 	<h:panelGroup>
+	       		<h:graphicImage value="IMG/fechar.png" id="fechaPanelF" />
+	       		<rich:componentControl for="panelTempoFases" attachTo="fechaPanelF" operation="hide" event="onclick" />
+	       	</h:panelGroup>
+	   	</f:facet>
+	   	
+   		<h:form id="frmTempoFases">
+  			<rich:simpleTogglePanel oncollapse="return false;" id="togglePrimeiraDose2" switchType="client">
+		   		<f:facet name="header">DEFINIÇÃO DE TEMPO E VAZÃO</f:facet>  
+				<div style="height:290px; overflow:scroll; overflow-y:scroll; overflow-x:hidden;">
+					<h:panelGrid columns="1">
+						<h:panelGroup>
+							<h:selectBooleanCheckbox id="repetirTempo" value="#{prescricaoForm.flgRepetirTempo}">
+								<a4j:support event="onclick" reRender="frmTempoFases"/>
+							</h:selectBooleanCheckbox>
+							<h:outputLabel value="Repetir tempo em todas as fases: " for="repetirTempo" 
+											style="font-size: 11px; white-space: nowrap; margin-right:10px;"/>
+							<h:inputText value="#{prescricaoForm.tempoFase}" rendered="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 size="3" maxlength="3" style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase()}"/>
+							</h:inputText>
+			                <h:selectOneMenu value="#{prescricaoForm.codTempoFase}" rendered="#{prescricaoForm.flgRepetirTempo}" style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange" reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase()}"/>								
+							</h:selectOneMenu>
+			                <h:selectOneMenu value="#{prescricaoForm.codVazao}" rendered="#{prescricaoForm.flgRepetirTempo}" style="width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao()}"/>						
+							</h:selectOneMenu>		
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid columns="1">
+						<h:panelGroup>
+							<h:outputText value="Tempo da 1ª Fase: " style="margin-right:7px; font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase1}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 size="3" maxlength="3" style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(1)}" reRender="frmTempoFases"/>
+							</h:inputText>
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase1}" style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase1()}"/>								
+							</h:selectOneMenu>
+							
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao1}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao1Manual}" />
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao1}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao1()}"/>								
+							</h:selectOneMenu>
+							<h:selectBooleanCheckbox id="vazaoManual1" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao1Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(1)}" />
+							</h:selectBooleanCheckbox>
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual1" style="font-size: 11px; margin-right:10px;"/>							
+						</h:panelGroup>
+						<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 1}">
+							<h:outputText value="Tempo da 2ª Fase: " style="margin-right:7px; font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase2}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 1}" size="3" maxlength="3" 
+										 style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(2)}" reRender="frmTempoFases"/>
+							</h:inputText>
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />										 
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase2}" 
+			                				 style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange" action="#{prescricaoForm.atualizarTempoFase2()}" reRender="frmTempoFases"/>								
+							</h:selectOneMenu>
+
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao2}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao2Manual}"/>
+			                <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao2}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao2()}"/>
+							</h:selectOneMenu>
+							<h:selectBooleanCheckbox id="vazaoManual2" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao2Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(2)}" />
+							</h:selectBooleanCheckbox>
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual2" style="font-size: 11px; margin-right:10px;"/>	
+						</h:panelGroup>	
+						<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 2}">
+							<h:outputText value="Tempo da 3ª Fase: " style="margin-right:7px; font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase3}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 2}" size="3" maxlength="3" 
+										 style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(3)}" reRender="frmTempoFases"/>
+							</h:inputText>
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />							 
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase3}" 
+			                				 style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase3()}"/>		
+							</h:selectOneMenu>
+
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao3}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao3Manual}"/>
+			                <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao3}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao3()}"/>
+							</h:selectOneMenu>
+							<h:selectBooleanCheckbox id="vazaoManual3" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao3Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(3)}" />
+							</h:selectBooleanCheckbox>							
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual3" style="font-size: 11px; margin-right:10px;"/>	
+						</h:panelGroup>
+						<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 3}">						
+							<h:outputText value="Tempo da 4ª Fase: " style="margin-right:7px; font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase4}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 3}" size="3" maxlength="3" 
+										 style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(4)}" reRender="frmTempoFases"/>
+							</h:inputText>										 
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase4}"
+			                				 style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase4()}"/>		
+							</h:selectOneMenu>
+							
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao4}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao4Manual}"/>
+			                <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao4}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao4()}"/>
+							</h:selectOneMenu>
+							<h:selectBooleanCheckbox id="vazaoManual4" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao4Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(4)}" />
+							</h:selectBooleanCheckbox>				
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual4" style="font-size: 11px; margin-right:10px;"/>				
+						</h:panelGroup>
+						<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 4}">
+							<h:outputText value="Tempo da 5ª Fase: " style="margin-right:7px; font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase5}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 4}" size="3" maxlength="3" 
+										 style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(5)}" reRender="frmTempoFases"/>
+							</h:inputText>
+						    <h:outputLabel style="color:red; font-size: 11px;" value="*" />						 
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase5}" 
+			                				 style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase5()}"/>		
+							</h:selectOneMenu>
+							
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao5}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao5Manual}"/>
+			                <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao5}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao5()}"/>
+							</h:selectOneMenu>							
+							<h:selectBooleanCheckbox id="vazaoManual5" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao5Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(5)}" />
+							</h:selectBooleanCheckbox>	
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual5" style="font-size: 11px; margin-right:10px;"/>							
+						</h:panelGroup>
+						<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 5}">
+							<h:outputText value="Tempo da 6ª Fase: " style="margin-right:7px; font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase6}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 5}" size="3" maxlength="3" 
+										 style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(6)}" reRender="frmTempoFases"/>
+							</h:inputText>
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />								 
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase6}" 
+			                				 style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase6()}"/>		
+							</h:selectOneMenu>
+
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao6}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao6Manual}"/>
+			                <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao6}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao6()}"/>
+							</h:selectOneMenu>
+							<h:selectBooleanCheckbox id="vazaoManual6" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao6Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(6)}" />
+							</h:selectBooleanCheckbox>
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual6" style="font-size: 11px; margin-right:10px;"/>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 6}">
+							<h:outputText value="Tempo da 7ª Fase: " style="margin-right:7px; font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase7}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 6}" size="3" maxlength="3" 
+										 style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(7)}" reRender="frmTempoFases"/>
+							</h:inputText>
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />				 
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase7}"
+			                				 style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase7()}"/>		
+							</h:selectOneMenu>
+
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao7}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao7Manual}"/>
+			                <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao7}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao7()}"/>
+							</h:selectOneMenu>
+							<h:selectBooleanCheckbox id="vazaoManual7" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao7Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(7)}" />
+							</h:selectBooleanCheckbox>
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual7" style="font-size: 11px; margin-right:10px;"/>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 7}">
+							<h:outputText value="Tempo da 8ª Fase: " style="margin-right:7px; font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase8}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 7}" size="3" maxlength="3" 
+										 style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(8)}" reRender="frmTempoFases"/>
+							</h:inputText>
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />										 
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase8}" 
+			                				 style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase8()}"/>		
+							</h:selectOneMenu>
+
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao8}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao8Manual}"/>
+			                <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao8}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao8()}"/>
+							</h:selectOneMenu>
+							<h:selectBooleanCheckbox id="vazaoManual8" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao8Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(8)}" />
+							</h:selectBooleanCheckbox>			
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual8" style="font-size: 11px; margin-right:10px;"/>				
+						</h:panelGroup>
+						<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 8}">
+							<h:outputText value="Tempo da 9ª Fase: " style="margin-right:7px; font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase9}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 8}" size="3" maxlength="3" 
+										 style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(9)}" reRender="frmTempoFases"/>
+							</h:inputText>
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />					 
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase9}"
+			                				 style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase9()}"/>		
+							</h:selectOneMenu>
+
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao9}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao9Manual}"/>
+			                <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao9}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao9()}"/>
+							</h:selectOneMenu>
+							<h:selectBooleanCheckbox id="vazaoManual9" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao9Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(9)}" />
+							</h:selectBooleanCheckbox>		
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual9" style="font-size: 11px; margin-right:10px;"/>					
+						</h:panelGroup>
+						<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 9}">
+							<h:outputText value="Tempo da 10ª Fase: " style="font-size: 11px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+							<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.tempoFase10}" disabled="#{prescricaoForm.flgRepetirTempo}" styleClass="campoTextoSemColar" onkeyup="javascript:return(formataNumero(this))" 
+										 rendered="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases > 9}" size="3" maxlength="3" 
+										 style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:50px;" >
+								<a4j:support event="onblur" action="#{prescricaoForm.calcularVazaoFase(10)}" reRender="frmTempoFases"/>
+							</h:inputText>
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codTempoFase10}"
+			                				 style="margin-right:10px; width:80px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="HORA"/>
+								<f:selectItem itemValue="2" itemLabel="MINUTOS"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarTempoFase10()}"/>
+							</h:selectOneMenu>
+
+							<h:outputText value="Vazão: " style="font-size: 11px; width:33px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText styleClass="campoTextoSemColar" onkeypress="return soNumero(event, this)" size="3" maxlength="3" 
+			  								style="text-size: 11px; text-transform:uppercase; width:50px; margin-right:10px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdVazao10}" disabled="#{!prescricaoForm.objPrescricaoPepItem.flgInformarVazao10Manual}"/>
+			                <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.codVazao10}" style="margin-right:10px; width:120px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="ML/H"/>
+								<f:selectItem itemValue="2" itemLabel="GOTAS/MIN"/>		
+								<f:selectItem itemValue="3" itemLabel="MICRO/MIN"/>
+								<a4j:support event="onchange"  reRender="frmTempoFases" action="#{prescricaoForm.atualizarVazao10()}"/>
+							</h:selectOneMenu>
+							<h:selectBooleanCheckbox id="vazaoManual10" value="#{prescricaoForm.objPrescricaoPepItem.flgInformarVazao10Manual}">
+								<a4j:support event="onclick" reRender="frmTempoFases" action="#{prescricaoForm.calcularVazaoFase(10)}" />
+							</h:selectBooleanCheckbox>
+							<h:outputLabel value="Informar vazão manualmente" for="vazaoManual10" style="font-size: 11px; margin-right:10px;"/>
+						</h:panelGroup>
+					</h:panelGrid>																			
+				</div>			
+				<rich:jQuery selector=".campoTextoSemColar" query="bind('paste drop', function(event) {event.preventDefault();})" />	
+		  	</rich:simpleTogglePanel>
+
+   		  	<br/>
+   		    <div style="float: right;">			
+				<a4j:commandButton id="btnConfirmarVazao"
+								   value="Confirmar" 
+								   action="#{prescricaoForm.confirmarVazao}"
+								   onclick="this.disabled=true;"
+								   style="margin-right:10px;width:100px;" 
+								   styleClass="botaoModal"
+								   oncomplete="this.disabled=false; if (validaProduto('#{prescricaoForm.mensagem}')) { Richfaces.hideModalPanel('panelTempoFases'); }"/>
+				<a4j:commandButton id="btnCancelarVazao"
+								   value="Cancelar" 
+								   action="#{prescricaoForm.cancelarVazao}"
+								   onclick="this.disabled=true;"
+								   style="width:100px;" 
+								   styleClass="botaoModal"
+								   oncomplete="this.disabled=false; Richfaces.hideModalPanel('panelTempoFases'); "/>
+   		    </div>
+   		</h:form>
+   	</rich:modalPanel>
+   	
+	<rich:modalPanel id="panelConfirm" autosized="true" width="400" resizeable="false">
+		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/IMG/alerta.png" style="border:0; margin-right:10px; vertical-align:middle;" />
+				<h:outputText value="Mensagem de Confirmação" style="font-size:12px; font-weight: bold;"/>
+			</h:panelGroup>
+    	</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidelinkConfirm" />
+				<rich:componentControl for="panelConfirm" attachTo="hidelinkConfirm" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmConfirm">	   								
+			<fieldset class="fsPepResp">
+				<div>
+					<label id="lblConfirm" style="font-size: 11px; color: black;">(Mensagem de Alerta)</label>
+				</div>
+			</fieldset>
+			<br clear="all"/>
+			<div style="text-align:center; margin-top:10px">
+				<a4j:commandButton id="btnOkConfirm"  value="Ok" action="#{prescricaoForm.incluirItemSemValidacao}" reRender="frmPrescricaoItem" onclick="this.disabled = true;"
+								   styleClass="botaoModal" style="width:80px;" oncomplete="this.disabled = false; Richfaces.hideModalPanel('panelConfirm'); limparCampos();"/>
+				<a4j:commandButton id="btnCancel"  value="Cancelar"  styleClass="botaoModal" style="margin-left:10px; width:100px;">
+					<rich:componentControl for="panelConfirm" attachTo="btnCancel" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelConfirm2" autosized="true" width="400" resizeable="false">
+		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/IMG/alerta.png" style="border:0; margin-right:10px; vertical-align:middle;" />
+				<h:outputText value="Mensagem de Confirmação" style="font-size:12px; font-weight: bold;"/>
+			</h:panelGroup>
+    	</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidelinkConfirm2" />
+				<rich:componentControl for="panelConfirm2" attachTo="hidelinkConfirm2" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmConfirm2">	   								
+			<fieldset class="fsPepResp">
+				<div>
+					<label id="lblConfirm2" style="font-size: 11px; color: black;">(Mensagem de Alerta)</label>
+				</div>
+			</fieldset>
+			<br clear="all"/>
+			<div style="text-align:center; margin-top:10px">
+				<a4j:commandButton id="btnOkConfirm2"  value="Ok" action="#{prescricaoForm.incluirItemSemValidacao}" reRender="frmPrescricaoItem" onclick="this.disabled = true;"
+								   styleClass="botaoModal" style="width:80px;" oncomplete="this.disabled = false; Richfaces.hideModalPanel('panelConfirm2'); limparCampos(); "/>
+				
+				<a4j:commandButton id="btnCancel2"  value="Cancelar"  styleClass="botaoModal" style="margin-left:10px; width:100px;">
+					<rich:componentControl for="panelConfirm2" attachTo="btnCancel2" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	
+	<!-- INICIO DO MODAL EVOLUCAO -->
+	<rich:modalPanel id="panelEvolucao" autosized="true" width="800" height="250" resizeable="false" headerClass="headerPanel3">
+				
+				<f:facet name="header">
+		            <h:outputText value="EVOLUÇÃO"></h:outputText>            
+		        </f:facet>
+				
+		        <f:facet name="controls">
+		            <h:panelGroup>
+		                <h:graphicImage value="IMG/fechar.png" id="fecharEvolucao" />
+		                <rich:componentControl for="panelEvolucao" attachTo="fecharEvolucao" operation="hide" event="onclick" />
+		            </h:panelGroup>
+		        </f:facet>		
+	
+				<h:form id="formularioEvolucao">
+	        		<h:panelGrid  width="100%">
+		        		<h:panelGrid width="100%" >
+		        			<h:panelGroup>
+		        				<h:inputTextarea value="#{prescricaoForm.dscEvolucao}" onkeyup="return limitarTamanhoCampo(this,4000);" style="width: 800px; height:120px; margin-top:20px">
+		        				</h:inputTextarea>
+		                     </h:panelGroup>
+		        		</h:panelGrid>
+	        		</h:panelGrid>
+	        		<center>
+		        		<a4j:commandButton onclick="#{rich:component('panelStatus')}.show();" oncomplete="if (avisosValidacao(#{prescricaoForm.avisoValidacao}, 'panelSenha', true, '')){Richfaces.hideModalPanel('panelEvolucao'); #{rich:component('panelStatus')}.hide();}" 
+													   id="inserirEvolucao"														  
+													   value="Confirmar"
+													   action="#{prescricaoForm.validarEvolucao}"
+													   reRender="panelSenha">
+						 </a4j:commandButton>						
+	        		</center>
+				</h:form>
+				
+	</rich:modalPanel>			
+	<!-- FIM DO MODAL EVOLUCAO -->	
+		
+	<!-- *****  MODAL PANEL PRORROGACAO  -->
+	<rich:modalPanel id="panelProrrogacao" autosized="true" width="480" resizeable="false">
+	    <f:facet name="header">
+   		    <h:panelGroup>
+			    <h:outputText value="MEDICAMENTOS"/>
+	  	    </h:panelGroup>
+   	    </f:facet>
+   	    <h:form id="prorrogacao">
+		<div>
+			<rich:dataTable value="#{prescricaoForm.listaFichaItemProrrogacao}"
+	          		var="med" 
+				    id="dtMedicamentos" 
+				    onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+				    onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+			    <rich:column style="width:400px">
+			        <f:facet name="header">
+			            <h:outputText value="Prescrição" />
+			        </f:facet>
+			        <h:outputText value="#{med.dscProduto}"/>
+			    </rich:column>
+			    <rich:column>
+			        <f:facet name="header">
+				        <h:outputText value="Prorrogação" />
+			        </f:facet>
+			        <rich:inputNumberSlider value="#{med.qtdProrrogacao}" maxValue="5" step="1" />		        
+			    </rich:column>
+			</rich:dataTable>
+		</div>
+		<br/>
+		<div>	
+			<h:panelGroup>
+				<h:outputLabel value="CÓDIGO AUTORIZADOR" for="inputCodAutorizador"/><br/>
+				<h:inputText value="#{prescricaoForm.codAutorizacaoProrrogacao}" id="inputCodAutorizador" maxlength="10" styleClass="campoTexto" />
+			</h:panelGroup>
+		</div>
+		<br/>
+		<div style="text-align: center;">
+		<a4j:commandButton id="btnProrrogacao" 
+				   value="OK" 
+			       action="#{prescricaoForm.concluirPrescricaoPepiProrrogacao}"
+				   style="margin-right:10px" 
+				   styleClass="botaoModal"
+				   oncomplete="msgValidacao(#{prescricaoForm.msgValidacaoProrrogacao}); ">   		
+		</a4j:commandButton>	
+		<a4j:commandButton id="btnCancelProrrogacao"  value="Cancelar"  styleClass="botaoModal">
+					<rich:componentControl for="panelProrrogacao" attachTo="btnCancelProrrogacao" operation="hide" event="onclick" />
+		</a4j:commandButton>
+		</div>
+		</h:form>
+	</rich:modalPanel>
+	<!-- FINAL DO MODAL PANEL PRORROGACAO -->
+
+	<!-- *****  MODAL PANEL ASSINATURA  -->
+	<rich:modalPanel id="panelSenha" autosized="true" width="450" resizeable="false">
+		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/images/icons/access.png" style="border:0; margin-right:10px; vertical-align:middle" />
+				<h:outputText value="Validação de Senha" style="font-size:11px; font-weight:bold;"/>
+			</h:panelGroup>
+    	</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidelink2" />
+				<rich:componentControl for="panelSenha" attachTo="hidelink2" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmPrescItemSenha">	      
+			<fieldset class="fsPepResp">
+				<div style="float: left; margin-right: 20px">		
+					<h:outputLabel value="Usuário/Conselho" for="inputConselho"/><h:outputLabel style="color:red; font-size: 11px;" value="*" /><br/>
+					<h:inputText id="inputConselho" value="#{prescricaoForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 150px">
+						<a4j:support event="onchange"  actionListener="#{prescricaoForm.pesquisaNomeMedicoCoren}" reRender="nomeMedico" oncomplete="setarFocoSenha();" />
+					</h:inputText>
+				</div>
+				<div style="float: left;">
+					<h:outputLabel value="Senha/Assinatura" for="inputAssinatura" /><h:outputLabel style="color:red; font-size: 11px;" value="*" /><br/>
+					<h:inputSecret value="#{prescricaoForm.senhaAssinatura}" id="inputAssinatura" maxlength="20" styleClass="inputText" style="width: 150px"/>
+				</div>
+				<div style="clear:both;">
+					<span style="width:400px; height:14px; padding:3px; display:block;">
+						<strong>
+							<h:outputText id="nomeMedico" value="#{prescricaoForm.nomeMedico}" style="font-size:11px;"/>
+						</strong>
+					</span>
+				</div>
+			</fieldset>
+			<br clear="all"/>
+			<div style="text-align:center; margin-top:10px">
+				<a4j:commandButton id="btnAssinatura" rendered="#{prescricaoForm.suspendeItens != 'S'}"
+								   value="OK" 
+								   action="#{prescricaoForm.concluirPrescricaoPepi}"
+								   style="margin-right:10px;width:100px;" 
+								   styleClass="botaoModal"
+								   reRender="panelProrrogacao"
+								   onclick="#{rich:component('panelStatus')}.show();"
+								   oncomplete="#{rich:component('panelStatus')}.hide(); avisosValidacao(#{prescricaoForm.avisoValidacao}, 'panelSenha', false, '');
+								   avisosValidacao2(#{prescricaoForm.avisoValidacao}, 'panelProrrogacao');
+								   if(! avisosValidacao5(#{prescricaoForm.avisoValidacao}))#{prescricaoForm.carregaPagina()}">   		
+	   	 		    <f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.listaFichaItemProrrogacao}" /> 
+				    <f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.mapeamentoProdutosAntibioticoProrrogacao}" /> 
+					<f:setPropertyActionListener value="#{false}" target="#{emergenciaForm.alertaAlergia}" /> 
+				</a4j:commandButton>	
+				
+				<a4j:commandButton id="btnAssinaturaS" rendered="#{prescricaoForm.suspendeItens == 'S'}"
+								   value="OK" 
+								   style="margin-right:10px" 
+					               styleClass="botaoModal"
+					               actionListener="#{prescricaoForm.incluirItemSuspensaoPadrao}" 
+					               reRender="frmPrescricaoItem,frmPrescricaoItem:dtPrescricaoPepiItem1"
+					               oncomplete="avisosValidacao(#{prescricaoForm.avisoValidacao}, 'panelSenha', false, '');
+					               avisosValidacao3(#{prescricaoForm.avisoValidacao}, 'panelSuspenderPrescritos');">   	   		
+				</a4j:commandButton>	
+				<a4j:commandButton id="btnCancelAssinatura"  value="Cancelar"  styleClass="botaoModal" style="width:100px;">
+					<rich:componentControl for="panelSenha" attachTo="btnCancelAssinatura" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	<!-- FINAL DO MODAL PANEL ASSINATURA -->
+
+	<!-- *****  MODAL PANEL ASSINATURA  -->
+	<rich:modalPanel id="panelSenhaCancelamento" autosized="true" width="450" resizeable="false">
+		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/images/icons/access.png" style="border:0; margin-right:10px; vertical-align:middle" />
+				<h:outputText value="Validação de Senha" style="font-size:11px; font-weight:bold;"/>
+			</h:panelGroup>
+    	</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidelinkC" />
+				<rich:componentControl for="panelSenhaCancelamento" attachTo="hidelinkC" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmPrescItemSenhaCancelamento">	      
+			<fieldset class="fsPepResp">
+				<div style="float: left; margin-right: 20px">		
+					<h:outputLabel value="Usuário/Conselho" for="inputConselhoCancelamento"/><h:outputLabel style="color:red; font-size: 11px;" value="*" /><br/>
+					<h:inputText id="inputConselhoCancelamento" value="#{prescricaoForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 150px">
+						<a4j:support event="onchange"  actionListener="#{prescricaoForm.pesquisaNomeMedicoCoren}" reRender="nomeMedicoCancelamento" oncomplete="setarFocoSenha();" />
+					</h:inputText>
+				</div>
+				<div style="float: left;">
+					<h:outputLabel value="Senha/Assinatura" for="inputAssinaturaCancelamento" /><h:outputLabel style="color:red; font-size: 11px;" value="*" /><br/>
+					<h:inputSecret value="#{prescricaoForm.senhaAssinatura}" id="inputAssinaturaCancelamento" maxlength="20" styleClass="inputText" style="width: 150px"/>
+				</div>
+				<div style="clear:both;">
+					<span style="width:400px; height:14px; padding:3px; display:block;">
+						<strong>
+							<h:outputText id="nomeMedicoCancelamento" value="#{prescricaoForm.nomeMedico}" style="font-size:11px;"/>
+						</strong>
+					</span>
+				</div>
+			</fieldset>
+			<br clear="all"/>
+			<div style="text-align:center; margin-top:10px">
+				<a4j:commandButton id="btnAssinaturaC" rendered="#{prescricaoForm.suspendeItens != 'S'}"
+								   value="OK" 
+								   action="#{prescricaoForm.cancelarPrescricaoPepi}"
+								   style="margin-right:10px;width:100px;" 
+								   styleClass="botaoModal"
+								   reRender="panelProrrogacao"
+								   onclick="#{rich:component('panelStatus')}.show();"
+								   oncomplete="#{rich:component('panelStatus')}.hide(); avisosValidacao(#{prescricaoForm.avisoValidacao}, 'panelSenhaCancelamento', false, '');">   		
+	   	 		    <f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.listaFichaItemProrrogacao}" /> 
+				    <f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.mapeamentoProdutosAntibioticoProrrogacao}" /> 
+					<f:setPropertyActionListener value="#{false}" target="#{emergenciaForm.alertaAlergia}" /> 
+				</a4j:commandButton>	
+				
+				<a4j:commandButton id="btnCancelAssinaturaCancelamento"  value="Cancelar"  styleClass="botaoModal" style="width:100px;">
+					<rich:componentControl for="panelSenhaCancelamento" attachTo="btnCancelAssinaturaCancelamento" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	<!-- FINAL DO MODAL PANEL ASSINATURA -->
+		
+		<!-- *****  MODAL PANEL ASSINATURA  -->
+	<rich:modalPanel id="panelSenhaCadPadrao" autosized="true" width="450" resizeable="false">
+		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/images/icons/access.png" style="border:0; margin-right:10px; vertical-align:middle" />
+				<h:outputText value="Validação de Senha" style="font-size:11px; font-weight:bold;"/>
+			</h:panelGroup>
+    	</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidelinkCadPad" />
+				<rich:componentControl for="panelSenhaCadPadrao" attachTo="hidelinkCadPad" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmCadPadrao">	      
+			<fieldset class="fsPepResp">
+				<div style="float: left; margin-right: 20px">		
+					<h:outputLabel value="Usuário/Conselho" for="inputConselho"/><h:outputLabel style="color:red; font-size: 11px;" value="*" /><br/>
+					<h:inputText id="inputConselho" value="#{prescricaoPadraoForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 150px">
+						<a4j:support event="onchange"  actionListener="#{prescricaoPadraoForm.pesquisaNomeMedicoCoren}" reRender="nomeMedico"/>
+					</h:inputText>
+				</div>
+				<div style="float: left;">
+					<h:outputLabel value="Senha/Assinatura" for="inputAssinatura" /><h:outputLabel style="color:red; font-size: 11px;" value="*" /><br/>
+					<h:inputSecret value="#{prescricaoPadraoForm.senhaAssinatura}" id="inputAssinatura" maxlength="20" styleClass="inputText" style="width: 150px"/>
+				</div>
+				<div style="clear:both;">
+					<span style="width:400px; height:14px; padding:3px; display:block;">
+						<strong>
+							<h:outputText id="nomeMedico" value="#{prescricaoPadraoForm.nomeMedico}" style="font-size:11px;"/>
+						</strong>
+					</span>
+				</div>
+			</fieldset>
+			<br clear="all"/>
+			<div style="text-align:center; margin-top:10px">
+				<a4j:commandButton id="btnAssinatura"
+								   value="OK" 
+								   action="#{prescricaoPadraoForm.salvar}"
+								   onclick="this.disabled=true;"
+								   style="margin-right:10px;width:100px;" 
+								   styleClass="botaoModal"
+								   oncomplete="this.disabled=false; if (validaProduto('#{prescricaoPadraoForm.mensagem}')){alert('Prescrição Médica Padrão cadastrada com sucesso!'); 
+								   				Richfaces.hideModalPanel('panelSenhaCadPadrao'); Richfaces.hideModalPanel('panelCadastraPrescricaoPadrao'); document.getElementById('frmCadPadrao:btnAtualizarTablePadronizacao').click(); }"/>				
+				<a4j:commandButton id="btnCancelCadPadrao"  value="Cancelar"  styleClass="botaoModal" style="width:100px;">
+					<rich:componentControl for="panelSenhaCadPadrao" attachTo="btnCancelCadPadrao" operation="hide" event="onclick" />
+				</a4j:commandButton>
+				<a4j:commandButton id="btnAtualizarTablePadronizacao"
+				   style="display:none;"
+				   reRender="tablePadronizacao" action="#{prescricaoForm.handlePadronizacaoChange}"/> 
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	<!-- FINAL DO MODAL PANEL ASSINATURA -->
+	
+	<rich:modalPanel id="panelCadastraPrescricaoPadrao" autosized="true" width="1100" height="250" resizeable="false">
+   		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/images/icons/lupa.png" style="border:0; margin-right:10px; vertical-align:middle;" />
+				<h:outputText value="Cadastro Prescrição Médica Padrão"/>
+			</h:panelGroup>
+		</f:facet>
+    	<h:form id="formCadastroPP">
+	    	<div class="areaPesquisa">
+				<h:panelGroup id="panelPrescricaoPadrao">
+	            	<h:outputText value="Prescrição Padrão: " style="font-size: 11px;  width:90px; white-space: nowrap;" /> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+	                <h:selectOneMenu value="#{prescricaoPadraoForm.isnPrescricaoPadrao}" id="selPrescricaoPadrao">
+						<f:selectItems value="#{prescricaoPadraoForm.sliPrescricaoPadrao}" />
+						<a4j:support event="onchange" reRender="formCadastroPP" action="#{prescricaoPadraoForm.limparPrescricao}" />
+					</h:selectOneMenu>
+				</h:panelGroup>
+				<t:htmlTag value="br"/>  
+				<a4j:region id="rb">
+					<a4j:status id="status" 
+				                onstart="#{rich:component('panelStatus')}.show()" 
+				                onstop="#{rich:component('panelStatus')}.hide()" >
+				 	</a4j:status>
+					<h:panelGroup id="panelGrupo">
+		            	<h:outputText value="Grupo: " style="font-size: 11px;  width:90px;" /> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+		                <h:selectOneMenu value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao}" 
+		                rendered="#{empty prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 0 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 20 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 2}" style="margin-right:10px; width:200px;">
+							<f:selectItem itemValue="0" itemLabel="Selecione"/>
+							<f:selectItem itemValue="2" itemLabel="Medicamento"/>
+							<f:selectItem itemValue="19" itemLabel="Hidratação"/>
+							<f:selectItem itemValue="20" itemLabel="Antibiótico"/>			
+							<a4j:support event="onchange" reRender="formCadastroPP" action="#{prescricaoPadraoForm.limparPrescricao}" 
+								oncomplete="document.getElementById('formCadastroPP:statesinput2').value = ''; document.getElementById('formCadastroPP:statesinput').value = '';" />
+						</h:selectOneMenu>
+						<rich:spacer width="10"/>
+		                <h:selectOneMenu value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao}" 
+		                rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 19}" style="margin-right:10px; width:200px;">
+							<f:selectItem itemValue="0" itemLabel="Selecione"/>
+							<f:selectItem itemValue="2" itemLabel="Medicamento"/>
+							<f:selectItem itemValue="19" itemLabel="Hidratação"/>
+							<f:selectItem itemValue="20" itemLabel="Antibiótico"/>			
+							<a4j:support event="onchange" reRender="formCadastroPP" action="#{prescricaoPadraoForm.limparPrescricao}" 
+								oncomplete="document.getElementById('formCadastroPP:statesinput').value = '';" />
+						</h:selectOneMenu>
+					</h:panelGroup>	
+				</a4j:region>			
+				<h:panelGroup id="panelDroga"  rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 19 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 20 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 2}">					
+		            <h:outputText value="Medicamento:" style="font-size: 11px; width:70px;"/>	<h:outputLabel style="color:red; font-size: 11px;" value="*" />	
+	                <h:inputText value="" id="statesinput" style="margin-right:10px; width:522px; text-transform:uppercase;" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 20 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 2}">         
+	       				<a4j:support event="onblur" reRender="formCadastroPP:selUnidadeDose, formCadastroPP:selPrescricaoVia"/>
+	       			</h:inputText>
+	                <h:inputText value="" id="statesinput2" style="margin-right:10px; width:522px; text-transform:uppercase;" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 19}">         
+	       				<a4j:support event="onblur" reRender="formCadastroPP:selPrescricaoVia2, formCadastroPP:selUnidadeDose2"/>
+	       			</h:inputText>
+	                <a4j:commandButton value="Pesquisar" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 2 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 20}" 
+	                                   onclick="#{rich:component('suggestion2')}.callSuggestion(true)"/>
+	                <a4j:commandButton value="Pesquisar" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 19}" onclick="#{rich:component('suggestionH2')}.callSuggestion(true)"/>
+			        				
+					<rich:suggestionbox height="200" width="500"  rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 2 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 20}"
+					 suggestionAction="#{prescricaoPadraoForm.autocomplete}" var="produto" ignoreDupResponses="true"				 
+          				 for="statesinput" fetchValue="#{produto.dscProduto}" id="suggestion2">
+           				 <h:column>
+			                <h:outputText value="#{produto.dscProduto}" />
+			             </h:column>	    
+                         <a4j:support id="a4j5" action="#{prescricaoPadraoForm.carregarCamposPreDefinidosDaPrescricao}" event="onselect">
+                           <f:setPropertyActionListener value="#{produto}" target="#{prescricaoPadraoForm.objProduto}" reRender="formCadastroPP:idUnidade"/>
+                    	 </a4j:support>                         
+          				 </rich:suggestionbox>
+          				 
+					<rich:suggestionbox height="200" width="500"  rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 19}"
+					 suggestionAction="#{prescricaoPadraoForm.autocomplete}" var="produto" ignoreDupResponses="true"				 
+          				 for="statesinput2" fetchValue="#{produto.dscProduto}" id="suggestionH2">
+           				 <h:column>
+			                <h:outputText value="#{produto.dscProduto}" />
+			             </h:column>	    
+                         <a4j:support id="a4j5" action="#{prescricaoPadraoForm.carregarCamposPreDefinidosDaPrescricao}" event="onselect">
+                           <f:setPropertyActionListener value="#{produto}" target="#{prescricaoPadraoForm.objProduto}"/>
+                    	 </a4j:support>                         
+          				 </rich:suggestionbox>
+				</h:panelGroup>
+				
+				<t:htmlTag value="br" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 2 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 20}"/>  						
+				<h:panelGroup id="panelDiluicao" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 2 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 20}">
+					<h:outputText value="Dose:" style="font-size: 11px; width:103px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+					<rich:spacer width="5"/>	
+					<h:inputText maxlength="8" value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.qtdDose}" onkeyup="javascript:return(formataNumero2(this))" onblur="validarNumero(this);"
+					 id="dose" style="margin-right:10px; width:50px;" />
+					<rich:spacer width="2"/>
+	                <h:selectOneMenu value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.dscApresentacao}" id="selUnidadeDose" style="width:73px; height:18px;">
+						<f:selectItems value="#{prescricaoPadraoForm.sliUnidadeDose}" />
+					</h:selectOneMenu>
+					<rich:spacer width="5"/>
+					<h:outputText value="Diluição:" style="font-size: 11px; width:45px;"/>					
+					<h:inputText value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.dscDiluicao}" maxlength="100" id="diluicao" style="margin-right:10px; width:225px; text-transform:uppercase;"/>
+					<rich:spacer width="10"/>
+					<h:outputText value="Via:" style="font-size: 11px; width:20px;"/>	<h:outputLabel style="color:red; font-size: 11px;" value="*" />						
+					<h:selectOneMenu id="selPrescricaoVia" value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnPrescricaoVia}" style="width:110px;">
+						<f:selectItems value="#{prescricaoPadraoForm.sliPrescricaoVia}"/>
+					</h:selectOneMenu>
+					<rich:spacer width="5"/>
+					<h:outputText value="Posologia:" style="font-size: 11px; width:52px;"/>	<h:outputLabel style="color:red; font-size: 11px;" value="*"  />						
+					<h:selectOneMenu value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnPrescricaoPosologia}" style="width:162px;">
+						<f:selectItems value="#{prescricaoPadraoForm.sliPrescricaoPosologia}"/>
+					</h:selectOneMenu>
+				</h:panelGroup>
+				<t:htmlTag value="br" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 19}"/>  						
+				<h:panelGroup id="panelDiluicao2" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 19}">
+					<h:outputText value="Volume:" style="font-size: 11px; width:93px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />				
+					<h:inputText maxlength="8" value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.qtdVolume}" onkeyup="javascript:return(formataNumero2(this))" onblur="validarNumero(this);"
+					 id="quantidade" style="margin-right:10px; width:50px;" />
+					<rich:spacer width="2"/>
+	                <h:selectOneMenu value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.dscApresentacao}" id="selUnidadeDose2" style="width:70px; height:18px;">
+						<f:selectItems value="#{prescricaoPadraoForm.sliUnidadeDose}" />
+					</h:selectOneMenu>
+					<rich:spacer width="5"/>
+					<h:outputText value="Via:" style="font-size: 11px; width:20px;"/>	<h:outputLabel style="color:red; font-size: 11px;" value="*" />						
+					<h:selectOneMenu id="selPrescricaoVia2" value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnPrescricaoVia}" style="width:137px;">
+						<f:selectItems value="#{prescricaoPadraoForm.sliPrescricaoVia}"/>
+					</h:selectOneMenu>
+					<rich:spacer width="10"/>
+					<h:outputText value="Complemento:" style="font-size: 11px; width:85px;"/>
+						<h:inputText maxlength="200" value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.dscComplemento}" style="width:400px; text-transform: uppercase;"/>
+					<rich:spacer width="10"/>
+					<h:selectBooleanCheckbox id="seNecessarioH" value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.flgSeNecessarioBoolean}" />
+					<h:outputLabel value="Se Necessário" for="seNecessario" style="font-size: 11px; white-space: nowrap;"/>
+				</h:panelGroup>	
+												
+				<t:htmlTag value="br" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 20 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 2}"/>  
+				<h:panelGroup id="complementoTextH" rendered="#{prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 20 or prescricaoPadraoForm.prescricaoPadraoItemPep.isnTipoPrescricao == 2}">
+					<h:panelGrid columns="6">
+						<h:outputText value="Complemento:" style="font-size: 11px; width:85px;"/>
+						<h:inputText maxlength="200" value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.dscComplemento}" style="width:795px; text-transform: uppercase;"/>
+						<rich:spacer width="10"/>
+						<h:selectBooleanCheckbox id="seNecessario" value="#{prescricaoPadraoForm.prescricaoPadraoItemPep.flgSeNecessarioBoolean}" />
+ 						<h:outputLabel value="Se Necessário" for="seNecessario" style="font-size: 11px; white-space: nowrap;"/>
+					</h:panelGrid>
+				</h:panelGroup>					
+				<br/>			
+			</div>
+			<div style="text-align:center; margin-top:10px;">
+			
+				<a4j:commandButton value="Salvar" 
+				                   styleClass="botaoModal" 
+				                   style="margin-right:10px" 
+				                   action="#{prescricaoPadraoForm.validarItem}" 
+				                   reRender="frmCadPadrao, formCadastroPP"
+				                   onclick="#{rich:component('panelStatus')}.show();"
+							       oncomplete="#{rich:component('panelStatus')}.hide(); if (validaProduto('#{prescricaoPadraoForm.mensagem}')){ Richfaces.showModalPanel('panelSenhaCadPadrao') }"/>
+				<a4j:commandButton id="btnCancelaPP" value="Cancelar" styleClass="botaoModal">
+					<rich:componentControl for="panelCadastraPrescricaoPadrao" attachTo="btnCancelaPP" operation="hide" event="onclick" />
+				</a4j:commandButton>					                   
+			</div>
+	    </h:form>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanelPadronizacao2"/>
+        		<rich:componentControl for="panelCadastraPrescricaoPadrao" attachTo="fechaPanelPadronizacao2" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelPadronizacao" autosized="true" width="900" height="400" resizeable="false">
+   		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/images/icons/lupa.png" style="border:0; margin-right:10px; vertical-align:middle;" />
+				<h:outputText value="Prescrição Médica Padrão"/>
+			</h:panelGroup>
+		</f:facet>
+    	<h:form id="formPadronizacao">
+		<div style="height:485px; overflow:scroll; overflow-y:scroll; overflow-x:hidden;">
+	    	<div class="areaPesquisa">
+                <h:selectOneMenu value="#{prescricaoForm.isnPrescricaoPadrao}" id="selPrescricaoPadrao">
+					<f:selectItems value="#{prescricaoForm.sliPrescricaoPadrao}" />
+					<a4j:support event="onchange" reRender="tablePadronizacao" action="#{prescricaoForm.handlePadronizacaoChange}" />
+				</h:selectOneMenu>
+			</div>
+			<div>
+				<rich:dataTable id="tablePadronizacao"
+								onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+								onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+								value="#{prescricaoForm.listaPrescricaoPadraoItem}"
+								var="pad" 
+								rows="10"
+								rowKeyVar="linha" 
+								style="width:100%;" reRender="ds">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<h:column>
+								<a4j:commandButton actionListener="#{prescricaoForm.changeFlgNenhumMarcados()}"
+				    							   value="#{prescricaoForm.flgNunhumMarcados ? 'Todos' : 'Nenhum' }" 
+				    							   reRender="tablePadronizacao:btnMarcarTodos, tablePadronizacao"
+				    							   id="btnMarcarTodos" style="float:left;" />
+								<rich:spacer width="25"/>
+								<h:outputText value="Sel."/>
+							</h:column>
+							<h:column>
+								<h:outputText value="Grupo" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Prescrição" />
+							</h:column>
+						</rich:columnGroup>
+					</f:facet>
+					<rich:column width="3%">
+						<h:inputHidden value="#{pad.isnPrescricaoPadraoItem}" />
+      					<h:selectBooleanCheckbox value="#{pad.insertItem}">
+						   <a4j:support event="onclick" reRender="tablePadronizacao:btnMarcarTodos, tablePadronizacao">
+      					     <f:setPropertyActionListener value="#{true}" target="#{prescricaoForm.flgNunhumMarcados}"/>
+      					   </a4j:support>
+      					</h:selectBooleanCheckbox>
+					</rich:column>
+					<rich:column>
+						<h:outputText value="#{pad.tipoPrescricao.dscTipoPrescricao}"/>
+					</rich:column>
+					<rich:column  width="82%" sortable="true">
+						<h:outputText value="#{pad.dscPrescricaoPadrao}" style="font-size:11px;" rendered="#{pad.isnTipoPrescricao != 19 and pad.isnTipoPrescricao != 20 and pad.isnTipoPrescricao != 2}" escape="false"/>
+						<h:outputText value="#{pad.dscPrescricaoPadrao}" style="#{(pad.produto.flgMpp)?'font-size:11px; text-decoration: underline; font-weight:bold;':'font-size:11px;'}" rendered="#{pad.isnTipoPrescricao == 19 or pad.isnTipoPrescricao == 20 or pad.isnTipoPrescricao == 2}" escape="false"/>							
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds" ajaxSingle="false" />
+					</f:facet>
+				</rich:dataTable>
+				<div style="text-align:center; margin-top:10px;">
+					<a4j:commandButton value="Adicionar" 
+					                   styleClass="botaoModal" 
+					                   style="margin-right:10px" 
+					                   actionListener="#{prescricaoForm.incluirItemPadrao}" 
+					                   reRender="frmPrescricaoItem,frmPrescricaoItem:dtPrescricaoPepiItem1"
+					                   onclick="#{rich:component('panelStatus')}.show();"					                   
+					                   oncomplete="#{rich:component('panelStatus')}.hide(); avisosValidacao(#{prescricaoForm.avisoValidacao}, 'panelPadronizacao', false, '#{prescricaoForm.mensagem}');"/>
+					<a4j:commandButton value="Cadastrar" styleClass="botaoModal" style="margin-right:10px;"
+						action="#{prescricaoPadraoForm.limparCadastroPrescricaoPadrao}"
+						rendered="false"
+					    oncomplete="#{rich:component('panelCadastraPrescricaoPadrao')}.show(); document.getElementById('formCadastroPP:statesinput').value = '';" 
+					    reRender="panelCadastraPrescricaoPadrao"/>
+					<a4j:commandButton id="btnCancelaPadronizacao" value="Cancelar" styleClass="botaoModal">
+						<rich:componentControl for="panelPadronizacao" attachTo="btnCancelaPadronizacao" operation="hide" event="onclick" />
+					</a4j:commandButton>					                   
+				</div>
+			</div>
+		</div>
+	    </h:form>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanelPadronizacao"/>
+        		<rich:componentControl for="panelPadronizacao" attachTo="fechaPanelPadronizacao" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelSuspenderPrescritos" autosized="true" width="900" height="450" resizeable="false">
+   		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/images/icons/lupa.png" style="border:0; margin-right:10px; vertical-align:middle" />
+				<h:outputText value="Suspensão de itens já prescritos"/>
+			</h:panelGroup>
+		</f:facet>
+    	<h:form id="formSuspenderPrescritos">
+	    	<div class="areaPesquisa">
+                <h:selectOneMenu value="#{prescricaoForm.isnTipoPrescricaoPepSuspenso}" id="selSuspensaoPadrao">
+					<f:selectItems value="#{prescricaoForm.lstPrescricaoPepSuspensoPadrao}" />
+					<a4j:support event="onchange" reRender="tableSuspensao" action="#{prescricaoForm.handlePadronizacaoSuspensaoChange}" />
+				</h:selectOneMenu>		
+			</div>
+	   		<div style="height:400px; overflow:scroll; overflow-y:scroll; overflow-x:hidden;">
+				<rich:dataTable id="tableSuspensao"
+								onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+								onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+								value="#{prescricaoForm.listaPrescricaoPepItemPadrao}" 
+								var="pad" 
+								rows="10"
+								rowKeyVar="linha" 
+								style="width:97%;" reRender="ds">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<h:column>
+								<h:outputText value="Sel." />
+							</h:column>
+							<h:column>
+								<h:outputText value="Grupo" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Prescrição" />
+							</h:column>
+						</rich:columnGroup>
+					</f:facet>
+					<rich:column>
+						<h:inputHidden value="#{pad.isnPrescricaoPepItem}" />
+      					<h:selectBooleanCheckbox value="#{pad.insertItem}" rendered="#{pad.isnPrescricaoPepIs == null and !pad.edit and pad.suspendidoItem == false}"/>
+					</rich:column>
+					<rich:column sortable="true">
+						<h:outputText value="#{pad.tipoPrescricao.dscTipoPrescricao}" />
+					</rich:column>
+					<rich:column  sortable="true">
+						<h:panelGroup>
+					  		<h:outputText value="#{pad.dscPrescricao}" style="#{(pad.produto.flgMpp)?'text-transform: uppercase; font-size: 11px; text-decoration: underline; font-weight:bold;':'text-transform: uppercase; font-size: 11px;'}" rendered="#{pad.isnPrescricaoPepIs == null and !pad.edit and pad.suspendidoItem == false}" escape="false"/>
+					  		<h:outputText value="#{pad.dscPrescricao}" style="#{(pad.produto.flgMpp)?'text-decoration: line-through underline; text-transform: uppercase; font-size: 11px; font-weight:bold;':'text-decoration: line-through; text-transform: uppercase; font-size: 11px;'}" rendered="#{pad.isnPrescricaoPepIs != null or pad.suspendidoItem == true}" escape="false"/>
+					  	</h:panelGroup>
+					</rich:column>
+
+					<f:facet name="footer">
+						<rich:datascroller id="ds" ajaxSingle="false" />
+					</f:facet>
+				</rich:dataTable>
+
+			</div>
+				<div style="text-align:center; margin-top:10px;">
+				
+					<a4j:commandButton value="Suspender" 
+					                   styleClass="botaoModal"
+					                   actionListener="#{prescricaoForm.validaSeTemItem}"
+					                   oncomplete="if (confirm('Confirma a suspensão dos itens selecionados.')) avisosValidacao(#{prescricaoForm.avisoValidacao}, 'panelSenha', true, '')" 
+					                   reRender="panelSenha">
+							<f:setPropertyActionListener target="#{prescricaoForm.suspendeItens}" value="S" />
+					</a4j:commandButton>
+				</div>
+	    </h:form>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanelSuspenderPrescritos"/>
+        		<rich:componentControl for="panelSuspenderPrescritos" attachTo="fechaPanelSuspenderPrescritos" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelAproveitarPrescritos" autosized="true" width="900" height="450" resizeable="false">
+   		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/images/icons/lupa.png" style="border:0; margin-right:10px; vertical-align:middle" />
+				<h:outputText value="Itens ativos prescritos anteriormente"/>
+			</h:panelGroup>
+		</f:facet>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanelAproveitarPrescritos"/>
+        		<rich:componentControl for="panelAproveitarPrescritos" attachTo="fechaPanelAproveitarPrescritos" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+    	<h:form id="formAproveitarPrescritos">
+	   		<div style="height:400px; overflow:scroll; overflow-y:scroll; overflow-x:hidden;">
+				<rich:dataTable id="tableAproveitar"
+								onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+								onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+								value="#{prescricaoForm.listPrescricaoPepItensAtivos}" 
+								var="pad" 
+								rows="10"
+								rowKeyVar="linha" 
+								style="width:97%;" reRender="ds">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<h:column>
+								<h:outputText value="Adicionar" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Suspender" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Grupo" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Prescrição" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Complemento" />
+							</h:column>
+						</rich:columnGroup>
+					</f:facet>
+					<rich:column>
+						<h:inputHidden value="#{pad.isnPrescricaoPepItem}" />
+      					<h:selectBooleanCheckbox value="#{pad.insertItem}" rendered="#{pad.suspendidoItem == false}">
+   						   <a4j:support event="onclick" reRender="formAproveitarPrescritos:tableAproveitar"/>					
+      					</h:selectBooleanCheckbox>
+					</rich:column>
+					<rich:column>
+      					<h:selectBooleanCheckbox value="#{pad.suspendidoItem}" rendered="#{pad.insertItem == false}">
+   						   <a4j:support event="onclick" reRender="formAproveitarPrescritos:tableAproveitar"/>					
+      					</h:selectBooleanCheckbox>
+					</rich:column>					
+					<rich:column sortable="true">
+						<h:outputText value="#{pad.tipoPrescricao.dscTipoPrescricao}" disabled="#{pad.suspendidoItem == true}" style="#{(pad.suspendidoItem == true)?'text-decoration: line-through; text-transform: uppercase; font-size: 11px;':'text-transform: uppercase; font-size: 11px;'}"/>
+					</rich:column>
+					<rich:column  sortable="true">
+						<h:panelGroup>
+					  		<h:outputText value="#{pad.dscPrescricao}" style="text-transform: uppercase; font-size: 11px;" rendered="#{(pad.isnTipoPrescricao == 43 or pad.isnTipoPrescricao == 19) and pad.isnPrescricaoPepIs == null}" escape="false"/>
+					  		<h:outputText value="#{pad.dscPrescricao}" style="text-decoration: line-through; text-transform: uppercase; font-size: 11px;" rendered="#{(pad.isnTipoPrescricao == 43 or pad.isnTipoPrescricao == 19) and pad.isnPrescricaoPepIs != null}" escape="false"/>
+							<h:outputText value="#{pad.dscPrescricao}" style="#{(pad.produto.flgMpp)?'text-transform: uppercase; font-size: 11px; text-decoration: underline; font-weight:bold;':'text-transform: uppercase; font-size: 11px;'}" rendered="#{pad.isnTipoPrescricao != 43 and pad.isnTipoPrescricao != 19 and pad.isnPrescricaoPepIs == null}" escape="false"/>
+					  		<h:outputText value="#{pad.dscPrescricao}" style="#{(pad.produto.flgMpp)?'text-decoration: line-through underline; text-transform: uppercase; font-size: 11px; font-weight:bold;':'text-decoration: line-through; text-transform: uppercase; font-size: 11px;'}" rendered="#{pad.isnTipoPrescricao != 43 and pad.isnTipoPrescricao != 19 and pad.isnPrescricaoPepIs != null}" escape="false"/>
+					  		<h:outputText value="#{pad.diasDietaZero}" style="#{(pad.produto.flgMpp)?'text-transform: uppercase; font-size: 11px; text-decoration: underline; font-weight:bold;':'text-transform: uppercase; font-size: 11px;'}" rendered="#{pad.isnPrescricaoPepIs == null}"/>
+					  		<h:outputText value="#{pad.diasDietaZero}" style="#{(pad.produto.flgMpp)?'text-decoration: line-through underline; text-transform: uppercase; font-size: 11px; font-weight:bold;':'text-decoration: line-through; text-transform: uppercase; font-size: 11px;'}" rendered="#{pad.isnPrescricaoPepIs != null}"/>
+					  		<h:outputText value="#{pad.contadorAntibiotico}" style="#{(pad.produto.flgMpp)?'text-transform: uppercase; font-size: 11px; text-decoration: underline; font-weight:bold;':'text-transform: uppercase; font-size: 11px;'}" rendered="#{pad.isnPrescricaoPepIs == null}"/>
+					  		<h:outputText value="#{pad.contadorAntibiotico}" style="#{(pad.produto.flgMpp)?'text-decoration: line-through underline; text-transform: uppercase; font-size: 11px; font-weight:bold;':'text-decoration: line-through; text-transform: uppercase; font-size: 11px;'}" rendered="#{pad.isnPrescricaoPepIs != null}"/>
+					  	</h:panelGroup>
+					</rich:column>
+					<rich:column sortable="true">
+						<h:outputText value="#{pad.dscComplemento}" disabled="#{pad.suspendidoItem == true}" style="#{(pad.suspendidoItem == true)?'text-decoration: line-through; text-transform: uppercase; font-size: 11px;':'text-transform: uppercase; font-size: 11px;'}"/>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds" ajaxSingle="false" />
+					</f:facet>
+				</rich:dataTable>
+
+			</div>
+				<div style="text-align:center; margin-top:10px;">
+					<a4j:commandButton value="Concluir" 
+					                   styleClass="botaoModal"
+					              	   onclick="if (! confirm('Confirma a inclusão/suspensão dos itens selecionados?')) { return false; } else { this.disabled = true; }" 
+					                   actionListener="#{prescricaoForm.incluirItemNaPrescricaoAtual}" 
+					               	   reRender="frmPrescricaoItem,frmPrescricaoItem:dtPrescricaoPepiItem1"
+					               	   oncomplete="this.disabled = false; if (validaProduto('#{prescricaoForm.mensagem}')){ Richfaces.hideModalPanel('panelAproveitarPrescritos'); }"/>
+					<a4j:commandButton value="Cancelar" 
+					                   styleClass="botaoModal"
+					                   style="margin-left:10px;"
+					               	   oncomplete="Richfaces.hideModalPanel('panelAproveitarPrescritos');"/>
+				</div>
+	    </h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panProduto" autosized="false" width="900" height="500" resizeable="false" headerClass="headerPanel3">
+		<f:facet name="header">
+			<h:panelGroup>
+				<h:outputText value="Pesquisa de Produto" />
+			</h:panelGroup>
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="fechaPanel" />
+				<rich:componentControl for="panProduto" attachTo="fechaPanel" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formProduto">
+			<fieldset style="background-color: #F5F5F5">
+				<div style="height: 30px;">
+					<div class="colLeft" style="width: 15%;">
+						<label class="font10"><b>Descrição:</b></label>
+					</div>
+					<div class="colLeft largura220">
+						<h:inputText value="#{prescricaoForm.nmProduto}" maxlength="50"
+							styleClass="campoTexto largura200"
+							onblur="this.value.toUpperCase();" style="width: 450px;"
+							id="nmProduto" onkeypress="return enter(event);" />
+					</div>
+				</div>
+				<div style="height: 20px">
+					<div class="colLeft" style="width: 100%;">
+						<a4j:commandButton style="width: 80px; height: 20px;"
+											oncomplete="validaProduto('#{prescricaoForm.mensagem}');"
+											id="Pesquisar" value="PESQUISAR"
+											action="#{prescricaoForm.pesquisarProduto}"
+											reRender="formProduto" />
+					</div>
+				</div>
+			</fieldset>
+			<div>
+				<rich:dataTable id="tabelaProfissional"
+								onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+								onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+								value="#{prescricaoForm.listaProduto}" var="rst" rows="10"
+								rowKeyVar="linha" style="width: 100%; cursor: pointer;">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<h:column>
+								<h:outputText width="5%" />
+							</h:column>
+							<h:column>
+								<h:outputText width="20%" value="Descrição" />
+							</h:column>
+						</rich:columnGroup>
+					</f:facet>
+					<rich:column align="center" width="5%" sortable="true">
+						<a4j:commandLink reRender="panProduto, frmPrescricaoItem" oncomplete="#{rich:component('panProduto')}.hide()">
+							<h:graphicImage id="imgSelecionar" url="IMG/selecionar.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{rst}" target="#{prescricaoForm.objProduto}" />
+						</a4j:commandLink>
+					</rich:column>
+					<rich:column width="65%" sortable="true">
+						<h:outputText value="#{rst.dscProduto}" />
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds" ajaxSingle="false" />
+					</f:facet>
+				</rich:dataTable>
+			</div>
+			<script>
+				function validaProduto(msg) {
+					var n = msg.search('sucesso!');
+					if (msg != '') {
+						if (n == -1) {
+							alertCustomizado(msg);
+							return false;
+						} else {
+							alertCustomizado(msg);
+							return true;
+						}
+					} else {
+						return true;
+					}
+				}
+	
+				function enter(e) {
+					var keycode;
+					if (window.event) {
+						keycode = window.event.keyCode;
+					} else {
+						keycode = e.which;
+					}
+					if (keycode == 13) {
+						alert('Não é possível utilizar a tecla Enter');
+						return false;
+					}
+				}
+			</script>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelVisualizarItem" autosized="false" width="650" height="300" resizeable="false" headerClass="headerPanel3">
+		<f:facet name="header">
+			<h:panelGroup>
+				<h:outputText value="Visualizar Item" />
+			</h:panelGroup>
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="fechaPanelVisualizar" />
+				<rich:componentControl for="panelVisualizarItem" attachTo="fechaPanelVisualizar" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formVisualizarItem">
+			<fieldset style="background-color: #F5F5F5">
+
+					<div class="colLeft" style="width: 15%; display: block;">
+							<h:outputText rendered="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao != 19 and prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao != 42}" value="Diluição:" style="font-size: 11px; width:92px;"/>
+							<h:inputText rendered="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao != 19 and prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao != 42}" value="#{prescricaoForm.objPrescricaoPepItemVisualizacao.dscDiluicao}" disabled="true" id="diluicao" style="margin-right:10px; width:600px; text-transform:uppercase;"/>
+							<br/>
+							<h:panelGrid columns="6" style="margin-left:-3px;">
+								<h:panelGroup>
+									<h:outputText rendered="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao != 19}" value="Dose:" style="font-size: 11px; width:50px;"/>					
+									<h:inputText rendered="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao != 19}" value="#{prescricaoForm.objPrescricaoPepItemVisualizacao.qtdDose}" disabled="true" style="width:50px;"/>
+							
+									<h:outputText rendered="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao == 19}" value="Volume:" style="font-size: 11px; width:50px;"/>
+									<h:inputText  rendered="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao == 19}" value="#{prescricaoForm.objPrescricaoPepItemVisualizacao.qtdVolume}" disabled="true" style="width:50px;"/>
+						    	</h:panelGroup>
+								<rich:spacer width="2"/>
+								<h:panelGroup>
+									<h:outputText value="" style="font-size: 11px; width:52px;"/>	
+					                <h:inputText rendered="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao != 42}" value="#{prescricaoForm.objPrescricaoPepItemVisualizacao.dscApresentacao}" style="width:55px;" disabled="true"/>
+									<h:inputText rendered="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao == 42}" value="gota(s)" disabled="true" style="width:50px;"/>
+								</h:panelGroup>
+								<rich:spacer width="10"/>
+								<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnTipoPrescricao != 19}">
+									<h:outputText value="Posologia:" style="font-size: 11px; width:52px;"/>					
+									<h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnPrescricaoPosologia}" style="width:157px;" disabled="true" >
+										<f:selectItems value="#{prescricaoForm.sliPrescricaoPosologia}"/>
+									</h:selectOneMenu>
+								</h:panelGroup>
+							</h:panelGrid>
+							<h:outputText value="Via:" style="font-size: 11px; width:20px;"/>				
+							<h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItemVisualizacao.isnPrescricaoVia}" style="width:120px;" disabled="true" >
+								<f:selectItems value="#{prescricaoForm.sliPrescricaoVia}"/>
+							</h:selectOneMenu>
+							<br/>
+							<h:outputText value="Complemento:" style="font-size: 11px; width:85px;"/>
+							<h:inputTextarea value="#{prescricaoForm.objPrescricaoPepItemVisualizacao.dscComplemento}" style="text-transform: uppercase; width:600px; height:30px" disabled="true" />
+							<br/>
+							<h:panelGrid columns="4">
+								<h:selectBooleanCheckbox id="seNecessario" value="#{prescricaoForm.objPrescricaoPepItemVisualizacao.flgSeNecessarioVisualizacao}" disabled="true" />
+	  							<h:outputLabel value="Se Necessário" for="seNecessario" style="font-size: 11px; white-space: nowrap;" />
+								<h:selectBooleanCheckbox id="sbcAcm" value="#{prescricaoForm.objPrescricaoPepItemVisualizacao.flgAcm eq 'S'}" disabled="true" />
+	  							<h:outputLabel value="ACM" for="sbcAcm" style="font-size: 11px; white-space: nowrap;" />
+  							</h:panelGrid>
+					</div>
+			</fieldset>
+			<br clear="all"/>
+			<div style="text-align:center;">
+				<a4j:commandButton id="btnCancelAssinatura"  value="Voltar"  styleClass="botaoModal" style="width:100px;">
+					<rich:componentControl for="panelVisualizarItem" attachTo="btnCancelAssinatura" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+   	<div>
+   		<ui:include src="cd_template_emergencia.xhtml"/>
+   	</div>
+	<rich:panel styleClass="panelContent" style="width:99%; margin:0px auto 0px auto; border:0;">
+			<h:form id="frmPrescricaoItem" onkeypress="return event.keyCode != 13">
+				<h:panelGroup styleClass="areaPesquisa" layout="block">
+					<a4j:region id="rb">
+						<a4j:status id="status" 
+					                onstart="#{rich:component('panelStatus')}.show()" 
+					                onstop="#{rich:component('panelStatus')}.hide()" >
+					 	</a4j:status>
+						<h:outputText value="Prescrição" style="font-size:16px; display:block; font-weight:bold;" />
+						<br/>
+		            	<p>
+		            		Prescrição <strong>#{prescricaoForm.objPrescricaoPep.prescricaoTipo.dscPrescricaoTipo}</strong> do dia <strong><h:outputText value="#{prescricaoForm.objPrescricaoPep.datPrescricao}" ><f:convertDateTime pattern=" dd/MM/yyyy" timeZone="GMT-3" /></h:outputText></strong>
+		          			as <strong><h:outputText value="#{prescricaoForm.objPrescricaoPep.datPrescricao}" ><f:convertDateTime pattern=" HH:mm" timeZone="GMT-3" /></h:outputText></strong>
+		          			por <strong><h:outputText value="#{prescricaoForm.objPrescricaoPep.usuario.dscUsuario}" /></strong><br/>
+		          			Obs.: <strong>#{prescricaoForm.objPrescricaoPep.dscObs}</strong>
+		          		</p>
+		          		<br />
+						<h:panelGroup id="panelGrupo">
+			            	<h:outputText value="Grupo: " style="font-size: 11px;" /> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			                <h:selectOneMenu value="#{prescricaoForm.isnTipoPrescricaoPep}" rendered="#{prescricaoForm.isnTipoPrescricaoPep != 8 and prescricaoForm.isnTipoPrescricaoPep != 40}" style="margin-right:10px; width:200px;" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem}">
+								<f:selectItems value="#{prescricaoForm.sliTipoPrescricaoPep}"/>
+								<a4j:support event="onchange" reRender="frmPrescricaoItem" action="#{prescricaoForm.handleTipoPrescricaoChange}" oncomplete="limparCampos();" />
+							</h:selectOneMenu>
+			                <h:selectOneMenu value="#{prescricaoForm.isnTipoPrescricaoPep}" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 8 or prescricaoForm.isnTipoPrescricaoPep == 40}" style="margin-right:10px; width:200px;" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem}">
+								<f:selectItems value="#{prescricaoForm.sliTipoPrescricaoPep}"/>
+								<a4j:support event="onchange" reRender="frmPrescricaoItem" action="#{prescricaoForm.handleTipoPrescricaoChange}" oncomplete="limparCampos();"/>
+							</h:selectOneMenu>
+							<rich:spacer width="10"/>
+						</h:panelGroup>
+					</a4j:region>
+					<h:panelGroup id="panelNutricao">
+						<h:outputLabel value="Nutrição:" rendered="#{prescricaoForm.cboNutricao}" style="font-size: 11px;"/><h:outputLabel style="color:red; font-size: 11px;" value="*" rendered="#{prescricaoForm.cboNutricao}"/>
+		                <h:selectOneMenu id="cboNutricao" value="#{prescricaoForm.isnCboNutricao}" style="margin-right:8px" rendered="#{prescricaoForm.cboNutricao}">
+							<f:selectItems value="#{prescricaoForm.sliCboNutricao}"/>
+							<a4j:support event="onchange" reRender="panelSugestao,panelPrescricaoText,panelNutricao,frmPrescricaoItem:cboDieta" action="#{prescricaoForm.handleTipoNutricaoChange}"/>
+						</h:selectOneMenu>
+		                <h:selectOneMenu id="cboDieta" value="#{prescricaoForm.isnDietaItem}" style="width:300px; margin-right:8px" rendered="#{prescricaoForm.cboNutricao}">
+							<f:selectItems var="d" itemValue="d.isnDietaItem" itemLabel="d.dscDietaItem" value="#{prescricaoForm.sliDietaItens}" 
+							reRender="panelSugestao,panelPrescricaoText,panelNutricao"/>
+							<a4j:support event="onchange" reRender="panelSugestao,panelPrescricaoText,panelNutricao,frmPrescricaoItem:cboDieta" action="#{prescricaoForm.handleDietaChange}" />
+						</h:selectOneMenu>
+						<h:panelGroup rendered="#{prescricaoForm.isnDietaItem == 24}">
+							<h:inputText value="#{prescricaoForm.outrosDietaZero}" maxlength="100" size="100">
+								<a4j:support event="onblur" reRender="panelSugestao,panelPrescricaoText,panelNutricao,frmPrescricaoItem:cboDieta" action="#{prescricaoForm.handleDscPrescricaoOutrosDietaZero}" />
+							</h:inputText>
+							<h:outputLabel style="color:red; font-size: 11px;" value=" * "/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<t:htmlTag value="br" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 1}"/>
+					<h:panelGroup id="panelSugestao">
+						<h:outputLabel value="Sugestão: " rendered="#{prescricaoForm.isnTipoPrescricaoPep == 36}" style="font-size: 11px;"/>
+						<!-- PREPARO EXAMES - isnTipoPrescricaoPep=36 -->
+		                <h:selectOneMenu value="#{prescricaoForm.dscSugestao}" style="margin-right:8px" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 36}">
+							<f:selectItems value="#{prescricaoForm.sliExame}"/>
+							<a4j:support event="onchange" reRender="panelPrescricaoText" action="#{prescricaoForm.handleSugestaoChange}" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup id="panelPrescricaoText" rendered="#{prescricaoForm.isnTipoPrescricaoPep != 43 and prescricaoForm.isnTipoPrescricaoPep != 44 and prescricaoForm.isnTipoPrescricaoPep != 40 and prescricaoForm.isnTipoPrescricaoPep != 8 and  prescricaoForm.isnTipoPrescricaoPep != 42 and prescricaoForm.isnTipoPrescricaoPep != 19 and prescricaoForm.isnTipoPrescricaoPep != 20 and prescricaoForm.isnTipoPrescricaoPep != 2 and prescricaoForm.isnTipoPrescricaoPep != 0}">
+						<h:outputText value="Prescrição:" style="font-size: 11px; width:70px;"/><h:outputLabel style="color:red; font-size: 11px;" value="*"/>
+						<h:inputText maxlength="900" size="125" value="#{prescricaoForm.dscPrescricao}" style="#{(prescricaoForm.cboNutricao)?'text-transform: uppercase;':'width:450px; text-transform: uppercase;'}"/>
+					</h:panelGroup>
+					<h:panelGroup id="panelPrescricaoTextObservacao" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 44}">
+						<h:outputText value="Observação:" style="font-size: 11px; width:70px;"/><h:outputLabel style="color:red; font-size: 11px;" value="*"/>
+						<h:inputTextarea
+							value="#{prescricaoForm.dscPrescricao}" 
+							onkeyup="verificaTamanho('formPrescricao',this, 900, 'lblDscObs');"
+							style="#{(prescricaoForm.cboNutricao)?'width:370px; text-transform: uppercase;':'width:450px; text-transform: uppercase;'}"
+						/>
+					</h:panelGroup>					
+					<h:panelGroup id="panelProcedimentos" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 8 or prescricaoForm.isnTipoPrescricaoPep == 40}">					
+			            <h:outputText value="Prescrição:" style="font-size: 11px; width:70px;"/>	<h:outputLabel style="color:red; font-size: 11px;" value="*" />	
+		                <h:inputText value="" id="statesinput2" style="margin-right:10px; width:522px; text-transform:uppercase;" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem}"/>
+		                <a4j:commandButton value="Pesquisar" onclick="#{rich:component('suggestionProc')}.callSuggestion(true)" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 8}" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem}"/>
+		                <a4j:commandButton value="Pesquisar" onclick="#{rich:component('suggestionCuidadosGerais')}.callSuggestion(true)" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 40}" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem}"/>
+		                
+						<rich:suggestionbox height="200" width="500"  rendered="#{prescricaoForm.isnTipoPrescricaoPep == 8}"
+						 suggestionAction="#{prescricaoForm.autocompleteProcedimentos}" var="procedimento" ignoreDupResponses="true"				 
+           				 for="statesinput2" fetchValue="#{procedimento.dscApresentacaoPrescricao}" id="suggestionProc">
+            				 <h:column>
+				                <h:outputText value="#{procedimento.dscApresentacaoPrescricao}" />
+				             </h:column>	    
+	                         <a4j:support id="a4j5" event="onselect"  ajaxSingle="true">
+	                           <f:setPropertyActionListener value="#{procedimento.isnPC}" target="#{prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItemProcedimento}"/>
+	                    	 </a4j:support>                         
+           				 </rich:suggestionbox>
+
+						<rich:suggestionbox height="200" width="500"  rendered="#{prescricaoForm.isnTipoPrescricaoPep == 40}"
+						 suggestionAction="#{prescricaoForm.autocompleteCuidadosGerais}" var="cuidadosGerais" ignoreDupResponses="true"				 
+           				 for="statesinput2" fetchValue="#{cuidadosGerais.dscPrescricaoPepItemCuidadosGerais}" id="suggestionCuidadosGerais">
+            				 <h:column>
+				                <h:outputText value="#{cuidadosGerais.dscPrescricaoPepItemCuidadosGerais}" />
+				             </h:column>	    
+	                         <a4j:support id="a4j5" event="onselect"  ajaxSingle="true">
+	                           <f:setPropertyActionListener value="#{cuidadosGerais.isnPrescricaoPepItemCuidadosGerais}" target="#{prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItemCuidadosGerais}"/>
+	                    	 </a4j:support>                         
+           				 </rich:suggestionbox>
+					</h:panelGroup>		
+					<t:htmlTag value="br" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 8 or prescricaoForm.isnTipoPrescricaoPep == 40}"/>  
+					<h:panelGroup rendered="#{prescricaoForm.isnTipoPrescricaoPep == 8 or prescricaoForm.isnTipoPrescricaoPep == 40}">
+						<h:outputText value="Complemento:" style="font-size: 11px; width:80px;"/>
+						<h:inputText maxlength="200" value="#{prescricaoForm.objPrescricaoPepItem.dscComplemento}" style="width:920px; text-transform: uppercase;"/>
+					</h:panelGroup>
+					<h:panelGroup id="panelDroga" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 43 or prescricaoForm.isnTipoPrescricaoPep == 42 or prescricaoForm.isnTipoPrescricaoPep == 19 or prescricaoForm.isnTipoPrescricaoPep == 20 or prescricaoForm.isnTipoPrescricaoPep == 2}">					
+			            <h:outputText value="Medicamento:" style="font-size: 11px; width:70px;"/>	<h:outputLabel style="color:red; font-size: 11px;" value="*" />	
+		                <h:inputText value="" id="statesinput" style="margin-right:10px; width:522px; text-transform:uppercase;" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem and (!prescricaoForm.objPrescricaoPepItem.editComposto or prescricaoForm.alterarItemAgrupado)}">         
+		       				<a4j:support event="onblur" oncomplete="limparDosesESetarFoco();" reRender="frmPrescricaoItem:idPrescricaoText, frmPrescricaoItem:parentComplemento, frmPrescricaoItem:obgDose, frmPrescricaoItem:obgPosologia, frmPrescricaoItem:panelDiluicao4, frmPrescricaoItem:selUnidadeDose, frmPrescricaoItem:selUnidadeDose2, frmPrescricaoItem:selPrescricaoVia, frmPrescricaoItem:selPrescricaoVia2, frmPrescricaoItem:idPrescricaoTextNebulizacao, frmPrescricaoItem:idPrescricaoTextEletrolito, frmPrescricaoItem:selUnidadeDose3, frmPrescricaoItem:selPrescricaoVia3, frmPrescricaoItem:selUnidadeDose8, frmPrescricaoItem:panelTableEletrolito, frmPrescricaoItem:panelDiluicao, frmPrescricaoItem:panelRediluicao"/>
+		       			</h:inputText>
+		                <a4j:commandButton value="Pesquisar" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 2 or prescricaoForm.isnTipoPrescricaoPep == 20}" onclick="#{rich:component('suggestion')}.callSuggestion(true)" oncomplete="limparCamposSel();" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem}"/>
+		                <a4j:commandButton value="Pesquisar" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 19}" onclick="#{rich:component('suggestionH')}.callSuggestion(true)" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem}"/>
+		                <a4j:commandButton value="Pesquisar" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 42}" onclick="#{rich:component('suggestionN')}.callSuggestion(true)" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem}"/>
+		                <a4j:commandButton value="Pesquisar" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 43}" onclick="#{rich:component('suggestionE')}.callSuggestion(true)" disabled="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem and (!prescricaoForm.objPrescricaoPepItem.editComposto or prescricaoForm.alterarItemAgrupado)}"/>
+				        				
+						<rich:suggestionbox height="200" width="500"  rendered="#{prescricaoForm.isnTipoPrescricaoPep == 2 or prescricaoForm.isnTipoPrescricaoPep == 20}"
+						 suggestionAction="#{prescricaoForm.autocomplete}" var="produto" ignoreDupResponses="true"				 
+           				 for="statesinput" fetchValue="#{produto.dscProduto}" id="suggestion">
+            				 <h:column>
+				                <h:outputText value="#{produto.dscProduto}" />
+				             </h:column>	    
+	                         <a4j:support id="a4j5" action="#{prescricaoForm.carregarCamposPreDefinidosDaPrescricao}" event="onselect"  ajaxSingle="true">
+	                           <f:setPropertyActionListener value="#{produto}" target="#{prescricaoForm.objProduto}"/>
+	                    	 </a4j:support>                         
+           				 </rich:suggestionbox>
+           				 
+						<rich:suggestionbox height="200" width="500"  rendered="#{prescricaoForm.isnTipoPrescricaoPep == 19}"
+						 suggestionAction="#{prescricaoForm.autocomplete}" var="produto" ignoreDupResponses="true"				 
+           				 for="statesinput" fetchValue="#{produto.dscProduto}" id="suggestionH">
+            				 <h:column>
+				                <h:outputText value="#{produto.dscProduto}" />
+				             </h:column>	    
+	                         <a4j:support id="a4j5" action="#{prescricaoForm.carregarCamposPreDefinidosDaPrescricao}" event="onselect"  ajaxSingle="true">
+	                           <f:setPropertyActionListener value="#{produto}" target="#{prescricaoForm.objProduto}"/>
+	                    	 </a4j:support>                         
+           				 </rich:suggestionbox>
+           				 
+           				 <rich:suggestionbox height="200" width="500"  rendered="#{prescricaoForm.isnTipoPrescricaoPep == 42}"
+						 suggestionAction="#{prescricaoForm.autocomplete}" var="produto" ignoreDupResponses="true"
+						 onobjectchange="printObjectsSelectedAps(document.getElementById('frmPrescricaoItem:idUnidade3'), #{rich:component('suggestionN')});"		 
+           				 for="statesinput" fetchValue="#{produto.dscProduto}" id="suggestionN">
+            				 <h:column>
+				                <h:outputText value="#{produto.dscProduto}" />
+				             </h:column>	    
+	                         <a4j:support id="a4j5" action="#{prescricaoForm.carregarCamposPreDefinidosDaPrescricao}" event="onselect"  ajaxSingle="true">
+	                           <f:setPropertyActionListener value="#{produto}" target="#{prescricaoForm.objProduto}"/>
+	                    	 </a4j:support>                         
+           				 </rich:suggestionbox>
+           				 
+           				 <rich:suggestionbox height="200" width="500"  rendered="#{prescricaoForm.isnTipoPrescricaoPep == 43}"
+						 suggestionAction="#{prescricaoForm.autocomplete}" var="produto" ignoreDupResponses="true"	 
+           				 for="statesinput" fetchValue="#{produto.dscProduto}" id="suggestionE">
+            				 <h:column>
+				                <h:outputText value="#{produto.dscProduto}" />
+				             </h:column>	    
+	                         <a4j:support id="a4j5" action="#{prescricaoForm.carregarCamposPreDefinidosDaPrescricaoEletrolito}" event="onselect"  ajaxSingle="true">
+	                           <f:setPropertyActionListener value="#{produto}" target="#{prescricaoForm.objProduto}"/>
+	                    	 </a4j:support>                         
+           				 </rich:suggestionbox>
+           				 
+					</h:panelGroup>
+					
+					<t:htmlTag value="br" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 2 or prescricaoForm.isnTipoPrescricaoPep == 20}"/>
+											
+					<h:panelGroup id="panelDiluicao" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 2 or prescricaoForm.isnTipoPrescricaoPep == 20}"> 
+						<h:outputText value="Dose: " style="font-size: 11px;"/>
+						<h:panelGroup id="obgDose">
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" rendered="#{prescricaoForm.objProduto.isnProduto != 1210 and prescricaoForm.objProduto.isnProduto != 1214}"/>
+						</h:panelGroup>
+						<h:inputText maxlength="8" value="#{prescricaoForm.objPrescricaoPepItem.qtdDose}" onkeyup="javascript:return(formataNumero2(this))" onblur="validarNumero(this);" id="dose" style="margin-right: 3px; width:55px;" >
+							<a4j:support event="onblur" reRender="frmPrescricaoItem:idPrescricaoText"/>
+					    </h:inputText>
+		                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.dscApresentacao}" id="selUnidadeDose" style="width:75px;">
+							<f:selectItems value="#{prescricaoForm.sliUnidadeDose}" />
+							<a4j:support event="onchange" reRender="frmPrescricaoItem:idPrescricaoText" />
+						</h:selectOneMenu>
+						
+						<a4j:outputPanel id="panelRediluicao">
+							<h:outputText value="Diluição: " style="font-size: 11px; margin-left: 20px;"/>
+							<h:panelGroup rendered="#{prescricaoForm.objPrescricaoPepItem.flgRediluicao or empty prescricaoForm.sliDiluicao}">
+								<h:panelGroup id="obgDiluicao">
+									<h:outputLabel style="color:red; font-size: 11px;" value="*" rendered="#{prescricaoForm.objPrescricaoPepItem.flgRediluicao}"/>
+								</h:panelGroup>
+								<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.dscDiluicao}" maxlength="100" id="diluicao" style="width:280px; text-transform:uppercase;">
+									<a4j:support event="onblur" reRender="frmPrescricaoItem:idPrescricaoText"/>
+								</h:inputText>
+							</h:panelGroup>
+							
+							<h:panelGroup rendered="#{!prescricaoForm.objPrescricaoPepItem.flgRediluicao and not empty prescricaoForm.sliDiluicao}">
+								<h:outputLabel style="color:red; font-size: 11px;" value="*" />
+								<h:inputText maxlength="4" value="#{prescricaoForm.doseDiluicao}" onkeyup="javascript:return(formataNumero2(this))" id="doseDiluicao" style="margin-right:2px; width:50px;">
+									<a4j:support event="onblur" oncomplete="validarNumeroInterno(document.getElementById('frmPrescricaoItem:doseDiluicao'));" reRender="frmPrescricaoItem:idPrescricaoText" />
+							    </h:inputText>
+								<h:outputLabel style="color:red; font-size: 11px; margin-right:3px;" value="*" />
+								<h:selectOneMenu id="selDiluicao" value="#{prescricaoForm.objPrescricaoPepItem.dscDiluicao}" style="margin-right:10px; width:425px; text-transform:uppercase;">
+									<f:selectItems var="d" value="#{prescricaoForm.sliDiluicao}" itemValue="#{d.dscDiluicao}" itemLabel="#{d.dscDiluicao}"/>
+									<a4j:support event="onchange" reRender="frmPrescricaoItem:idPrescricaoText"/>
+								</h:selectOneMenu>
+							</h:panelGroup>
+						</a4j:outputPanel>
+						
+						<h:selectBooleanCheckbox id="chkRediluicao" value="#{prescricaoForm.objPrescricaoPepItem.flgRediluicao}" style="margin-left: 20px; margin-right: 3px;">
+							<a4j:support event="onchange" action="#{prescricaoForm.acrescentarDoseDiluicaoAoTextoDaDiluicao}" reRender="frmPrescricaoItem:obgDiluicao, frmPrescricaoItem:idPrescricaoText, frmPrescricaoItem:panelRediluicao" />
+						</h:selectBooleanCheckbox>
+ 						<h:outputLabel value="Rediluição" for="chkRediluicao" style="font-size: 11px"/>
+						
+						<h:outputText value="Via: " style="font-size: 11px; margin-left: 20px;"/>
+						<h:outputLabel style="color:red; font-size: 11px;" value="*" />						
+						<h:selectOneMenu id="selPrescricaoVia" value="#{prescricaoForm.objPrescricaoPepItem.isnPrescricaoVia}" style="width:115px;">
+							<f:selectItems value="#{prescricaoForm.sliPrescricaoVia}"/>
+							<a4j:support event="onchange" reRender="frmPrescricaoItem:idPrescricaoText"/>
+						</h:selectOneMenu>
+						
+						<h:outputText value="Posologia: " style="font-size: 11px; margin-left: 20px;"/>
+						<h:panelGroup id="obgPosologia">
+							<h:outputLabel style="color:red; font-size: 11px;" value="*" rendered="#{(prescricaoForm.objProduto.isnProduto != 1210 and prescricaoForm.objProduto.isnProduto != 1214) and prescricaoForm.objProduto.flgPosologia eq 'S'}"/>
+						</h:panelGroup>
+						<h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.isnPrescricaoPosologia}" style="width:115px;">
+							<f:selectItems value="#{prescricaoForm.sliPrescricaoPosologia}"/>
+							<a4j:support event="onchange" reRender="frmPrescricaoItem:idPrescricaoText"/>
+						</h:selectOneMenu>
+					</h:panelGroup>
+					<t:htmlTag value="br" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 19}"/>  						
+					<h:panelGroup id="panelDiluicao2" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 19}">
+						<h:outputText value="Volume:" style="font-size: 11px; width:82px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />				
+						<h:inputText maxlength="8" value="#{prescricaoForm.objPrescricaoPepItem.qtdVolume}" onkeyup="javascript:return(formataNumero2(this))" onblur="validarNumero(this);"
+						 id="quantidade" style="margin-right:10px; width:50px;" >
+							<a4j:support event="onblur" reRender="frmPrescricaoItem:idPrescricaoText"/>
+					    </h:inputText>	
+						<rich:spacer width="2"/>
+		                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.dscApresentacao}" id="selUnidadeDose2" style="width:55px; height:18px;">
+							<f:selectItems value="#{prescricaoForm.sliUnidadeDose}" />
+							<a4j:support event="onchange" reRender="frmPrescricaoItem:idPrescricaoText" />
+						</h:selectOneMenu>		
+						<rich:spacer width="5"/>
+						<h:outputText value="Via:" style="font-size: 11px; width:20px;"/>	<h:outputLabel style="color:red; font-size: 11px;" value="*" />						
+						<h:selectOneMenu id="selPrescricaoVia2" value="#{prescricaoForm.objPrescricaoPepItem.isnPrescricaoVia}" style="width:137px;">
+							<f:selectItems value="#{prescricaoForm.sliPrescricaoVia}"/>
+							<a4j:support event="onchange" reRender="frmPrescricaoItem:idPrescricaoText"/>
+						</h:selectOneMenu>
+						<rich:spacer width="5"/>
+						<h:outputText value="Complemento:" style="font-size: 11px; width:85px;"/>
+						<h:inputText maxlength="200" value="#{prescricaoForm.objPrescricaoPepItem.dscComplemento}" style="width:420px; text-transform: uppercase;"/>
+						<rich:spacer width="10"/>
+						<h:selectBooleanCheckbox id="seNecessarioH" value="#{prescricaoForm.objPrescricaoPepItem.flgSeNecessarioBoolean}" />
+ 							<h:outputLabel value="Se Necessário" for="seNecessario" style="font-size: 11px; white-space: nowrap;"/>
+					</h:panelGroup>	
+					<t:htmlTag value="br" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 42}"/>  						
+					<h:panelGroup id="panelDiluicao3" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 42}">
+						<h:outputText value="Dose:" style="font-size: 11px; width:82px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+						<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.qtdDose}"  onkeyup="javascript:return(formataNumero2(this))" onblur="validarNumero(this);" size="2" maxlength="6" id="droga2" style="margin-right:5px; width:50px;">
+							<a4j:support event="onblur" reRender="frmPrescricaoItem:idPrescricaoTextNebulizacao"/>
+						</h:inputText>
+						<rich:spacer width="2"/>
+		                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.dscApresentacao}" id="selUnidadeDose8" style="width:75px; height:18px;">
+							<f:selectItems value="#{prescricaoForm.sliUnidadeDose}" />
+							<a4j:support event="onblur" reRender="frmPrescricaoItem:idPrescricaoTextNebulizacao"/>
+						</h:selectOneMenu>
+					</h:panelGroup>
+					<t:htmlTag value="br" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 43}"/>  						
+					<a4j:outputPanel id="panelDiluicao4" layout="block">
+						<h:panelGroup id="panelDiluicao4Interno" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 43}">
+							<h:panelGrid columns="30">
+								<h:outputText value="Dose:" style="font-size: 11px; width:76px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+								<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.qtdDose}" onkeyup="javascript:return(formataNumero2(this))" size="6" 
+											 maxlength="6" id="droga3" style="width:50px;" rendered="#{!prescricaoForm.objPrescricaoPepItem.flgFracionario and (empty prescricaoForm.objProduto.flgDoseSugestao or prescricaoForm.objProduto.flgDoseSugestao == false)}">
+									<a4j:support event="onblur" oncomplete="validarNumeroInterno(document.getElementById('frmPrescricaoItem:droga3'));" reRender="frmPrescricaoItem:idPrescricaoTextEletrolito"/>
+								</h:inputText>
+
+								<h:inputText value="#{prescricaoForm.objPrescricaoPepItem.qtdDose}" onkeyup="javascript:return(formataNumero2(this))" size="6"
+											 maxlength="6" id="droga4" style="width:50px;" rendered="#{!prescricaoForm.objPrescricaoPepItem.flgFracionario and not empty prescricaoForm.objProduto.flgDoseSugestao and prescricaoForm.objProduto.flgDoseSugestao == true}">
+									<a4j:support event="onblur" oncomplete="validarNumeroInterno(document.getElementById('frmPrescricaoItem:droga4'));" reRender="frmPrescricaoItem:idPrescricaoTextEletrolito"/>
+								</h:inputText>
+
+								<h:inputText value="1/2" disabled="true"
+								 id="doseFrac3" style="width:50px;" rendered="#{prescricaoForm.objPrescricaoPepItem.flgFracionario}">
+									<a4j:support event="onblur" reRender="frmPrescricaoItem:idPrescricaoTextEletrolito"/>
+							    </h:inputText>
+								<h:panelGroup>
+									<h:selectBooleanCheckbox id="doseFracionaria3" value="#{prescricaoForm.objPrescricaoPepItem.flgFracionario}">
+										<a4j:support event="onclick" oncomplete="limparDoses();" reRender="frmPrescricaoItem:panelDiluicao4, frmPrescricaoItem:idPrescricaoTextEletrolito">
+											<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.qtdDose}" /> 											
+										</a4j:support>
+									</h:selectBooleanCheckbox>
+		  							<h:outputLabel value="1/2" for="doseFracionaria3" style="margin-right:5px; font-size: 11px; white-space: nowrap;"/>  
+		  						</h:panelGroup>
+								<rich:spacer width="2"/>
+								<h:outputLabel style="color:red; font-size: 11px;" value="* " />								
+				                <h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.dscApresentacao}" id="selUnidadeDose3" style="width:75px; height:18px;">
+									<f:selectItems value="#{prescricaoForm.sliUnidadeDose}" />
+									<a4j:support event="onblur" reRender="frmPrescricaoItem:idPrescricaoTextEletrolito"/>
+								</h:selectOneMenu>
+																
+								<h:outputLabel style="color:red; font-size: 11px; margin-left:20px;" value="* " rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>
+				   		 		<h:selectOneRadio id="selEmCadaFase" style="font-weight: bold;" styleClass="fonte11"
+					                    value="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<f:selectItem itemLabel="EM CADA FASE" itemValue="S" />
+									<f:selectItem itemLabel="NAS FASES. QUAIS:" itemValue="N" />											
+									<a4j:support event="onchange"  reRender="frmPrescricaoItem:panelDiluicao4, frmPrescricaoItem:idPrescricaoText">
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase1}" />
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase2}" />
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase3}" />
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase4}" />
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase5}" />
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase6}" />
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase7}" />
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase8}" />
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase9}" />
+										<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase10}" />
+									</a4j:support>
+								</h:selectOneRadio>			
+									<h:outputLabel style="color:red; font-size: 11px;" value="*" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao() and prescricaoForm.objPrescricaoPepItem.flgEmCadaFase == 'N'}" />														
+								<h:selectBooleanCheckbox id="fase1" value="#{prescricaoForm.objPrescricaoPepItem.flgFase1}" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>
+								</h:selectBooleanCheckbox>
+	  							<h:outputLabel value="1" for="fase1" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>		
+								<h:selectBooleanCheckbox id="fase2" value="#{prescricaoForm.objPrescricaoPepItem.flgFase2}" style="margin-left:3px;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>
+								</h:selectBooleanCheckbox>									
+	  							<h:outputLabel value="2" for="fase2" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>	
+								<h:selectBooleanCheckbox id="fase3" value="#{prescricaoForm.objPrescricaoPepItem.flgFase3}" style="margin-left:3px;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>									
+								</h:selectBooleanCheckbox>
+	  							<h:outputLabel value="3" for="fase3" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>	
+								<h:selectBooleanCheckbox id="fase4" value="#{prescricaoForm.objPrescricaoPepItem.flgFase4}" style="margin-left:3px;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>									
+								</h:selectBooleanCheckbox>
+	  							<h:outputLabel value="4" for="fase4" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>	
+								<h:selectBooleanCheckbox id="fase5" value="#{prescricaoForm.objPrescricaoPepItem.flgFase5}" style="margin-left:3px;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>									
+								</h:selectBooleanCheckbox>
+	  							<h:outputLabel value="5" for="fase5" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>	
+								<h:selectBooleanCheckbox id="fase6" value="#{prescricaoForm.objPrescricaoPepItem.flgFase6}" style="margin-left:3px;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>									
+								</h:selectBooleanCheckbox>
+	  							<h:outputLabel value="6" for="fase6" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>	
+								<h:selectBooleanCheckbox id="fase7" value="#{prescricaoForm.objPrescricaoPepItem.flgFase7}" style="margin-left:3px;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>									
+								</h:selectBooleanCheckbox>
+	  							<h:outputLabel value="7" for="fase7" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>	
+								<h:selectBooleanCheckbox id="fase8" value="#{prescricaoForm.objPrescricaoPepItem.flgFase8}" style="margin-left:3px;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>									
+								</h:selectBooleanCheckbox>
+	  							<h:outputLabel value="8" for="fase8" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>	
+								<h:selectBooleanCheckbox id="fase9" value="#{prescricaoForm.objPrescricaoPepItem.flgFase9}" style="margin-left:3px;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>									
+								</h:selectBooleanCheckbox>
+	  							<h:outputLabel value="9" for="fase9" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>	
+								<h:selectBooleanCheckbox id="fase10" value="#{prescricaoForm.objPrescricaoPepItem.flgFase10}" style="margin-left:3px;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}">
+									<a4j:support event="onclick"  reRender="frmPrescricaoItem:panelDiluicao4">
+										<f:setPropertyActionListener value="#{'N'}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" /> 										
+									</a4j:support>									
+								</h:selectBooleanCheckbox>
+	  							<h:outputLabel value="10" for="fase10" style="font-size: 11px; white-space: nowrap;" rendered="#{!prescricaoForm.retornarSeProdutoSelecionadoEhSolucao()}"/>
+	  						</h:panelGrid>
+						</h:panelGroup>
+					</a4j:outputPanel>
+					<t:htmlTag value="br" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 20 or prescricaoForm.isnTipoPrescricaoPep == 2}"/>  
+					<h:panelGroup id="complementoTextH" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 20 or prescricaoForm.isnTipoPrescricaoPep == 2}">
+  						<a4j:outputPanel id="parentComplemento">
+							<h:panelGrid columns="9">
+								<h:outputText value="Complemento:" style="font-size: 11px; width:85px;"/>
+								<h:inputText maxlength="200" value="#{prescricaoForm.objPrescricaoPepItem.dscComplemento}" style="width:795px; text-transform: uppercase; margin-right: 10px;" rendered="#{prescricaoForm.objProduto.isnProduto != 1142 and prescricaoForm.objProduto.isnProduto != 1152 and prescricaoForm.objProduto.isnProduto != 1492 and prescricaoForm.objProduto.isnProduto != 1489 and prescricaoForm.objProduto.isnProduto != 1493 and prescricaoForm.objProduto.isnProduto != 1491 and prescricaoForm.objProduto.isnProduto != 1490}"/>
+								<h:inputText maxlength="200" value="#{prescricaoForm.objPrescricaoPepItem.dscComplemento}" style="width:720px; text-transform: uppercase; margin-right: 10px;" rendered="#{prescricaoForm.objProduto.isnProduto == 1142 or prescricaoForm.objProduto.isnProduto == 1152 or prescricaoForm.objProduto.isnProduto == 1492 or prescricaoForm.objProduto.isnProduto == 1489 or prescricaoForm.objProduto.isnProduto == 1493 or prescricaoForm.objProduto.isnProduto == 1491 or prescricaoForm.objProduto.isnProduto == 1490}"/>
+								<h:selectBooleanCheckbox id="seNecessario" value="#{prescricaoForm.objPrescricaoPepItem.flgSeNecessarioBoolean}" />
+		  						<h:outputLabel value="Se Necessário" for="seNecessario" style="font-size: 11px; white-space: nowrap;"/>
+		  						<h:panelGrid columns="3" rendered="#{prescricaoForm.objProduto.isnProduto == 1142 or prescricaoForm.objProduto.isnProduto == 1152 or prescricaoForm.objProduto.isnProduto == 1492 or prescricaoForm.objProduto.isnProduto == 1489 or prescricaoForm.objProduto.isnProduto == 1493 or prescricaoForm.objProduto.isnProduto == 1491 or prescricaoForm.objProduto.isnProduto == 1490 or prescricaoForm.objProduto.isnProduto==1141}">
+									<rich:spacer width="10"/>
+									<h:selectBooleanCheckbox id="idAcm" value="#{prescricaoForm.objPrescricaoPepItem.flgAcmBoolean}"/>
+			  						<h:outputLabel value=" ACM" for="idAcm" style="font-size: 11px; white-space: nowrap;"/>
+								</h:panelGrid>
+							</h:panelGrid>
+						</a4j:outputPanel>
+						<br />
+						<h:outputText style="color:red; font-size: 10px; margin-left: 100px; margin-top: -5px;" value=" ** Não colocar dose no complemento se for utilizada a opção rediluição." />
+					</h:panelGroup>	
+					<t:htmlTag value="br" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 19 or prescricaoForm.isnTipoPrescricaoPep == 20 or prescricaoForm.isnTipoPrescricaoPep == 2 or prescricaoForm.isnTipoPrescricaoPep == 42 or prescricaoForm.isnTipoPrescricaoPep == 43}"/>  
+					<h:panelGroup id="prescricaoText" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 19 or prescricaoForm.isnTipoPrescricaoPep == 20 or prescricaoForm.isnTipoPrescricaoPep == 2}">
+						<h:panelGrid columns="6">
+							<h:outputText value="Prescrição:" style="font-size: 11px; width:85px;"/>
+								<h:inputText id="idPrescricaoText" disabled="true" value="#{prescricaoForm.dscPrescricaoTxt}" style="#{(prescricaoForm.objProduto.flgMpp)?'width:907px; text-transform: uppercase; text-decoration: underline; font-weight:bold;':'width:907px; text-transform: uppercase;'}"/>
+						</h:panelGrid>
+					</h:panelGroup>	
+					<h:panelGroup id="prescricaoTextNebulizacao" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 42}">
+						<h:panelGrid columns="6">
+							<h:outputText value="Prescrição:" style="font-size: 11px; width:85px;"/>
+								<h:inputText id="idPrescricaoTextNebulizacao" disabled="true" value="#{prescricaoForm.dscPrescricaoTxtNebulizacao}" style="#{(prescricaoForm.objProduto.flgMpp)?'width:907px; text-transform: uppercase; text-decoration: underline; font-weight:bold;':'width:907px; text-transform: uppercase;'}"/>
+						</h:panelGrid>
+					</h:panelGroup>							
+					<h:panelGroup id="prescricaoTextEletrolito" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 43}">
+						<h:panelGrid columns="6">
+							<h:outputText value="Prescrição:" style="font-size: 11px; width:85px;"/>
+								<h:inputText id="idPrescricaoTextEletrolito" disabled="true" value="#{prescricaoForm.dscPrescricaoTxtEletrolito}" style="#{(prescricaoForm.objProduto.flgMpp)?'width:907px; text-transform: uppercase; text-decoration: underline; font-weight:bold;':'width:907px; text-transform: uppercase;'}"/>
+						</h:panelGrid>
+					</h:panelGroup>		
+					<br/>
+					<br/>
+					<h:panelGroup id="panelBotoes">
+						<a4j:commandButton value="Adicionar" styleClass="botaoModal" 
+						    action="#{prescricaoForm.addItemNebulizacao}" style="width:100px;" 
+						    onclick="this.disabled=true"
+						    oncomplete="if (validaIncluirItem(#{prescricaoForm.avisoValidacaoIncluirItem})){ limparCampos(); }  this.disabled=false;" 
+						    reRender="frmPrescricaoItem" disabled="#{prescricaoForm.apenasVisualizarPrescricao or prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp.size() >= 3}" rendered="#{empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem and prescricaoForm.isnTipoPrescricaoPep == 42}"/>
+
+						<a4j:commandButton value="Adicionar" styleClass="botaoModal" 
+						    action="#{prescricaoForm.addItemEletrolito}" style="width:100px;"
+						    onclick="this.disabled=true"
+						    oncomplete="if (validaIncluirItem(#{prescricaoForm.avisoValidacaoIncluirItem})){ limparCampos(); }  this.disabled=false;" 
+						    reRender="frmPrescricaoItem" disabled="#{prescricaoForm.apenasVisualizarPrescricao or prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp.size() >= 8}" rendered="#{(empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem or prescricaoForm.objPrescricaoPepItem.editComposto) and prescricaoForm.isnTipoPrescricaoPep == 43 and !prescricaoForm.alterarItemAgrupado}"/>
+
+						<a4j:commandButton value="Alterar" styleClass="botaoModal" 
+						    action="#{prescricaoForm.alterarItemAgrupado}" style="width:100px;" 
+						    onclick="this.disabled=true"
+						    oncomplete="if (validaIncluirItem(#{prescricaoForm.avisoValidacaoIncluirItem})){ limparCampos(); }  this.disabled=false;"
+						    reRender="frmPrescricaoItem" disabled="#{prescricaoForm.apenasVisualizarPrescricao}" rendered="#{prescricaoForm.alterarItemAgrupado}"/>
+
+						<a4j:commandButton value="Cancelar Edição" styleClass="botaoModal" 
+						    style="width:150px; margin-left:5px;" 
+						    action="#{prescricaoForm.limparVisualizacaoItemAgrupado}"
+						    onclick="this.disabled=true"
+						    oncomplete="this.disabled=false; limparCampos();"
+						    reRender="frmPrescricaoItem" 
+						    disabled="#{prescricaoForm.apenasVisualizarPrescricao}" 
+						    rendered="#{prescricaoForm.alterarItemAgrupado}">
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.qtdDose}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFracionario}" />									
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objProduto}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.dscPrescricaoTxt}" />
+								<f:setPropertyActionListener value="#{false}" target="#{prescricaoForm.alterarItemAgrupado}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase1}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase2}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase3}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase4}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase5}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase6}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase7}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase8}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase9}" />
+								<f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase10}" />									
+						</a4j:commandButton>
+						
+						<a4j:commandButton
+						value="Incluir"
+						styleClass="botaoModal"
+						style="width: 100px;"
+					    actionListener="#{prescricaoForm.incluirItem}"
+					    onclick="#{rich:component('panelStatus')}.show();"
+					    rendered="#{empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem and prescricaoForm.isnTipoPrescricaoPep != 8 and prescricaoForm.isnTipoPrescricaoPep != 40 and prescricaoForm.isnTipoPrescricaoPep != 42 and prescricaoForm.isnTipoPrescricaoPep != 43}"
+					    oncomplete="#{rich:component('panelStatus')}.hide(); if (validaIncluirItem(#{prescricaoForm.avisoValidacaoIncluirItem})){ limparCampos(); limparCamposSel(); }" 
+					    reRender="frmPrescricaoItem"
+					    disabled="#{prescricaoForm.apenasVisualizarPrescricao}">
+						</a4j:commandButton>
+						<a4j:commandButton value="Incluir" styleClass="botaoModal"
+						    actionListener="#{prescricaoForm.incluirItem}" style="width:100px;"
+						    onclick="#{rich:component('panelStatus')}.show();"
+						    oncomplete="#{rich:component('panelStatus')}.hide(); if (validaIncluirItem(#{prescricaoForm.avisoValidacaoIncluirItem})){ limparCampos();}" 
+						    reRender="frmPrescricaoItem" disabled="#{prescricaoForm.apenasVisualizarPrescricao}" rendered="#{empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem and (prescricaoForm.isnTipoPrescricaoPep == 8 or prescricaoForm.isnTipoPrescricaoPep == 40) and prescricaoForm.isnTipoPrescricaoPep != 42 and prescricaoForm.isnTipoPrescricaoPep != 43}"/>
+						<a4j:commandButton value="Alterar" styleClass="botaoModal" 
+						    actionListener="#{prescricaoForm.alterarItem}" style="width:100px;" 
+						    onclick="#{rich:component('panelStatus')}.show();"
+						    oncomplete="#{rich:component('panelStatus')}.hide(); if (validaIncluirItem(#{prescricaoForm.avisoValidacaoIncluirItem})){ limparCampos(); limparCamposSel(); }" 
+						    reRender="frmPrescricaoItem" disabled="#{prescricaoForm.apenasVisualizarPrescricao}" rendered="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem and prescricaoForm.isnTipoPrescricaoPep != 43}"/>
+						<rich:spacer width="10"/>
+						<a4j:commandButton value="Cancelar Edição" styleClass="botaoModal" 
+						    action="#{prescricaoForm.limparVisualizacaoItem}" style="width:150px;" 
+						    oncomplete="limparCampos();" 
+						    reRender="frmPrescricaoItem" disabled="#{prescricaoForm.apenasVisualizarPrescricao}" rendered="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem and prescricaoForm.isnTipoPrescricaoPep != 43}"/>
+						<rich:spacer width="10"/>
+						<a4j:commandButton value="Prescrição Padrão" styleClass="botaoModal" 
+						    style="width: 170px;" actionListener="#{prescricaoForm.carregaPrescricaoPadrao}" 
+						    oncomplete="#{rich:component('panelPadronizacao')}.show()" 
+						    reRender="dtPrescricaoPepiItem1,panelPadronizacao" disabled="#{prescricaoForm.apenasVisualizarPrescricao}"/><rich:spacer width="10"/>
+						<a4j:commandButton value="Suspender Itens" 
+							rendered="#{prescricaoForm.objPrescricaoPep.isnPrescricaoTipo == 9}"
+							styleClass="botaoModal" style="width: 150px;" 
+							action="#{prescricaoForm.carregaPrescricaoSuspensao}" 
+							oncomplete="#{rich:component('panelSuspenderPrescritos')}.show()" 
+							reRender="dtPrescricaoPepiItem1,panelSuspenderPrescritos" disabled="#{prescricaoForm.apenasVisualizarPrescricao}">
+   	 		                <f:setPropertyActionListener value="#{0}" target="#{prescricaoForm.isnTipoPrescricaoPepSuspenso}" /> 			
+   	 		                <f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.lstPrescricaoPepSuspensoPadrao}" /> 			
+   	 		                <f:setPropertyActionListener value="#{null}" target="#{prescricaoForm.listaPrescricaoPepItemPadrao}" /> 			
+						</a4j:commandButton>
+						
+						<a4j:commandButton
+						value="Aproveitar Itens"
+						action="#{prescricaoForm.verificarDietaZero()}"
+						oncomplete="avisarDietaZero('#{prescricaoForm.justificativaDietaZero}', '#{prescricaoForm.tempoPermanenciaDietaZero}', 'frmPrescricaoItem:btnAproveitarItens')"
+						styleClass="botaoModal"
+						style="width: 150px;"
+						rendered="#{prescricaoForm.objPrescricaoPep.isnPrescricaoTipo == 8}"
+						disabled="#{prescricaoForm.apenasVisualizarPrescricao}">
+						</a4j:commandButton>
+						<a4j:commandButton
+						value="Aproveitar Itens Ação"
+						id="btnAproveitarItens"
+						style="display: none;"
+						action="#{prescricaoForm.carregaPrescricoesAtivas}"
+						oncomplete="if(validaProduto('#{prescricaoForm.mensagem}')) { #{rich:component('panelAproveitarPrescritos')}.show(); }"
+						reRender="dtPrescricaoPepiItem1, panelAproveitarPrescritos">
+						</a4j:commandButton>
+						
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup id="panelTableNebulizacao" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 42}">
+					<rich:dataTable id="dtPrescricaoPepiItemNeb"
+									onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+					           		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+									value="#{prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}" 
+									var="item"
+									rows="20"
+									reRender="ds"
+									style="width:100%;"  
+									rowKeyVar="rowCount" >
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column style="width:5%">Num.</rich:column>
+								<rich:column>Grupo</rich:column>
+								<rich:column>Prescrição</rich:column>
+								<rich:column>Complemento</rich:column>
+								<rich:column style="width:7%">Ações</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column>
+							<h:outputText value="#{rowCount+1}" />
+						</rich:column>		
+						<rich:column id="colunaTipoPrescricao">
+							<h:outputText value="#{item.tipoPrescricao.dscTipoPrescricao}" rendered="#{!item.edit}" style="font-size: 11px;" />
+							<h:selectOneMenu value="#{item.isnTipoPrescricao}" rendered="#{item.edit}" disabled="#{true}"  style="text-transform: uppercase;" >
+								<f:selectItems value="#{prescricaoForm.sliTipoPrescricaoPep}"  style="text-transform: uppercase;" />
+							</h:selectOneMenu>
+						</rich:column>
+						<rich:column id="colunaDscPrescricao">
+							<h:panelGroup>
+						  		<h:outputText value="#{item.dscPrescricao}" style="#{(item.produto.flgMpp)?'text-transform: uppercase; font-size: 11px; text-decoration: underline; font-weight:bold;':'text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnPrescricaoPepIs == null}"/>
+						  		<h:outputText value="#{item.dscPrescricao}" style="#{(item.produto.flgMpp)?'text-decoration: line-through underline; text-transform: uppercase; font-size: 11px; font-weight:bold;':'text-decoration: line-through; text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnPrescricaoPepIs != null}"/>
+						  		<h:graphicImage title="Produto Inativo" value="IMG/uncheck.gif" rendered="#{item.produto.flgAtivoProduto == false}" style="padding-left:10px;"/>
+						  	</h:panelGroup>
+						</rich:column>			
+						<rich:column id="colunaDscComplemento">
+						  		<h:outputText value="#{item.dscComplemento}" style="text-transform: uppercase; font-size: 11px;"/>
+						</rich:column>				
+						<rich:column id="colunaAcoes" style="text-align:center;">
+							<a4j:commandLink id="btnVisualizarItem" title="Visualizar" style="margin-right:5px;" oncomplete="#{rich:component('panelVisualizarItem')}.show()" 
+								rendered="#{item.isnTipoPrescricao == 42 or item.isnTipoPrescricao == 19 or item.isnTipoPrescricao == 20 or item.isnTipoPrescricao == 2}" reRender="formVisualizarItem">
+								<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItemVisualizacao}" />
+								<h:graphicImage value="IMG/selecionar.png" style="text-align:center; border-width:0" />
+							</a4j:commandLink>
+							
+							<a4j:commandButton action="#{prescricaoForm.deletarItemNebulizacao}"
+											 title="Deletar" reRender="frmPrescricaoItem"
+											 image="images/icons/trash.png" 
+											 style="text-align:center; border-width:0; margin-right:5px;">
+								<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItem}" />
+							</a4j:commandButton>
+						</rich:column>			
+						<f:facet name="footer">
+							<h:panelGroup>
+								<h:outputText value="Não há itens nessa prescrição!" rendered="#{empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}" />
+							</h:panelGroup>
+							<rich:datascroller id="ds" ajaxSingle="false" />
+						</f:facet>
+					</rich:dataTable>	
+					<rich:spacer width="10" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}"/>											
+					<div style="float:left;">			
+						<h:outputText value="Posologia:" style="font-size: 11px; width:52px;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}"/>	<h:outputLabel style="color:red; font-size: 11px;" value="*" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}" />						
+						<h:selectOneMenu value="#{prescricaoForm.objPrescricaoPepItem.isnPrescricaoPosologia}" style="width:207px;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}">
+							<f:selectItems value="#{prescricaoForm.sliPrescricaoPosologia}"/>
+						</h:selectOneMenu>							
+						<rich:spacer width="8" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}"/>
+						<h:outputText value="Complemento:" style="font-size: 11px; width:92px;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}"/>
+						<h:inputText maxlength="180" value="#{prescricaoForm.dscComplemento}" style="width:707px; text-transform: uppercase;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}"/>
+						<rich:spacer width="8" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}"/>
+						<h:selectBooleanCheckbox id="seNecessarioN" value="#{prescricaoForm.flgSeNecessarioBoolean}" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}"/>
+ 						<h:outputLabel value="Se Necessário" for="seNecessarioN" style="font-size: 11px; white-space: nowrap;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}"/>  						
+					</div>
+					<div style="float: right;">
+					<a4j:commandButton value="Incluir" styleClass="botaoModal" actionListener="#{prescricaoForm.incluirItemNebulizacao}" style="width:100px;" 
+						oncomplete="validaIncluirItemNebulizacao(#{prescricaoForm.avisoValidacaoIncluirItem});" reRender="frmPrescricaoItem"
+					    rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemNebulizacaoTemp}"/>						
+					</div>
+				</h:panelGroup>
+				<a4j:outputPanel id="panelTableEletrolito" style="width:100%;"> 
+					<h:panelGroup id="panelTableEletrolitoInterno" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 43}" style="width:100%;">
+						<rich:dataTable id="dtPrescricaoPepiItemEle"
+										onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+						           		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										value="#{prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}" 
+										var="item"
+										rows="20"
+										reRender="ds"
+										style="width:100%;"  
+										rowKeyVar="rowCount" >
+							<f:facet name="header">
+								<rich:columnGroup>
+									<rich:column style="width:5%">Num.</rich:column>
+									<rich:column>Grupo</rich:column>
+									<rich:column>Prescrição - Componentes da Fase</rich:column>
+									<rich:column style="width:7%">Ações</rich:column>
+								</rich:columnGroup>
+							</f:facet>
+							<rich:column>
+								<h:outputText value="#{rowCount+1}" />
+							</rich:column>		
+							<rich:column id="colunaTipoPrescricao">
+								<h:outputText value="#{item.tipoPrescricao.dscTipoPrescricao}" rendered="#{!item.edit}" style="font-size: 11px;" />
+								<h:selectOneMenu value="#{item.isnTipoPrescricao}" rendered="#{item.edit}" disabled="#{true}"  style="text-transform: uppercase;" >
+									<f:selectItems value="#{prescricaoForm.sliTipoPrescricaoPep}"  style="text-transform: uppercase;" />
+								</h:selectOneMenu>
+							</rich:column>
+							<rich:column id="colunaDscPrescricao">
+								<h:panelGroup>
+							  		<h:outputText value="#{item.dscPrescricao}" style="#{(item.produto.flgMpp)?'text-transform: uppercase; font-size: 11px; text-decoration: underline; font-weight:bold;':'text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnPrescricaoPepIs == null}"/>
+							  		<h:outputText value="#{item.dscPrescricao}" style="#{(item.produto.flgMpp)?'text-decoration: line-through underline; text-transform: uppercase; font-size: 11px; font-weight:bold;':'text-decoration: line-through; text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnPrescricaoPepIs != null}"/>
+							  		<h:graphicImage title="Produto Inativo" value="IMG/uncheck.gif" rendered="#{item.produto.flgAtivoProduto == false}" style="padding-left:10px;"/>
+							  	</h:panelGroup>
+							</rich:column>			
+							<rich:column id="colunaAcoes" style="text-align:center;">
+								<a4j:commandLink id="btnAlterarItemEletr" title="Alterar" action="#{prescricaoForm.carregarUnidadeDose}"
+									oncomplete="document.getElementById('frmPrescricaoItem:statesinput').value = '#{item.produto.dscProduto}'; document.getElementById('inputFoco').focus();" 
+									 reRender="frmPrescricaoItem, frmPrescricaoItem:dtPrescricaoPepiItemEle" style="margin-right:5px;" rendered="#{!prescricaoForm.alterarItemAgrupado}">
+									<f:setPropertyActionListener value="#{item.qtdDose}" target="#{prescricaoForm.objPrescricaoPepItem.qtdDose}" />
+									<f:setPropertyActionListener value="#{item.dscApresentacao}" target="#{prescricaoForm.objPrescricaoPepItem.dscApresentacao}" />
+									<f:setPropertyActionListener value="#{item.flgFracionario}" target="#{prescricaoForm.objPrescricaoPepItem.flgFracionario}" />									
+									<f:setPropertyActionListener value="#{item.produto}" target="#{prescricaoForm.objProduto}" />
+									<f:setPropertyActionListener value="#{item.isnTipoPrescricao}" target="#{prescricaoForm.isnTipoPrescricaoPep}" />
+									<f:setPropertyActionListener value="#{item.flgEmCadaFase}" target="#{prescricaoForm.objPrescricaoPepItem.flgEmCadaFase}" />
+									<f:setPropertyActionListener value="#{item.flgFase1}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase1}" />
+									<f:setPropertyActionListener value="#{item.flgFase2}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase2}" />
+									<f:setPropertyActionListener value="#{item.flgFase3}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase3}" />
+									<f:setPropertyActionListener value="#{item.flgFase4}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase4}" />
+									<f:setPropertyActionListener value="#{item.flgFase5}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase5}" />
+									<f:setPropertyActionListener value="#{item.flgFase6}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase6}" />
+									<f:setPropertyActionListener value="#{item.flgFase7}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase7}" />
+									<f:setPropertyActionListener value="#{item.flgFase8}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase8}" />
+									<f:setPropertyActionListener value="#{item.flgFase9}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase9}" />
+									<f:setPropertyActionListener value="#{item.flgFase10}" target="#{prescricaoForm.objPrescricaoPepItem.flgFase10}" />
+									<f:setPropertyActionListener value="#{item.dscPrescricao}" target="#{prescricaoForm.dscPrescricaoTxt}" />
+									<f:setPropertyActionListener value="#{true}" target="#{item.edit}" />
+									<f:setPropertyActionListener value="#{true}" target="#{prescricaoForm.alterarItemAgrupado}" />									
+									<h:graphicImage value="images/icons/edit.gif" style="text-align:center; border-width:0" />
+								</a4j:commandLink>
+								<a4j:commandButton action="#{prescricaoForm.deletarItemEletrolito}" rendered="#{!item.edit}"
+												 oncomplete="document.getElementById('frmPrescricaoItem:statesinput').value = '#{prescricaoForm.objProduto.dscProduto}';"
+												 title="Deletar" reRender="frmPrescricaoItem"
+												 image="images/icons/trash.png" 
+												 style="text-align:center; border-width:0; margin-right:5px;">
+									<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItemVisualizacao}" />
+								</a4j:commandButton>
+							</rich:column>			
+							<f:facet name="footer">
+								<h:panelGroup>
+									<h:outputText value="Não há itens nessa prescrição!" rendered="#{empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}" />
+								</h:panelGroup>
+								<rich:datascroller id="ds" ajaxSingle="false" />
+							</f:facet>
+						</rich:dataTable>	
+						<rich:spacer width="10" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}"/>											
+						<div style="float:left;">			
+						<h:panelGrid columns="9" style="margin-top: -15px; margin-left:-2px;">
+							<h:outputText id="selPrescricaoVia3" value="Via:" style="font-size: 11px; width:20px;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}"/>	<h:outputLabel style="color:red; font-size: 11px;" value="*" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}" />				
+							<h:selectOneMenu id="selPrescricaoViaSel" value="#{prescricaoForm.objPrescricaoPepItem.isnPrescricaoVia}" style="width:110px;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}">
+								<f:selectItems value="#{prescricaoForm.sliPrescricaoVia}"/>
+							</h:selectOneMenu>					
+							<rich:spacer width="8" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}"/>
+							<h:outputText value="Complemento:" style="font-size: 11px; width:92px;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}"/>
+							<h:panelGrid columns="1" style="margin-top:15px;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}">	
+								<h:inputText maxlength="180" value="#{prescricaoForm.dscComplemento}" style="width:700px; text-transform: uppercase;"
+											 onkeyup="verificaTamanho('frmPrescricaoItem',this, 180, 'lblComplementoE')" 
+											 onblur="verificaTamanho('frmPrescricaoItem',this, 180, 'lblComplementoE')"/>
+								<label id="lblComplementoE" class="labelChar" style="font-size:11px;">(180 caracteres restantes)</label>			
+							</h:panelGrid>																
+							<rich:spacer width="8" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}"/>
+							<h:selectBooleanCheckbox id="seNecessarioE" value="#{prescricaoForm.flgSeNecessarioBoolean}" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}"/>
+	 						<h:outputLabel value="Se Necessário" for="seNecessarioE" style="font-size: 11px; white-space: nowrap;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}"/>  						
+	 					</h:panelGrid>
+						</div>
+						<div style="float:left; width: 800px;">
+						<h:panelGrid columns="7" style="margin-left:-2px; display: contents;" rendered="#{not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}">		 					
+							<h:outputText value="Nº de fases: " style="font-size: 11px; width:70px;"/> <h:outputLabel style="color:red; font-size: 11px;" value="*" />
+			  				<h:inputText id="numFases" styleClass="campoTextoSemColar" size="2" maxlength="2" 
+							  				onkeyup="javascript:return(formataNumero(this))"
+			  								style="margin-right:10px; text-size: 11px; text-transform:uppercase; width:128px;" 
+			  								value="#{prescricaoForm.objPrescricaoPepItem.qtdNumeroFases}">
+								<a4j:support event="onblur" oncomplete="validarNumero2(document.getElementById('frmPrescricaoItem:numFases'), 'frmPrescricaoItem:btnTempoCadaFase');"/>
+			  				</h:inputText>
+							<h:outputText value="Tempo De Cada Fase:" style="font-size: 11px; width:120px;"/>														
+							<a4j:commandButton id="btnTempoCadaFase" value="Calcular Vazão" action="#{prescricaoForm.salvarVazaoVo}" oncomplete="if (validaProduto('#{prescricaoForm.mensagem}')) { #{rich:component('panelTempoFases')}.show(); }" reRender="panelTempoFases"/>
+			  				<h:outputText value="Volume Total(ML): " style="font-size: 11px; margin-left:5px;"/>
+							<h:outputText value="#{prescricaoForm.retornarVolumeTotalEmML()}" style="font-size: 11px;"/>
+						 	<rich:jQuery selector=".campoTextoSemColar" query="bind('paste drop', function(event) {event.preventDefault();})" />								
+						</h:panelGrid>
+						</div>
+						<div style="float: right; margin-bottom: 5px;">
+							<a4j:commandButton value="Incluir" styleClass="botaoModal" actionListener="#{prescricaoForm.incluirItemEletrolito}" style="width:100px;" 
+								oncomplete="if (validaIncluirItemNebulizacao(#{prescricaoForm.avisoValidacaoIncluirItem})){ limparCampos(); };" reRender="frmPrescricaoItem"
+							    rendered="#{empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem and not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}"/>						
+							
+							<a4j:commandButton value="Alterar" styleClass="botaoModal" actionListener="#{prescricaoForm.alterarEletrolitoGeral}" style="width:100px;" 
+								oncomplete="if (validaIncluirItemNebulizacao(#{prescricaoForm.avisoValidacaoIncluirItem})){ limparCampos(); };" reRender="frmPrescricaoItem"
+							    rendered="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem and not empty prescricaoForm.lstPrescricaoPepiItemEletrolitoTemp}"/>	
+							<a4j:commandButton value="Cancelar Edição" styleClass="botaoModal" 
+							    action="#{prescricaoForm.limparVisualizacaoItem}" style="width:150px; margin-left:5px;" 
+							    oncomplete="limparCampos();" 
+							    reRender="frmPrescricaoItem" disabled="#{prescricaoForm.apenasVisualizarPrescricao}" 
+							    rendered="#{not empty prescricaoForm.objPrescricaoPepItem.isnPrescricaoPepItem}">
+									<f:setPropertyActionListener value="#{false}" target="#{prescricaoForm.alterarItemAgrupado}" />	
+						    </a4j:commandButton>
+						</div>
+					</h:panelGroup>
+				</a4j:outputPanel>
+					
+				<rich:spacer width="10" rendered="#{prescricaoForm.isnTipoPrescricaoPep == 42 or prescricaoForm.isnTipoPrescricaoPep == 43}"/>											
+				<div>
+					<rich:dataTable 
+					id="dtPrescricaoPepiItem1"
+					onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+				    onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+					value="#{prescricaoForm.lstPrescricaoPepiItem}" 
+					var="item"
+					rows="20"
+					reRender="ds"
+					style="width:100%;"  
+					rowKeyVar="rowCount" >
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column style="width:5%">Num.</rich:column>
+								<rich:column>Grupo</rich:column>
+								<rich:column>Prescrição</rich:column>
+								<rich:column>Complemento</rich:column>
+								<rich:column style="width:7%">Ações</rich:column>
+								<rich:column style="width:10%">Se Necessário</rich:column>
+								<rich:column style="width:10%">ACM</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column>
+							<h:outputText value="#{rowCount+1}" />
+						</rich:column>		
+						<rich:column id="colunaTipoPrescricao">
+							<h:outputText value="#{item.tipoPrescricao.dscTipoPrescricao}" rendered="#{!item.edit and !item.editComposto}" style="font-size: 11px;" />
+							<h:selectOneMenu value="#{item.isnTipoPrescricao}" rendered="#{item.edit or item.editComposto}" disabled="#{true}"  style="text-transform: uppercase;" >
+								<f:selectItems value="#{prescricaoForm.sliTipoPrescricaoPep}"  style="text-transform: uppercase;" />
+							</h:selectOneMenu>
+						</rich:column>
+						<rich:column id="colunaDscPrescricao">
+							<h:panelGroup>
+						  		<h:outputText value="#{item.dscPrescricao}" style="text-transform: uppercase; font-size: 11px;" rendered="#{(item.isnTipoPrescricao == 43 or item.isnTipoPrescricao == 19) and item.isnPrescricaoPepIs == null}" escape="false"/>
+						  		<h:outputText value="#{item.dscPrescricao}" style="text-decoration: line-through; text-transform: uppercase; font-size: 11px;" rendered="#{(item.isnTipoPrescricao == 43 or item.isnTipoPrescricao == 19) and item.isnPrescricaoPepIs != null}" escape="false"/>
+								<h:outputText value="#{item.dscPrescricao}" style="#{(item.produto.flgMpp)?'text-transform: uppercase; font-size: 11px; text-decoration: underline; font-weight:bold;':'text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnTipoPrescricao != 43 and item.isnTipoPrescricao != 19 and item.isnPrescricaoPepIs == null}" escape="false"/>
+						  		<h:outputText value="#{item.dscPrescricao}" style="#{(item.produto.flgMpp)?'text-decoration: line-through underline; text-transform: uppercase; font-size: 11px; font-weight:bold;':'text-decoration: line-through; text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnTipoPrescricao != 43 and item.isnTipoPrescricao != 19 and item.isnPrescricaoPepIs != null}" escape="false"/>
+						  		<h:outputText value="#{item.diasDietaZero}" style="#{(item.produto.flgMpp)?'text-transform: uppercase; font-size: 11px; text-decoration: underline; font-weight:bold;':'text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnPrescricaoPepIs == null}"/>
+						  		<h:outputText value="#{item.diasDietaZero}" style="#{(item.produto.flgMpp)?'text-decoration: line-through underline; text-transform: uppercase; font-size: 11px; font-weight:bold;':'text-decoration: line-through; text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnPrescricaoPepIs != null}"/>
+						  		<h:outputText value="#{item.contadorAntibiotico}" style="#{(item.produto.flgMpp)?'margin-left:3px;text-transform: uppercase; font-size: 11px; text-decoration: underline; font-weight:bold;':'margin-left:3px; text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnPrescricaoPepIs == null}"/>
+						  		<h:outputText value="#{item.contadorAntibiotico}" style="#{(item.produto.flgMpp)?'margin-left:3px;text-decoration: line-through underline; text-transform: uppercase; font-size: 11px; font-weight:bold;':'margin-left:3px; text-decoration: line-through; text-transform: uppercase; font-size: 11px;'}" rendered="#{item.isnPrescricaoPepIs != null}"/>
+						  		<h:graphicImage title="Produto Inativo" value="IMG/uncheck.gif" rendered="#{item.produto.flgAtivoProduto == false}" style="padding-left:10px;"/>
+						  	</h:panelGroup>
+						</rich:column>			
+						<rich:column id="colunaDscComplemento">
+						  		<h:outputText value="#{item.dscComplemento}" style="text-transform: uppercase; font-size: 11px;"/>
+						</rich:column>				
+						<rich:column id="colunaAcoes" style="text-align:center;">
+							<a4j:commandLink id="btnVisualizarItem" title="Visualizar" style="margin-right:5px;" oncomplete="#{rich:component('panelVisualizarItem')}.show()" 
+								rendered="#{item.isnTipoPrescricao == 19 or item.isnTipoPrescricao == 20 or item.isnTipoPrescricao == 2}" reRender="formVisualizarItem">
+								<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItemVisualizacao}" />
+								<h:graphicImage value="IMG/selecionar.png" style="text-align:center; border-width:0" />
+							</a4j:commandLink>
+							
+							<a4j:commandLink id="btnAlterarItem" title="Alterar" style="margin-right:5px;" action="#{prescricaoForm.editarItem(item)}" 
+							    oncomplete="document.getElementById('inputFoco').focus();"
+								rendered="#{!prescricaoForm.apenasVisualizarPrescricao and (item.isnPrescricaoPepIs == null and !item.edit and (item.isnTipoPrescricao != 1 and item.isnTipoPrescricao != 8 and item.isnTipoPrescricao != 19 and item.isnTipoPrescricao != 20 and item.isnTipoPrescricao != 2 and item.isnTipoPrescricao != 42 and item.isnTipoPrescricao != 40 and item.isnTipoPrescricao != 43))}" reRender="frmPrescricaoItem">
+								<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItem}" />
+								<f:setPropertyActionListener value="#{true}" target="#{item.edit}" />
+								<f:setPropertyActionListener value="#{item.dscPrescricao}" target="#{prescricaoForm.dscPrescricao}" />
+								<f:setPropertyActionListener value="#{item.isnTipoPrescricao}" target="#{prescricaoForm.isnTipoPrescricaoPep}" />
+								<h:graphicImage value="images/icons/edit.gif" style="text-align:center; border-width:0" />
+							</a4j:commandLink>
+
+							<a4j:commandLink id="btnAlterarItem2" title="Alterar" style="margin-right:5px;" action="#{prescricaoForm.editarItem(item)}"
+								oncomplete="document.getElementById('frmPrescricaoItem:statesinput').value = '#{prescricaoForm.objProduto.dscProduto}'; document.getElementById('inputFoco').focus();" 
+								rendered="#{!prescricaoForm.apenasVisualizarPrescricao and (item.isnPrescricaoPepIs == null and !item.edit and (item.isnTipoPrescricao == 19 or item.isnTipoPrescricao == 20 or item.isnTipoPrescricao == 2))}" reRender="frmPrescricaoItem">
+								<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItem}" />
+								<f:setPropertyActionListener value="#{item.produto}" target="#{prescricaoForm.objProduto}" />
+								<f:setPropertyActionListener value="#{item.isnTipoPrescricao}" target="#{prescricaoForm.isnTipoPrescricaoPep}" />
+								<f:setPropertyActionListener value="#{item.dscPrescricao}" target="#{prescricaoForm.dscPrescricaoTxt}" />
+								<f:setPropertyActionListener value="#{true}" target="#{item.edit}" />
+								<h:graphicImage value="images/icons/edit.gif" style="text-align:center; border-width:0" />
+							</a4j:commandLink>
+							
+							<a4j:commandLink id="btnAlterarItemProc" title="Alterar" style="margin-right:5px;" action="#{prescricaoForm.editarItem(item)}"
+								oncomplete="document.getElementById('frmPrescricaoItem:statesinput2').value = '#{item.dscPrescricao}'; 
+											document.getElementById('inputFoco').focus();" 
+											rendered="#{!prescricaoForm.apenasVisualizarPrescricao and (item.isnPrescricaoPepIs == null and !item.edit and (item.isnTipoPrescricao == 8 or item.isnTipoPrescricao == 40))}" 
+											reRender="frmPrescricaoItem">
+								<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItem}" />
+								<f:setPropertyActionListener value="#{item.isnTipoPrescricao}" target="#{prescricaoForm.isnTipoPrescricaoPep}" />
+								<f:setPropertyActionListener value="#{item.prescricaoPepItemProcedimento.dscApresentacaoPrescricao}" target="#{prescricaoForm.dscPrescricaoTxt}" />
+								<f:setPropertyActionListener value="#{true}" target="#{item.edit}" />
+								<h:graphicImage value="images/icons/edit.gif" style="text-align:center; border-width:0" />
+							</a4j:commandLink>
+						
+							<a4j:commandButton image="images/icons/edit.gif" title="Alterar" style="margin-right:5px;" action="#{prescricaoForm.validarEditarItem}" 
+							    oncomplete="if (validaProduto('#{prescricaoForm.mensagem}')){ document.getElementById(this.id.substring(0, this.id.lastIndexOf(':')) + ':btnAlterarItemAgrupado').click(); }"
+								rendered="#{!prescricaoForm.apenasVisualizarPrescricao and (item.isnPrescricaoPepIs == null and !item.edit and (item.isnTipoPrescricao == 43))}"/>
+							
+							<a4j:commandButton id="btnAlterarItemAgrupado" title="Alterar" style="display:none;" action="#{prescricaoForm.editarItem(item)}" 
+							    oncomplete="document.getElementById('inputFoco').focus();" reRender="frmPrescricaoItem">
+								<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItem}" />
+								<f:setPropertyActionListener value="#{true}" target="#{item.editComposto}" />
+								<f:setPropertyActionListener value="#{item.isnTipoPrescricao}" target="#{prescricaoForm.isnTipoPrescricaoPep}" />
+								<f:setPropertyActionListener value="#{false}" target="#{prescricaoForm.alterarItemAgrupado}" />
+							</a4j:commandButton>
+							
+							<a4j:commandButton onclick="if(!confirm('Confirma deletar esse item?')) return false;"  
+								             action="#{prescricaoForm.validarDeletarItem}"
+								             oncomplete="if (validaIncluirItem(#{prescricaoForm.avisoValidacaoIncluirItem})){ document.getElementById(this.id.substring(0, this.id.lastIndexOf(':')) + ':deletarItem').click(); }"
+											 title="Deletar"
+											 image="images/icons/trash.png" 
+											 style="text-align:center; border-width:0; margin-right:5px;" rendered="#{!prescricaoForm.apenasVisualizarPrescricao and ((item.flgItemSugerido == null or item.flgItemSugerido eq 'N') and item.flgAlterado != null and item.flgAlterado eq 'S' and item.isnPrescricaoPepIs == null) }">
+							</a4j:commandButton>
+
+							<a4j:commandButton id="deletarItem"
+								             action="#{prescricaoForm.deletarItem}"
+											 style="display:none;" reRender="frmPrescricaoItem, frmPrescricaoItem:dtPrescricaoPepiItem1">
+								<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItem}" />
+							</a4j:commandButton>
+
+							<a4j:commandButton image="images/icons/delete.png" style="text-align:center; border-width:0"  action="#{prescricaoForm.suspenderItem}" onclick="if(!confirm('Confirma suspender esse item?')) return false;" title="Suspender"
+							 			rendered="#{!prescricaoForm.apenasVisualizarPrescricao and (prescricaoForm.verificarItemSuspenso(item.flgAlterado,item.isnPrescricaoPepIs,item.flgItemSugerido))}" reRender="dtPrescricaoPepiItem1">
+								<f:setPropertyActionListener value="#{item}" target="#{prescricaoForm.objPrescricaoPepItem}" />
+							</a4j:commandButton>
+						</rich:column>			
+						<rich:column style="text-align:center;">
+							<h:outputText value="Sim" rendered="#{item.flgSeNecessario == 'S'}"/>
+							<h:outputText value="Não" rendered="#{item.flgSeNecessario != 'S'}"/>
+						</rich:column>
+						<rich:column style="text-align:center;">
+							<h:outputText value="Sim" rendered="#{item.flgAcm == 'S'}"/>
+							<h:outputText value="Não" rendered="#{item.flgAcm != 'S'}"/>
+						</rich:column>
+						<f:facet name="footer">
+							<h:panelGroup>
+								<h:outputText value="Não há itens nessa prescrição!" rendered="#{empty prescricaoForm.lstPrescricaoPepiItem}" />
+							</h:panelGroup>
+							<rich:datascroller id="ds" ajaxSingle="false" />
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div>
+				   	<div style="float:left; padding-left:15px; font-weight:bolder; padding-top:8px">
+				     	<h:outputText value="Legenda:" styleClass="bold"/>
+				   	</div>
+					<div style="float:left; padding-left:10px">
+						<div style="float: left; padding-left: 10px; padding-top:8px">
+							<h:outputText value="Alterar:" />
+						</div>
+						<div style="float:left; padding-left:8px; padding-top:8px">
+							<h:graphicImage value="images/icons/edit.gif" style="text-align:center;" />
+						</div>
+					</div>
+					<div style="float:left; padding-left:8px">
+					    <div style="float:left; padding-left:10px; padding-top:8px">
+				   	        <h:outputText value="Suspender:"/>
+						</div>
+						<div style="float:left; padding-left:8px; padding-top:8px">				   	        
+				     		<h:graphicImage value="images/icons/delete.png" style="text-align:center;"/>
+				     	</div>	
+				   </div>
+				   <div style="float:left;padding-left:8px">
+					    <div style="float:left; padding-left:10px; padding-top:8px">
+				   	        <h:outputText value="Deletar:"/>
+						</div>
+						<div style="float:left; padding-left:8px; padding-top:8px">				   	        
+				     		<h:graphicImage value="images/icons/trash.png" style="text-align:center;"/>
+				     	</div>	
+				   </div>
+					<div style="float:left; padding-left:10px">
+						<div style="float:left; padding-left:8px; padding-top:8px">
+							<h:outputText value="Necessita Autorizador:" />
+						</div>
+						<div style="float:left; padding-left:8px; padding-top:8px">
+							<h:graphicImage value="images/icons/access.png" style="text-align:center;" />
+						</div>
+					</div>
+					<div style="float:left; padding-left:10px">
+						<div style="float:left; padding-left:8px; padding-top:8px">
+							<h:outputText value="Produto Inativo:" />
+						</div>
+						<div style="float:left; padding-left:8px; padding-top:8px">
+							<h:graphicImage value="IMG/uncheck.gif" style="text-align:center;" />
+						</div>
+					</div>
+					<div align="right" style="padding-top:6px" >
+				   		<a4j:commandButton value="Concluir" styleClass="botaoModal" style="width:150px;" rendered="#{!emergenciaForm.pacienteNaRecepcao}" disabled="#{prescricaoForm.apenasVisualizarPrescricao}" action="#{prescricaoForm.preValidarEvolucao}" onclick="#{rich:component('panelStatus')}.show();" oncomplete="avisosValidacao(#{prescricaoForm.avisoValidacao}, 'panelEvolucao', true, ''); #{rich:component('panelStatus')}.hide();" reRender="panelEvolucao"/>
+						<rich:spacer width="10"/>
+						<a4j:commandButton id="btnAssinatura"
+										   value="Cancelar Prescrição" 
+										   disabled="#{not empty prescricaoForm.objPrescricaoPep.datConclusao}"
+										   rendered="#{prescricaoForm.objPrescricaoPep.isnPrescricaoTipo == 9}"
+										   style="width:170px;" 
+										   styleClass="botaoModal"
+										   reRender="panelSenhaCancelamento"
+										   onclick="if(!confirm('Todos os itens dessa prescrição serão excluídos. Confirma o cancelamento da prescrição?')){ return false; }else{ #{rich:component('panelStatus')}.show(); }"
+										   oncomplete="#{rich:component('panelStatus')}.hide(); #{rich:component('panelSenhaCancelamento')}.show();"/>
+						<rich:spacer width="10" rendered="#{prescricaoForm.objPrescricaoPep.isnPrescricaoTipo == 9}"/>
+						<a4j:commandButton value="Voltar" styleClass="botaoModal" action="#{prescricaoForm.carregaPagina}" onclick="#{rich:component('panelStatus')}.show();" oncomplete="#{rich:component('panelStatus')}.hide(); limparCampos();" style="width:100px;">
+							<f:setPropertyActionListener value="#{false}" target="#{emergenciaForm.alertaAlergia}" /> 						
+						</a4j:commandButton>
+				   		<a4j:commandButton value="Ficha Antimicrobiano" styleClass="botaoModal" onclick="#{rich:component('panelAntimicrobiano')}.show()" rendered="#{false}" />
+				   	</div>
+				</div>
+			</h:form>
+	</rich:panel>
+	<script>
+    <!--    
+	    function limparDosesESetarFoco(){
+	    	var element2 =  document.getElementById('frmPrescricaoItem:dose');
+	    	if (element2)
+	    	{
+	    		element2.value = '';
+	    		element2.focus();
+	    	}    	
+	    	
+	    	var element3 =  document.getElementById('frmPrescricaoItem:droga2');
+	    	if (element3)
+	    	{
+	    		element3.value = '';
+	    		element3.focus();
+	    	}    		
+	    	
+	    	var element4 =  document.getElementById('frmPrescricaoItem:droga3');
+	    	if (element4)
+	    	{
+	    		element4.value = '';
+	    		element4.focus();
+	    	}
+		}
+	    
+	    function limparCampos(){
+	    	var element =  document.getElementById('frmPrescricaoItem:statesinput');
+	    	if (element)
+	    	{
+	    		element.value = '';
+	    	}
+		
+	    	var element2 =  document.getElementById('frmPrescricaoItem:statesinput2');
+	    	if (element2)
+	    	{
+	    		element2.value = '';
+	    	}    	
+		}
+	
+		function limparCamposSel(){	
+	    	var element3 =  document.getElementById('frmPrescricaoItem:selUnidadeDose');
+	    	if (element3)
+	    	{
+	    		element3.value = '';
+	    	}    		
+	    	
+	    	var element4 =  document.getElementById('frmPrescricaoItem:selPrescricaoVia');
+	    	if (element4)
+	    	{
+	    		element4.value = '';
+	    	}    		
+		}
+		   
+		function formataNumero2(campo) {
+			var valor = campo.value;
+			campo.value = valor.replace(/[^0123456789,.]/g, '');
+			campo.value = campo.value.replace(',', '.');
+		}
+    
+    	function validarNumero(campo){
+    		var cont = 0;
+		    for(var j = 0; j < campo.value.length; j++){
+		        if(campo.value.charAt(j) == "."){
+		            cont++; 
+		        }
+		    }
+		    
+		    if (cont > 1){
+				alert("Valor informado incorreto.");
+				campo.value = '';
+				campo.focus();
+				return false;
+			}
+    	}
+    	
+    	function validarNumeroInterno(campo){
+    		if (campo.value.length > 0){
+	    		var cont = 0;
+				var digits = "0123456789.";
+				var campo_temp;
+				for ( var i = 0; i < campo.value.length; i++) {
+					campo_temp = campo.value.substring(i, i + 1);
+					if (digits.indexOf(campo_temp) == -1) {
+						alert("Valor informado incorreto.");
+						campo.focus();
+						return false;
+					}
+				}
+				
+	    		for(var j = 0; j < campo.value.length; j++){
+			        if(campo.value.charAt(j) == "."){
+			            cont++; 
+			        }
+			    }
+			    
+			    if (cont > 1){
+					alert("Valor informado incorreto.");
+					campo.value = '';
+					campo.focus();
+					return false;
+				}
+    		}
+    	}
+    
+    	function validarNumero2(campo, idProxItem){
+    		if (campo.value.length > 0){
+	    		var cont = 0;
+				var digits = "0123456789";
+				var campo_temp;
+				for ( var i = 0; i < campo.value.length; i++) {
+					campo_temp = campo.value.substring(i, i + 1);
+					if (digits.indexOf(campo_temp) == -1) {
+						alert("Valor informado incorreto.");
+						campo.focus();
+						return false;
+					}
+				}
+			    
+			    if (campo.value < 1 || campo.value > 10){
+					alert("Valor informado deve ser entre 1 e 10.");
+					campo.value = '';
+					campo.focus();
+					return false;
+				}
+    		}
+    		document.getElementById(idProxItem).focus();
+    	}    
+    	
+	    function printObjectsSelected(output, sgcomponent){
+	        output.innerHTML=sgcomponent.getSelectedItems().pluck('dscUnidade');
+	    }
+    
+	    function printObjectsSelectedAps(output, sgcomponent){
+	        output.innerHTML=sgcomponent.getSelectedItems().pluck('dscApresentacao');
+	    }
+    
+	    function focoProduto() {
+			document.getElementById('formProduto:nmProduto').focus();
+		}
+    
+	    function msgValidacao(erro){
+	       if(erro ==1){
+                alert('Usuário inválido!');
+	       } else if(erro ==2){
+                alert('Senha não pode ser vazia!');
+    	   } else if (erro == 3) {
+		        alert("Este(s) item(ns) necessita(m) de autorização CCIH para prorrogar!");
+	       } else if (erro == 4) {
+		        alert("Este(s) item(ns) necessita(m) de autorização para prorrogar!");
+	       } else if (erro == 5) {
+		        alert("Código de autorização inválido ou já utilizado.");
+	       } else if (erro == 6) {
+		        alert("Erro ao prorrogar o(s) item(ns)!");
+	       } else if (erro == 7) {
+		        alert("É necessário definir a quantidade de dias para prorrogar.");
+	       } else {
+			   Richfaces.hideModalPanel(panelProrrogacao);
+		   }
+	    }
+    
+	    function expandItens(obj,idItens) {
+		    var detailsId = obj.id.substring(0, obj.id.lastIndexOf(':')) + ':' + idItens;
+		    var details = document.getElementById(detailsId);
+		    if (details.style.display == 'none') {
+		        details.style.display = 'block';
+		        obj.src = 'IMG/collapse.gif';
+		    } else {
+		        details.style.display = 'none';
+		        obj.src = 'IMG/expand.gif';
+		    }
+		}
+
+		function chamaPanelObs(tipo){
+			if (tipo==0) {
+				Richfaces.showModalPanel("pnlPrescricaoPep");
+			} else {
+				alert("Não é possivel adicionar uma nova observação!")
+			}	
+		}
+
+		function avisosValidacao(erro, panel, show, msg) {
+			if (erro == 1) {
+				alert("Usuário/Conselho e Senha/Assinatura inválidos.");
+		    	return false;
+			} else if (erro == 2) {
+				alert("Usuário sem permissão para esta ação.");
+		    	return false;
+			} else if(erro == 3) {
+				alert("Erro ao gravar no banco de dados. Contate o NTI.");
+				return false;
+			} else if(erro == 4) {
+				alert("A lista de Prescrições deve possuir no mínimo um item.");
+				return false;
+			} else if(erro == 6) {
+				alert("A lista de Suspensão de itens deve possuir no mínimo um item.");
+				return false;
+			} else if(erro == 7) {
+					alert("Não foi possível suspender os itens nas listas concluídas.");
+					return false;
+			} else if(erro == 8) {
+				alert("Não foi possível incluir os itens da prescrição médica padrão.");
+				return false;
+		    }  else if (erro == 9) {
+				alert(msg);
+				Richfaces.hideModalPanel(panel);
+			} else if (erro == 10) {
+				alert(msg);
+				Richfaces.hideModalPanel(panel);
+			}  else if (erro == 11) {
+				alert(msg);
+		    	return false;
+			}  else if (erro==12)  {
+				alert("Permitida apenas uma dieta por paciente.");
+				return false;
+			}  else if(erro == 23){
+				alert("Aconteceu um erro inesperado. Por favor, entre em contato com o NTI.");
+		    	return false;
+			} else if(erro == 24){
+				alert("O Campo 'Evolução' é obrigatório.");
+		    	return false;
+			} else if (erro == 25){
+				alert("O Campo 'Evolução' é maior que o suportado no banco de dados. Por favor reduzir.");
+		    	return false;
+			} else if (erro == 26){
+				alert("Não é possivel concluir uma prescrição com prescrições anteriores em aberto.");
+				return false;
+			} else if (erro == 27){
+				alert("É necessário indicar, através do botão 'Aproveitar Itens', os itens que permanecerão prescritos e os itens suspensos.");
+				return false;
+			} else {
+		    	if (show) {
+		        	Richfaces.showModalPanel(panel);
+		        	return true;
+		    	} else {
+		    		Richfaces.hideModalPanel(panel);
+		    		return true;
+		    	}	 	
+			} 		    	
+		}
+
+		function avisosValidacao2(erro, panel) {
+			if (erro == 0) {
+	        	Richfaces.showModalPanel(panel);
+			}
+		}
+		
+		function avisosValidacao3(erro, panel) {
+			if (erro == 0) {
+	        	Richfaces.hideModalPanel(panel);
+			}
+		}
+		
+		function avisosValidacao5(erro) {
+			var retorno = true;
+		    if(erro == 5) {
+				alert("Prescrições com data futura não podem sem concluídas, essa Prescrição foi gravada para conclusão na data futura indicada!");
+				retorno = false;
+			}
+		    return retorno;
+		}
+		
+		function validaIncluirItemNebulizacao(erro) {
+			if (erro == 1) {
+				alert("O campo Posologia deve ser preenchido!");
+				return false;			
+			} else if (erro == 2) {
+				alert("O campo Via deve ser preenchido!");
+				return false;			
+			} else if (erro == 3) {
+				alert("O campo Complemento deve ser preenchido!");
+				return false;			
+			} else if (erro == 4) {
+				alert("O campo Nº de fases deve ser maior que 0!");
+				return false;			
+			} else if (erro == 5) {
+				alert("O campo Nº de fases deve ser maior ou igual a maior fase informada nos itens!");
+				return false;			
+			} else if (erro == 6) {
+				alert("Informe a Vazão de cada fase!");
+				return false;			
+			} else if (erro == 7) {
+				alert("Existe(m) fase(s) que não possui(em) item(ns) cadastrado(s)!") ;
+				return false;			
+			} else{
+				return true;
+			}
+		}
+		
+		function validaIncluirItem(erro) {
+			if (erro == 1) {
+				alert("Os campos obrigatórios deverão ser preenchidos!");
+				return false;			
+			} else if (erro == 3) {
+				alert("Na inclusão de medicamento/antibiótico, não se pode modificar o nome do medicamento/antibiótico. Podendo apenas acrescentar texto.");
+		    	return false;
+			} else if (erro == 4) {
+				document.getElementById('lblConfirm').innerHTML = "Deseja realmente incluir o mesmo medicamento/antibiótico mais de uma vez?";	
+				Richfaces.showModalPanel("panelConfirm");
+				return false;
+			} else if (erro == 5) {
+				document.getElementById('lblConfirm').innerHTML = "Este medicamento/antibiótico já foi adicionado em outra prescrição. Deseja adicioná-lo novamente?";	
+				Richfaces.showModalPanel("panelConfirm");
+				return false;
+			} else if (erro == 6) {
+				alert("Selecione uma prescrição válida.");
+		    	return false;
+			} else if (erro == 7) {
+				document.getElementById('lblConfirm2').innerHTML = "Deseja realmente incluir o mesmo procedimento mais de uma vez?";	
+				Richfaces.showModalPanel("panelConfirm2");
+				return false;
+			} else if (erro == 8) {
+				document.getElementById('lblConfirm2').innerHTML = "Deseja realmente incluir o mesmo item de 'cuidados gerais' mais de uma vez?";	
+				Richfaces.showModalPanel("panelConfirm2");
+				return false;
+			} else if (erro == 9) {
+				document.getElementById('lblConfirm2').innerHTML = "Este procedimento já foi adicionado em outra prescrição. Deseja adicioná-lo novamente?";	
+				Richfaces.showModalPanel("panelConfirm2");
+				return false;
+			} else if (erro == 10) {
+				document.getElementById('lblConfirm2').innerHTML = "Este item de 'cuidados gerais' já foi adicionado em outra prescrição. Deseja adicioná-lo novamente?";	
+				Richfaces.showModalPanel("panelConfirm2");
+				return false;
+			} else if (erro == 11) {
+				alert("Não é permitido deletar item enquanto houver outro em edição.");
+		    	return false;
+			} else if (erro==12)
+			{
+				alert("Permitida apenas uma dieta por paciente.");
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		function validaAlterarItem(obj, erro) {
+			if (erro == 1) {
+				alert("Os campos obrigatórios deverão ser preenchidos!");
+				return false;			
+			} else if (erro == 3) {
+				alert("Na Alteração de medicamento/antibiótico, não se pode modificar o nome do medicamento/antibiótico. Podendo apenas acrescentar texto.");
+			    document.getElementById(obj.id.substring(0, obj.id.lastIndexOf(':')) + ':btnAlterarItem').click();
+		    	return false;
+			} 
+		}
+		
+		function setarFocoSenha(){	
+			document.getElementById('frmPrescItemSenha:inputAssinatura').focus();
+		}
+		
+		function avisarDietaZero(justificativa, tempoPermanencia, acaoBotaoId) {
+			if(justificativa && tempoPermanencia) {
+				var mensagemHtml = '';
+				mensagemHtml += '<strong>Justificativa: </strong>';
+				mensagemHtml += justificativa + '<br/><br/>';
+				mensagemHtml += '<strong>Tempo total: </strong>';
+				mensagemHtml += tempoPermanencia + '<br/>';
+				alertCustomizadoComTitulo('PACIENTE EM DIETA ZERO', mensagemHtml, acaoBotaoId);
+			} else {
+				document.getElementById(acaoBotaoId).click();
+			}
+		}
+	//-->
+    </script>
+	
+</body>
+</html>

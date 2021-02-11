@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:rich="http://richfaces.org/rich">
+	  
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<title>SISTEMA DE PACIENTE - Pesquisar Paciente</title>	
+</ui:define>
+<ui:define name="conteudo">
+<a4j:keepAlive beanName="exameAutorizacaoForm" />
+
+<script type="text/javascript" src="SCRIPTS/custom.js"></script>
+
+<rich:modalPanel id="panelStatus" autosized="true" >  
+	<h:panelGrid columns="2"> 
+		<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+		<h:outputText value="Carregando..." />
+	</h:panelGrid> 
+</rich:modalPanel> 
+
+<a4j:status id="status" 
+              onstart="#{rich:component('panelStatus')}.show()" 
+              onstop="#{rich:component('panelStatus')}.hide()" >
+</a4j:status>
+
+
+<!-- *****  MODAL PANEL ASSINATURA  -->
+	<rich:modalPanel id="panelSenha" autosized="true" width="400" resizeable="false" headerClass="headerPanel">
+		<f:facet name="header">
+    		<h:panelGroup styleClass="headerModal">
+				<h:graphicImage value="/images/icons/access.png" style="border:0; margin-right:10px;" /><h:outputText value="Validação de Senha" style="font-size: 14px"/>
+			</h:panelGroup>
+    	</f:facet>
+	
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidelink2" />
+				<rich:componentControl for="panelSenha" attachTo="hidelink2" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<!-- FIM DA BARRA DE TITULO MODAL-->
+	
+		<!-- CAMPOS DE BUSCA -->
+		<h:form id="frmSenha">	      
+			<div>
+				<fieldset class="fsPepResp">
+					
+					<div style="margin-bottom:10px">
+						Justificativa: <h:outputLabel value="*" style="color:red;" /><br/>
+						<h:inputTextarea value="#{exameAutorizacaoForm.dscJustificativaAutorizacao}" style="width: 400px; height:60px" onkeyup="verificaTamanho('frmSenha',this, 255, 'lblDscObs');"/>
+						<br/><label id="lblDscObs" style="font: bold; float: right;margin-right:15px;">(255 caracteres restantes)</label>
+						<br/><br/>
+					</div>
+					<hr/>
+					<div style="float:left; margin-right:30px; margin-top:10px">		
+						<h:outputLabel value="Usuário/Conselho" for="inputConselho"/><h:outputLabel value="*" style="color:red;" /><br/>
+						<h:inputText value="#{exameAutorizacaoForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 150px">
+							<a4j:support event="onchange"  actionListener="#{exameAutorizacaoForm.pesquisaNomeMedicoCoren}" reRender="nomeMedico" oncomplete="setarFocoSenha();" />
+						</h:inputText>
+					</div>
+					<div style="float:left;  margin-top:10px">
+						<h:outputLabel value="Senha/Assinatura" for="inputAssinatura" /><h:outputLabel value="*" style="color:red;" /><br/>
+						<h:inputSecret value="#{exameAutorizacaoForm.senhaAssinatura}" id="inputAssinatura" maxlength="20" styleClass="inputText"
+						style="width: 150px;"/>
+					</div>
+					<div style="clear:both;">
+						<span style="width:400px; height:14px; padding:3px; display:block;">
+							<strong>
+								<h:outputText id="nomeMedico" value="#{exameAutorizacaoForm.nomeMedico}"/>
+							</strong>
+						</span>
+					</div>
+				</fieldset>
+			</div>
+			<br clear="all"/>
+			<div style="text-align: center; margin-top: 10px">
+				
+				<a4j:commandButton id="btnGravarPrescricaoPep1" 
+							   value="OK" 
+							   action="#{exameAutorizacaoForm.autorizarExames}"
+							   style="margin-right:10px;width:100px;" 
+							   styleClass="botaoModal"
+							   oncomplete="validarSenha('#{exameAutorizacaoForm.mensagem}')"
+							   reRender="formulario"
+							   rendered="#{exameAutorizacaoForm.acao == 'autorizar'}"/>
+							   
+				<a4j:commandButton id="btnGravarPrescricaoPep2" 
+							   value="OK" 
+							   action="#{exameAutorizacaoForm.naoAutorizarExames}"
+							   style="margin-right:10px;width:100px;" 
+							   styleClass="botaoModal"
+							   oncomplete="validarSenha('#{exameAutorizacaoForm.mensagem}')"
+							   reRender="formulario"
+							   rendered="#{exameAutorizacaoForm.acao == 'naoAutorizar'}"
+							   />    
+			
+				
+						
+				<a4j:commandButton id="btnCancelAlta" value="Cancelar" styleClass="botaoModal" style="width:100px;">
+					<rich:componentControl for="panelSenha" attachTo="btnCancelAlta" operation="hide" event="onclick" />
+				</a4j:commandButton>
+				
+			</div>
+		</h:form>
+		<!-- FIM CONTEUDO MODAL -->
+	</rich:modalPanel>
+	<!-- FINAL DO MODAL PANEL ASSINATURA -->
+
+
+
+<a4j:form id="formulario">
+   	    <div style="margin-bottom: 55px">	  
+   	    <div class="cabAreaPesquisa">AUTORIZAÇÃO DE EXAMES</div>	  
+	    <div class="areaPesquisa" style="height:80px;">	              
+	       
+	        
+	       <div class="col170" style="margin-top: 8px">	       
+	           <label>Agrupar por:</label><br/>	
+	           	           
+	           <h:selectOneMenu value="#{exameAutorizacaoForm.tpAgrupamento}" id="selAgrupamento" style="margin-right:8px; width:150px; height:20px">
+					<f:selectItem itemValue="1" itemLabel="PACIENTE"/>
+					<f:selectItem itemValue="2" itemLabel="EXAME"/>
+					<a4j:support event="onchange"  reRender="divFiltro" />
+				</h:selectOneMenu>
+				
+	       </div>
+	       
+
+	         
+	       <div class="col170" style="margin-top: 8px">	       
+	           <label>Filtro:</label><br/>
+	           <h:panelGroup id="divFiltro">	        
+	           		
+	           		
+	           		
+	           		<h:panelGroup rendered="#{exameAutorizacaoForm.tpAgrupamento == 1}">
+		           <h:selectOneMenu value="#{exameAutorizacaoForm.campoPesquisa}"
+		                            styleClass="selectItens"
+		                            style="width:160px; font-size:11px">
+		           		<f:selectItem itemLabel="Selecione" itemValue="0"/>
+		           		<f:selectItem itemLabel="Nome" itemValue="1"/>
+		           		<f:selectItem itemLabel="Prontuário" itemValue="2" />
+		           		<f:selectItem itemLabel="Período" itemValue="3"/>
+		           		<f:selectItem itemLabel="Nome Social" itemValue="4"/>
+		           		
+		           		<a4j:support event="onchange"  reRender="filtroPesquisa" />
+		           </h:selectOneMenu>
+		           </h:panelGroup>
+		           
+		           <h:panelGroup rendered="#{exameAutorizacaoForm.tpAgrupamento == 2}">
+		           <h:selectOneMenu value="#{exameAutorizacaoForm.campoPesquisa}"
+		                            styleClass="selectItens"
+		                            style="width:160px; font-size:11px">
+		           		<f:selectItem itemLabel="Selecione" itemValue="0"/>
+		           		<f:selectItem itemLabel="Nome" itemValue="1"/>
+		           		<f:selectItem itemLabel="Período" itemValue="3"/>
+		           		
+		           		<a4j:support event="onchange"  reRender="filtroPesquisa" />
+		           </h:selectOneMenu>
+		           </h:panelGroup>
+	           </h:panelGroup>
+	       </div>
+	       
+	       <div class="col220" style="margin-top: 8px; width:300px;" >
+		       <rich:spacer height="18px"/><br/>      
+		       
+		       <h:panelGroup id="filtroPesquisa" style="font-size:12px">
+			       <h:panelGroup rendered="#{exameAutorizacaoForm.campoPesquisa == 1 or exameAutorizacaoForm.campoPesquisa == 2 or exameAutorizacaoForm.campoPesquisa == 4}">
+			       		<h:inputText id="inputPesquisa" 
+		                        value="#{exameAutorizacaoForm.filtroLista}"
+		                        styleClass="campoTexto" style="width:210px"/>
+			       </h:panelGroup>
+			       
+			       <h:panelGroup rendered="#{exameAutorizacaoForm.campoPesquisa == 3}">
+			       		<rich:calendar value="#{exameAutorizacaoForm.datInicio}" inputStyle="width:80px; height:15px; font-size:12px !important" datePattern="dd/MM/yyyy" />
+			       		a 
+			       		<rich:calendar value="#{exameAutorizacaoForm.datFim}" inputStyle="width:80px; height:15px; margin-left:10px; font-size:12px !important" datePattern="dd/MM/yyyy" />
+			       </h:panelGroup>
+	           </h:panelGroup>
+		    	               		
+					                    
+	           
+	       </div>     
+	       <div class="col180" style="margin-top: 8px">
+	           <rich:spacer height="12px"/><br/>
+	           <a4j:commandButton id="btnPesquisa" 
+				           		  image="IMG/pesquisa.gif"
+				           		  alt="Pesquisar" 
+				                  action="#{exameAutorizacaoForm.pesquisar}"  
+					    		  oncomplete="validarPesquisa('#{exameAutorizacaoForm.mensagem}')"
+					    		  reRender="resultado,totalPesq" 
+					    		  style="margin-right: 8px"/>
+		     			
+		       <rich:hotKey key="return" selector="#inputPesquisa" 
+		    		             handler="#{rich:element('btnPesquisa')}.click()"/>			
+		   		           
+	       </div>
+	       <div class="col100" style="text-align: right">    
+	           <label>Pesquisados:</label><br/>
+	           <h:outputText id="totalPesq" 
+	                         value="#{exameAutorizacaoForm.totalPesquisados}" 
+	                         styleClass="totalizador2" />	          
+	       </div>
+
+	             
+	    </div>
+		
+		 		                   
+		       		                   
+		       		                   
+		<h:panelGroup id="resultado" style="display:inline">
+			
+			<table class="tabela" style="width: 100%; font-size:12px; margin-bottom:20px">	  		
+				<tr>
+					<td colspan="2"><br/>
+						<h:outputText style="background-color: #FF6262;color: #FF6262;" value="LEGENDA ISGH" />
+						<span>NECESSITA DE AUTORIZAÇÃO DO COORDENADOR DA UNIDADE OU DIREÇÃO ISGH</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<h:outputText style="background-color: #FFFF80;color: #FFFF80;" value="LEGENDA ISGH" />
+						<span>NECESSITA DE AUTORIZAÇÃO DO CHEFE DE EQUIPE OU COORDENADOR DA UNIDADE</span>
+					</td>
+				</tr>
+	  		</table> 
+	  		
+			<h:panelGroup style="text-align:center; width:100%" rendered="#{not empty exameAutorizacaoForm.lstExameSolic}">
+				
+				<a4j:commandButton value="Autorizar" 
+												action="#{exameAutorizacaoForm.limparCampos}"
+				       		                   style="margin-top:5px;margin-bottom:10px;" 
+				       		                   styleClass="botaoModal"
+				       		                   reRender="panelSenha"
+				       		                   oncomplete="validarMarcados('#{exameAutorizacaoForm.mensagem}')">
+				
+					<f:setPropertyActionListener value="#{'autorizar'}" target="#{exameAutorizacaoForm.acao}" />
+				</a4j:commandButton>
+				       		                   
+				       		                   
+				<a4j:commandButton value="Não Autorizar" 
+				       		                   action="#{exameAutorizacaoForm.limparCampos}" 
+				       		                   style="margin-top:5px;margin-bottom:10px; margin-left:60px" 
+				       		                   styleClass="botaoModal"
+				       		                   reRender="panelSenha"
+				       		                   oncomplete="validarMarcados('#{exameAutorizacaoForm.mensagem}')">
+					<f:setPropertyActionListener value="#{'naoAutorizar'}" target="#{exameAutorizacaoForm.acao}" />
+				</a4j:commandButton>  
+				    		                   
+			</h:panelGroup>   
+		
+		
+			<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+	   					    value="#{exameAutorizacaoForm.lstPaciente}"
+	   					    var="paciente"
+	   					    rows="10"
+	   					    id="tabelaExameTpPaciente"
+	  					    reRender="ds"
+	  					    rendered="#{exameAutorizacaoForm.tpAgrupamento == 1}"
+	  					   >
+			    <f:facet name="header">
+					<rich:columnGroup>
+						<h:column>
+							<h:outputText>Paciente</h:outputText>
+						</h:column>						
+					</rich:columnGroup>
+				</f:facet>
+				
+			    <rich:column >
+			    	<div style="float:left;">				        	
+			        	
+			        	<a4j:commandButton id="buttonHTMLExpand4"
+										       image="IMG/collapse.gif"
+										       style="display:none" 
+											   oncomplete="expandItens(this, 'details');">						
+						</a4j:commandButton>	
+												
+			        	<a4j:commandButton id="expand4"
+										       image="IMG/expand.gif"										                 
+										       reRender="details"										                  
+										       oncomplete="#{rich:element('expand4')}.style.display = 'none';#{rich:element('buttonHTMLExpand4')}.style.display = 'block';toggleDetails2(this,'details');"  >	
+						</a4j:commandButton>	
+			       </div>				      
+			       <div> 	
+			        	<rich:spacer width="10"/> 
+			        	<h:outputText value="#{paciente.dscNome}"/>	
+		        	</div>
+		        	
+         			
+         			<rich:dataTable 
+					                    style="width: 100%; display: none;" 
+				        				id="details" 
+				        				value="#{paciente.lstExameSolic}" 
+				        				var="subExame">     
+				        				
+				       <f:facet name="header">
+							<rich:columnGroup>
+								<h:column style="width: 40%">
+									<h:outputText value="Descrição" />
+								</h:column>					
+								<h:column style="width: 10%">
+									<h:outputText value="Solicitação" />
+								</h:column>
+								<h:column style="width: 10%">
+									<h:outputText value="Data Solicitação" />
+								</h:column>
+								<h:column style="width: 10%">
+									<h:outputText value="Status" />
+								</h:column>		
+								<h:column style="width: 10%">
+									<h:outputText value="Detalhes" />
+								</h:column>
+								
+							</rich:columnGroup>
+						</f:facet>
+						 								
+				       <rich:columnGroup style="background-color:#{((subExame.examePepBean.isnDisponibilidade == 3)?'#FF6262':  ((subExame.examePepBean.isnDisponibilidade == 2) ? '#FFFF80' : 'white')) };"> 				  						  	
+				            <rich:column style="width: 40%">
+				            	<h:panelGroup>	
+				            		
+				            		<h:selectBooleanCheckbox value="#{subExame.flgMarcado}" rendered="#{subExame.flgAutorizacao == 'P'}"/>
+			            			<h:outputText value="#{subExame.examePepBean.dscExame}" />
+				            	</h:panelGroup>
+				            </rich:column>
+							<rich:column  style="width: 10%">
+								<h:outputText value="#{subExame.isnExameSolicAux}" />
+							</rich:column>
+							
+							<rich:column style="width: 10%">
+				            	<h:outputText value="#{subExame.datSolicitacao}">
+									<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-3" />
+								</h:outputText>
+							</rich:column>
+							
+							<rich:column style="width: 10%">
+								<h:outputText value="Pendente" rendered="#{subExame.flgAutorizacao == 'P' or subExame.flgAutorizacao == 'E'}"/>
+								<h:outputText value="Autorizado" rendered="#{subExame.flgAutorizacao == 'A'}"/>
+								<h:outputText value="Não Autorizado" rendered="#{subExame.flgAutorizacao == 'N'}"/>
+							</rich:column>
+
+							<rich:column style="width: 10%; text-align:center">
+								<h:graphicImage url="IMG/detalhes.png" style="border:0;"/>
+								<rich:toolTip direction="bottom-left" layout="block" 
+						    	              styleClass="tooltipEmergencia" style="text-align:left; width:400px">
+									<f:facet name="defaultContent">
+										<strong>Aguarde...</strong>
+									</f:facet>
+									<h:panelGroup style="text-align:left; font-size:12px">
+									    <label>Profissional Solicitante:</label>
+									    <h:outputText style="margin-left:5px; font-weight: bold" value="#{subExame.profissionalBean.dscUsuario}"/>
+									</h:panelGroup>
+									<div style="clear:both"/>
+									<h:panelGroup style="text-align:left; font-size:12px">
+									    <label>Data Solicitação:</label>
+									    <h:outputText value="#{subExame.datCadastro}" style="margin-left:5px; font-weight: bold">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+										</h:outputText>
+									</h:panelGroup>
+									<div style="clear:both"/>
+									<h:panelGroup style="text-align:left; font-size:12px" rendered="#{not empty subExame.profissionalAutorizacaoBean.dscUsuario}">
+									    <label>Profissional Autorizador:</label>
+									    <h:outputText style="margin-left:5px; font-weight: bold" value="#{subExame.profissionalAutorizacaoBean.dscUsuario}"/>
+									</h:panelGroup>
+									<div style="clear:both"/>
+									<h:panelGroup style="text-align:left; font-size:12px" rendered="#{not empty subExame.datAutorizacao}">
+									    <label>Data Autorização:</label>
+									    <h:outputText value="#{subExame.datAutorizacao}" style="margin-left:5px; font-weight: bold">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+										</h:outputText>
+									</h:panelGroup>
+									<div style="clear:both"/>
+								</rich:toolTip>
+							</rich:column>
+							
+				             
+			            </rich:columnGroup>
+			        </rich:dataTable> 
+			        
+			    </rich:column>
+			    
+			    <f:facet name="footer">
+					<rich:datascroller id="ds" render="tabelaExameTpExame" />
+				</f:facet>
+			</rich:dataTable>
+			
+			
+			
+			<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+	   					    value="#{exameAutorizacaoForm.lstExame}"
+	   					    var="exame"
+	   					    rows="10"
+	   					    id="tabelaExameTpExame"
+	  					    reRender="ds"
+	  					    rendered="#{exameAutorizacaoForm.tpAgrupamento == 2}"
+	  					   >
+			    <f:facet name="header">
+					<rich:columnGroup>
+						<h:column>
+							<h:outputText>Exames</h:outputText>
+						</h:column>						
+					</rich:columnGroup>
+				</f:facet>
+				
+			    <rich:column >
+			    	<div style="float:left;">				        	
+			        	
+			        	<a4j:commandButton id="buttonHTMLExpand2"
+										       image="IMG/collapse.gif"
+										       style="display:none" 
+											   oncomplete="expandItens(this, 'details2');">						
+						</a4j:commandButton>	
+												
+			        	<a4j:commandButton id="expand2"
+										       image="IMG/expand.gif"										                 
+										       reRender="details2"										                  
+										       oncomplete="#{rich:element('expand2')}.style.display = 'none';#{rich:element('buttonHTMLExpand2')}.style.display = 'block';toggleDetails2(this,'details2');"  >	
+						</a4j:commandButton>	
+			       </div>				      
+			       <div> 	
+			        	<rich:spacer width="10"/> 
+			        	<h:outputText value="#{exame.dscExame}"/>	
+		        	</div>
+		        			        
+			        <rich:dataTable 
+					                    style="width: 100%; display: none;" 
+				        				id="details2" 
+				        				value="#{exame.lstExameSolic}" 
+				        				var="subExame">     
+				        				
+				       <f:facet name="header">
+							<rich:columnGroup>
+								<h:column style="width: 40%">
+									<h:outputText value="Descrição" />
+								</h:column>					
+								<h:column style="width: 10%">
+									<h:outputText value="Solicitação" />
+								</h:column>
+								<h:column style="width: 10%">
+									<h:outputText value="Data Solicitação" />
+								</h:column>
+								<h:column style="width: 10%">
+									<h:outputText value="Status" />
+								</h:column>		
+								<h:column style="width: 20%">
+									<h:outputText value="Profissional Autorizador" />
+								</h:column>
+								<h:column style="width: 10%">
+									<h:outputText value="Data Autorização" />
+								</h:column>
+								
+							</rich:columnGroup>
+						</f:facet>
+						 								
+				       <rich:columnGroup style="background-color:#{((subExame.examePepBean.isnDisponibilidade == 3)?'#FF6262':  ((subExame.examePepBean.isnDisponibilidade == 2) ? '#FFFF80' : 'white')) };"> 				  						  	
+				            <rich:column style="width: 40%">
+				            	<h:panelGroup>	
+				            		
+				            		<h:selectBooleanCheckbox value="#{subExame.flgMarcado}" rendered="#{subExame.flgAutorizacao == 'P'}"/>
+			            			<h:outputText value="#{subExame.internacaoPepBean.pacientePepBean.dscNome}" />
+				            	</h:panelGroup>
+				            </rich:column>
+							<rich:column  style="width: 10%">
+								<h:outputText value="#{subExame.isnExameSolicAux}" />
+							</rich:column>
+							
+							<rich:column style="width: 10%">
+				            	<h:outputText value="#{subExame.datSolicitacao}">
+									<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-3" />
+								</h:outputText>
+							</rich:column>
+							
+							<rich:column style="width: 10%">
+								<h:outputText value="Pendente" rendered="#{subExame.flgAutorizacao == 'P' or subExame.flgAutorizacao == 'E'}"/>
+								<h:outputText value="Autorizado" rendered="#{subExame.flgAutorizacao == 'A'}"/>
+								<h:outputText value="Não Autorizado" rendered="#{subExame.flgAutorizacao == 'N'}"/>
+							</rich:column>
+							
+							<rich:column style="width: 20%">
+								<h:outputText value="#{subExame.profissionalAutorizacaoBean.dscUsuario}"/>
+							</rich:column>
+							
+							<rich:column style="width: 10%">
+								<h:outputText value="#{subExame.datAutorizacao}">
+									<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-3" />
+								</h:outputText>
+							</rich:column>
+							
+							
+				             
+			            </rich:columnGroup>
+			        </rich:dataTable> 
+			        
+			    </rich:column>
+			    
+			    <f:facet name="footer">
+					<rich:datascroller id="ds" render="tabelaExameTpExame" />
+				</f:facet>
+			</rich:dataTable>
+			
+							
+		</h:panelGroup>
+	</div>
+	<script type="text/javascript">
+	     function avisosPesquisa(erro) {
+		     if (erro==2) {
+		    	 alert("Não há pacientes cadastrados que atendam a esta pesquisa.");
+		     }
+	     }
+
+	     function abrirRelatorio(msg, isnInternacao)
+	     {		     
+		     if (msg=='EMPTY') 
+			 {
+		     	alert("Não existe transferência(s) para este paciente!");
+		     }
+		     else
+			 {
+			 	window.open('cd_internacaoTrans.jsf?paramRel=relISGH_'+isnInternacao);
+			 }
+	     }
+	     
+	     function validarPesquisa(msg) {
+	     	if (msg != '') {
+	     		alert(msg);
+	     	}
+	     	
+	     }
+	     
+	     function validarSenha(msg) {
+	    	 
+	 		if (msg == '1') {
+	 			alert('Usuário/Conselho e Senha/Assinatura inválidos.');
+	 		}
+	 		else if (msg == '2') {
+	 			alert('É necessário escolher pelo menos um exame!');
+	 			Richfaces.hideModalPanel("panelSenha");
+	 		}
+	 		else if (msg == '3') {
+	 			alert('Campo Justificativa Obrigatório!');
+	 		}
+	 		else if (msg == '4') {
+	 			alert('Usuário não possui permissão!');
+	 		}
+	 		else {
+	 			Richfaces.hideModalPanel("panelSenha");
+	 		}
+	 	}
+	     
+	     function validarMarcados(msg) {
+	    	 if (msg == '2') {
+	    		 alert('É necessário escolher pelo menos um exame!');
+	    	 }
+	    	 else {
+	    		 Richfaces.showModalPanel('panelSenha');
+	    	 }
+	     }
+	     
+	     
+	   //abre e fecha detalhes do datatable
+		function expandItens(obj,idItens)
+		{		
+			var detailsId = obj.id.substring(0, obj.id.lastIndexOf(':')) + ':' + idItens;
+			var details = document.getElementById(detailsId);
+			if (details.style.display == 'none') 
+			{
+			       details.style.display = 'table';
+			       obj.src = 'IMG/collapse.gif';
+			 } 
+			 else 
+			 {
+			       details.style.display = 'none';
+			       obj.src = 'IMG/expand.gif';
+			 }
+		}	
+		 
+		 function toggleDetails2(image, idItens) 
+		 {
+		    var detailsId = image.id.substring(0, image.id.lastIndexOf(':')) + ':' + idItens;
+		    var details = document.getElementById(detailsId);
+		    if (details.style.display == 'none') 
+			{
+		        details.style.display = 'table';
+		        image.src = 'IMG/collapse.gif';
+		    } 
+		    else 
+			{
+		        details.style.display = 'none';
+		        image.src = 'IMG/expand.gif';
+		    }
+		 }
+		 
+		 function setarFocoSenha(){	
+			document.getElementById('frmSenha:inputAssinatura').focus();
+		}
+		 
+	</script>
+		
+</a4j:form>	
+</ui:define>
+</ui:composition>
+</html>

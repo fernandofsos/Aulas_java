@@ -1,0 +1,33 @@
+package curso_array;
+
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class AulaArray {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Locale.setDefault(Locale.US);
+		Scanner sc = new Scanner(System.in);
+
+		int n = sc.nextInt();
+
+		double[] vect = new double[n];
+
+		for (double d : vect) {
+			
+			System.out.println(d);
+			
+			//vect[d] = sc.nextDouble();
+			
+			
+			
+		}
+
+		sc.close();
+
+	}
+
+}

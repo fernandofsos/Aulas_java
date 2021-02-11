@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich" >
+
+<ui:composition template="template.xhtml">
+<ui:define name="conteudo">
+<a4j:keepAlive beanName="cid10Form" />
+	<h:form>
+		<label class="tituloPagina">EDIÇÃO DE CID 10</label>
+		<div class="quadroEdicaoU">
+		     <div>
+		     	<label class="col150">Código CID:</label>
+		     	<h:outputText value="#{cid10Form.objCid10.codCid10}" 
+		     	              styleClass="campoVazio col420" />
+		     </div>
+		     <br style="clear: both"/>
+		     <div>
+		     	<label class="col150">Descrição simplificada:</label>
+		     	<h:outputText value="#{cid10Form.objCid10.dscCid10}" 
+		     	              styleClass="quadroCID10" />
+		     </div>		     
+		     <br style="clear: both"/>
+		     <div>
+		     	<label class="col150">Descrição detalhada:</label>
+		     	<div class="quadroCID10" id="detalheCID">		     	    
+		     	</div>		     	
+		     </div>
+		</div>
+		<div class="quadroEdicaoU">
+		     <div>
+		     	<label class="col150">Categoria:</label>
+		     	<h:outputText value="#{cid10Form.objCid10.cid10Grupo.cid10Categoria.dscCid10Categoria}" 
+		     	             styleClass="quadroCID10" 
+		     	             style="width: 600px" />
+		     </div>
+		     <br style="clear: both"/>
+		     <div>
+		     	<label class="col150">Grupo:</label>
+		     	<h:outputText value="#{cid10Form.objCid10.cid10Grupo.dscCid10Grupo}" 
+		     				  styleClass="quadroCID10"
+		     				  style="width: 600px" />
+		     </div>		     
+		</div>		
+		<div class="quadroEdicaoU">
+		     <div>
+		     	<label>Pesquisa adicional:</label>
+		     	<h:inputText id="inputPesquisa" 	    	         	
+	        	     		value="#{cid10Form.objCid10.dscAtalho}"
+					 		maxlength="60" 
+					 		style="width: 490px" 
+					 		styleClass="campoTexto"/>
+		     </div>		
+		     <div>
+		         <h:selectBooleanCheckbox id="chkRelevante" value="#{cid10Form.favorito}"/>		         
+		         <label>Marcar como relevante.</label>		         
+		     </div>     		     
+		</div>
+		
+		<h:panelGroup layout="block" style="text-align: center; margin-top: 10px">
+			<h:commandButton id="btnGravar" 
+			                 value="Gravar"              			                 
+			                 action="#{cid10Form.alterar}" 
+			                 styleClass="botaoModal100"
+			                 style="margin-right:8px"/>
+			                 				
+			<h:commandButton id="consulta" value="Cancelar" 
+				             action="cdCid10FromCsCid10" 
+				             immediate="true"
+				             styleClass="botaoModal100"/>			
+		</h:panelGroup>
+	</h:form>
+	<script>
+	    var dc = document.getElementById("detalheCID");
+    	dc.innerHTML = "#{cid10Form.objCid10.dscDetalhe}";
+	</script>
+</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BPAConsolidado" language="groovy" pageWidth="595" pageHeight="842" columnWidth="561" leftMargin="20" rightMargin="14" topMargin="7" bottomMargin="7">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="2"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\ricardo\\projetos\\pep\\relatorios\\versao1\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p1" class="java.lang.Integer"/>
+	<parameter name="CAMINHO_SUB_REPORT" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG2" class="java.lang.String"/>
+	<parameter name="cod_cliente" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="qtd_linhas" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="dat_competencia" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="dsc_unidade" class="java.lang.String"/>
+	<parameter name="logo_unidade" class="java.lang.String"/>
+	<parameter name="cod_ativ_prof" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="internacaoPepBean" class="br.org.isgh.pep.beans.InternacaoPepBean">
+		<fieldDescription><![CDATA[internacaoPepBean]]></fieldDescription>
+	</field>
+	<field name="examePepBean" class="br.org.isgh.pep.beans.ExamePepBean">
+		<fieldDescription><![CDATA[examePepBean]]></fieldDescription>
+	</field>
+	<field name="datRealizacao" class="java.util.Date">
+		<fieldDescription><![CDATA[datRealizacao]]></fieldDescription>
+	</field>
+	<variable name="ccGrupos" class="java.lang.Integer" resetType="Page" incrementType="Group" incrementGroup="codIsgh">
+		<variableExpression><![CDATA[($V{codIsgh_COUNT} == 1)?$V{ccGrupos}+1:$V{ccGrupos}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="controle" class="java.lang.Integer" resetType="Page" incrementType="Group" incrementGroup="codIsgh" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{examePepBean}.getCodIsgh().substring($F{examePepBean}.getCodIsgh().length()-1,$F{examePepBean}.getCodIsgh().length())) + $V{codIsgh_COUNT}]]></variableExpression>
+	</variable>
+	<group name="codIsgh">
+		<groupExpression><![CDATA[$F{examePepBean}.getCodIsgh()]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<rectangle>
+					<reportElement x="28" y="0" width="106" height="15"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="138" y="0" width="307" height="15"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="516" y="0" width="44" height="15"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="1" y="0" width="21" height="15" backcolor="#CCCCCC"/>
+				</rectangle>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement x="30" y="0" width="104" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{examePepBean}.getCodIsgh()]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="518" y="1" width="42" height="13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{codIsgh_COUNT}]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="2" y="1" width="19" height="13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{ccGrupos}]]></textFieldExpression>
+				</textField>
+				<break>
+					<reportElement x="0" y="13" width="560" height="1" isPrintWhenDetailOverflows="true">
+						<printWhenExpression><![CDATA[new Boolean(($V{ccGrupos} % 20) == 0)]]></printWhenExpression>
+					</reportElement>
+				</break>
+				<rectangle>
+					<reportElement x="447" y="0" width="75" height="15"/>
+				</rectangle>
+				<textField>
+					<reportElement x="450" y="1" width="66" height="13"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{examePepBean}.getCodCbo()]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="138" y="1" width="307" height="12"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{examePepBean}.getDscExame()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="115">
+			<textField>
+				<reportElement x="2" y="20" width="301" height="13"/>
+				<box leftPadding="0"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{dsc_unidade}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="7" width="301" height="13"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="1" y="59" width="52" height="15"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="1" y="50" width="21" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="81" y="50" width="40" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Competência]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="81" y="59" width="57" height="15"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="184" y="59" width="52" height="15"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="184" y="50" width="23" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Boletim]]></text>
+			</staticText>
+			<line>
+				<reportElement x="197" y="69" width="1" height="5"/>
+			</line>
+			<line>
+				<reportElement x="210" y="69" width="1" height="5"/>
+			</line>
+			<line>
+				<reportElement x="223" y="69" width="1" height="5"/>
+			</line>
+			<staticText>
+				<reportElement x="269" y="50" width="20" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="269" y="59" width="66" height="15"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="521" y="51" width="20" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Linhas]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="521" y="60" width="39" height="15"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="38" width="561" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BPA CONSOLIDADO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="1" y="79" width="559" height="11" backcolor="#CCCCCC"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="1" y="93" width="21" height="11" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="3" y="79" width="558" height="11"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRODUÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="95" width="18" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEQ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="106" width="14" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Linha]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="28" y="93" width="532" height="11" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="28" y="95" width="532" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ATENDIMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="106" width="117" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Descrição do Procedimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="28" y="106" width="62" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Código do Procedimento ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="445" y="106" width="20" height="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[CBO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="522" y="106" width="29" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="5" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Quantidade]]></text>
+			</staticText>
+			<image>
+				<reportElement x="356" y="0" width="89" height="42"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="460" y="0" width="96" height="42"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG2}]]></imageExpression>
+			</image>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="271" y="60" width="63" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="83" y="60" width="55" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{dat_competencia}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Page" pattern="">
+				<reportElement x="522" y="61" width="38" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{ccGrupos}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="MM/yyyy">
+				<reportElement x="2" y="60" width="50" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{cod_cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band/>
+	</detail>
+	<pageFooter>
+		<band height="8">
+			<line>
+				<reportElement x="0" y="3" width="561" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html lang="pt-Br">
+<head>
+    <!-- support for mobile touch devices -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1, minimal-ui">
+    <link href="CSS/bootstrap.min.css" rel="stylesheet">
+    <link href="CSS/font-awesome.min.css" rel="stylesheet">
+    <link href="CSS/cornerstone.min.css" rel="stylesheet">
+</head>
+<style>
+
+    /* prevent 'bounce' in scrolling */
+    html {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: auto;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    /* images are displayed in viewports */
+    .viewport {
+        width:98%;
+        height:98%;
+        top:2px;
+        left:2px;
+        position:absolute
+    }
+
+    .overlay {
+        position: absolute;
+        color: #e4ad00;
+    }
+
+    .imageViewer {
+    }
+
+    .myNav {
+        margin: 0;
+        border:0;
+    }
+
+    .viewportWrapper {
+
+    }
+    .renderTime {}
+    .fps {}
+
+    .csthumbnail {
+        color: white;
+        background-color:black;
+        width:200px;
+        height:100px;
+        border: 0px;
+        padding: 0px;
+    }
+
+    .viewer {
+        position: absolute;
+        width: 100%;
+        left: 210px;
+    }
+
+    .thumbnailSelector {
+        width:206px;
+        float:left;
+        margin-left:0px;
+    }
+    body, html {height:100%}
+
+    #wrap {height:100%}
+
+    .studyContainer {
+        margin-top: 2px;
+        margin-left:0px;
+        margin-right:0px;
+        padding: 0px;
+    }
+    .container {
+    }
+
+    .thumbnails {
+        margin:0px;
+        margin-bottom: 0px;
+        overflow-y:scroll;
+        overflow-x:hidden;
+    }
+    .studyRow {
+        margin-left: 0px;
+        margin-rigth: 0px;
+        height:100%;
+    }
+    .row {
+        margin:0;
+    }
+
+    a.list-group-item {
+        background-color: black;
+        padding: 2px;
+    }
+    a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.active:focus {
+        background-color: #424242;
+        border-color: #4e4e4e;
+    }
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+        background-color: #424242;
+        border-color: #4e4e4e;
+    }
+
+    .viewerRows .viewerCells {
+     border-bottom: 1px solid #ddd;
+     border-right: 1px solid #ddd;
+    }
+    .viewerRows:last-child .viewerCells {
+         border-bottom: none;
+    }
+    .viewerRows .viewerCells:last-child {
+         border-right: none;
+    }
+    .viewerRows {
+        display: table-row;
+    }
+    .viewerCells {
+        display: table-cell;
+        position: relative;
+    }
+
+</style>
+<body>
+<div id="wrap" style="margin-top:-10px; background-color:black;">
+    <div class="main">
+		<ul id="tabs">
+        </ul>
+		
+		<div id="tabContent">
+        </div>
+
+        <div id="studyViewerTemplate" class="active hidden" style="height:100%;">
+            <div class="studyContainer container-fluid" style="height:100%;">
+                <div class="row-fluid">
+					<div class="col-sm-2" style="padding-left:5px;">
+						<img style="margin-left:10px;margin-top:19px;margin-bottom:16px;" src="IMG/logo-header.png"/>
+					</div>
+					<div class="col-sm-8">
+						<div class="text-center" >
+							<div class="btn-group">
+                                <button type="button" id="btn01" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="WW/WC"><span class="fa fa-md fa-sun-o"></span></button>
+								<button type="button" id="btn02" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Inverter"><span class="fa fa-md fa-adjust"></span></button>
+								<button type="button" id="btn03" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Zoom"><span class="fa fa-md fa-search"></span></button>
+								<button type="button" id="btn04" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Pan"><span class="fa fa-md fa-arrows"></span></button>
+								<button type="button" id="btn05" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Stack Scroll"><span class="fa fa-md fa-bars"></span></button>
+								<button type="button" id="btn06" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Medir"><span class="fa fa-md fa-arrows-v"></span></button>
+								<button type="button" id="btn07" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Ponto"><span class="fa fa-md fa-dot-circle-o"></span></button>
+								<button type="button" id="btn08" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Ellipse"><span class="fa fa-md fa-circle-o"></span></button>
+								<button type="button" id="btn09" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Retângulo"><span class="fa fa-md fa-square-o"></span></button>
+								<button type="button" id="btn12" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Ângulo"><span class="fa fa-md fa-angle-left"></span></button>
+								<button type="button" id="btn10" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Play Clip"><span class="fa fa-md fa-play"></span></button>
+								<button type="button" id="btn11" class="btn btn-md btn-default" data-container='body' data-toggle="tooltip" data-placement="bottom" title="Stop Clip"><span class="fa fa-md fa-stop"></span></button>
+								
+								<div class="btn-group">
+								   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									 <span id="spanPreConfig">Pré-configurações</span>
+									 <span class="caret"></span>
+								   </button>
+								   <ul class="dropdown-menu" id="menuPreConfiguracoes">
+								   </ul>
+								</div>
+								<div class="btn-group">
+                                   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                     <span id="spanSplit">1 x 1</span>
+                                     <span class="caret"></span>
+                                   </button>
+                                   <ul class="dropdown-menu">
+                                        <li><a href="#" class="split" title="1,1">1 x 1</a></li>
+                                        <li><a href="#" class="split" title="2,1">2 x 1</a></li>
+                                        <li><a href="#" class="split" title="1,2">1 x 2</a></li>
+                                        <li><a href="#" class="split" title="2,2">2 x 2</a></li>
+                                        <li><a href="#" class="split" title="3,3">3 x 3</a></li>
+                                   </ul>
+                                </div>
+                                <div class="btn-group">
+								   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									 Limpar
+									 <span class="caret"></span>
+								   </button>
+								   <ul class="dropdown-menu">
+										<li><a href="#" id="limparImagem">Imagem</a></li>
+										<li><a href="#" id="limparSerie">Série</a></li>
+										<li><a href="#" id="limparInformacoes">Informações</a></li>
+								   </ul>
+								</div>
+							</div>
+						</div>
+					</div>
+                    <div class="col-sm-2" style="padding-left:5px;">
+                        <div style="margin-top:19px; color:white;">
+                            <span id="spanNomeUsuario"></span>
+                        </div>
+                    </div>
+				</div>
+                <div class="row-fluid">
+                    <div class="col-sm-12" style="padding-left:0px;">
+        				<div class="studyRow row" style="height:100%;">
+                            <div class="thumbnailSelector" style="height:100%;">
+                                <div class="thumbnails list-group">
+                                </div>
+                            </div>
+                            <div id="matrixView" class="viewer">
+                                <div id="cellView" class="imageViewer">
+                                    <!--style="width:100%;height:100%;position:relative;color: white;display:inline-block;background-color:black;"-->
+                                    <div class="viewportWrapper" 
+                                         oncontextmenu="return false"
+                                         class='cornerstone-enabled-image'
+                                         unselectable='on'
+                                         onselectstart='return false;'
+                                         onmousedown='return false;'>
+                                        <div class="viewport">
+                                        </div>
+                                        <div class="overlay" style="top:0px; left:0px">
+                                            <div>Patient Name</div>
+                                            <div>Patient Id</div>
+                                        </div>
+                                        <div class="overlay" style="top:0px; right:0px">
+                                            <div>Study Description</div>
+                                            <div>Study Date</div>
+                                        </div>
+
+                                        <div class="overlay" style="bottom:0px; left:0px">
+                                            <div class="fps">FPS:</div>
+                                            <div class="renderTime">Render Time:</div>
+                                            <div class="currentImageAndTotalImages">Image #:</div>
+                                        </div>
+                                        <div class="overlay" style="bottom:0px; right:0px">
+                                            <div>Zoom:</div>
+                                            <div>WW/WC:</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="col-sm-2" style="padding-left:5px;">
+                        <img src="IMG/logo-statix-cor2-pequeno.jpg"/>
+                    </div>
+                    <div class="col-sm-8 col-sm-offset-2 col-sm-pull-2">
+                        
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-2.1.0.min.js"></script>
+<script src="js/jquery.hammer-full.js"></script>
+<script src="js/bootstrap.min.js" ></script>
+
+<script src="js/dicomtix.min.js"></script>
+<script src="js/dicomtixConfig.min.js"></script>
+<script src="js/dicomtixTelaDetalhe.min.js"></script>
+
+</body>
+</html>

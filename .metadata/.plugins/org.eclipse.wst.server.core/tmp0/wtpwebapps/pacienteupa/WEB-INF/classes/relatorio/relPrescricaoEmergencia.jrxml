@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioAtendimento" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.4641000000000053"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="11"/>
+	<parameter name="p1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CAMINHO_IMG_UPA" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG_BRASAO" class="java.lang.String"/>
+	<parameter name="p2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\anderson.ws\\workspace\\pacienteupa_desenv\\src\\relatorio\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CAMINHO_SUB_REPORT" class="java.lang.String"/>
+	<parameter name="data_atual" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+      distinct(i.isn_internacao),p.num_prontuario,p.dsc_nome,p.num_rg,p.num_rg,p.dsc_orgao_emissao_rg,p.num_cep,
+       i.dat_cadastro, p.dat_nascimento,i.isn_internacao,
+       s.dsc_sexo,i.dsc_endereco,i.dsc_endereco,p.dsc_mae,i.dsc_bairro,
+       i.num_ddd_1,i.num_telefone_1,
+       i.isn_internacao,
+       medpoint.idade2(p.dat_nascimento, i.dat_cadastro) as idade,
+       (select vlr_parametro from medpoint.t_parametro where isn_parametro = 10) as endereco_completo,
+       (select vlr_parametro from medpoint.t_parametro where isn_parametro = 13) as dsc_unidade,
+CASE WHEN (ppi.ISN_PRESCRICAO_PEP_IS is null and (pro.flg_mpp is null or pro.flg_mpp is false or ppi.ISN_TIPO_PRESCRICAO = 43))
+		THEN upper(ppi.DSC_PRESCRICAO) || ' ' ||
+			CASE WHEN ppi.FLG_SE_NECESSARIO = 'S'
+				THEN ' - ** SE NECESSÁRIO **' ELSE ''
+			END
+			||' '||
+			CASE WHEN ppi.FLG_ACM = 'S'
+				THEN ' - ** ACM **' ELSE ''
+			END
+			||' '||
+			CASE WHEN D.DIAS is null THEN '' ELSE '(**D'||D.DIAS||'**)'
+			END
+		ELSE NULL
+		END || case when (ppi.dsc_complemento is null or ppi.dsc_complemento = '') then '' else '  |  ' || ppi.dsc_complemento end || coalesce(ppi.contador_antibiotico_relatorio, '') as dsc_prescricao,
+       CASE WHEN (ppi.ISN_PRESCRICAO_PEP_IS is null and pro.flg_mpp is true and ppi.ISN_TIPO_PRESCRICAO != 43)
+		THEN upper(ppi.DSC_PRESCRICAO) || ' ' ||
+		CASE WHEN ppi.FLG_SE_NECESSARIO = 'S'
+		THEN ' - ** SE NECESSÁRIO **' ELSE ''
+		END ||' '||
+		CASE WHEN ppi.FLG_ACM = 'S'
+		THEN ' - ** ACM **' ELSE ''
+		END ||' '||
+		CASE WHEN D.DIAS is null
+		THEN ''
+		ELSE '(**D'||D.DIAS||'**)'
+		END
+	ELSE NULL
+	END || case when (ppi.dsc_complemento is null or ppi.dsc_complemento = '') then '' else '  |  ' || ppi.dsc_complemento end || coalesce(ppi.contador_antibiotico_relatorio, '') as dsc_prescricao_mpp,
+
+       CASE WHEN (ppi.ISN_PRESCRICAO_PEP_IS is not null and (pro.flg_mpp is null or pro.flg_mpp is false or ppi.ISN_TIPO_PRESCRICAO = 43))
+		THEN upper(ppi.DSC_PRESCRICAO)|| ' ' ||
+		CASE WHEN ppi.FLG_SE_NECESSARIO = 'S' THEN ' - ** SE NECESSÁRIO **' ELSE ''
+		END ||' '||
+		CASE WHEN ppi.FLG_ACM = 'S' THEN ' - ** ACM **' ELSE ''
+		END ||' '||
+		CASE WHEN D.DIAS is null THEN '' ELSE '(**D'||D.DIAS||'**)'
+		END ||'  '|| '(SUSPENSO)' ELSE NULL
+		END ||
+	case when (ppi.dsc_complemento is null or ppi.dsc_complemento = '') then '' else '  |  ' || ppi.dsc_complemento end || coalesce(ppi.contador_antibiotico_relatorio, '') as DSC_DESCRICAO_SUSPENSAO,
+
+       CASE WHEN (ppi.ISN_PRESCRICAO_PEP_IS is not null and pro.flg_mpp is true and ppi.ISN_TIPO_PRESCRICAO != 43) THEN upper(ppi.DSC_PRESCRICAO)|| ' ' || CASE WHEN ppi.FLG_SE_NECESSARIO = 'S' THEN ' - ** SE NECESSÁRIO **' ELSE '' END ||' '|| CASE WHEN ppi.FLG_ACM = 'S' THEN ' - ** ACM **' ELSE '' END ||' '|| CASE WHEN D.DIAS is null THEN '' ELSE '(**D'||D.DIAS||'**)' END ||'  '|| '(SUSPENSO)' ELSE NULL END || case when (ppi.dsc_complemento is null or ppi.dsc_complemento = '') then '' else '  |  ' || ppi.dsc_complemento end ||
+coalesce(ppi.contador_antibiotico_relatorio, '') as DSC_DESCRICAO_SUSPENSAO_MPP,
+
+       ppi.dat_cadastro as dat_cad_prescricao,
+       usr.dsc_usuario as nom_profissional,usrc.dsc_usuario as nom_profissional_concl,
+       ppi.isn_prescricao_pep_item,
+       ppi.isn_prescricao_pep_is,
+       pp.dat_prescricao,
+       pp.dat_conclusao,
+       pp.dat_apz,
+       upper(tp.DSC_TIPO_PRESCRICAO) DSC_TIPO_PRESCRICAO,
+       tp.num_ordem,
+       ie.isn_internacao_evolucao,
+ ppi.ISN_TIPO_PRESCRICAO::integer,
+ ppi.ISN_DIETA,
+(case when dz.dat_inicial is null then '' else (' / (D' ||
+ regexp_replace(medpoint.seconds_dd_hh_mi((extract (epoch from age(to_char((case when dz.dat_final is null then $P{data_atual}::timestamp else dz.dat_final end),'dd/MM/yyyy HH24:MI:SS')::timestamp, to_char(dz.dat_inicial,'dd/MM/yyyy HH24:MI:SS')::timestamp))::integer))
+ ,'dias', '-') || ')') end) as QTD_DIAS_DIETA_ZERO
+from medpoint.t_prescricao_pep_item ppi
+    inner join medpoint.t_prescricao_pep pp on ppi.isn_prescricao_pep = pp.isn_prescricao_pep
+    inner join medpoint.t_internacao i on pp.isn_internacao = i.isn_internacao
+    inner join medpoint.t_paciente p on p.isn_paciente = i.isn_paciente
+    inner join medpoint.t_sexo s on s.isn_sexo = p.isn_sexo
+    inner join seguranca.t_usuario usr on usr.isn_usuario = pp.isn_profissional
+    INNER JOIN medpoint.T_TIPO_PRESCRICAO tp ON  ppi.ISN_TIPO_PRESCRICAO = tp.ISN_TIPO_PRESCRICAO
+    left  join seguranca.t_usuario usrc on usrc.isn_usuario = pp.isn_profissional_concl
+    left join medpoint.t_internacao_evolucao ie on ie.isn_prescricao_pep = pp.isn_prescricao_pep
+    LEFT JOIN
+    (select
+        a.isn_internacao,
+        b.isn_produto_almox,
+        date(date_trunc('day', current_date)) - date(date_trunc('day', a.dat_inicio)) dias
+    from
+        medpoint.t_ficha a,
+        medpoint.t_ficha_item b
+    where
+        a.isn_ficha = b.isn_ficha and
+        date(date(a.dat_inicio) + b.num_dias_validade_ficha::integer) >= date(date_trunc('day', current_date)) and a.isn_internacao = $P{p2}::numeric
+         ) as D ON ppi.isn_produto_almox = D.isn_produto_almox
+    left join almox.t_produto pro on pro.isn_produto = ppi.isn_produto_almox
+    LEFT JOIN MEDPOINT.T_PRESCRICAO_PEP_ITEM_DIETA_ZERO DZ ON DZ.ISN_PRESCRICAO_PEP_ITEM_DIETA_ZERO = ppi.ISN_PRESCRICAO_PEP_ITEM_DIETA_ZERO
+where ppi.isn_prescricao_pep = $P{p1} and ppi.flg_ativo = 'S' order by tp.num_ordem asc]]>
+	</queryString>
+	<field name="isn_internacao" class="java.lang.Integer"/>
+	<field name="num_prontuario" class="java.lang.String"/>
+	<field name="dsc_nome" class="java.lang.String"/>
+	<field name="num_rg" class="java.lang.String"/>
+	<field name="dsc_orgao_emissao_rg" class="java.lang.String"/>
+	<field name="num_cep" class="java.lang.String"/>
+	<field name="dat_cadastro" class="java.sql.Date"/>
+	<field name="dat_nascimento" class="java.sql.Date"/>
+	<field name="dsc_sexo" class="java.lang.String"/>
+	<field name="dsc_endereco" class="java.lang.String"/>
+	<field name="dsc_mae" class="java.lang.String"/>
+	<field name="dsc_bairro" class="java.lang.String"/>
+	<field name="num_ddd_1" class="java.lang.String"/>
+	<field name="num_telefone_1" class="java.lang.String"/>
+	<field name="idade" class="java.lang.String"/>
+	<field name="endereco_completo" class="java.lang.String"/>
+	<field name="dsc_unidade" class="java.lang.String"/>
+	<field name="dsc_prescricao" class="java.lang.String"/>
+	<field name="dsc_prescricao_mpp" class="java.lang.String"/>
+	<field name="dsc_descricao_suspensao" class="java.lang.String"/>
+	<field name="dsc_descricao_suspensao_mpp" class="java.lang.String"/>
+	<field name="dat_cad_prescricao" class="java.sql.Timestamp"/>
+	<field name="nom_profissional" class="java.lang.String"/>
+	<field name="nom_profissional_concl" class="java.lang.String"/>
+	<field name="isn_prescricao_pep_item" class="java.lang.Integer"/>
+	<field name="isn_prescricao_pep_is" class="java.lang.Integer"/>
+	<field name="dat_prescricao" class="java.sql.Timestamp"/>
+	<field name="dat_conclusao" class="java.sql.Timestamp"/>
+	<field name="dat_apz" class="java.sql.Timestamp"/>
+	<field name="dsc_tipo_prescricao" class="java.lang.String"/>
+	<field name="num_ordem" class="java.lang.Integer"/>
+	<field name="isn_internacao_evolucao" class="java.lang.Integer"/>
+	<field name="isn_tipo_prescricao" class="java.lang.Integer"/>
+	<field name="isn_dieta" class="java.lang.Integer"/>
+	<field name="qtd_dias_dieta_zero" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="215" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="107" width="555" height="89"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="2" width="343" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="77" width="554" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="16" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[PRESCRIÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="181" width="62" height="15"/>
+				<box leftPadding="1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="107" width="555" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO PACIENTE/CADASTRO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="360" y="166" width="55" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefone:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="62" y="181" width="219" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_endereco}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="281" y="136" width="165" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_cadastro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="323" y="181" width="144" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_bairro}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="494" y="181" width="61" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_cep}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="72" y="151" width="57" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_nascimento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="281" y="181" width="42" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="151" width="72" height="15"/>
+				<box leftPadding="1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Nasc.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="467" y="181" width="27" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="343" y="151" width="34" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sexo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="221" y="137" width="60" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Admissão:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="129" y="151" width="39" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Idade:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="454" y="166" width="101" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_telefone_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="166" width="36" height="15"/>
+				<box leftPadding="1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mãe:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="467" y="151" width="88" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_rg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="122" width="40" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="137" width="70" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prontuário:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="168" y="151" width="173" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{idade}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="36" y="166" width="324" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_mae}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="377" y="151" width="69" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_sexo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="72" y="136" width="148" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_prontuario}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="40" y="122" width="513" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="446" y="151" width="21" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="446" y="2" width="107" height="34"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_UPA}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="36" width="343" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORGANIZAÇÃO SOCIAL SAÚDE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="343" y="1" width="103" height="34"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_BRASAO}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="415" y="166" width="39" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_ddd_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="19" width="343" height="17"/>
+				<box leftPadding="0"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_unidade}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement isPrintRepeatedValues="false" x="-1" y="199" width="554" height="16"/>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$F{isn_internacao_evolucao}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "subRelEvolucao.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="67" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="51" y="22" width="230" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nom_profissional_concl}==null?$F{nom_profissional}:$F{nom_profissional_concl}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="22" width="51" height="15"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Médico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="22" width="38" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="381" y="22" width="103" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº Atendimento:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="484" y="22" width="74" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{isn_internacao}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="319" y="22" width="62" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_prescricao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="103" y="52" width="322" height="15"/>
+				<box leftPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prescrição | Complemento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="425" y="52" width="130" height="15"/>
+				<box leftPadding="2">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Aprazamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="52" width="103" height="15"/>
+				<box leftPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="554" y="52" width="1" height="15" isPrintWhenDetailOverflows="true"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="52" width="1" height="15" isPrintWhenDetailOverflows="true"/>
+			</line>
+			<staticText>
+				<reportElement x="-2" y="36" width="95" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Conclusão:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="93" y="36" width="130" height="15"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_conclusao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="224" y="36" width="113" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Aprazamento:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="338" y="36" width="129" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_apz}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="426" y="1" width="129" height="15" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="102" height="15"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_tipo_prescricao}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="0" y="16" width="555" height="1" isPrintWhenDetailOverflows="true"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="103" y="0" width="322" height="15" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[$F{isn_prescricao_pep_is} == null && $F{dsc_prescricao} != null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement markup="html">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_prescricao}.toUpperCase() +
+($F{isn_tipo_prescricao}.equals(1) && $F{isn_dieta}.equals(4)?$F{qtd_dias_dieta_zero}.toUpperCase():"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="103" y="0" width="322" height="15" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[$F{isn_prescricao_pep_is} != null && $F{dsc_descricao_suspensao} != null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement markup="html">
+					<font fontName="Arial" size="9" isStrikeThrough="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_descricao_suspensao}.toUpperCase() +
+($F{isn_tipo_prescricao}.equals(1) && $F{isn_dieta}.equals(4)?$F{qtd_dias_dieta_zero}.toUpperCase():"")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="1" height="17" isPrintWhenDetailOverflows="true"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="554" y="0" width="1" height="17" isPrintWhenDetailOverflows="true"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="103" y="0" width="322" height="15" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[$F{isn_prescricao_pep_is} != null  && $F{dsc_descricao_suspensao_mpp} != null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement markup="html">
+					<font fontName="Arial" size="9" isStrikeThrough="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_descricao_suspensao_mpp}.toUpperCase() +
+($F{isn_tipo_prescricao}.equals(1) && $F{isn_dieta}.equals(4)?$F{qtd_dias_dieta_zero}.toUpperCase():"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="103" y="1" width="322" height="15" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[$F{isn_prescricao_pep_is} == null && $F{dsc_prescricao_mpp} != null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement markup="html">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_prescricao_mpp}.toUpperCase() +
+($F{isn_tipo_prescricao}.equals(1) && $F{isn_dieta}.equals(4)?$F{qtd_dias_dieta_zero}.toUpperCase():"")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="34" width="555" height="14"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unidade mantida com recursos públicos, provenientes de seus impostos e contribuições sociais.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="19" width="593" height="14"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{endereco_completo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="33" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="1" y="17" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="248" y="1" width="100" height="15"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

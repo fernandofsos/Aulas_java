@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="conteudo">
+<a4j:keepAlive beanName="movLeitoTransporteForm" />
+	<!-- FORM -->
+	<h:form>
+		<div class="tituloPagina">HISTÓRICO MOVIMENTAÇÃO PACIENTE</div>
+		<div class="quadroPaciente">			
+			<div>
+				<label>Nome do Paciente:</label><br />
+			   	<h:outputText id="nmPaciente" value="#{movLeitoTransporteForm.objPaciente.dscNome}" 
+			   		              styleClass="campoVazio" ></h:outputText>
+			</div>
+			<div>
+				<label>Nome da Mãe:</label><br />
+			   	<h:outputText id="nmMae" value="#{movLeitoTransporteForm.objPaciente.dscMae}" 
+			   		        styleClass="campoVazio col385" ></h:outputText>
+			</div>	
+
+			<div>				
+				<label>Sexo:</label><br />
+				<h:outputText value="#{movLeitoTransporteForm.objPaciente.sexo.dscSexo}" styleClass="campoVazio col70" />
+			</div>
+			<div>
+			    <label>Data Nascimento:</label><br />						
+				<h:outputText value="#{movLeitoTransporteForm.objPaciente.idade}" styleClass="campoVazio col220" />								
+			</div>
+			<div>
+			    <label>Prontuario:</label><br />
+				<h:outputText value="#{movLeitoTransporteForm.objPaciente.numProntuario} " styleClass="campoVazio col70" />
+			</div>
+			<div>
+				<label>Leito:</label><br />
+				<h:outputText value="#{movLeitoTransporteForm.objPaciente.leitoAtual}" styleClass="campoVazio col300" />
+			</div>
+		   	<div>
+		   	    <rich:spacer height="18" style="display:block"/>
+		   	    <div class="col70 campoVazio">
+	        		<h:graphicImage value="IMG/iconeCCIH.png" alt="CCIH" rendered="#{movLeitoTransporteForm.objPaciente.flgVre=='S'}"/>
+	        	</div>
+	     	</div>			
+       	</div>
+	  	<br/>
+	    <h:panelGroup layout="block">
+	    	<h3>MOVIMENTAÇÃO DE LEITOS</h3>
+			<rich:dataTable 
+				id="dtMovimentacaoLeito" 
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				value="#{movLeitoTransporteForm.lstInternacaoLeitos}" 
+				var="moviLeito"
+				width="100%"
+				reRender="ds"
+				rows="10" >				
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column><h:outputText value="Clinica" /></h:column>
+						<h:column><h:outputText value="Enf./Leito" /></h:column>
+						<h:column><h:outputText value="Dt. Entrada" /></h:column>
+						<h:column><h:outputText value="Dt. Saída" /></h:column>
+						<h:column><h:outputText value="Dt. Óbito Informada" /></h:column>
+						<h:column><h:outputText value="Destino" /></h:column>
+						<h:column><h:outputText value="Obs." /></h:column>
+						<h:column><h:outputText value="Mot. Alta" /></h:column>
+						<h:column><h:outputText value="Usuário" /></h:column>					
+					</rich:columnGroup>				
+				</f:facet>
+			
+				<rich:column width="150px">				
+					<h:outputText value="#{moviLeito.leito.enfermaria.clinica.dscClinica}" />				
+				</rich:column>
+				<rich:column width="80px">				
+					<h:outputText value="#{moviLeito.leito.enfermaria.dscEnfermaria}.#{moviLeito.leito.dscLeito}" rendered="#{moviLeito.leito.isnLeito != 56}"/>				
+					<h:outputText value="RECEPÇÃO" rendered="#{moviLeito.leito.isnLeito == 56}"/>				
+				</rich:column>
+				<rich:column width="80px">				
+					<h:outputText value="#{moviLeito.datInternacao}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>				
+					<h:outputText value=" " />				
+					<h:outputText value="#{moviLeito.horInternacao}" />
+				</rich:column>
+				<rich:column width="80px">				
+					<h:outputText value="#{moviLeito.datAlta}" >
+					    <f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+					<h:outputText value="  #{moviLeito.horAlta}" />				
+				</rich:column>
+				<rich:column width="80px">
+					<h:outputText value="#{moviLeito.getDatObitoFormatada()}" />
+				</rich:column>
+				<rich:column width="80px">				
+					<h:outputText value="#{moviLeito.destino.dscDestino}" />				
+				</rich:column>
+				<rich:column width="150px">				
+					<h:outputText value="#{moviLeito.dscObsAlta}" />				
+				</rich:column>
+				<rich:column >			
+					<h:outputText value="DECISÃO MÉDICA" rendered="#{moviLeito.isnMotivoAlta == 1}"/>				
+					<h:outputText value="SOLICITAÇÃO PACIENTE / FAMILIARES" rendered="#{moviLeito.isnMotivoAlta == 2}"/>				
+					<h:outputText value="DECISÃO ADMINISTRATIVA" rendered="#{moviLeito.isnMotivoAlta == 3}"/>				
+					<h:outputText value="EVASÃO" rendered="#{moviLeito.isnMotivoAlta == 4}"/>				
+					<h:outputText value="OUTRO HOSPITAL" rendered="#{moviLeito.isnMotivoAlta == 5}"/>				
+					<h:outputText value="UNIDADE BÁSICA DE SAÚDE" rendered="#{moviLeito.isnMotivoAlta == 6}"/>				
+				</rich:column>
+				<rich:column width="30px">
+					<center>
+						<h:graphicImage id="imgAcomp" 
+						                url="IMG/acompanhante.png"
+									    style="border:0;" />
+					</center>
+					<rich:toolTip followMouse="true" 
+								  direction="top-right"
+								  showDelay="200"
+								  styleClass="tooltip" 
+								  layout="block">
+							      <f:facet name="defaultContent">
+							      	  <strong>Carregando Informações...</strong>
+								  </f:facet>
+								  <h:panelGrid>
+									 <h:panelGroup>
+										 <h:outputText value="Cadastrado por: " />
+										 <h:outputText value="#{moviLeito.nmUsuarioCadastro}" />
+									 </h:panelGroup>
+									 <h:panelGroup>
+									 	<h:outputText value="Transferência por: " />
+									 	<h:outputText value="#{moviLeito.nmUsuarioTransf}" />
+									 </h:panelGroup>
+									 <h:panelGroup>
+									 	<h:outputText value="Alta por: " />
+									 	<h:outputText value="#{moviLeito.nmUsuarioAlta}" />
+									 </h:panelGroup>
+								  </h:panelGrid>
+					</rich:toolTip>
+				 
+                </rich:column>  						            	        
+				<!-- RODAPE DA TABELA -->	
+				<f:facet name="footer">
+		       		<rich:datascroller fastControls="auto"  maxPages="5" id="ds" ajaxSingle="false" />
+		    	</f:facet>
+			</rich:dataTable>
+		</h:panelGroup>
+		<br/>
+		<h:panelGroup layout="block">
+	    	<h3>CLASSIFICAÇÃO DE RISCO</h3>
+			<rich:dataTable 
+				id="tbClassificacaoRisco" 
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				value="#{movLeitoTransporteForm.lstClassificacaoRisco}" 
+				var="classifRisco"
+				width="100%"
+				reRender="rolagemRisco"
+				rows="10" >
+			
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column><h:outputText value="Cor" /></h:column>
+						<h:column><h:outputText value="Inicio" /></h:column>
+						<h:column><h:outputText value="Fim" /></h:column>
+						<h:column><h:outputText value="Profissional" /></h:column>						
+					</rich:columnGroup>				
+				</f:facet>
+			
+				<rich:column style="text-align: center;width: 5%;">
+					<center>
+						<h:graphicImage url="IMG/#{classifRisco.risco.dscArquivo}" />
+					</center>
+				</rich:column>
+				<rich:column style="text-align: center;font-size:small;width: 15%;">
+					<center>
+						<h:outputText value="#{classifRisco.dateIni}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>				
+						<h:outputText value=" " />
+						<h:outputText value="#{classifRisco.dscHorIni}" />
+					</center>
+				</rich:column>
+				<rich:column style="text-align: center;font-size:small;width: 15%;">
+					<center>
+						<h:outputText value="#{classifRisco.datRegistro}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>				
+						<h:outputText value=" " />
+						<h:outputText value="#{classifRisco.horRegistro}" />
+					</center>
+				</rich:column>
+				<rich:column style="text-align: center;width: 65%;">
+					<h:outputText value="#{classifRisco.nomeProfissional}" />
+				</rich:column>				
+				<!-- RODAPE DA TABELA -->	
+				<f:facet name="footer">
+		       		<rich:datascroller fastControls="auto" id="rolagemRisco" ajaxSingle="false" />
+		    	</f:facet>
+			</rich:dataTable>
+		</h:panelGroup>
+		<br/>
+		<h:panelGroup layout="block">
+	    	<h3>ATENDIMENTO</h3>
+			<rich:dataTable 
+				id="idAtendimento" 
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				value="#{movLeitoTransporteForm.lstAtendimento}" 
+				var="atend"
+				width="100%"
+				reRender="rolagemAtend"
+				rows="10" >
+			
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column><h:outputText value="Inicio" /></h:column>
+						<h:column><h:outputText value="Fim" /></h:column>
+						<h:column><h:outputText value="Profissional" /></h:column>
+						<h:column><h:outputText value="Destino" /></h:column>
+						<h:column><h:outputText value="" /></h:column>
+					</rich:columnGroup>				
+				</f:facet>
+			
+				<rich:column style="text-align: center;font-size:small;width: 12%;">
+					<center>
+						<h:outputText value="#{atend.datIni}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>				
+						<h:outputText value=" " />				
+						<h:outputText value="#{atend.dscHorIni}" />					
+					</center>
+				</rich:column>
+				<rich:column style="text-align: center;font-size:small;width: 12%;">
+					<center>
+						<h:outputText value="#{atend.datFim}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>				
+						<h:outputText value=" " />				
+						<h:outputText value="#{atend.dscHorFim}" />					
+					</center>
+				</rich:column>
+				<rich:column style="text-align: center;width: 50%;">
+					<h:outputText value="#{atend.profissional.dscUsuario}" />
+				</rich:column>
+				<rich:column style="text-align: center;width: 18%;">
+					<h:outputText value="#{atend.dscDestinoAtendimento}" />
+				</rich:column>
+				<rich:column style="text-align: center;width: 8%;">
+					<center>
+						<t:commandLink id="atendimentoLink" action="#{emergenciaForm.relatorioGeral}" target="blank" title="IMPRIMIR IDENTIFICAÇÃO DO PACIENTE">
+							<h:graphicImage id="imgAtendimentoGeral" url="IMG/impressora.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{atend.isnInternacao}" target="#{emergenciaForm.isnInternacao}" />							
+						</t:commandLink>
+					</center>				
+				</rich:column>
+				<!-- RODAPE DA TABELA -->	
+				<f:facet name="footer">
+		       		<rich:datascroller fastControls="auto" id="rolagemAtend" ajaxSingle="false" />
+		    	</f:facet>
+			</rich:dataTable>
+		</h:panelGroup>
+		<br/>
+		<h:panelGroup layout="block">
+	    	<h3>RELATÓRIO DE TRANSFERÊNCIA</h3>
+			<rich:dataTable 
+				id="dtMovimentacao" 
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				value="#{movLeitoTransporteForm.lstRelatorioTransferencia}" 
+				var="relTrans"
+				width="100%"
+				reRender="dst"
+				rows="10" >
+			
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column><h:outputText value="Data Cadastro" /></h:column>
+						<h:column><h:outputText value="Profissional" /></h:column>
+						<h:column><h:outputText value="Destino" /></h:column>
+						<h:column><h:outputText value="" /></h:column>
+					</rich:columnGroup>				
+				</f:facet>
+			
+				<rich:column style="text-align: center;">
+					<h:outputText value="#{relTrans.datTrans}" >
+					  <f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>		
+					<h:outputText value="  #{relTrans.dscHorCad}" />			
+				</rich:column>
+				<rich:column style="text-align: center;">
+					<h:outputText value="#{relTrans.usuario.dscUsuario}" />					
+				</rich:column>
+				<rich:column style="text-align: center;">
+					<h:outputText value="#{relTrans.dscReferencia}" />					
+				</rich:column>
+				<rich:column width="6%">
+					<center>
+						<a4j:commandLink style="border:white; width: 12px; height: 12px;" title="IMPRIMIR RELATÓRIO TRANSFERÊNCIA" action="#{internacaoTransForm.verificaRelatorio}" oncomplete="abrirRelatorio(#{relTrans.isnInternacao});">
+							<h:graphicImage id="imgTransf" url="IMG/impressora.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{relTrans.isnInternacao}" target="#{internacaoTransForm.isnInternacao}" />
+						</a4j:commandLink>
+					</center>										
+				</rich:column>				
+				<!-- RODAPE DA TABELA -->	
+				<f:facet name="footer">
+		       		<rich:datascroller fastControls="auto"  maxPages="5" id="dst" ajaxSingle="false" />
+		    	</f:facet>
+			</rich:dataTable>
+		</h:panelGroup>
+		<br/>
+		<h:panelGroup layout="block">
+	    	<h3>RELATÓRIO DE TRANSFERÊNCIA (HISTÓRICO)</h3>
+			<rich:dataTable 
+				id="dtMovimentacaoLog" 
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				value="#{movLeitoTransporteForm.lstRelatorioTransferenciaLog}"
+				rendered="#{not empty movLeitoTransporteForm.lstRelatorioTransferenciaLog}" 
+				var="relTrans"
+				width="100%"
+				reRender="dstLog"
+				rows="10" >
+			
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column><h:outputText value="Data Cadastro" /></h:column>
+						<h:column><h:outputText value="Profissional" /></h:column>
+						<h:column><h:outputText value="Destino" /></h:column>
+						<h:column><h:outputText value="" /></h:column>
+					</rich:columnGroup>				
+				</f:facet>
+			
+				<rich:column style="text-align: center;">
+					<h:outputText value="#{relTrans.datTrans}" >
+					  <f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>					
+					<h:outputText value="  #{relTrans.dscHorCad}" />
+				</rich:column>
+				<rich:column style="text-align: center;">
+					<h:outputText value="#{relTrans.usuario.dscUsuario}" />					
+				</rich:column>
+				<rich:column style="text-align: center;">
+					<h:outputText value="#{relTrans.dscReferencia}" />					
+				</rich:column>
+				<rich:column width="6%">
+					<center>
+						<t:commandLink id="idTransLog" action="#{internacaoTransForm.relatorioTransLog}" target="_blank" title="IMPRIMIR RELATÓRIO TRANSFERÊNCIA">
+							<h:graphicImage id="imgTransfLog" url="IMG/impressora.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{relTrans.isnInternacaoTransLog}" target="#{internacaoTransForm.isnInternacaoTransLog}" />							
+						</t:commandLink>						
+					</center>										
+				</rich:column>				
+				<!-- RODAPE DA TABELA -->	
+				<f:facet name="footer">
+		       		<rich:datascroller fastControls="auto" id="dstLog" ajaxSingle="false" />
+		    	</f:facet>
+			</rich:dataTable>
+		</h:panelGroup>
+		<br/>
+		<h:panelGroup layout="block" rendered="#{not empty movLeitoTransporteForm.listaReferencia}">
+	    	<h3>REFERÊNCIA</h3>
+			<rich:dataTable 
+				id="dtTableReferencia" 
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				value="#{movLeitoTransporteForm.listaReferencia}" 
+				var="ref"
+				width="100%">
+			
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column><h:outputText value="Data Cadastro" /></h:column>
+						<h:column><h:outputText value="Profissional" /></h:column>
+						<h:column><h:outputText value="Acatou Referência ?" /></h:column>
+						<h:column><h:outputText value="Referência" /></h:column>
+						<h:column><h:outputText value="Observação" /></h:column>
+					</rich:columnGroup>				
+				</f:facet>
+			
+				<rich:column style="text-align: center;">
+					<h:outputText value="#{ref.datCadastro}" >
+					  <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="GMT-03:00"/>
+					</h:outputText>					
+				</rich:column>
+				<rich:column style="text-align: center;">
+					<h:outputText value="#{ref.usuarioBean.dscUsuario}" />					
+				</rich:column>
+				<rich:column style="text-align: center;">
+					<h:outputText value="SIM" rendered="#{ref.flgReferencia == 'S'}" />					
+					<h:outputText value="NÃO" rendered="#{ref.flgReferencia == 'N'}" />					
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{ref.dscReferencia}" />					
+				</rich:column>				
+				<rich:column>
+					<h:outputText value="#{ref.dscObservacao}" />					
+				</rich:column>				
+			</rich:dataTable>
+		</h:panelGroup>
+		<br/>    		
+    	<div id="botoes" style="text-align: center">    		    
+			<h:commandButton id="btnVoltar" styleClass="botaoModal" value="Voltar"
+			                 action="#{movLeitoTransporteForm.btnVoltar}" immediate="true">
+			                 <f:setPropertyActionListener value="#{movLeitoTransporteForm.objPaciente}" target="#{geralForm.objPaciente}"/>
+			</h:commandButton>
+    	</div>
+    	<br/>
+		<br/>
+		<br/>
+	</h:form>
+<script>
+	    function abrirRelatorio(isnInternacao)
+	     {		     
+		 	window.open('cd_internacaoTrans.jsf?paramRel=relISGH_'+isnInternacao);
+	     }
+</script>	
+</ui:define>
+</ui:composition>
+</html>

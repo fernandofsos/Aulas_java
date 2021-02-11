@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:rich="http://richfaces.org/rich">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/> -->
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<script type="text/javascript" src="SCRIPTS/mascara.js"></script>
+	<script type="text/javascript" src="SCRIPTS/maskedinput-1.1.4.js"></script>
+	<script type="text/javascript" src="SCRIPTS/rotinasComuns.js"></script>
+	<script type="text/javascript" src="SCRIPTS/custom.js"></script>
+	<link rel="stylesheet" type="text/css" href="CSS/layout.css" />
+	<link rel="stylesheet" type="text/css" href="CSS/paciente.css" />	
+
+	<script type="text/javascript">
+	<!--
+		function alertCustomizado(alerta) {
+			document.getElementById('lblTitulo').innerHTML = 'Mensagem de Alerta';
+			document.getElementById('lblAlert').innerHTML = alerta;
+			Richfaces.showModalPanel("panelAlert");
+			return false;
+		}
+		
+		function alertCustomizadoComTitulo(titulo, alerta, botao) {
+			document.getElementById('lblTitulo').innerHTML = titulo;
+			document.getElementById('lblAlert').innerHTML = alerta;
+			document.getElementById('btnAcaoId').value = botao;
+			Richfaces.showModalPanel("panelAlert");
+			return false;
+		}
+		
+		function alertCustomizadoComTituloAcao() {
+			var btnId = document.getElementById('btnAcaoId').value;
+			var botao = document.getElementById(btnId);
+			btnId.value = '';
+			if(botao) {
+				botao.click();
+			}
+		}
+    //-->
+	</script>
+</head>
+<body>
+	<rich:modalPanel id="panelAlert" autosized="true" width="400" resizeable="false">
+		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/IMG/alerta.png" style="border:0; margin-right:10px; vertical-align:middle; float: left" />
+				<p id="lblTitulo" style="font-size:14px; font-weight: bold;">(Mensagem de Alerta)</p>
+			</h:panelGroup>
+    	</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidelinkAlert" />
+				<rich:componentControl for="panelAlert" attachTo="hidelinkAlert" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmAlert">	   								
+			<fieldset class="fsPepResp">
+				<div>
+					<label id="lblAlert" style="font-size: 11px; color: black;">(Mensagem de Alerta)</label>
+				</div>
+			</fieldset>
+			<br clear="all"/>
+			<div style="text-align:center; margin-top:10px">
+				<input id="btnAcaoId" type="hidden" value=""></input>
+				<a4j:commandButton id="btnOkAlert" onclick="alertCustomizadoComTituloAcao();" value="Ok"  styleClass="botaoModal" style="width:100px;">
+					<rich:componentControl for="panelAlert" attachTo="btnOkAlert" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+	<!-- CABEÇALHO -->
+	<rich:modalPanel id="panelStatus" autosized="true">  
+ 		<h:panelGrid columns="2"> 
+ 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 			<h:outputText value="Carregando..." />
+ 		</h:panelGrid> 
+	</rich:modalPanel>
+	
+    <div id="divCabecalho">
+    	<h:form id="formCabecalho">
+    	<div id="divConteudoCabecalho">
+	    	<div id="divLogotipo">
+	    		<a4j:commandLink action="#{templateForm.retornaPaginaPrincipal}" onclick="navegacao(1)">
+	    	    	<h:graphicImage value="images/paciente/logo_paciente.png" style="border:0"></h:graphicImage>
+	    	    </a4j:commandLink>
+	    	</div>
+	    	<div id="divLabels">
+	    		<table cellspacing="10">
+	    		<tr>
+	    			<td><h:commandLink action="#{templateForm.retornaPaginaPrincipal}"><img src="images/paciente/btn_inicio.png" border="0"/></h:commandLink></td>
+	    			<td class="bemvindo">
+	    				<span class="nomeUsuario"><h:outputText value="#{sessionScope.loginUsuario.dscLogin}" /></span><br/>
+	    				<span class="dataSistema"><h:outputText value="#{templateForm.getDataAtual()}"/></span>
+	    			</td>
+	    			<td><a4j:commandLink action="#{templateForm.sairSistema}"><img src="images/paciente/btn_sair.png" border="0"/></a4j:commandLink></td>		    			
+	    		</tr>
+	    		</table>
+	    	</div>
+	    	<div id="divSepse" >
+	            <a style="display:none" id="linkSepse" href="http://www.isgh.org.br/intranet/index.php?option=com_content&amp;view=article&amp;id=1823&amp;Itemid=726" target="_blank"></a>
+				<h:commandLink onclick="document.getElementById('linkSepse').click();">
+			    		<h:graphicImage value="IMG/Sepse.png" width="90" height="40" style="float:right; margin-right:180px; margin-top:12px; border:0;" ></h:graphicImage>		
+				</h:commandLink>
+       		</div>		
+	    	<div id="divLogoHgwa">
+	    		<h:graphicImage value="images/paciente/#{templateForm.logoUpa}"  ></h:graphicImage>
+        	</div>
+        	<div id="divIcons">
+			<ul id="navbar">
+				<!-- The strange spacing herein prevents an IE6 whitespace bug. -->
+				<li><a href="#" title="Internados" class="img"><img src="images/paciente/icon_internados.png" border="0" title="Internados" /></a>
+					<ul>
+						<li><a4j:commandLink value="Eixos da Emergência" action="#{templateForm.chamaPaginaEixosEmergencia}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+	    				<li><a4j:commandLink value="Farmácia" action="#{templateForm.chamaPaginaFarmacia}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+	    				<li><a4j:commandLink value="Laboratório / Raio-X" action="#{templateForm.chamaPaginaLaboratorio}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+	    				<li><a4j:commandLink value="Pacientes Atendimento" action="#{templateForm.chamaPaginaAtendimento}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+	    				<li><a4j:commandLink value="Pacientes Recepção" action="#{templateForm.chamaPaginaRecepcao}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+	    				<li><a4j:commandLink value="Serviço Social" action="paginaPrincipalSocial" /></li>
+					</ul>
+				</li>
+				<li><a href="#" title="Farmácia" class="img"><img src="images/paciente/icon_validacao_produto.png" border="0" title="Farmácia" /></a>
+					<ul>
+						<li><a4j:commandLink value="Validação Produto" action="#{templateForm.chamaPaginaValidacaoProduto}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+					</ul>
+				</li>
+				<li><a href="#" title="Assistência" class="img"><img src="images/paciente/icon_assistencia.png" border="0" title="Assistência" /></a>
+					<ul>
+            			<li><a4j:commandLink value="Cadastros" action="principalParaCadastros" /></li>
+            			<li><a4j:commandLink value="NAC" action="principalParaNAC" /></li>
+						
+					</ul>
+				</li>
+				<li><a href="#" title="Relatórios" class="img"><img src="images/paciente/icon_relatorios.png" border="0" title="Relatórios" /></a>
+					<ul>
+						<li><a4j:commandLink value="Censo Diário" action="#{templateForm.chamaPaginaCensoHospitalar}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+            			<li><a4j:commandLink value="Estatistica Emergência" action="#{templateForm.chamaPaginaEstatisticaEmergencia}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="#{templateForm.hospital=='UPA'}" /></li>
+            			<li><a4j:commandLink value="Geral Exame" action="#{templateForm.chamaPaginaExameDetalhado}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+            			<li><a4j:commandLink value="Relatórios Gerencias" action="paginaPrincipalRelatorio"  /></li>
+               			<li><a4j:commandLink value="Indicadores" action="#{templateForm.chamaPaginaIndicadores}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="false" /></li>
+               			<li><a4j:commandLink value="Relatórios" action="#{templateForm.chamaPaginaRelatorios}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="false" /></li>							
+					</ul>
+				</li>
+			</ul>
+    	</div>
+		</div>
+		</h:form>
+	</div><br clear="all"/>	
+	
+	<div class="cabAreaPesquisa">ATENDIMENTO MÉDICO</div>
+	   	
+   	<!-- ALTERAÇÃO DIA 09.04.2012 POR JORGE MAIA EM: QUADRO ATENDIMENTO -->	
+ 			<h:panelGrid width="98%" style="margin:0px auto 0px auto;" columns="3" styleClass="quadroAtendimento" columnClasses="col1,col2,col3">	
+				<h:panelGroup layout="block">
+		   		<h:outputLabel value="Paciente:" /><br />
+		   		<h:outputLabel value="#{emergenciaForm.pacienteOtimizado.dscNome}" styleClass="campoVazio2 campoTextoAtendMedic" />
+		   		<h:graphicImage id="imgDocFoto" url="IMG/imgDocFoto.png" title="Cadastro de Documento sem Foto" style="margin:0 0 0 4px; border:0; vertical-align:middle" rendered="#{emergenciaForm.pacienteOtimizado.flgDocFoto eq 'N'}" />
+		   		</h:panelGroup>
+		   		
+		   		<h:panelGroup layout="block">
+		   		<h:outputLabel value="Mãe:" /><br />
+		   		<h:outputLabel value="#{emergenciaForm.pacienteOtimizado.dscMae}" styleClass="campoVazio2 campoTextoAtendMedic" />
+		   		</h:panelGroup>
+		   		
+		   		<h:panelGroup layout="block">
+				<h:outputLabel value="Fluxograma:" /><br />
+				<h:outputLabel value="#{emergenciaForm.pacienteOtimizado.dscFluxograma}" styleClass="campoVazio2 campoTextoAtendMedic" />
+				</h:panelGroup>
+				
+				<h:panelGroup layout="block">
+				<h:outputLabel value="Discriminador:" /><br />
+				<h:outputLabel value="#{emergenciaForm.pacienteOtimizado.dscDiscriminador}" styleClass="campoVazio2 campoTextoAtendMedic" />
+				</h:panelGroup>
+				
+				<h:panelGrid columns="3">
+					<h:panelGroup layout="block">
+					<h:outputLabel value="Nascimento:" /><br />
+					<h:outputLabel value="#{emergenciaForm.pacienteOtimizado.datNascimento}" styleClass="campoVazio2 campoTextoAtendMedic" />
+					<rich:spacer width="50px" height="0" />
+					</h:panelGroup>
+						
+					<h:panelGroup layout="block">
+					<h:outputLabel value="Nº Atendimento:" /><br />
+					<h:outputText value="#{emergenciaForm.pacienteOtimizado.isnInternacao}" styleClass="campoVazio2 campoTextoAtendMedic" />
+					</h:panelGroup>
+					
+					<h:panelGroup layout="block">
+					<h:outputLabel value="Atendimentos na Unidade:" /><br />
+					<h:outputText value="#{emergenciaForm.numAtendimentos}" styleClass="campoVazio2 campoTextoAtendMedic" style="text-align:center; width:100%"/>
+					</h:panelGroup>
+		   		</h:panelGrid>
+		   		
+		   		<h:panelGrid columns="2">
+			   		<h:panelGroup layout="block">
+					<h:outputLabel value="Risco:" /><br />
+					<h:graphicImage url="IMG/#{emergenciaForm.imagensRiscos[emergenciaForm.pacienteOtimizado.isnRisco]}" style="border:0; height: ; float:left" />
+					
+					<div style="margin-top:3px; float:left">
+						<h:outputText value="(" style="color:black; font-size:11px"/>
+						<h:outputText value="Alergia" style="color:blue; font-size:11px" rendered="#{emergenciaForm.pacienteOtimizado.flgAlergia == 'S'}"/>
+						<h:outputText value=" / " style="color:black; font-size:11px" rendered="#{emergenciaForm.pacienteOtimizado.flgAlergia == 'S' and emergenciaForm.pacienteOtimizado.flgRiscoQueda == 'S'}"/>
+						<h:outputText value="Queda" style="color:red; font-size:11px" rendered="#{emergenciaForm.pacienteOtimizado.flgRiscoQueda == 'S'}"/>
+						<h:outputText value=")" style="color:black; font-size:11px"/>
+					</div>
+					<div style="clear:both"/>
+					<rich:spacer width="50px" height="0" />
+					</h:panelGroup>
+			   			
+			   		<h:panelGroup layout="block">
+			   		<h:outputLabel value="Sexo:" /><br />
+			   		<h:outputText value="#{emergenciaForm.pacienteOtimizado.sglSexo}" styleClass="campoVazio2 campoTextoMenor" />
+					</h:panelGroup>
+				</h:panelGrid>
+									
+				<h:panelGroup layout="block">
+				<h:outputLabel value="Queixa:" /><br />
+				<h:outputLabel value="#{emergenciaForm.pacienteOtimizado.dscQueixa}" styleClass="campoVazio2 campoTextoAtendMedic" />
+				</h:panelGroup>
+				
+				<h:panelGrid columns="3">
+					<h:panelGroup layout="block">
+					<h:outputLabel value="SatO2:" /><br />
+					<h:outputText value="#{emergenciaForm.pacienteOtimizado.dscSato2}" styleClass="campoVazio2 campoTextoMenorAinda" />
+					</h:panelGroup>
+					
+					<h:panelGroup layout="block">
+					<h:outputLabel value="Glasgow:" /><br />
+					<h:outputText value="#{emergenciaForm.pacienteOtimizado.dscGlassgow}" styleClass="campoVazio2 campoTextoMenorAinda" />
+					</h:panelGroup>
+					
+					<h:panelGroup layout="block">
+					<h:outputLabel value="Temperatura:" /><br />
+					<h:outputText value="#{emergenciaForm.pacienteOtimizado.dscTemperatura}" styleClass="campoVazio2 campoTextoMenorAinda" />
+					</h:panelGroup>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="5">
+					<h:panelGroup layout="block">
+					<h:outputLabel value="Glicemia:" /><br />
+					<h:outputText value="#{emergenciaForm.pacienteOtimizado.dscGlicemia}" styleClass="campoVazio2 campoTextoMenorAinda" />
+					</h:panelGroup>
+				
+					<h:panelGroup layout="block">
+					<h:outputLabel value="Régua Dor:" /><br />
+					<h:outputText value="#{emergenciaForm.pacienteOtimizado.dscReguaDor}" styleClass="campoVazio2 campoTextoMenorAinda" />
+					</h:panelGroup>
+					
+					<h:panelGroup layout="block">
+					<h:outputLabel value="FC:" /><br />
+					<h:outputText value="#{emergenciaForm.pacienteOtimizado.dscFc}" styleClass="campoVazio2 campoTextoMenorAinda" />
+					</h:panelGroup>
+					
+					<h:panelGroup layout="block">
+					<h:outputLabel value="Dengue:" /><br />
+					<h:outputText value="#{emergenciaForm.pacienteOtimizado.flgDengue =='S'?'SIM':'NÃO'}" styleClass="campoVazio2 campoTextoMenorAinda" />
+					</h:panelGroup>
+					
+					<h:panelGroup layout="block">
+					<h:outputLabel value="Primeiro sintoma dengue:" /><br />
+					<h:outputText value="#{emergenciaForm.pacienteOtimizado.datSintomaDengue}" styleClass="campoVazio2 campoTextoMenorAinda" />
+					</h:panelGroup>
+				</h:panelGrid>
+ 		</h:panelGrid>				
+</body>
+</html>

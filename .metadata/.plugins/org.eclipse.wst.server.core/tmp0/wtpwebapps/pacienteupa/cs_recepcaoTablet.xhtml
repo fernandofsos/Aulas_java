@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<script src="SCRIPTS/mascara.js" type="text/javascript"></script>
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/> -->
+	<script type="text/javascript" src="SCRIPTS/mascara.js"></script>
+	<script type="text/javascript" src="SCRIPTS/maskedinput-1.1.4.js"></script>
+	<script type="text/javascript" src="SCRIPTS/rotinasComuns.js"></script>
+	<script type="text/javascript" src="SCRIPTS/custom.js"></script>
+	<link rel="stylesheet" type="text/css" href="CSS/layout.css" />
+	<link rel="stylesheet" type="text/css" href="CSS/paciente.css" />
+</head>
+      
+<body onload="obterDataDeHoje();">    
+	<!-- MODAL PANEL DE CLASSIFICAÇÃO DE RISCO -->
+	<a4j:keepAlive beanName="paginaPrincipalForm" />
+	<a4j:keepAlive beanName="templateForm" />
+	
+	
+	<rich:modalPanel id="panelStatus" autosized="true">  
+ 		<h:panelGrid columns="2"> 
+ 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 			<h:outputText value="Carregando..." />
+ 		</h:panelGrid> 
+	</rich:modalPanel>
+
+	<!-- CABEÇALHO -->
+    <div id="divCabecalho">
+    	<h:form id="formCabecalho">
+    	<div id="divConteudoCabecalho">
+	    	<div id="divLogotipo">
+	    		<a4j:commandLink action="#{paginaPrincipalForm.retornaPaginaPrincipal}">
+	    	    	<h:graphicImage value="images/paciente/logo_paciente.png" style="border:0"></h:graphicImage>
+	    	    </a4j:commandLink>
+	    	</div>
+	    	<div id="divLabels">
+	    		<table cellspacing="10">
+	    		<tr>
+	    			<td><a4j:commandLink action="#{paginaPrincipalForm.retornaPaginaPrincipal}"><img src="images/paciente/btn_inicio.png" border="0"/></a4j:commandLink></td>
+	    			<td class="bemvindo">
+	    				<span class="nomeUsuario"><h:outputText value="#{sessionScope.loginUsuario.dscLogin.substring(0,20)}" rendered="#{sessionScope.loginUsuario.dscLogin.length()  &gt; 20}"  /><h:outputText value="#{sessionScope.loginUsuario.dscLogin}" rendered="#{sessionScope.loginUsuario.dscLogin.length()  &lt; 20}"  /><h:outputText value="#{sessionScope.loginUsuario.dscLogin}" rendered="#{sessionScope.loginUsuario.dscLogin.length()  == 20}"  /><h:outputText value="..." rendered="#{sessionScope.loginUsuario.dscLogin.length() > 20}"  /></span><br/>
+	    				<span class="dataSistema"><h:outputText value="#{templateForm.getDataAtual()}"/></span>
+	    			</td>
+	    			<td><a4j:commandLink action="#{templateForm.sairSistema}"><img src="images/paciente/btn_sair.png" border="0"/></a4j:commandLink></td>
+	    		</tr>
+	    		</table>
+	    	</div>		
+	    	<div id="divLogoHgwa">
+	    		<h:graphicImage value="images/paciente/#{templateForm.logoUpa}" width="198" height="66" ></h:graphicImage>
+        	</div>
+        	<div id="divIcons">
+				<ul id="navbar"> 
+					<!-- The strange spacing herein prevents an IE6 whitespace bug. -->
+					<li>
+						<a href="#" title="Internados" class="img"><img src="images/paciente/icon_internados.png" border="0" title="Internados" /></a>
+						<ul>
+							<!-- The strange spacing herein prevents an IE6 whitespace bug. -->
+							<li><a4j:commandLink value="Eixos da Emergência" action="#{templateForm.chamaPaginaEixosEmergencia}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+		    				<li><a4j:commandLink value="Farmácia" action="#{templateForm.chamaPaginaFarmacia}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+		    				<li><a4j:commandLink value="Laboratório / Raio-X" action="#{templateForm.chamaPaginaLaboratorio}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+		    				<li><a4j:commandLink value="Pacientes Atendimento" action="#{templateForm.chamaPaginaAtendimento}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+		    				<li><a4j:commandLink value="Pacientes Recepção" action="#{templateForm.chamaPaginaRecepcao}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+		    				<li><a4j:commandLink value="Serviço Social" action="paginaPrincipalSocial" /></li>
+						</ul>
+					</li>
+					<li>
+						<a href="#" title="Assistência" class="img"><img src="images/paciente/icon_assistencia.png" border="0" title="Assistência" /></a>
+						<ul>
+							<!-- The strange spacing herein prevents an IE6 whitespace bug. -->
+	            			<li><a4j:commandLink value="Cadastros" action="principalParaCadastros" /></li>
+	            			<li><a4j:commandLink value="NAC" action="principalParaNAC" /></li>
+						</ul>
+					</li>
+					<li>
+						<a href="#" title="Relatórios" class="img"><img src="images/paciente/icon_relatorios.png" border="0" title="Relatórios" /></a>
+						<ul>
+							<!-- The strange spacing herein prevents an IE6 whitespace bug. -->
+							<li><a4j:commandLink value="Censo Diário" action="#{templateForm.chamaPaginaCensoHospitalar}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+	            			<li><a4j:commandLink value="Estatistica Emergência" action="#{templateForm.chamaPaginaEstatisticaEmergencia}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="#{templateForm.hospital=='UPA'}" /></li>
+	            			<li><a4j:commandLink value="Geral Exame" action="#{templateForm.chamaPaginaExameDetalhado}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+	            			<li><a4j:commandLink value="Relatórios Gerencias" action="paginaPrincipalRelatorio"  /></li>
+	               			<li><a4j:commandLink value="Indicadores" action="#{templateForm.chamaPaginaIndicadores}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="false" /></li>
+	               			<li><a4j:commandLink value="Relatórios" action="#{templateForm.chamaPaginaRelatorios}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="false" /></li>							
+						</ul>
+					</li>
+				</ul>
+	    	</div>
+		</div>
+		</h:form>
+	</div>
+	
+	
+	
+	<h:form id="csEmergencia" >
+	 	
+	 	 <a4j:poll id="poll" interval="30000" actionListener="#{paginaPrincipalForm.atualizarListasRecepcaoTabletAjax}"
+                reRender="tabEmergencia,totaisEmergencia, tblChamada" />	 	
+	 	
+	 	<!-- ABAS -->
+	 	<rich:tabPanel switchType="client" style="margin-top:20px;width: 100%;">
+	 		<rich:tab label="ATENDIMENTO"  style="width: 100%; height: 15px;">
+				<div>
+				<h:panelGroup styleClass="areaPesquisa" layout="block" id="totaisEmergencia" style="width: 98%;">
+				    <div class="colLeft" style="text-align: left; margin-top: 10px; width:100%">
+					    <div class="col150" style="text-align: center; margin-right: 40px; width: 20%; float: left;">		       
+					   	   <label style="font: 700; font-size: 13px;"><b>Pacientes em Espera</b></label><br/>
+					       <label class="totalizador" style="margin-left: 1px;">#{paginaPrincipalForm.totalEmergencia}</label>
+					    </div>		    		    
+				        <div class="col90" style="height: 60px; width: 110px;">
+				            <br/>
+							<label style="font-size: 13px;"><b>Classificação de Risco</b></label>		        		
+						</div>    
+				    	<div class="col320" style="overflow:auto; border: solid 1px #999">
+				      		<div class="totaisRisco bordaDir bordaBot">
+				           		<h:graphicImage url="IMG/risco_vermelho.gif" style="vertical-align: middle"/>
+						   		<label> <b>#{paginaPrincipalForm.totaisRisco[0]}</b></label>			
+				        	</div>
+				      		<div class="totaisRisco bordaDir bordaBot">
+				           		<h:graphicImage url="IMG/risco_laranja.gif" style="vertical-align: middle"/>
+						   		<label><b>#{paginaPrincipalForm.totaisRisco[1]}</b></label>					
+				      		</div>
+				      		<div class="totaisRisco bordaDir bordaBot">
+				           		<h:graphicImage url="IMG/risco_amarelo.gif" style="vertical-align: middle"/>
+						   		<label><b>#{paginaPrincipalForm.totaisRisco[2]}</b></label>				
+				        	</div>
+				      		<div class="totaisRisco bordaBot">
+				           		<h:graphicImage url="IMG/risco_verde.gif" style="vertical-align: middle"/>
+						   		<label><b>#{paginaPrincipalForm.totaisRisco[3]}</b></label>			
+				        	</div>		        	
+				        	<br style="clear: both"/>		        
+				         	<div class="totaisRisco bordaDir">
+				           		<h:graphicImage url="IMG/risco_azul.gif" style="vertical-align: middle"/>
+						   		<label><b>#{paginaPrincipalForm.totaisRisco[4]}</b></label>					
+				      		</div>
+				      		<div class="totaisRisco bordaDir">
+				           		<h:graphicImage url="IMG/risco_branco.gif" style="vertical-align: middle"/>
+						   		<label><b>#{paginaPrincipalForm.totaisRisco[5]}</b></label>				
+				        	</div>
+				        	<div class="totaisRisco bordaDir">
+				           		<h:graphicImage url="IMG/risco_cinza.gif" style="vertical-align: middle"/>
+						   		<label><b>#{paginaPrincipalForm.totaisRisco[6]}</b></label>				
+				        	</div>
+				        </div>
+					    <div class="col150" style="text-align: center; margin-left: 80px; float: left;">		       
+					   	   <label style="font: 700; font-size: 13px;"><b>Pacientes Atendidos</b></label><br/>
+					       <label class="totalizador" style="margin-left: 1px;">#{paginaPrincipalForm.qtdPacientesAtendidosDoDia}</label>
+					    </div>				    	
+				        <div style="float: right;">
+					        <a4j:commandButton id="btnRefresh"
+					       		image="IMG/atualizar2.gif"
+					       		alt="Atualizar lista" 
+				                action="#{paginaPrincipalForm.atualizarRecepcaoEmergencia}"
+					    		reRender="tabEmergencia,totaisEmergencia,tblChamada" />
+				        </div>
+				    </div><br clear="all"/>
+		   		</h:panelGroup>
+		   		</div>
+		   		<div>
+		   			<rich:dataTable id="tabEmergencia"
+									onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+									onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+									value="#{paginaPrincipalForm.listaPacientesEmergenciaTablet}" 
+									var="paciente"
+									style="width: 100%"										 
+									reRender="ds,totaisEmergencia">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<h:column style="width: 2%;"> <h:outputText  /> </h:column>												
+								<h:column> <h:outputText value="Atend." /> </h:column>
+								<h:column> <h:outputText value="Risco" /> </h:column>
+								<h:column> <h:outputText value="Paciente" /> </h:column>
+								<h:column> <h:outputText value="Data/Hora" /> </h:column>						
+								<h:column> <h:outputText value="T.Emerg."/> </h:column>
+								<h:column> <h:outputText value="T.Risco"/> </h:column>						
+								<h:column> <h:outputText value="Idade"/> </h:column>						
+								<h:column> <h:outputText value="Especialidade" /> </h:column>
+								<h:column> <h:outputText value="Local" /> </h:column>
+								<h:column> <h:outputText value="Profissional" /> </h:column>
+							</rich:columnGroup>
+						</f:facet>			
+						<!-- PRONTUARIO -->
+						<rich:column width="2%">
+							<center>			
+							    <a4j:outputPanel styleClass="linhaFormulario" layout="block">
+							    	<h:graphicImage url="IMG/#{paginaPrincipalForm.imagensRiscos[paciente.isnRisco]}" style="border:0;" />
+							    	<rich:toolTip direction="bottom-right" layout="block" rendered="#{paciente.isnRisco != 0}"
+							    	              styleClass="tooltipEmergencia">
+										<f:facet name="defaultContent">
+											<strong>Aguarde...</strong>
+										</f:facet>
+										<div>
+										    <label>Fluxograma:</label>
+										    <h:outputText value="#{paciente.dscFluxograma}" style="font-weight: bold"/>
+										    <br/>
+										    <label>Queixa:</label>
+										    <h:outputText value="#{paciente.dscQueixa}" style="font-weight: bold"/>
+										    <br/>
+										    <label>Encaminhamento:</label>
+										    <h:outputText value=" " style="font-weight: bold"/>
+										    <br/>
+										    <label>Tempo Classificação (HH:mm):</label>
+										    <h:outputText value="#{paciente.tempoClassificacaoRisco}" style="font-weight: bold"/>
+										</div>
+									</rich:toolTip>
+							    </a4j:outputPanel>															
+							</center>
+						</rich:column>
+						
+						<!-- ATENDIMENTO -->
+						<rich:column  width="6%">
+							<center>
+								<h:outputText value="#{paciente.isnInternacao}" />
+							</center>
+						</rich:column>
+						<rich:column>
+					<center>
+						<div style="display:#{paciente.flgAlergia == 'S'?'':'none'}">
+							<h:outputText value="Alergia" style="color:blue; font-size:11px"/>
+						</div>
+						<div style="display:#{paciente.flgRiscoQueda == 'S'?'':'none'}">
+							<h:outputText value="Queda" rendered="#{paciente.flgRiscoQueda == 'S'}" style="color:red; font-size:11px"/>
+						</div>
+					</center>
+					
+				</rich:column>
+						<!-- NOME -->
+						<rich:column>
+						    <h:outputText value="#{paciente.dscNome}" />					
+          					<h:graphicImage id="imgSepse" url="IMG/risco_sepse.png" title="Paciente com suspeita de infecção" style="margin:0 0 0 4px; border:0; vertical-align:middle" rendered="#{not empty paciente.flgSuspeitaInfeccao and paciente.flgSuspeitaInfeccao == 'S' and paciente.exibeIconeSepse}" />
+						</rich:column>
+						
+						<!-- DATA/HORA -->
+						<rich:column style="text-align: center;" width="12%">
+							<h:outputText value="#{paciente.datCadastro}" >
+							     <f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+							<h:outputText value=" #{paciente.horChegada}" />
+						</rich:column>
+						
+						<!-- CLINICA, ENFERMARIA, LEITO -->
+						<rich:column width="6%" style="text-align: center;">
+							<h:outputText value="#{paciente.tempoEmergencia}" />
+						</rich:column>				
+						
+						<!-- Tempo do Risco -->				
+						<rich:column width="6%" style="text-align: center;">
+							<h:outputText value="#{paciente.tempoRisco}" />
+						</rich:column>
+				
+						<!-- Idade -->				
+						<rich:column>
+							<h:outputText value="#{paciente.idade}" />
+						</rich:column>						
+						
+						<!-- DIAS LEITO -->
+						<rich:column>
+							<h:outputText value="#{paciente.dscEspecialidadeEmergencia}" />	
+						</rich:column>
+							
+						<!-- LOCAL DO PACIENTE -->
+						<rich:column>
+							<h:outputText value="RISCO" rendered="#{paciente.flgRisco == 'S'}"/>
+							<h:outputText value="ATENDIMENTO" rendered="#{paciente.flgAtendendo == 'S'}"/>	
+						</rich:column>
+						
+						<!-- PROFISSIONAL -->
+						<rich:column>
+							<h:outputText value="#{paciente.nomProfAtend}" />	
+						</rich:column>	
+						
+					
+					</rich:dataTable>
+				</div>
+				<a4j:support event="onlabelclick" actionListener="#{paginaPrincipalForm.atualizarPacientesRecepcaoTablet}" reRender="tblReceituario" />
+			</rich:tab>
+			
+			<rich:tab label="CHAMADA" style="width: 100%;" rendered="#{false}">
+				<rich:dataTable id="tblChamada" 
+						 		value="#{paginaPrincipalForm.lstPacientesChamada}" 
+						 		var="rst" 
+						 		style="width: 100%;" 
+						 		rowClasses="par,impar" >
+					<f:facet name="header">
+						<rich:columnGroup>
+							<rich:column style="width: 15%; text-align: center;">
+								Data de Atendimento
+							</rich:column>										
+							<rich:column style="text-align: center;">
+								Paciente
+							</rich:column>
+							<rich:column style="text-align: center;">
+								Profissional
+							</rich:column>
+							<rich:column style="width: 15%; text-align: center;">
+								Local
+							</rich:column>
+						</rich:columnGroup>						
+					</f:facet>
+					<rich:columnGroup onmouseover="javascript:this.style.backgroundColor='#FFFFCC';" 
+						 onmouseout="javascript:this.style.backgroundColor=''">									
+						<rich:column style="text-align: center; height: 35px;">
+							<h:outputText value="#{rst.datChamada}" converter="ConversorDeDataHora"/>
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{rst.internacaoBean.pacientePepBean.dscNome}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{rst.profissionalBean.dscUsuario}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="RISCO " rendered="#{rst.tpInternacaoChamada == 2}"/>
+							<h:outputText value="ATENDIMENTO" rendered="#{rst.tpInternacaoChamada == 1}"/>
+						</rich:column>
+					</rich:columnGroup>
+				</rich:dataTable>
+				<a4j:support event="onlabelclick" actionListener="#{paginaPrincipalForm.atualizarChamadasRecepcaoTablet}" reRender="tblReceituario" />
+			</rich:tab>			
+			
+		</rich:tabPanel>
+			
+		<br/><br/><br/>
+		
+		<a4j:status id="statusPanel"
+			   onstart="Richfaces.showModalPanel('panelStatus');" 
+			    onstop="#{rich:component('panelStatus')}.hide()">
+		</a4j:status>   
+		
+		
+	<script type="text/javascript">
+        var meses = new Array("Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez");
+        function obterDataDeHoje() {
+           data = new Date();           
+		   document.getElementById("dataHoje").innerHTML = data.getDate() + " de " + 
+           meses[data.getMonth()] + " de " + data.getFullYear();           
+		}
+	</script>
+		
+		</h:form>
+	<script>
+	
+	    function navegacao(tipo) {
+		    if (tipo == 1) {
+		    	window.location = "#{request.contextPath}/paginaPrincipal.jsf";
+		    } else if (tipo == 2) {
+		    	window.location = "#{request.contextPath}/cs_paciente.jsf";
+		    } else if (tipo == 3) {
+		    	window.location = "#{request.contextPath}/cs_referencia.jsf";
+		    } else if (tipo == 4) {
+		    	window.location = "#{request.contextPath}/movPaciente.jsf";
+		    } else if (tipo == 5) {
+		    	window.location = "#{request.contextPath}/cs_enfermaria.jsf";
+		    } else if (tipo == 6) {
+		    	window.location = "#{request.contextPath}/cs_leito.jsf";
+		    } else if (tipo == 7) {
+		    	window.location = "#{request.contextPath}/cs_clinica.jsf";
+		    } else if (tipo == 8) {
+		    	window.location = "#{request.contextPath}/cs_bloco.jsf";
+		    } else if (tipo == 9) {
+		    	window.location = "#{request.contextPath}/ajustesMovimentos.jsf";
+	    	} else if (tipo == 10) {
+	    		window.location = "#{request.contextPath}/cs_exame.jsf";		    			
+	    	} else if (tipo == 11) {
+	    		window.location = "#{request.contextPath}/cs_interconsulta.jsf";	    			
+	    	} else if (tipo == 12) {
+	    		window.location = "#{request.contextPath}/cs_internados.jsf";
+	    	} else if (tipo == 13) {
+	    		window.location = "#{request.contextPath}/cs_relatorioNac.jsf";
+	    	} else if (tipo == 14) {
+	    		window.location = "#{request.contextPath}/cs_chaveBolsa.jsf";
+	    	} else if (tipo == 15) {
+	    		window.location = "#{request.contextPath}/cs_emergencia.jsf";
+	    	} else if (tipo == 16) {
+	    		window.location = "#{request.contextPath}/eixosEmergencia.jsf";	
+	    	} else if (tipo == 17) {
+	    		window.location = "#{request.contextPath}/cs_InternadosPendentes.jsf";	
+	    	} else if (tipo == 18) {
+	    		window.location = "#{request.contextPath}/cs_censoHospitalar.jsf";	
+	    	} else if (tipo == 19) {
+	    		window.location = "#{request.contextPath}/cs_estatisticaEmergencia.jsf";	
+	    	} else if (tipo == 20) {
+	    		window.location = "#{request.contextPath}/cs_cid10.jsf";
+	    	} else if (tipo == 21) {
+	    		window.location = "#{request.contextPath}/cs_validaInternacao.jsf";
+		    } else if (tipo == 22) {
+	    		window.location = "#{request.contextPath}/cs_ocupacao.jsf";
+		    } else if (tipo == 23) {
+	    		window.location = "#{request.contextPath}/cs_internacoesValidadas.jsf";
+		    } else if (tipo == 30) {
+	    		window.location = "#{request.contextPath}/cd_migrarEscala.jsf";
+		    } else if (tipo == 24) {
+		    	window.location = "#{request.contextPath}/cd_escala.jsf";
+		    } else if (tipo == 25) {
+		    	window.location = "#{request.contextPath}/cd_marcacao.jsf";
+		    } else if (tipo == 26) {
+		    	window.location = "#{request.contextPath}/cd_geracaoEscala.jsf";
+		    } else if (tipo == 27) {
+		    	window.location = "#{request.contextPath}/cs_agendamentoAmbulatorial.jsf";
+		   } else if (tipo == 31) {
+    		    window.location = "#{request.contextPath}/cs_indicadores.jsf";
+	       } else if (tipo == 32) {
+    		    window.location = "#{request.contextPath}/cs_pacienteAtendimento.jsf";
+	       } else if (tipo == 33) {
+    		    window.location = "#{request.contextPath}/cs_laboratorio.jsf";
+	       } else if (tipo == 34) {
+    		    window.location = "#{request.contextPath}/cs_farmacia.jsf";
+	       } else if (tipo == 35) {
+   		    	window.location = "#{request.contextPath}/cs_exame_detalhado.jsf";
+	       } else if (tipo == 36) {
+   		    	window.location = "#{request.contextPath}/cs_assistenteSocial.jsf";
+	       } else if (tipo == 99){
+	       		window.alert("Usuário sem permissão")
+	       }
+	       	 
+	    }
+
+	    function validar(msg)
+		{
+			if(msg != '')
+			{
+				alert(msg);
+			}
+		}
+	    
+	</script>
+</body>
+</html>

@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+      
+<ui:composition template="template.xhtml">
+	<ui:define name="conteudo">    
+	<!-- MODAL PANEL DE CLASSIFICAÇÃO DE RISCO -->
+	 <a4j:keepAlive beanName="emergenciaForm" />
+	 <a4j:keepAlive beanName="obitoForm" />
+	 <a4j:loadScript src="resource://jquery.js" />
+	 
+	<rich:modalPanel id="panelStatus" autosized="true">  
+ 		<h:panelGrid columns="2"> 
+ 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 			<h:outputText value="Carregando..." />
+ 		</h:panelGrid> 
+	</rich:modalPanel>	 
+	 
+	 <rich:modalPanel id="panPaciente" autosized="false" width="600" height="400" resizeable="true" headerClass="headerPanel3">
+		
+    	<f:facet name="header">
+			<h:panelGroup>
+       			<h:outputText value="DADOS DO PACIENTE"></h:outputText>
+       		</h:panelGroup>
+    	</f:facet>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanel"/>
+        		<rich:componentControl for="panPaciente" attachTo="fechaPanel" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+    	<div>
+    		<ui:include src="panelDadosPaciente.xhtml"/>
+    	</div> 
+   	</rich:modalPanel>
+	 
+	<!-- MODAL PANEL DE baixa --> 
+	<rich:modalPanel id="panelBaixa" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+		<!-- BARRA DE TITULO MODAL-->
+        <f:facet name="header">            
+            <h:outputText value="Atendimento Baixa"></h:outputText>            
+        </f:facet>
+
+        <f:facet name="controls">
+            <h:panelGroup>
+                <h:graphicImage value="IMG/fechar.png" id="fechar3" />
+                <rich:componentControl for="panelBaixa" attachTo="fechar3" operation="hide" event="onclick" />
+            </h:panelGroup>
+        </f:facet>
+       	<!-- CAMPOS DE BUSCA -->			 
+   	    <h:form>
+	        <div class="dadosPaciente">
+			    <div class="col400">
+			       	<label>Paciente: </label>
+					<h:outputText value="#{emergenciaForm.paciente.dscNome}" style="font-weight: bold" />
+				</div>
+				<div class="col150">
+					<label>Nº atendimento: </label>
+					<h:outputText value="#{emergenciaForm.paciente.isnInternacao}" style="font-weight: bold" />
+				</div>
+				<div class="col380">
+				    <label>Data entrada: </label>
+					<h:outputText value="#{emergenciaForm.paciente.datCadastro}" style="font-weight: bold">
+				    	<f:convertDateTime pattern="dd/MM/yyyy"/>				       
+					</h:outputText>
+					<h:outputText value=" #{emergenciaForm.paciente.horChegada}" style="font-weight: bold"/>									
+				</div>
+				<div class="col170">
+				    <div style="float: left; margin-right: 10px">
+						<label>Idade: </label>
+						<h:outputText value="#{emergenciaForm.paciente.idade}" style="font-weight: bold"/>
+					</div>
+					<div>
+						<label>Sexo: </label>
+						<h:outputText value="#{emergenciaForm.paciente.sglSexo}" style="font-weight: bold"/>
+					</div>
+				</div>
+			</div>			
+        	<div class="geralCampos">
+				<div class="col70">
+					<label>Risco: </label><br/>
+					<h:graphicImage url="IMG/#{emergenciaForm.imagensRiscos[emergenciaForm.paciente.isnRisco]}" style="border:0;" rendered="#{emergenciaForm.paciente.isnRisco != null}" />
+					<h:graphicImage url="IMG/#{emergenciaForm.imagensRiscos[0]}" style="border:0;" rendered="#{emergenciaForm.paciente.isnRisco == null}" />
+				</div>
+				<div class="col230">
+					<label>Fluxograma: </label><br/>
+					<h:outputText value="#{emergenciaForm.paciente.dscFluxograma}" style="font-weight: bold"/>
+				</div>				
+				<div class="col250">
+					<label>Discriminador: </label><br/>
+					<h:outputText value="#{emergenciaForm.paciente.dscDiscriminador}" style="font-weight: bold"/>
+				</div>
+			</div>			
+        	<div class="geralCampos">
+        	    <h:panelGroup styleClass="linhaFormulario" layout="block">		
+					<label>Motivo da Baixa:</label><br/>
+					<h:inputTextarea value="#{emergenciaForm.textoAtendimento}"
+					                 styleClass="campoObservacao" 
+				                 	 style="width: 540px" 
+				                     onkeyup="limitarTamanhoCampo(this,1000)"/>
+				</h:panelGroup>									
+				<div class="linhaFormulario" >
+				    <div style="float: left; margin-right: 40px">		
+						<label>Usuário:</label>
+						<h:inputText value="#{emergenciaForm.usuario}" maxlength="20" styleClass="campoTexto" 
+						             style="width: 90px"/>
+					</div>
+					<div style="float: left;">		
+						<label>Senha:</label>
+						<h:inputSecret value="#{emergenciaForm.senha}" maxlength="20" styleClass="campoTexto" 
+						               style="width: 90px"/>
+					</div>
+				</div>	
+			</div>	
+			
+			<div style="text-align: center; margin-top: 10px">
+				<a4j:commandButton id="btnOkAtend" value="OK" 
+								   action="#{emergenciaForm.baixarPaciente()}"				    
+								   reRender="tabEmergencia,totaisEmergencia,csEmergencia"
+								   style="margin-right: 10px" 
+								   styleClass="botaoModal"
+								   oncomplete="this.disabled=false; avisosValidacao(#{emergenciaForm.avisoValidacao}, 'panelBaixa', false)"
+								   onclick="this.disabled=true" >				
+				</a4j:commandButton>			
+				<a4j:commandButton id="btnCancelAtend"  value="Cancelar"  styleClass="botaoModal">
+					<rich:componentControl for="panelBaixa" attachTo="btnCancelAtend" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+	    </h:form>	
+	 </rich:modalPanel>
+	 
+	<!-- MODAL PANEL DE REFERENCIA - INICIO --> 
+	<rich:modalPanel id="panelReferencia" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+		<!-- BARRA DE TITULO MODAL-->
+        <f:facet name="header">            
+            <h:outputText value="Referênciar Paciente"></h:outputText>            
+        </f:facet>
+
+        <f:facet name="controls">
+            <h:panelGroup>
+                <h:graphicImage value="IMG/fechar.png" id="fechar4" />
+                <rich:componentControl for="panelReferencia" attachTo="fechar4" operation="hide" event="onclick" />
+            </h:panelGroup>
+        </f:facet>
+       	<!-- CAMPOS DE BUSCA -->			 
+   	    <h:form>
+	        <div class="dadosPaciente">
+			    <div class="col400">
+			       	<label>Paciente: </label>
+					<h:outputText value="#{emergenciaForm.paciente.dscNome}" style="font-weight: bold" />
+				</div>
+				<div class="col150">
+					<label>Nº atendimento: </label>
+					<h:outputText value="#{emergenciaForm.paciente.isnInternacao}" style="font-weight: bold" />
+				</div>
+				<div class="col380">
+				    <label>Data entrada: </label>
+					<h:outputText value="#{emergenciaForm.paciente.datCadastro}" style="font-weight: bold">
+				    	<f:convertDateTime pattern="dd/MM/yyyy"/>				       
+					</h:outputText>
+					<h:outputText value=" #{emergenciaForm.paciente.horChegada}" style="font-weight: bold"/>									
+				</div>
+				<div class="col170">
+				    <div style="float: left; margin-right: 10px">
+						<label>Idade: </label>
+						<h:outputText value="#{emergenciaForm.paciente.idade}" style="font-weight: bold"/>
+					</div>
+					<div>
+						<label>Sexo: </label>
+						<h:outputText value="#{emergenciaForm.paciente.sglSexo}" style="font-weight: bold"/>
+					</div>
+				</div>
+			</div>			
+        	<div class="geralCampos">
+				<div class="col70">
+					<label>Risco: </label><br/>
+					<h:graphicImage url="IMG/#{emergenciaForm.imagensRiscos[emergenciaForm.paciente.isnRisco]}" 
+					                style="border:0; " />
+				</div>
+				<div class="col230">
+					<label>Fluxograma: </label><br/>
+					<h:outputText value="#{emergenciaForm.paciente.dscFluxograma}" style="font-weight: bold"/>
+				</div>				
+				<div class="col250">
+					<label>Discriminador: </label><br/>
+					<h:outputText value="#{emergenciaForm.paciente.dscDiscriminador}" style="font-weight: bold"/>
+				</div>
+			</div>			
+        	<div class="geralCampos">
+        		<h:panelGroup styleClass="linhaFormulario" layout="block">
+        			<label><h:outputText value="Paciente acatou referência ?" /></label>
+			   		<h:selectOneRadio value="#{emergenciaForm.internacaoReferenciaBean.flgReferencia}" styleClass="radioButton">
+						<f:selectItem itemValue="S" itemLabel="SIM"/>
+						<f:selectItem itemValue="N" itemLabel="NÃO"/>
+					</h:selectOneRadio>
+        		</h:panelGroup>
+        	    <h:panelGroup styleClass="linhaFormulario" layout="block">		
+					<label>Referência:</label><br/>
+					<h:inputTextarea value="#{emergenciaForm.internacaoReferenciaBean.dscReferencia}"
+					                 styleClass="campoObservacao" 
+				                 	 style="width: 540px" 
+				                     onkeyup="limitarTamanhoCampo(this,200)"
+				                     onblur="upper(this);" />
+				</h:panelGroup>									
+        	    <h:panelGroup styleClass="linhaFormulario" layout="block">		
+					<label>Observação:</label><br/>
+					<h:inputTextarea value="#{emergenciaForm.internacaoReferenciaBean.dscObservacao}"
+					                 styleClass="campoObservacao" 
+				                 	 style="width: 540px" 
+				                     onkeyup="limitarTamanhoCampo(this,600)"
+				                     onblur="upper(this);" />
+				</h:panelGroup>									
+				<div class="linhaFormulario" >
+				    <div style="float: left; margin-right: 40px">		
+						<label>Usuário:</label>
+						<h:inputText value="#{emergenciaForm.usuario}" maxlength="20" styleClass="campoTexto" 
+						             style="width: 90px"/>
+					</div>
+					<div style="float: left;">		
+						<label>Senha:</label>
+						<h:inputSecret value="#{emergenciaForm.senha}" maxlength="20" styleClass="campoTexto" 
+						               style="width: 90px"/>
+					</div>
+				</div>	
+			</div>	
+			
+			<div style="text-align: center; margin-top: 10px">
+				<a4j:commandButton id="btnOkReferencia" value="OK" 
+								   actionListener="#{emergenciaForm.referenciarPaciente}"				    
+								   reRender="tabEmergencia,totaisEmergencia,csEmergencia"
+								   style="margin-right: 10px" 
+								   styleClass="botaoModal"
+								   oncomplete="this.disabled=false; avisosValidacao(#{emergenciaForm.avisoValidacao}, 'panelReferencia', false)"
+								   onclick="this.disabled=true" >				
+				</a4j:commandButton>			
+				<a4j:commandButton id="btnCancelReferencia"  value="Cancelar"  styleClass="botaoModal">
+					<rich:componentControl for="panelReferencia" attachTo="btnCancelReferencia" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+	    </h:form>	
+	 </rich:modalPanel>
+	 <!-- MODAL PANEL DE REFERENCIA - FIM -->
+	 
+	<h:form id="csEmergencia" >
+	 	<div class="cabAreaPesquisa">GERENCIAR PACIENTE</div>
+		<h:panelGroup styleClass="areaPesquisa" layout="block" id="totaisEmergencia" style="height:130px">
+		    <div class="col150" style="text-align: center; margin-right: 40px">		       
+		   	   <label><b>Pacientes em Espera</b></label><br/>
+		       <label class="totalizador">#{emergenciaForm.totalEmergencia}</label>
+		    </div>		    		    
+		    <div class="colLeft">
+		        <div class="col90" style="height: 60px;">
+		            <br/>
+					<label><b>Classificação de Risco</b></label>		        		
+				</div>    
+		    	<div class="col320" style="overflow:auto; border: solid 1px #999">
+		      		<div class="totaisRisco bordaDir bordaBot">
+		           		<h:graphicImage url="IMG/risco_vermelho.gif" style="vertical-align: middle"/>
+				   		<label> <b>#{emergenciaForm.totaisRisco[0]}</b></label>			
+		        	</div>
+		      		<div class="totaisRisco bordaDir bordaBot">
+		           		<h:graphicImage url="IMG/risco_laranja.gif" style="vertical-align: middle"/>
+				   		<label><b>#{emergenciaForm.totaisRisco[1]}</b></label>					
+		      		</div>
+		      		<div class="totaisRisco bordaDir bordaBot">
+		           		<h:graphicImage url="IMG/risco_amarelo.gif" style="vertical-align: middle"/>
+				   		<label><b>#{emergenciaForm.totaisRisco[2]}</b></label>				
+		        	</div>
+		      		<div class="totaisRisco bordaBot">
+		           		<h:graphicImage url="IMG/risco_verde.gif" style="vertical-align: middle"/>
+				   		<label><b>#{emergenciaForm.totaisRisco[3]}</b></label>			
+		        	</div>		        	
+		        	<br style="clear: both"/>		        
+		         	<div class="totaisRisco bordaDir">
+		           		<h:graphicImage url="IMG/risco_azul.gif" style="vertical-align: middle"/>
+				   		<label><b>#{emergenciaForm.totaisRisco[4]}</b></label>					
+		      		</div>
+		      		<div class="totaisRisco bordaDir">
+		           		<h:graphicImage url="IMG/risco_branco.gif" style="vertical-align: middle"/>
+				   		<label><b>#{emergenciaForm.totaisRisco[5]}</b></label>				
+		        	</div>
+		        	<div class="totaisRisco bordaDir">
+		           		<h:graphicImage url="IMG/risco_cinza.gif" style="vertical-align: middle"/>
+				   		<label><b>#{emergenciaForm.totaisRisco[6]}</b></label>				
+		        	</div>
+		        </div>
+		    </div>	
+		    <div class="col180" style="height: 60px; text-align: center;">
+		        <br/>
+		        <a4j:commandButton id="btnRefresh" 
+		       		image="IMG/atualizar2.gif"
+		       		alt="Atualizar lista" 
+	                action="#{emergenciaForm.atualizarListaEmergencia}"
+		    		reRender="tabEmergencia,totaisEmergencia" />		
+		    </div>	    
+   		</h:panelGroup>   		 		
+   		<div>
+   			<rich:dataTable id="tabEmergencia"
+							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							value="#{emergenciaForm.listaPacientesRecepcao}" 
+							var="paciente"
+							rows="30"					 
+							style="width: 100%"										 
+							reRender="ds,totaisEmergencia">
+				<f:facet name="header">
+					<rich:columnGroup>											
+						<h:column> <h:outputText value="Risco" /> </h:column>												
+						<h:column> <h:outputText value="N° Atend." /> </h:column>
+						<h:column> <h:outputText value="Paciente" /> </h:column>
+						<h:column> <h:outputText value="Data/Hora" /> </h:column>						
+						<h:column> <h:outputText value="T.Emerg."/> </h:column>
+						<h:column> <h:outputText value="T.Risco"/> </h:column>						
+						<h:column> <h:outputText value="Idade"/> </h:column>						
+						<h:column> <h:outputText value="Especialidade" /> </h:column>
+						<h:column> <h:outputText value="Atendido" /> </h:column>
+						<h:column> <h:outputText value="Ações" /> </h:column>
+					</rich:columnGroup>
+				</f:facet>			
+				<!-- PRONTUARIO -->
+				<rich:column width="6%">
+					<center>			
+					    <a4j:outputPanel styleClass="linhaFormulario" layout="block">
+					    	<h:graphicImage url="IMG/#{emergenciaForm.imagensRiscos[paciente.isnRisco]}" style="border:0;" />
+					    	<rich:toolTip direction="bottom-right" layout="block" rendered="#{paciente.isnRisco != 0}"
+					    	              styleClass="tooltipEmergencia">
+								<f:facet name="defaultContent">
+									<strong>Aguarde...</strong>
+								</f:facet>
+								<div>
+								    <label>Fluxograma:</label>
+								    <h:outputText value="#{paciente.dscFluxograma}" style="font-weight: bold"/>
+								    <br/>
+								    <label>Queixa:</label>
+								    <h:outputText value="#{paciente.dscQueixa}" style="font-weight: bold"/>
+								    <br/>
+								    <label>Encaminhamento:</label>
+								    <h:outputText value=" " style="font-weight: bold"/>
+								    <br/>
+								    <label>Tempo Classificação (HH:mm):</label>
+								    <h:outputText value="#{paciente.tempoClassificacaoRisco}" style="font-weight: bold"/>								    
+								</div>
+							</rich:toolTip>
+					    </a4j:outputPanel>															
+					</center>
+				</rich:column>
+				
+				<!-- ATENDIMENTO -->
+				<rich:column>
+					<center>
+						<h:outputText value="#{paciente.isnInternacao}" />
+					</center>
+				</rich:column>
+				
+				<!-- NOME -->
+				<rich:column>
+				    <a4j:commandLink styleClass="link" oncomplete="#{rich:component('panPaciente')}.show();" value="#{paciente.dscNome}" action="#{farmaciaForm.popularDadosPaciente}" reRender="panPaciente">
+          				<f:setPropertyActionListener target="#{farmaciaForm.isnPaciente}" value="#{paciente.isnPaciente}" />
+          			</a4j:commandLink>						
+				</rich:column>
+				
+				<!-- DATA/HORA -->
+				<rich:column>
+					<h:outputText value="#{paciente.datCadastro}" >
+					     <f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+					<h:outputText value=" #{paciente.horChegada}" />
+				</rich:column>
+				
+				<!-- CLINICA, ENFERMARIA, LEITO -->
+				<rich:column>
+					<h:outputText value="#{paciente.tempoEmergencia}" />
+				</rich:column>				
+				
+				<!-- Tempo do Risco -->				
+				<rich:column>
+					<h:outputText value="#{paciente.tempoRisco}" />
+				</rich:column>
+				
+				<!-- Idade -->				
+				<rich:column>
+					<h:outputText value="#{paciente.idade}" />
+				</rich:column>				
+				
+				<!-- DIAS LEITO -->
+				<rich:column>
+					<h:outputText value="#{paciente.dscEspecialidadeEmergencia}" />	
+				</rich:column>
+				
+				<!-- ATENDIDO -->
+				<rich:column style="text-align:center">
+					<h:graphicImage url="IMG/check.gif" 
+	                    style="border:0; vertical-align: middle; text-align:center;"
+	                    rendered="#{paciente.isnInternacaoAtendimento != null}"/>
+				</rich:column>
+				
+				<!-- DIAS HOSPITAL -->
+				<rich:column style="text-align: center;">
+					<a4j:commandButton id="btnBaixa" 
+					    			   value="Baixa"  reRender="panelBaixa"  
+					                   oncomplete="avisoBaixarPaciente(#{emergenciaForm.avisoBaixarPaciente})"
+					                   alt="Baixar paciente da lista"
+					                   action="#{emergenciaForm.carregarPaciente}"
+					                   style="margin-right: 5px;">					    
+					    <f:setPropertyActionListener value="#{paciente.isnInternacao}" target="#{emergenciaForm.isnInternacao}"/>
+					</a4j:commandButton>	
+					
+					
+				                    
+					<a4j:commandButton id="btnLiberar" ajaxSingle="true"
+					    			   value="Liberar"
+					    			   action="#{emergenciaForm.liberarPaciente}"    
+					                   alt="Liberar paciente do risco e atendimento"
+					                   style="margin-right: 5px;"
+					                   oncomplete="avisoValidacaoLiberarPaciente(#{emergenciaForm.avisoLiberacaoPaciente})"
+					                   onclick="if (!confirm('Deseja realmente liberar este paciente?')) return false">
+	                   <f:setPropertyActionListener value="#{paciente}" target="#{emergenciaForm.pacienteOtimizado}"/>
+					</a4j:commandButton>	
+
+					<a4j:commandButton id="btnReferencia" reRender="panelReferencia"					
+					    			   value="Referência"    
+					                   oncomplete="Richfaces.showModalPanel('panelReferencia')"
+					                   alt="Encaminhar paciente para referência"
+					                   action="#{emergenciaForm.carregarPaciente}"
+					                   rendered="#{false}"
+					                   style="margin-right: 5px;">					    
+					    <f:setPropertyActionListener value="#{paciente.isnInternacao}" target="#{emergenciaForm.isnInternacao}"/>				    
+					</a4j:commandButton>	
+					                   <!-- botao referencia so aparece para os riscos 'AZUL' e 'BRANCO'
+					                   rendered="#{paciente.isnRisco eq 5 or paciente.isnRisco eq 6}"
+					                    -->
+				</rich:column>
+				
+				
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+		</div>	
+		<br/><br/><br/>		
+		
+		<a4j:status id="statusPanel"
+			   onstart="Richfaces.showModalPanel('panelStatus');" 
+			    onstop="#{rich:component('panelStatus')}.hide()">
+		</a4j:status> 		
+		
+		</h:form>
+		<script>
+		
+			function avisosValidacao(erro, panel, show) {
+				if (erro == 1) {
+				   	alert("Selecione a classificação de risco do paciente.");
+				   	return false;
+				} else if (erro == 2) {
+					alert("Classificação de risco selecionada e a mesma que a atual.");
+				   	return false;
+				} else if (erro == 3) {
+					alert("Usuário/Conselho e/ou Senha/Assinatura inválidos.");					
+			    	return false;
+			    } else if (erro == 4) {
+					alert("Para registrar nova classificação espere 1 minuto.");					
+			    	return false;	
+			    } else if (erro == 5) {
+					alert("Usuário sem permisão para esta ação.");					
+			    	return false;		
+			    } else if (erro == 6) {
+					alert("Selecione a Especialidade da emergência.");					
+			    	return false;		
+			    } else if (erro == 7) {
+					alert("Campo 'Observações do atendimento' não pode ficar em branco.");					
+			    	return false;				
+			    } else if (erro == 8) {
+					alert("Informe o motivo da alta.");					
+			    	return false;			
+			    } else if (erro == 9) {
+					alert("Hospital destino não informado.");					
+			    	return false;			
+			    } else if (erro == 10) {
+					alert("Informe o Eixo a ser transferido.");					
+			    	return false;			
+				} else if (erro == 11) {
+					alert("Erro ao gravar no banco de dados. Contate o NTI.");
+			    	return false;	
+				} else if (erro == 12) {
+					alert("Selecione o Fluxograma.");
+			    	return false;	
+			    } else if (erro == 13) {
+					alert("Informe o discriminador.");
+			    	return false;	
+			    } else if (erro == 14) {
+					alert("Selecione sim ou não para acidente.");
+			    	return false;
+			    } else if (erro == 15) {
+					alert("Selecione sim ou não para agressão.");
+			    	return false;
+			    }else if(erro == 16){
+			    	Richfaces.showModalPanel("panelPeso");
+			    }else if(erro == 17){
+			    	alert("Enfermeira precisa avaliar o risco do paciente.");
+			    	return false;
+			    }else if(erro == 18){
+			    	window.location = "#{request.contextPath}/cd_atendimentoMedico.jsf";
+			    }else if(erro == 19){
+			    	alert("Paciente em atendimento por outro profissional.");
+			    	return false;
+			     }else if(erro == 20){
+			    	Richfaces.showModalPanel("panelRisco");
+			     }else if(erro == 22){
+			    	alert("Antes de executar essa operação você deve atualizar sua pagina!");
+			     }else if(erro == 23){
+			    	alert("O Campo 'Paciente acatou referência?' é obrigatório.");
+			     }else if(erro == 24){
+			    	alert("O Campo Referência é obrigatório.");
+			     }else if(erro == 25){
+				    	alert("EMERGES ToLife está inoperante. Notifique o(a) coordenador(a) da unidade.");					 
+				 }else {
+			    	if (show) {
+			        	Richfaces.showModalPanel(panel);
+			    	} else {
+			    		Richfaces.hideModalPanel(panel);
+			    	}	 	
+				} 		    	
+			}
+			
+			function avisoValidacaoLiberarPaciente(erro)
+			{
+				if (erro == 1)
+				{
+					alert('O paciente foi liberado com sucesso!');
+				}
+				else if (erro == 2)
+				{
+					alert('Usuário sem permissão!');
+				}
+				else if (erro == 3)
+				{
+					alert('EMERGES ToLife está inoperante. Notifique o(a) coordenador(a) da unidade.');
+				}
+			}
+			
+			function avisoBaixarPaciente(erro){
+				if (erro == 1){
+					alert('O paciente encontra-se em atendimento!');
+					return false;
+				}else if (erro == 2){
+					alert('Existem registros de atendimento cadastrados para esse paciente,'
+							+'verificar com o profissional que atendeu!');
+					return false;
+				}else if (erro == 3){
+					Richfaces.showModalPanel('panelBaixa');	
+				}
+					
+			}
+			
+		</script>
+	</ui:define>
+</ui:composition>
+</html>

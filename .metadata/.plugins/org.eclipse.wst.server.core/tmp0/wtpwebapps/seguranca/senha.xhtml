@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a4j="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:t="http://myfaces.apache.org/tomahawk"
+				xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+				template="crud_template.xhtml">
+
+	<ui:param name="crudBean" value="#{senhaForm}" />
+	
+	<ui:define name="saveStateObjectsDefined">
+		<t:saveState value="#{crudBean.usuarioBean}" />
+	</ui:define>
+	
+	<ui:define name="requiredFieldsMessage">
+		<h:outputText value="#{bundle.todosCamposObrigatorios}" rendered="#{crudBean.updating}"/>
+		<h:outputText value="#{bundle.peloMenosUmCamposObrigatorio}" rendered="#{crudBean.searching}"/>
+	</ui:define>
+		
+	<ui:define name="content">				
+		<h:panelGroup id="panelGroupDeCadastro" style="height:100%;width:100%;" rendered="#{crudBean.updating}">
+			<f:subview id="viewCadastro">
+				<h:panelGroup id="panelGroupDeAlterar" style="height:100%;width:100%;" rendered="#{crudBean.editing}">
+					<table class="tabela">
+						<tr>
+							<td class="tdCor" width="200px">Usuário</td>
+							<td class="tdBranco">								
+								<h:outputText value="#{crudBean.usuarioBean.dscUsuario}"/>
+								<h:inputHidden value="#{crudBean.usuarioBean.isnUsuario}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tdCor" width="200px">Senha Atual *</td>
+							<td class="tdBranco">								
+								<h:inputSecret value="#{crudBean.senha}" styleClass="baseField" size="40" maxlength="64" onblur="upper(this);" onkeypress="upper(this)"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tdCor" width="200px">Nova Senha *</td>
+							<td class="tdBranco">
+								<h:inputSecret value="#{crudBean.novaSenha}" styleClass="baseField" size="40" maxlength="64" onblur="upper(this);" onkeypress="upper(this)"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tdCor" width="200px">Repita Nova Senha *</td>
+							<td class="tdBranco">
+								<h:inputSecret value="#{crudBean.repitirNovaSenha}" styleClass="baseField" size="40" maxlength="64" onblur="upper(this);" onkeypress="upper(this)"/>
+							</td>
+						</tr>			
+					</table>
+				</h:panelGroup>
+			</f:subview>
+		</h:panelGroup>			
+	</ui:define>
+	
+	<ui:define name="buttonItens" style="height:100%; width:100%;">	
+		<!-- Painel dos botoes de edicao -->
+		<h:panelGroup rendered="#{crudBean.updating || crudBean.viewing}">
+			<a4j:commandButton image="imagens/bntGravar.png" style="border: 0; width: 154px; height: 29px;" id="inserir" value="Gravar" actionListener="#{crudBean.inserir}" rendered="#{crudBean.inserting}" reRender="formulario, panelTitle"/>
+			<h:outputText value=" "/>
+			<a4j:commandButton image="imagens/bntAlterar.png" style="border: 0; width: 154px; height: 29px;" id="alterar" value="Alterar" actionListener="#{crudBean.alterar}" rendered="#{crudBean.editing}" reRender="formulario, panelTitle"/>
+			<h:outputText value=" "/>
+			<a4j:commandButton image="imagens/bntCancelar.png" style="border: 0; width: 154px; height: 29px;" id="cancelar" value="Tela de Pesquisa" action="#{usuarioForm.preparaPesquisar}" reRender="formulario, panelTitle" />
+		</h:panelGroup>
+	</ui:define>	
+</ui:composition>	

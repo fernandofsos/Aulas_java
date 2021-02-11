@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<link rel="stylesheet" type="text/css" href="CSS/layoutCsPaciente.css" />
+	</ui:define>
+	<ui:define name="conteudo">
+
+<a4j:keepAlive beanName="numeroClassificacaoRiscoForm" />
+
+	<rich:modalPanel id="panelStatus" autosized="true">  
+ 		<h:panelGrid columns="2"> 
+ 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 			<h:outputText value="Carregando..." />
+ 		</h:panelGrid> 
+	</rich:modalPanel>
+
+<a4j:form id="formPesquisaId">
+   
+	<div class="cabAreaPesquisa">ENFERMEIRO(A) X RISCO</div>
+	<div class="areaPesquisa">
+		<div>
+			<label>Período</label>
+			<rich:calendar value="#{numeroClassificacaoRiscoForm.datIniInicio}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10" />
+				<h:outputText value=" a "/>
+			<rich:calendar value="#{numeroClassificacaoRiscoForm.datIniFim}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10"/>		
+	          		<a4j:commandButton image="IMG/pesquisa.gif" id="btnPesquisar" 
+	          		        actionListener="#{numeroClassificacaoRiscoForm.pesquisar}" 
+	          		        oncomplete="avisosPesquisa('#{numeroClassificacaoRiscoForm.mensagem}')"
+	    				reRender="formPesquisaId,formPesquisaId:atendimentoMedico" />			
+		</div>
+	</div>
+	
+	<br />
+	
+	<h:panelGrid style="width: 100%;">
+			<rich:dataTable id="atendimentoMedico"
+					onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+					value="#{numeroClassificacaoRiscoForm.lista}"
+					rendered="#{not empty numeroClassificacaoRiscoForm.lista}" 
+					var="atend" 
+					rowKeyVar="myRow" 
+					style="width: 100%"
+					reRender="ds">
+					
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column >
+							<h:outputText value="Enfermeiro(a)" />
+						</h:column>
+						<h:column>
+							<h:outputText value="Nº Classificações" />
+						</h:column>
+						<h:column>
+							<h:outputText value="Média Tempo Classificação" />
+						</h:column>
+					</rich:columnGroup>
+				</f:facet>			
+				
+				<rich:column style="background:#CCCCCC;">
+					<h:graphicImage id="expandMostrar" value="IMG/expand.gif" rendered="#{!atend.mostrarSubItens}">
+						<a4j:support event="onclick" reRender="formPesquisaId:atendimentoMedico">
+							<f:setPropertyActionListener value="#{true}" target="#{atend.mostrarSubItens}" />
+						</a4j:support>
+					</h:graphicImage>
+					<h:graphicImage id="expandEsconder" value="IMG/collapse.gif" rendered="#{atend.mostrarSubItens}">
+						<a4j:support event="onclick" reRender="formPesquisaId:atendimentoMedico">
+							<f:setPropertyActionListener value="#{false}" target="#{atend.mostrarSubItens}" />
+						</a4j:support>
+					</h:graphicImage>
+					<rich:spacer width="10"/>
+					<h:outputText value="#{atend.enfermeira}" />
+				</rich:column>
+				<rich:column style="background:#CCCCCC;text-align: center;">
+					<h:outputText value="#{atend.quantidadeTotal}" />
+				</rich:column>
+				<rich:column style="background:#CCCCCC;text-align: center;">
+					<h:outputText value="#{atend.mediaTotal}" />
+				</rich:column>
+				
+					<rich:subTable id="subItens" var="subAtend" value="#{atend.lista}" rendered="#{atend.mostrarSubItens}" rowClasses="#{myRow mod 2 == 0 ? 'par' : 'impar'}">
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{subAtend.datIni}" />
+						</rich:column>					
+						<rich:column style="text-align: center;">
+							<h:outputText value="#{subAtend.quantidade}" />
+						</rich:column>					
+						<rich:column style="text-align: center;">
+							<h:outputText value="#{subAtend.media}" />
+						</rich:column>					
+					</rich:subTable>	
+					
+			<f:facet name="footer">
+				<rich:columnGroup>
+					<rich:column style="text-align: center;" styleClass="totalizador3">Total:</rich:column>
+					<rich:column style="text-align: center;" styleClass="totalizador3">
+						<h:outputText value="#{numeroClassificacaoRiscoForm.quantidadeTotalAtendimentos}" />
+					</rich:column>
+					<rich:column style="text-align: rigth;" styleClass="totalizador3"></rich:column>
+				</rich:columnGroup>
+			</f:facet>				
+					
+			</rich:dataTable>				
+	</h:panelGrid>
+	
+	
+	 
+    <a4j:status id="statusPanel"
+		   	onstart="Richfaces.showModalPanel('panelStatus');" 
+		    onstop="#{rich:component('panelStatus')}.hide()">
+	</a4j:status>	
+	
+	<script type="text/javascript">
+	     function avisosPesquisa(msg) {
+		     if(msg != '')
+		     {
+			     alert(msg);
+		     }
+	     }
+	</script>
+</a4j:form>	
+</ui:define>
+</ui:composition>
+</html>

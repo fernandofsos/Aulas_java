@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+	<ui:composition template="template.xhtml">	
+	    <ui:define name="headHtml">
+			<meta http-equiv="cache-control" content="no-cache" />
+			<meta http-equiv="pragma" content="no-cache" />	
+		</ui:define>  
+		
+		<ui:define name="conteudo">
+			<a4j:keepAlive beanName="internacaoTransForm" />
+			<a4j:keepAlive beanName="emergenciaForm" />
+			
+			<rich:modalPanel id="panelCid10" autosized="false" width="920" height="650" resizeable="false" headerClass="headerPanel3">
+				<f:facet name="header">
+			   		<h:panelGroup styleClass="headerModal">
+						<h:graphicImage value="/images/icons/lupa.png" style="border:0; margin-right:10px;" /><h:outputText value="CID10" styleClass="outputTextBig"/>
+					</h:panelGroup>
+			   	</f:facet>
+			   	<f:facet name="controls">
+			   	 	<h:panelGroup>
+			       		<h:graphicImage value="IMG/fechar.png" id="fechaPanelCid10"/>
+			       		<rich:componentControl for="panelCid10" attachTo="fechaPanelCid10" operation="hide" event="onclick" />
+			       	</h:panelGroup>
+			   	</f:facet>
+			   	
+				<a4j:keepAlive beanName="cid10Form"/>			
+				<!-- FORM -->
+				<h:form id="formTabelaCid10">
+					<h:panelGroup styleClass="areaPesquisa" layout="block" id="filtros" > 
+			    		<div style="margin-left:10px;">         	
+			        		<table cellpadding="10">
+			        		<tr>
+			        			<td valign="top">
+					        		<label>Pesquisar:</label><br/>
+									<h:inputText id="inputPesquisa" 
+									             value="#{cid10Form.valorPesquisa}"
+									             styleClass="campoTexto"  
+									             style="width: 170px;" />
+									             
+									<a4j:commandButton image="IMG/pesquisa.gif" 
+						           	        id="btnPesquisa" 
+						           	        action="#{cid10Form.buscar}" 
+							    			oncomplete="avisosPesquisa(#{cid10Form.erroCid10})" 
+							    			style="margin-left:10px; vertical-align:middle;"
+							    			reRender="dtCid10,totalRegs,ddpGrupos,ddpCategorias" >
+							    		<f:setPropertyActionListener target="#{cid10Form.tipoBusca}" value="#{0}"/>	
+							    	</a4j:commandButton>
+							    	<rich:hotKey key="return" selector="#inputPesquisa" 
+							    	             handler="#{rich:element('btnPesquisa')}.click()"/>
+							    	<br/>
+									<a4j:commandLink action="#{cid10Form.buscar()}" 
+									                 value="Listar Apenas os Relevantes" 
+									                 reRender="dtCid10,totalRegs,ddpGrupos,ddpCategorias"
+									                 styleClass="linkGeral">
+										<f:setPropertyActionListener target="#{cid10Form.tipoBusca}" value="#{1}"/>
+									</a4j:commandLink><br/>
+									<a4j:commandLink action="#{cid10Form.buscar()}" 
+									                 value="Listar com Pesquisa Adicional" 
+									                 reRender="dtCid10,totalRegs,ddpGrupos,ddpCategorias"
+									                 styleClass="linkGeral">
+										<f:setPropertyActionListener target="#{cid10Form.tipoBusca}" value="#{2}"/>
+									</a4j:commandLink>
+			        			</td>
+			        			<td valign="top">
+						            <label>Categorias:</label><br/>
+						           	<h:selectOneMenu id="ddpCategorias" 
+										             value="#{cid10Form.isnCategoria}" 
+										             style="width:390px;" styleClass="selectItens">
+										<f:selectItems value="#{cid10Form.sliCategoriasCid}" />
+										<a4j:support action="#{cid10Form.listarGruposPorCategoria}"
+											         event="onchange"						              
+											         ajaxSingle="true"
+											         reRender="ddpGrupos,dtCid10,totalRegs"/>
+									</h:selectOneMenu><br></br>
+									<label>Grupo:</label><br/>
+						           	<h:selectOneMenu id="ddpGrupos" 
+										             value="#{cid10Form.isnGrupo}" 
+										             style="width:390px;" styleClass="selectItens">
+										<f:selectItems value="#{cid10Form.sliGruposCid}" />
+										<a4j:support action="#{cid10Form.listarCid10}"
+											         event="onchange"						              
+											         ajaxSingle="true"
+											         reRender="dtCid10,totalRegs"/>
+									</h:selectOneMenu>	
+			        			</td>
+			        			<td valign="top">
+								    <div style="text-align: right">
+							       	   	<label>Resultado:</label><br/>
+									    <h:outputText styleClass="totalizador2" value="#{cid10Form.totalRegistros}" id="totalRegs"/> 
+							        </div>
+			        			</td>
+			        		</tr>
+			        		</table>
+					    </div>	
+			    	</h:panelGroup>
+			   		<div style="height:500px; overflow:scroll; overflow-y:scroll; overflow-x:hidden;">			    	
+					<!-- DATATABLE -->
+					<rich:dataTable 
+						id="dtCid10" 
+						onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+			            onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+						value="#{cid10Form.lstCid10}" 
+						var="cid10"
+						rows="10"
+						rowKeyVar="linha" 
+						style="width: 98%; font-size: 12px"
+						reRender="ds">	
+								
+						<f:facet name="header">
+							<rich:columnGroup>
+								<h:column >
+									<h:outputText value="Sel." />
+								</h:column>					
+								<h:column>
+									<h:outputText value="Código" />
+								</h:column>
+								<h:column>
+									<h:outputText value="Descrição" />
+								</h:column>		
+								<h:column>
+									<h:outputText value="Categoria/Grupo" />
+								</h:column>
+								<h:column rendered="#{cid10Form.tipoBusca==2}">
+									<h:outputText value="Pesquisa Adicional" />
+								</h:column>						
+								<h:column>
+									<h:outputText value="---" />
+								</h:column>
+							</rich:columnGroup>
+						</f:facet>
+						
+						<rich:column width="5%" style="text-align: center;">
+							<a4j:commandLink id="selecionar" action="#{internacaoTransForm.salvaCid10Transferencia}" oncomplete="#{rich:component('panelCid10')}.hide();" reRender="cdInternacaoTrans:pgCid10">
+								<h:graphicImage id="imgSel02" url="IMG/selecionar.png" style="border:0;" />
+								<f:setPropertyActionListener value="#{cid10}" target="#{cid10Form.objCid10}" />
+								<f:setPropertyActionListener value="#{cid10}" target="#{internacaoTransForm.objCid10}" />							
+							</a4j:commandLink>
+						</rich:column>
+							
+						<rich:column width="8%" style="text-align: center; font-size: 12px">
+							<h:outputText value="#{cid10.codCid10}" />
+						</rich:column>
+							
+						<rich:column style="font-size: 11px">
+							<h:outputText value="#{cid10.dscCid10}" />
+						</rich:column>
+									
+						<rich:column>
+							<h:outputText value="#{cid10.cid10Grupo.cid10Categoria.dscCid10Categoria}" />
+						</rich:column>
+									
+						<rich:column rendered="#{cid10Form.tipoBusca==2}">
+							<h:outputText value="#{cid10.dscAtalho}" />
+						</rich:column>
+						
+						<rich:column>
+						    <h:graphicImage id="imgFav" url="#{(cid10.flgFavorito=='S')?'IMG/star_yellow.png':'IMG/star_grey.png'}" style="border:0;" />				
+						</rich:column>
+						<!-- RODAPE DA TABELA -->	
+						<f:facet name="footer">
+					       	<rich:datascroller fastControls="auto"  maxPages="5" id="ds" ajaxSingle="false" />
+					    </f:facet>
+					</rich:dataTable>
+					</div>
+					<br/><br/><br/>
+				</h:form>
+			</rich:modalPanel>
+		
+			<h:form id="cdInternacaoTrans" >
+				<div class="cabAreaPesquisa">TRANSFERÊNCIA PACIENTE</div>
+			    <div class="quadroPaciente">			
+					<div>
+						<label>Nome do Paciente:</label><br />
+					   	<h:outputText id="nmPaciente" value="#{internacaoTransForm.objPaciente.dscNome}" styleClass="campoVazio" />
+					</div>
+					<div class="col390">
+						<label>Nome da Mãe:</label><br />
+					   	<h:outputText id="nmMae" value="#{internacaoTransForm.objPaciente.dscMae}" styleClass="campoVazio col380" />
+					</div>	
+					<div>
+						<div class="col90">				
+							<label>Sexo:</label><br />
+							<h:outputText value="#{internacaoTransForm.objPaciente.sexo.dscSexo}" styleClass="campoVazio col70" />
+						</div>
+						<div class="col220">
+						    <label>Data Nascimento:</label><br />						
+							<h:outputText value="#{internacaoTransForm.objPaciente.datNascimento}" styleClass="campoVazio col200" />								
+						</div>
+						<div>
+						    <label>Prontuário:</label><br />
+							<h:outputText value="#{internacaoTransForm.objPaciente.numProntuario} " styleClass="campoVazio col50" />
+						</div>
+					</div>
+					<div class="col390">
+						<div class="col200">				
+							<label>Clínica:</label><br />
+							<h:outputText value="#{internacaoTransForm.pacienteAtendimento.dscClinica}" styleClass="campoVazio col180" />
+						</div>
+						<div class="col150">
+						    <label>Leito:</label><br />
+							<h:outputText value="#{internacaoTransForm.pacienteAtendimento.dscLeito}" styleClass="campoVazio col130" />								
+						</div>
+					</div>
+			    </div>
+			    
+			    <div class="quadroEdicaoU">      	  
+			    	<div class="col450"  style="margin-right: 10px"> 
+			        	<label>Resumo Clínico:</label>
+			            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+						<h:inputTextarea value="#{internacaoTransForm.objInternacaoTrans.dscResumoClinico}" id="resumoClinico" style="width: 700px; text-transform:uppercase; height: 67px;" onkeyup="verificaTamanho('cdInternacaoTrans',this, 2000, 'lblCaracteresResumoCli');" onblur="upper(this);" />
+        				<label id="lblCaracteresResumoCli">(2000 caracteres restantes)</label>						
+			        </div>
+			   </div>
+			    <div class="quadroEdicaoU">      	  
+			    	<div class="col450"  style="margin-right: 10px"> 
+			        	<label>Exames Realizados:</label>
+			            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+						<h:inputTextarea value="#{internacaoTransForm.objInternacaoTrans.dscExame}" id="examesClinicos" style="width: 700px;text-transform:uppercase;" onkeyup="verificaTamanho('cdInternacaoTrans',this, 500, 'lblCaracteresExames');" onblur="upper(this);" />  
+        				<label id="lblCaracteresExames">(500 caracteres restantes)</label>						
+			    	</div>
+			    </div>	
+			    <div class="quadroEdicaoU">      	  
+			    	<div class="col450"  style="margin-right: 10px"> 
+			        	<label>Terapêutica Utilizada:</label>
+			            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+						<h:inputTextarea value="#{internacaoTransForm.objInternacaoTrans.dscTerapeutica}" id="terapeuticaUtilizada" style="width: 700px;text-transform:uppercase;" onkeyup="verificaTamanho('cdInternacaoTrans',this, 500, 'lblCaracteresTerapeutica');" onblur="upper(this);"/>  
+        				<label id="lblCaracteresTerapeutica">(500 caracteres restantes)</label>						
+				    </div>
+				</div>
+				
+				<!-- 
+					[BARROS - 10/04/2013] - RETIRADA DO CAMPO HIPOTESE DIAGNOSTICA. MOTIVO: AGORA VAI SER PELO CID10
+				<div class="quadroEdicaoU">      	  
+			    	<div class="col450"  style="margin-right: 10px"> 
+			        	<label>Hipótese Diagnóstica:</label>
+			            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+			            <h:inputText id="hipoteseDiagnostica" value="#{internacaoTransForm.objInternacaoTrans.dscHipoteseDiagnostica}" style="width: 450px;text-transform:uppercase;" maxlength="200" onblur="upper(this);"/>
+				    </div>
+				</div>
+				 -->
+				
+				<div class="quadroEdicaoU">      	  
+			    	<div class="col450"  style="margin-right: 10px"> 
+			        	<label>Referência:</label>
+			            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+			            <h:inputText id="referencia" value="#{internacaoTransForm.objInternacaoTrans.dscReferencia}" style="width: 450px;text-transform:uppercase;" maxlength="100" onblur="upper(this);"/>
+				    </div>
+				</div>
+				
+				 <div class="quadroEdicaoU">      	  
+			    	<div class="col450"  style="margin-right: 10px"> 
+			        	<label>Observações Complementares:</label>
+			            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+						<h:inputTextarea value="#{internacaoTransForm.objInternacaoTrans.dscObs}"  id="obsComplementares" style="width: 700px;text-transform:uppercase;" onkeyup="verificaTamanho('cdInternacaoTrans',this, 500, 'lblCaracteresObservacoes');" onblur="upper(this);" />  
+        				<label id="lblCaracteresObservacoes">(500 caracteres restantes)</label>						
+				    </div>
+				</div>
+				
+				 <div class="quadroEdicaoU">      	  
+			    	<div class="col450"  style="margin-right: 10px"> 
+			        	<label>Perfil:</label>
+			            <h:outputText value="*" style="color:red;font-weight: bold;" />
+						<h:selectOneMenu id="idPerfilItem" value="#{internacaoTransForm.objInternacaoTrans.isnPerfilTransfItem}" rendered="#{internacaoTransForm.isnPaciente != null and internacaoTransForm.isnPaciente > 0}">
+							<f:selectItems value="#{internacaoTransForm.listaPerfilTransfItem}" />
+							<a4j:support  event="onchange" reRender="cdInternacaoTrans" />
+						</h:selectOneMenu>			            
+				    </div>
+				    
+					<h:panelGroup rendered="#{internacaoTransForm.objInternacaoTrans.isnPerfilTransfItem == 24}">
+					    <div class="col450"  style="margin-right: 10px">
+				        	<label>Justificativa Outros:</label>
+				            <h:outputText value="*" style="color:red;font-weight: bold;" />
+							<h:inputText value="#{internacaoTransForm.objInternacaoTrans.dscJustificativaOutros}"  id="idJustificativaOutros" style="width: 450px;text-transform:uppercase;" onblur="upper(this);" maxlength="99" />  
+					    </div>
+					</h:panelGroup>    
+				    
+				</div>
+				
+				<div class="quadroEdicaoU">
+					<h:panelGrid columns="2" id="pgCid10" styleClass="fonte14">
+	        			<label>Diagnóstico:</label>
+	        			<h:panelGroup>
+		        			<h:outputText value="(#{internacaoTransForm.objInternacaoTrans.cid10.codCid10}) " rendered="#{internacaoTransForm.objInternacaoTrans.cid10!=null}" styleClass="fonteNegrito" />
+		        			<h:outputText value="#{internacaoTransForm.objInternacaoTrans.cid10.dscCid10}" styleClass="fonteNegrito" />
+		        			<h:outputText value=" (#{internacaoTransForm.objInternacaoTrans.cid10.cid10Grupo.dscCid10Grupo})" rendered="#{internacaoTransForm.objInternacaoTrans.cid10!=null}" styleClass="fonteNegrito" />
+		        			<h:outputText value="*" style="color:red;font-weight: bold;" />
+	        			</h:panelGroup>
+	        		</h:panelGrid>
+        			<h:commandButton styleClass="botaoModal" value="Escolher Diagnóstico" onclick="#{rich:component('panelCid10')}.show();return false;"/>
+	        	</div>
+			    
+			    <div style="font-size: 0.65em; margin: 8px 0 8px 0; font-weight: bold; display:none">
+					<h:outputText value="Cadastrado por: " />
+				    <h:outputText value="#{emergenciaExameForm.nomeUsuario}" />
+				</div>
+			    <div style="margin: 10px; text-align: center">            
+			   		<a4j:commandButton id="btnGrava" 
+								 	   value="Gravar"
+								 	   styleClass="botaoModal"
+									   actionListener="#{internacaoTransForm.gravarInternacaoTrans}"
+									   oncomplete="validaInternacao('#{internacaoTransForm.msgInternacaoTrans}'); retorno('#{internacaoTransForm.msgRelatorio}');"
+									   style='margin-right: 10px' 
+									   rendered="#{!internacaoTransForm.origemTelaAtendimentoMedico}">
+					</a4j:commandButton>
+			   		<a4j:commandButton id="btnGrava2" 
+								 	   value="Gravar"
+								 	   styleClass="botaoModal"
+									   actionListener="#{internacaoTransForm.gravarInternacaoTrans}"
+									   oncomplete="validaInternacao('#{internacaoTransForm.msgInternacaoTrans}'); retornoEmergencia('#{internacaoTransForm.msgRelatorio}');"
+									   style='margin-right: 10px' 
+									   rendered="#{internacaoTransForm.origemTelaAtendimentoMedico}">
+					</a4j:commandButton>
+					<h:commandButton   id="btnVoltar"
+									   value="Voltar"
+								 	   styleClass="botaoModal" 
+									   action="#{emergenciaForm.irParaAtendimentoDaTelaTransferencia}"
+									   style='margin-right: 10px'
+									   rendered="#{internacaoTransForm.origemTelaAtendimentoMedico}">
+					   <f:setPropertyActionListener target="#{emergenciaForm.isnInternacao}" value="#{internacaoTransForm.pacienteAtendimento.isnInternacao}" />
+					</h:commandButton>
+					<h:commandButton   id="btnVoltar2"
+									   value="Voltar"
+								 	   styleClass="botaoModal" 
+									   action="cd_internacaoTrans"
+									   style='margin-right: 10px' 
+									   rendered="#{!internacaoTransForm.origemTelaAtendimentoMedico}">
+					</h:commandButton>
+				</div>
+				
+				<script>
+				<!--
+					function validaInternacao(msg){
+						if (msg != ''){
+							alert(msg);
+						}
+					}  
+					
+					function retorno(msg){
+						if (msg == 'OK'){
+							window.location = 'cs_pacienteAtendimento.jsf';
+						}
+					}
+					
+					function retornoEmergencia(msg){
+						if (msg == 'OK'){
+							document.getElementById('cdInternacaoTrans:btnVoltar').click();
+						}
+					}
+					
+				//-->
+				</script>	  							
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</html>

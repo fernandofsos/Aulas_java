@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a4j="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:t="http://myfaces.apache.org/tomahawk"
+				xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+				template="crud_template.xhtml">
+
+	<ui:param name="crudBean" value="#{entidadeForm}" />
+	
+	<ui:define name="requiredFieldsMessage">
+		<h:outputText value="#{bundle.todosCamposObrigatorios}" rendered="#{crudBean.updating}"/>
+		<h:outputText value="#{bundle.peloMenosUmCamposObrigatorio}" rendered="#{crudBean.searching}"/>
+	</ui:define>
+	
+	<ui:define name="saveStateObjectsDefined">
+		<t:saveState value="#{crudBean.listaContratantes}" />
+		<t:saveState value="#{crudBean.logoBase64}" />
+	</ui:define>
+	
+	<ui:define name="content">
+		<!-- Painel de Busca -->
+		<h:panelGroup id="panelGroupDePesquisa" style="height:100%; width:100%;" rendered="#{crudBean.searching}">
+			<f:subview id="viewBusca">
+				<table class="tabela">
+					<tr>
+						<td class="tdCor" width="200px">Entidade *</td>
+						<td class="tdBranco">
+							<h:inputText id="dscEntidade" value="#{crudBean.searchObject.dscEntidade}" styleClass="baseField" onblur="upper(this);" size="70" maxlength="100" />
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Contratante *</td>
+						<td class="tdBranco">
+							<h:selectOneMenu value="#{crudBean.searchObject.contratanteBean}" converter="simpleIndexConverter" style="width: 400px;">
+								<t:selectItems var="o" itemValue="#{o}" itemLabel="#{o.dscContratante}" value="#{crudBean.listaContratantes}" />
+							</h:selectOneMenu>
+						</td>
+					</tr>		
+					<tr>
+						<td class="tdCor" width="200px">Sigla *</td>
+						<td class="tdBranco">
+							<h:inputText value="#{crudBean.searchObject.sglEntidade}" styleClass="baseField" size="10" onblur="upper(this);" maxlength="10" />
+						</td>
+					</tr>					
+					<tr>
+						<td class="tdCor" width="200px">Data do Cadastro *</td>
+						<td class="tdBranco">
+							<rich:calendar value="#{crudBean.searchObject.filtro.datCadastroInicio}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10" />
+								<h:outputText value=" a "/>
+							<rich:calendar value="#{crudBean.searchObject.filtro.datCadastroFim}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10"/>						
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Flag de Ativo</td>
+						<td class="tdBranco">
+							<div style="width:300px;">
+								<h:selectOneRadio value="#{crudBean.searchObject.flgAtivo}" styleClass="radioButton">
+												<f:selectItem itemValue="" itemLabel="Todos"/>
+												<f:selectItem itemValue="S" itemLabel="Sim"/>
+												<f:selectItem itemValue="N" itemLabel="Não"/>
+								</h:selectOneRadio>
+							</div>	
+						</td>
+					</tr>
+				</table>
+				<mj:focus for="formulario:viewBusca:dscEntidade" />
+			</f:subview>
+		</h:panelGroup>
+		
+		<h:panelGroup id="panelGroupDeCadastro" style="height:100%;width:100%;" rendered="#{crudBean.updating}">
+			<f:subview id="viewCadastro">
+				<h:panelGroup id="panelGroupDeAlterar" style="height:100%;width:100%;" rendered="#{crudBean.editing}">
+					<table class="tabela">
+						<tr>
+							<td class="tdCor" width="200px">Código</td>
+							<td class="tdBranco">
+								<h:outputText value="#{crudBean.entity.isnEntidade}" />
+							</td>
+						</tr>
+						<tr>
+							<td class="tdCor" width="200px">Usuário do Cadastro</td>
+							<td class="tdBranco">
+								<h:outputText value="#{crudBean.entity.usuarioBean.dscUsuario}" />
+							</td>
+						</tr>						
+						<tr>
+							<td class="tdCor" width="200px">Data do Cadastro</td>
+							<td class="tdBranco">
+								<h:outputText value="#{crudBean.entity.datCadastro}" />
+							</td>
+						</tr>						
+					</table>
+				</h:panelGroup>			
+				<table class="tabela">
+					<tr>
+						<td class="tdCor" width="200px">Entidade *</td>
+						<td class="tdBranco">
+							<h:inputText id="dscEntidade" value="#{crudBean.entity.dscEntidade}" styleClass="baseField" size="70" maxlength="100" onblur="upper(this);" />
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Contratante *</td>
+						<td class="tdBranco">
+							<h:selectOneMenu value="#{crudBean.entity.isnContratante}" converter="simpleIndexConverter" style="width: 400px;">
+								<t:selectItems var="o" itemValue="#{o.isnContratante}" itemLabel="#{o.dscContratante}" value="#{crudBean.listaContratantes}" />
+							</h:selectOneMenu>
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Sigla *</td>
+						<td class="tdBranco">
+							<h:inputText value="#{crudBean.entity.sglEntidade}" styleClass="baseField" size="10" maxlength="10" onblur="upper(this);" />
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Possui Zimbra</td>
+						<td class="tdBranco">
+							<div style="width:200px;">
+								<h:selectOneRadio value="#{crudBean.entity.flgEmail}" styleClass="radioButton">
+											<f:selectItem itemValue="S" itemLabel="Sim"/>
+											<f:selectItem itemValue="N" itemLabel="Não"/>
+								</h:selectOneRadio>
+							</div>	
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Endereço *</td>
+						<td class="tdBranco">
+							<div style="width:200px;">
+								<h:inputText value="#{crudBean.entity.dscEndereco}" styleClass="baseField" size="70" maxlength="200" onblur="upper(this);" />
+							</div>	
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Telefone *</td>
+						<td class="tdBranco">
+							<div style="width:200px;">
+								<h:inputText id="numTelefone" value="#{crudBean.entity.numTelefone}" styleClass="baseField" size="15" maxlength="15" onkeypress="return nomarlizeTelefone(event, this)" />
+								<rich:jQuery selector="#numTelefone" timing="onload" query="bind('cut copy paste drop', function(event) {event.preventDefault();})" />
+							</div>	
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">FAX *</td>
+						<td class="tdBranco">
+							<div style="width:200px;">
+								<h:inputText id="numFax" value="#{crudBean.entity.numFax}" styleClass="baseField" size="15" maxlength="15" onkeypress="return nomarlizeTelefone(event, this)" />
+								<rich:jQuery selector="#numFax" timing="onload" query="bind('cut copy paste drop', function(event) {event.preventDefault();})" />
+							</div>	
+						</td>
+					</tr>
+				</table>
+				<mj:focus for="formulario:viewCadastro:dscEntidade" />		
+				<h:panelGroup id="panelGroupDeAlterar2" style="height:100%;width:100%;" rendered="#{crudBean.editing}">
+					<table class="tabela">
+						<tr>
+							<td class="tdCor" width="200px">Flag de Ativo</td>
+							<td class="tdBranco">
+								<div style="width:200px;">
+									<h:selectOneRadio value="#{crudBean.entity.flgAtivo}" styleClass="radioButton">
+												<f:selectItem itemValue="S" itemLabel="Ativo"/>
+												<f:selectItem itemValue="N" itemLabel="Inativo"/>
+									</h:selectOneRadio>
+								</div>	
+							</td>
+						</tr>
+					</table>
+				</h:panelGroup>
+				<table>
+					<tr>
+						<td class="tdCor" width="200px">Logo* (tam. max. 50kb) (dim. max. 200x200)</td>
+						<td class="tdBranco" >
+							<h:panelGrid id="uploadArquivo" columns="2" >
+								<rich:fileUpload 
+									fileUploadListener="#{crudBean.efetuarUpload}"
+									maxFilesQuantity="1" 
+									id="upload" 
+									immediateUpload="true"
+									acceptedTypes="png" 
+									allowFlash="true"
+									transferErrorLabel="Erro ao carregar a imagem!"
+									addControlLabel="Adicionar" 
+									cancelEntryControlLabel="Cancelar"
+									doneLabel="Arquivo adicionado"
+									progressLabel="Transferindo arquivo" 
+									sizeErrorLabel="Imagem possui tamanho maior que 50kb"
+									stopControlLabel="Parar"
+									stopEntryControlLabel="Parar" 
+									clearAllControlLabel="Remover"
+									clearControlLabel="Remover">
+									<a4j:support event="onuploadcomplete" reRender="imgPrevia"  />
+									<a4j:support event="onclear" actionListener="#{crudBean.limparUpload}" reRender="uploadArquivo"  />
+								</rich:fileUpload>
+								<h:panelGroup layout="block" id="imgPrevia" style="width: 420px;">
+									<rich:panel rendered="#{crudBean.logoBase64 != null and crudBean.logoBase64 != ''}" >
+										<f:facet name="header">Logo Atual</f:facet>
+											<center>
+												<h:graphicImage style="width: 198px;" value="data:image/png;base64,#{crudBean.logoBase64}" />
+											</center>
+									</rich:panel>
+								</h:panelGroup>
+							</h:panelGrid>
+						</td>
+					</tr>
+				</table>
+			</f:subview>
+		</h:panelGroup>			
+	</ui:define>
+	
+	<ui:define name="list">
+	
+		<!-- Painel de resultado da busca-->
+		<h:panelGroup id="panelGroupDeListagem" style="height:100%;width: 100%;" rendered="#{crudBean.searching}">
+			<f:subview id="viewListagem">
+			
+				<rich:dataTable id="tblData" value="#{crudBean.searchResult}" binding="#{crudBean.tblData}" var="rst" style="width: 100%;" rowClasses="par,impar">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<rich:column style="text-align: center;width: 5%;">
+								Código
+							</rich:column>
+							<rich:column style="text-align: center;">
+								Descrição
+							</rich:column>
+							<rich:column style="text-align: center;">
+								Sigla
+							</rich:column>							
+							<rich:column style="text-align: center;">
+								Ativo
+							</rich:column>
+							<rich:column style="text-align: center;">
+								Possui Zimbra
+							</rich:column>
+							<rich:column style="text-align: center;">
+								Data do Cadastro
+							</rich:column>
+							<rich:column style="text-align: center;width: 3%;" >
+							</rich:column>
+							<rich:column style="text-align: center;width: 3%;">
+							</rich:column>							
+						</rich:columnGroup>
+					</f:facet>
+					
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.isnEntidade}" reRender="formulario"/>
+					</rich:column>
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.dscEntidade}"/>
+					</rich:column>
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.sglEntidade}"/>
+					</rich:column>					
+					<rich:column style="text-align: left;">
+						<h:outputText value="SIM" rendered="#{rst.flgAtivo == 'S'}"/>
+						<h:outputText value="NÃO" rendered="#{rst.flgAtivo == 'N'}"/>
+					</rich:column>
+					<rich:column style="text-align: left;">
+						<h:outputText value="SIM" rendered="#{rst.flgEmail == 'S'}"/>
+						<h:outputText value="NÃO" rendered="#{rst.flgEmail == 'N'}"/>
+					</rich:column>
+					<rich:column style="text-align: center;">
+						<h:outputText value="#{rst.datCadastro}" reRender="formulario" />
+					</rich:column>
+					<rich:column style="text-align: center;">
+						<a4j:commandButton image="/imagens/icone_alterar.gif" style="border:white; width: 12px; height: 12px;" title="ALTERAR" actionListener="#{crudBean.preparaAlterar}" reRender="formulario, panelTitle" />
+					</rich:column>
+					<rich:column style="text-align: center;">
+						<a4j:commandButton image="/imagens/icone_excluir.gif" style="border:white; width: 12px; height: 12px;" title="INATIVAR" actionListener="#{crudBean.inativar}" reRender="formulario" onclick="if (!confirm('Deseja realmente inativar esta entidade?')) return false" rendered="#{rst.flgAtivo == 'S'}"/>
+					</rich:column>					
+				</rich:dataTable>
+			</f:subview>
+		</h:panelGroup>	
+	
+	</ui:define>
+	
+	
+</ui:composition>	
+	
+			
+	
+	

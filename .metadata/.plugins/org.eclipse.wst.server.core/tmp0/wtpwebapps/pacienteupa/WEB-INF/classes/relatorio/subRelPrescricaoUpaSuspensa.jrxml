@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subRelPrescricaoUpaSuspensa" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+ CASE WHEN (pi.ISN_PRESCRICAO_PEP_IS is null) THEN '' ELSE upper(pi.DSC_PRESCRICAO) || ' ' || CASE WHEN pi.FLG_SE_NECESSARIO = 'S' THEN ' - ** SE NECESSÁRIO **' ELSE '' END ||' '|| coalesce(CASE D.DIAS WHEN null THEN '' ELSE '(**D'||D.DIAS||'**)' END,'') END DSC_DESCRICAO_SUSPENSAO,
+      CASE pi.DSC_OBS_APZ WHEN '' THEN '-' ELSE pi.DSC_OBS_APZ END DSC_OBS_APZ
+from medpoint.t_prescricao_pep_item pi
+     inner join medpoint.t_prescricao_pep pp on pp.isn_prescricao_pep = pi.isn_prescricao_pep
+     left join (select
+        a.isn_internacao,
+        b.isn_produto_almox,
+        trunc(date(current_date) - date(a.dat_inicio)) dias
+        from
+        medpoint.t_ficha a,
+        medpoint.t_ficha_item b
+        where
+        a.isn_ficha = b.isn_ficha and
+        date_trunc('day', date(a.dat_inicio) + b.num_dias_validade_ficha::integer) >= date_trunc('day',current_date) and a.isn_internacao = $P{p1}::numeric
+        ) D on pi.isn_produto_almox = D.isn_produto_almox
+where pp.ISN_PRESCRICAO_PEP = $P{p2}::numeric and
+pi.isn_prescricao_pep_is is not null
+ order by 1 desc]]>
+	</queryString>
+	<field name="dsc_descricao_suspensao" class="java.lang.String"/>
+	<field name="dsc_obs_apz" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ITENS SUSPENSOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="801" height="16" backcolor="#CCCCCC"/>
+				<box topPadding="2" leftPadding="0">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[      PRESCRIÇÃO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="15" y="0" width="412" height="16" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font size="8" isBold="true" isStrikeThrough="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_descricao_suspensao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="427" y="0" width="30" height="16"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBS:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="457" y="0" width="345" height="16" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_obs_apz}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="3">
+			<line>
+				<reportElement positionType="Float" x="0" y="0" width="802" height="1"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

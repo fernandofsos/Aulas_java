@@ -1,0 +1,76 @@
+.tooltip { width: 300px; background-color: #ededed; border: solid 1px #bbb; text-align: left;
+           font-size: 0.8em; font-family: verdana, arial, helvetica}    
+                  
+.tooltip label { line-height: 18px; display: inline-block; }
+
+.areaTransferencia { width: 230px; margin-bottom: 10px; border: solid 1px #aaa; overflow: auto; }
+                     
+.cabTransferencia  {font-weight: bold; font-size: 12px; background-color: #DEF0FA; padding: 3px 10px;  
+    				margin: 0px; text-align: center; font-family: verdana; }
+    				   
+.leitosTransferencia { background-color: #FEFEFE; font-size: 0.70em; height: 90px; height:auto !important; min-height: 90px; }
+.leitoTransferencia { float: left; width: 55px; padding: 8px; text-align: center; }
+
+#divAlertaTransferencia { font-weight: bold; font-size: 1.1em; padding-left: 42px; border: solid 1px #DDD;
+                          margin-bottom: 10px; background: url("../IMG/alerta.png") no-repeat 8px 8px; 
+                          height: 46px; color: red; line-height: 44px}
+
+.headerPanel { font-family: arial, helvetica ; font-size: 0.9em;
+               background: none; border: none; text-align: center}
+ 
+ input.inputText {font-size: 13px; height: 18px; border: solid 1px #ccc; 
+                  text-transform: uppercase; }
+       
+.topoPagina { width: 1010px; font-size: 0.7em; font-family: Verdana; margin-bottom: 12px; overflow: auto}
+
+.topoPaginaUnidade { background-color: #B6DBEB; float: left; width: 512px; padding: 8px; margin-right: 8px;
+                     border: solid 1px #ccc; height: 55px}
+                     
+.tituloPagina { margin: 0px 0px 10px 0px; font-size: 16px; font-weight: bold; }
+
+.topoPaginaUnidade select { font-size: 1.1em }
+
+.topoPaginaTotais  { background-color: #B6DBEB; float: left; width: 452px; padding: 8px; border: solid 1px #ccc;
+                     height: 55px }
+                     
+.totalLeito { width: 150px; float: left; margin-bottom: 5px}
+
+.dadosPaciente { height: 35px; background-color: #eee }
+.dadosPaciente .col400 { width: 410px; float: left; margin-bottom: 8px }
+.dadosPaciente .col200 { width: 150px; float: left; margin-bottom: 8px }
+
+.geralCampos { font-family: Verdana; font-size: 1em; border: solid 1px #aaa; padding: 8px;
+               margin-bottom: 8px; overflow: auto; }
+
+.dadosAlta select { font-size: 1.1em }
+
+.label { margin-bottom: 3px; display: inline-block; float: left }
+
+.largura80 { width: 80px }
+.largura100 { width: 100px }
+.largura110 { width: 110px }
+.largura120 { width: 120px }
+
+textarea.campoObservacao { font-size: 1.1em; width: 400px; height: 40px; text-transform: uppercase; }
+
+.selecaoTipo { font-size: 1.2em; border-bottom: solid 1px #CCC; margin-bottom: 5px }
+.linhaFormulario { padding: 5px; clear: both }
+
+.botaoModal { width: 80px; height: 30px; background: url('../IMG/botaoModalOff.png') no-repeat !important;
+              line-height: 28px; text-align: center; border: none;  }              
+.botaoModal:hover { font-weight: bold; background: url('../IMG/botaoModalOn.png') no-repeat !important; }
+ 
+.areaEnfermaria { font-family: Arial; border: solid 1px #ddd; background-color: #FEFEFE;
+                  margin-right: 9px; float: left; min-width: 248px; min-height: 70px; 
+                  margin-bottom: 8px;}   
+                            
+.cabEnfermaria { font-size: 12px; font-weight: bold; background-color: #E7F9FB; padding: 3px;
+                 border-bottom: solid 1px #ddd; margin: 0px;}
+                                         
+.areaLeitos { font-size: 0.7em; text-align: center; padding: 10px 0px 10px 9px }                    
+.areaLeito { float: left; margin-right: 10px; padding-bottom: 8px}
+
+.rodape { width: 990px; height: 20px; background-color: #e9e9e9; solid: solid 1px #aaa;
+          padding: 9px; margin-top: 10px; font-size: 12px; font-family: verdana, arial, helvetica}
+              
+.rodapeCol  { width: 490px; float: left; height: 16px; line-height: 16px}

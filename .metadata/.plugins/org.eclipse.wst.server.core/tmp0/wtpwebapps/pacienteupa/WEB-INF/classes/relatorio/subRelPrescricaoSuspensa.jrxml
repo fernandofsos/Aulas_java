@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subRelPrescricaoSuspensa" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="434cacb0-5868-4617-8bc4-b2b733158da0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{p1}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{p2}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+ CASE pi.ISN_PRESCRICAO_PEP_IS WHEN null THEN '' ELSE upper(pi.DSC_PRESCRICAO)||' '|| coalesce(CASE D.DIAS WHEN null THEN '' ELSE '(**D'||D.DIAS||'**)' END,'') END DSC_DESCRICAO_SUSPENSAO,
+      CASE pi.DSC_OBS_APZ WHEN '' THEN '-' ELSE pi.DSC_OBS_APZ END DSC_OBS_APZ
+from medpoint.t_prescricao_pep_item pi
+     inner join medpoint.t_prescricao_pep pp on
+     pp.isn_prescricao_pep = pi.isn_prescricao_pep
+     left join (select
+        a.isn_internacao,
+        b.isn_produto_almox,
+        trunc(date(current_date) - date(a.dat_inicio)) dias
+        from
+        medpoint.t_ficha a,
+        medpoint.t_ficha_item b
+        where
+        a.isn_ficha = b.isn_ficha and
+        date_trunc('day', date(a.dat_inicio) + b.num_dias_validade_ficha::integer) >= date_trunc('day',current_date) and a.isn_internacao = $P{p1}::numeric
+        ) D on pi.isn_produto_almox = D.isn_produto_almox
+where pp.ISN_PRESCRICAO_PEP = $P{p2}::numeric and
+pi.isn_prescricao_pep_is is not null
+ order by 1 desc]]>
+	</queryString>
+	<field name="dsc_descricao_suspensao" class="java.lang.String"/>
+	<field name="dsc_obs_apz" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="14" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="802" height="14" uuid="de5d488e-1af9-450f-a4b8-ee02687abad1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ITENS SUSPENSOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="14">
+			<rectangle>
+				<reportElement x="0" y="0" width="802" height="13" backcolor="#CCCCCC" uuid="477a120e-2c4c-498a-8ceb-d4e31e3179b8"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="39" y="0" width="390" height="11" uuid="27ccf6ad-18a5-4799-9617-1ea2411e00f4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRESCRIÇÃO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="452" y="0" width="284" height="14" isPrintWhenDetailOverflows="true" uuid="95e1d79f-653d-46a8-a7cc-ac1ace9866d0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dsc_obs_apz}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="39" y="0" width="390" height="14" isPrintWhenDetailOverflows="true" uuid="7182ef18-96e7-4818-8c7d-2e3e70451123"/>
+				<textElement>
+					<font size="8" isBold="true" isStrikeThrough="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dsc_descricao_suspensao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="429" y="0" width="22" height="11" uuid="7c1e1f52-e942-4a4e-b4b3-003eda07fa19"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBS:]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="14" width="802" height="1" uuid="e1aef28a-8193-4508-b09e-9fadacab5c20"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

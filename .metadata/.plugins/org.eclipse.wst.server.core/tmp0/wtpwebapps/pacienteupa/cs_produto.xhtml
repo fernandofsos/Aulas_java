@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="headHtml">
+		<link rel="stylesheet" type="text/css" href="CSS/layoutCsPaciente.css" />
+	</ui:define>
+	
+	<ui:define name="conteudo">
+		<a4j:keepAlive beanName="produtoForm" />
+		
+		<rich:modalPanel id="panelStatus" autosized="true">
+			<h:panelGrid columns="2">
+				<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px" />
+				<h:outputText value="Carregando..." />
+			</h:panelGrid>
+		</rich:modalPanel>
+		
+		<h:form id="formPesquisa">
+			<h:panelGroup layout="block" styleClass="cabAreaPesquisa">VALIDAÇÃO DE PRODUTO</h:panelGroup>
+			<h:panelGroup lavout="block" styleClass="areaPesquisa">
+			<h:panelGrid columns="6">
+				<h:panelGrid columns="1">
+					<h:panelGroup layout="block">
+						Pesquisar Por:
+					</h:panelGroup>
+					<h:panelGroup layout="block">
+						<h:selectOneMenu style="height: 20px;width: 140px;" value="#{produtoForm.isnTipoPesquisar}">
+							<f:selectItem itemLabel="Descrição Produto" itemValue="1"/>
+							<f:selectItem itemLabel="Descrição Técnica" itemValue="2"/>
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<h:panelGroup layout="block">
+						Descrição:
+					</h:panelGroup>
+					<h:panelGroup layout="block">
+						<h:inputText styleClass="campoTexto" style="width: 240px;" value="#{produtoForm.dscProduto}" />
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<h:panelGroup layout="block">
+						Família:
+					</h:panelGroup>
+					<h:panelGroup layout="block">
+						<h:selectOneMenu style="height: 20px;" value="#{produtoForm.isnFamilia}">
+							<f:selectItem itemLabel="Selecione" itemValue="0"/>
+							<f:selectItems value="#{produtoForm.listaFamilia}" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<h:panelGroup layout="block">
+						Unidade:
+					</h:panelGroup>
+					<h:panelGroup layout="block">
+						<h:selectOneMenu style="height: 20px;" value="#{produtoForm.isnUnidade}">
+							<f:selectItem itemLabel="Selecione" itemValue="0"/>
+							<f:selectItems value="#{produtoForm.listaUnidade}" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<h:panelGroup layout="block">
+						Status:
+					</h:panelGroup>
+					<h:panelGroup layout="block">
+						<h:selectOneMenu style="height: 20px;" value="#{produtoForm.isnStatus}">
+							<f:selectItems value="#{produtoForm.listaTipo}" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<h:panelGroup layout="block" style="height:5px;"/>
+					<h:panelGroup layout="block">
+						<a4j:commandButton image="IMG/pesquisa.gif" id="btnPesquisa" actionListener="#{produtoForm.pesquisar}" reRender="tblData"/>
+					</h:panelGroup>
+				</h:panelGrid>
+			</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="tblResult" layout="block">
+					<rich:dataTable id="tblData" var="rst" style="width:100%;"
+							rows="20" sortMode="single" value="#{produtoForm.listaProduto}">
+							<f:facet name="header">
+								<rich:columnGroup>
+									<rich:column style="width:80px;">
+										<h:outputText value="Código Produto" />
+									</rich:column>
+									<rich:column style="width:300px;">
+										<h:outputText value="Descrição Produto" />
+									</rich:column>
+									<rich:column style="width:100px;">
+										<h:outputText value="Unidade" />
+									</rich:column>
+									<rich:column style="width:100px;">
+										<h:outputText value="Família" />
+									</rich:column>
+									<rich:column style="width:350px;">
+										<h:outputText value="Descrição Técnica" />
+									</rich:column>
+									<rich:column style="width:60px;" />
+									<rich:column style="width:60px;" />
+								</rich:columnGroup>
+							</f:facet>
+						<rich:column styleClass="text-center"  sortBy="#{rst.isnProduto}" >
+								<h:outputText value="#{rst.isnProduto}" />
+						</rich:column>
+						<rich:column styleClass="text-center" sortBy="#{rst.dscProduto}" >
+								<h:outputText value="#{rst.dscProduto}" />
+						</rich:column>				
+						<rich:column styleClass="text-center" sortBy="#{rst.dscUnidade}" >
+								<h:outputText value="#{rst.dscUnidade}" />
+						</rich:column>
+						<rich:column styleClass="text-center" sortBy="#{rst.dscFamilia}" >
+								<h:outputText value="#{rst.dscFamilia}" />
+						</rich:column>	
+						<rich:column styleClass="text-center" sortBy="#{rst.dscTecnica}" >
+								<h:outputText value="#{rst.dscTecnica}" />
+						</rich:column>	
+						<rich:column style="text-align: center;" > 
+							<a4j:commandButton styleClass="botaoNovoItem"  
+											   value="#{(rst.flgAtivoProduto)?'EDITAR':'VALIDAR'}"
+											   action="#{produtoForm.valida}" style="margin-right: 0px;" 
+											   reRender=":produtoPanelForm,produtoPanelForm:ficha" oncomplete="#{rich:component('panelModal')}.show()">
+								<f:setPropertyActionListener target="#{produtoForm.produtoSelecionado}" value="#{rst.clone()}"/>
+							</a4j:commandButton>
+						</rich:column>	
+						<rich:column style="text-align: center;" > 
+							<a4j:commandButton styleClass="botaoNovoItem"
+											   rendered="#{rst.flgAtivoProduto}"
+											   reRender="tblResult"
+											   value="INATIVAR" style="margin-right: 0px;"
+											   action="#{produtoForm.cancelarProduto(rst)}" 
+											   oncomplete="if(#{produtoForm.flgMensagem}){alert('#{produtoForm.mensagem}');}"
+											   onclick="if(! confirm('Deseja realmente inativar?') ) { return false }">
+							</a4j:commandButton>
+						</rich:column>	
+						<f:facet name="footer">
+								<rich:datascroller id="ds" />
+						</f:facet>
+				</rich:dataTable>
+			</h:panelGroup>
+		</h:form>
+		
+		<!-- INICIO DOS MODAL PANEL -->
+		<rich:modalPanel id="panelModal" autosized="false" width="700" height="675" resizeable="false" headerClass="headerPanel3" domElementAttachment="form">
+		<!-- BARRA DE TITULO MODAL-->
+    	<f:facet name="header">
+			<h:panelGroup>
+       			<h:outputText value="Validação de Produto"></h:outputText>
+       		</h:panelGroup>
+    	</f:facet>
+    	<h:form id="produtoPanelForm">
+    	<h:panelGrid columns="1" style="width: 100%;">
+			<h:panelGrid columns="3" style="width: 100%;">
+	    		<h:panelGroup>
+	    			<fieldset>
+	    				<legend>PRESCREVER</legend>
+	    				<h:panelGroup layout="block">
+		    				<h:selectOneRadio value="#{produtoForm.produtoSelecionado.flgPrescrever}"  style="height: 20px;">
+		    					<f:selectItem itemLabel="Não" itemValue="false"/>
+		    					<f:selectItem itemLabel="Sim" itemValue="true"/>
+		   						<a4j:support event="onclick" ajaxSingle="true"/>
+		    				</h:selectOneRadio>
+	    				</h:panelGroup>
+	    			</fieldset>
+				</h:panelGroup>
+	    		<h:panelGroup>
+	    			<fieldset>
+	    				<legend>DUPLA CHECAGEM</legend>
+	    				<h:panelGroup layout="block">
+		    				<h:selectOneRadio value="#{produtoForm.produtoSelecionado.flgDc}"  style="height: 20px;">
+		    					<f:selectItem itemLabel="Não" itemValue="N"/>
+		    					<f:selectItem itemLabel="Sim" itemValue="S"/>
+		   						<a4j:support event="onclick" ajaxSingle="true"/>
+		    				</h:selectOneRadio>
+	    				</h:panelGroup>
+	    			</fieldset>
+	    		</h:panelGroup>
+	    		<h:panelGroup>
+	    			<fieldset>
+	    				<legend>SOLUÇÃO</legend>
+	    				<h:panelGroup layout="block">
+		    				<h:selectOneRadio value="#{produtoForm.produtoSelecionado.flgSolucao}" style="height: 20px;">
+		    					<f:selectItem itemLabel="Não" itemValue="false"/>
+		    					<f:selectItem itemLabel="Sim" itemValue="true"/>
+		   						<a4j:support event="onclick" ajaxSingle="true"/>
+		    				</h:selectOneRadio>
+	    				</h:panelGroup>
+	    			</fieldset>
+				</h:panelGroup>
+	    	</h:panelGrid>
+    		<h:panelGroup layout="block">
+    			<fieldset >
+    				<legend>DESCRIÇÃO RESUMIDA</legend>
+    				<h:panelGroup layout="block">
+	    				<h:inputText value="#{produtoForm.produtoSelecionado.dscPrescricaoPep}"  
+	    					styleClass="campoTexto" onkeyup="limitarTamanhoCampo(this,200)" style="width:650px;" />
+    				</h:panelGroup>
+    			</fieldset>
+    		</h:panelGroup>
+    		<h:panelGroup layout="block">
+    			<fieldset >
+    				<legend>RISCO(S)</legend>
+    				<h:panelGroup layout="block">
+	    				<h:inputText value="#{produtoForm.produtoSelecionado.dscRiscos}"  
+	    					styleClass="campoTexto" onkeyup="limitarTamanhoCampo(this,200)" style="width:650px;" />
+    				</h:panelGroup>
+    			</fieldset>
+    		</h:panelGroup>
+    		<h:panelGroup layout="block">
+    			<fieldset >
+    				<legend>DILUIÇÃO</legend>
+    				<h:panelGroup layout="block">
+    					<h:outputLabel for="doseDiluicao">Volume: </h:outputLabel>
+	    				<h:inputText
+    					id="doseDiluicao"
+    					value="#{produtoForm.doseDiluicao}"
+    					styleClass="campoTexto"
+    					style="width: 100px;"
+    					maxlength="4"
+    					onkeyup="javascript:return(formataNumero2(this))">
+	    					<a4j:support event="onblur" oncomplete="validarNumero(document.getElementById('produtoPanelForm:doseDiluicao'));"/>
+	    				</h:inputText>
+    				</h:panelGroup>
+    				<h:panelGroup layout="block">
+    					<h:outputLabel for="dscDiluicaoItem" style="margin-left: 50px;">Diluição: </h:outputLabel>
+	    				<h:inputText id="dscDiluicaoItem" value="#{produtoForm.produtoDiluicao.dscDiluicao}" styleClass="campoTexto campoTextoSemColar" onkeyup="limitarTamanhoCampo(this,120)" onblur="limitarTamanhoCampo(this,120)" style="width:250px;" />
+	    				<a4j:commandButton
+	    				value="Adicionar"
+	    				action="#{produtoForm.addListaProdutoDiluicao}"
+	    				oncomplete="validarProduto('#{produtoForm.mensagem}');"
+	    				styleClass="botaoNovoItem"
+	    				style="margin-left: 25px;"
+	    				reRender="tableProdutoDiluicao">
+	    				</a4j:commandButton>
+    				</h:panelGroup>
+    				<h:panelGroup layout="block">
+	                	<rich:dataTable id="tableProdutoDiluicao" value="#{produtoForm.lstProdutoDiluicao}" var="item" rows="5" style="width: 100%; margin-top: 10px;">
+							<f:facet name="header">
+								<rich:columnGroup>
+									<rich:column style="width:85%;">
+										<h:outputText value="Diluição" />
+									</rich:column>
+									<rich:column style="width:15%;">
+										<h:outputText value="" />
+									</rich:column>
+								</rich:columnGroup>
+							</f:facet>
+							<rich:column style="text-align:center;">
+								<h:outputText value="#{item.dscDiluicao}" style="text-transform: uppercase; font-size: inherit;"/>
+							</rich:column>
+							<rich:column>
+								<a4j:commandButton
+								value="Remover"
+								action="#{produtoForm.removerListaProdutoDiluicao}"
+								reRender="produtoPanelForm:tableProdutoDiluicao">
+									<f:setPropertyActionListener value="#{item}" target="#{produtoForm.produtoDiluicao}" />
+								</a4j:commandButton>
+							</rich:column>
+	                	</rich:dataTable>
+    				</h:panelGroup>
+    			</fieldset>
+    		</h:panelGroup>
+    		<h:panelGroup id="panelAntibioticos" layout="block">
+    			<fieldset >
+    				<legend>GRUPO</legend>
+    				<h:panelGroup layout="block">
+	                	<rich:dataTable value="#{produtoForm.produtoSelecionado.listProdutoTipoPrescricao}" id="tblData" var="rst" style="width:100%" rows="20" sortMode="single" >
+							<f:facet name="header">
+								<rich:columnGroup>
+									<rich:column style="width:2%;">
+										<h:outputText value="Situação" />
+									</rich:column>
+									<rich:column style="width:25%;">
+										<h:outputText value="Descrição Grupo" />
+									</rich:column>
+									<rich:column style="width:2%;">
+										<h:outputText value="Obrig. Posologia"/>
+									</rich:column>
+									<rich:column style="width:2%;">
+										<h:outputText value="Ficha"/>
+									</rich:column>
+									<rich:column style="width:2%;">
+										<h:outputText value="Enviar Almox"/>
+									</rich:column>
+								</rich:columnGroup>
+							</f:facet>
+							<rich:column style="text-align:center;">
+								<h:selectBooleanCheckbox value="#{rst.flgAtivoBoolean}">
+									<a4j:support event="onchange" reRender="tblData" ajaxSingle="true"/>
+								</h:selectBooleanCheckbox>
+							</rich:column>
+							<rich:column>
+								<h:outputText value="#{rst.tipoPrescricaoPep.dscTipoPrescricao}" style="text-transform: uppercase;font-size: inherit;"/>
+							</rich:column>
+							<rich:column style="text-align: center;">
+								<h:selectBooleanCheckbox value="#{produtoForm.produtoSelecionado.flgPosologiaBoolean}"  title="Obrigatoriedade Posologia" rendered="#{rst.isnTipoPrescricao eq 2}">
+									<a4j:support event="onchange" reRender="tblData" ajaxSingle="true"/>
+								</h:selectBooleanCheckbox>
+								<h:outputText value=" - "  title="Obrigatoriedade Posologia" disabled="#{not (rst.isnTipoPrescricao eq 2)}" rendered="#{not(rst.isnTipoPrescricao eq 2)}"/>
+							</rich:column>
+							<rich:column style="text-align: center;">
+								<h:selectBooleanCheckbox value="#{produtoForm.produtoSelecionado.flgFicha}"  title="Ficha" rendered="#{rst.isnTipoPrescricao eq 20}">
+								<a4j:support event="onchange" reRender="tblData" ajaxSingle="true"/>
+								</h:selectBooleanCheckbox>
+								<h:outputText value=" - "   rendered="#{not(rst.isnTipoPrescricao eq 20)}"/>
+							</rich:column>
+							<rich:column style="text-align: center;">
+								<h:selectBooleanCheckbox value="#{rst.flgEnvioAlmoxBoolean}"  />
+							</rich:column>
+	                	</rich:dataTable>
+    				</h:panelGroup>
+    				<br/>
+    					
+    			</fieldset>
+    		</h:panelGroup>
+    	</h:panelGrid>
+    	<h:panelGrid columns="3" >
+    		<a4j:commandButton value="Salvar" 
+    						   styleClass="botaoNovoItem" 
+    						   action="#{produtoForm.alterarProduto}" 
+    						   reRender="tblResult" 
+    						   oncomplete="if(#{produtoForm.flgMensagem}){#{rich:component('panelModal')}.hide();alert('#{produtoForm.mensagem}');}else{alert('#{produtoForm.mensagem}');}" />
+    						   
+    		<a4j:commandButton value="Cancelar" styleClass="botaoNovoItem" actionListener="#{produtoForm.pesquisar}" reRender="tblData" oncomplete="#{rich:component('panelModal')}.hide();" />
+    	</h:panelGrid>
+    	</h:form>
+		</rich:modalPanel>
+		<script type="text/javascript">
+		<!--
+			jQuery(function(){
+				jQuery('.campoTextoSemColar').bind('paste drop', function(event) {
+			         event.preventDefault();
+			    }); 
+			});
+		
+			function validarProduto(msg) {
+				if (msg.indexOf('sucesso!') != -1){
+					alertCustomizado(msg);
+					setTimeout(function(){ 
+						document.getElementById('produtoPanelForm:btnCancel').click();	
+				    }, 1500); 
+				
+				}else if (msg != '') {
+					alertCustomizado(msg);    			
+	   			}
+	   		}
+		
+			function formataNumero2(campo) {
+				var valor = campo.value;
+				campo.value = valor.replace(/[^0123456789,.]/g, '');
+				campo.value = campo.value.replace(',', '.');
+			}
+		
+			function validarNumero(campo){
+	    		if (campo.value.length > 0){
+		    		var cont = 0;
+					var digits = "0123456789.";
+					var campo_temp;
+					for ( var i = 0; i < campo.value.length; i++) {
+						campo_temp = campo.value.substring(i, i + 1);
+						if (digits.indexOf(campo_temp) == -1) {
+							alert("Valor informado incorreto.");
+							campo.focus();
+							return false;
+						}
+					}
+					
+		    		for(var j = 0; j < campo.value.length; j++){
+				        if(campo.value.charAt(j) == "."){
+				            cont++; 
+				        }
+				    }
+				    
+				    if (cont > 1){
+						alert("Valor informado incorreto.");
+						campo.value = '';
+						campo.focus();
+						return false;
+					}
+	    		}
+    		}
+		-->
+		</script>
+	</ui:define>
+</ui:composition>
+</html>

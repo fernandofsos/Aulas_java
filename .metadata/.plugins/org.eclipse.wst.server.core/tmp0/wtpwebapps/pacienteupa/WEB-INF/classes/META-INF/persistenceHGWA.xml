@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	
+	<persistence-unit name="medpoint" transaction-type="RESOURCE_LOCAL">		
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>br.org.isgh.paciente.vo.PacienteInternado</class>
+		<class>br.org.isgh.paciente.vo.PacienteEmergencia</class>
+		<class>br.org.isgh.paciente.vo.ExameSolicitado</class>
+		<class>br.org.isgh.paciente.beans.UsuarioProfissional</class>
+		<class>br.org.isgh.paciente.beans.Usuario</class>
+		<class>br.org.isgh.paciente.beans.Uf</class>
+		<class>br.org.isgh.paciente.beans.Turno</class>
+		<class>br.org.isgh.paciente.beans.TransferenciaBloco</class>
+		<class>br.org.isgh.paciente.beans.TipoTelefone</class>
+		<class>br.org.isgh.paciente.beans.TipoCertidao</class>
+		<class>br.org.isgh.paciente.beans.TipoAtendimento</class>
+		<class>br.org.isgh.paciente.beans.SituacaoFamiliar</class>
+		<class>br.org.isgh.paciente.beans.Sexo</class>
+		<class>br.org.isgh.paciente.beans.Risco</class>
+		<class>br.org.isgh.paciente.beans.Regulacao</class>
+		<class>br.org.isgh.paciente.beans.Referencia</class>
+		<class>br.org.isgh.paciente.beans.ProfissionalEspecialidade</class>
+		<class>br.org.isgh.paciente.beans.Profissional</class>
+		<class>br.org.isgh.paciente.beans.Parentesco</class>
+		<class>br.org.isgh.paciente.beans.PacienteTransporte</class>
+		<class>br.org.isgh.paciente.beans.Paciente</class>
+		<class>br.org.isgh.paciente.beans.Ocupacao</class>
+		<class>br.org.isgh.paciente.beans.Nacionalidade</class>
+		<class>br.org.isgh.paciente.beans.Municipio</class>
+		<class>br.org.isgh.paciente.beans.MarcacaoSituacao</class>
+		<class>br.org.isgh.paciente.beans.MarcacaoAtendimento</class>
+		<class>br.org.isgh.paciente.beans.Marcacao</class>
+		<class>br.org.isgh.paciente.beans.LeitoReserva</class>
+		<class>br.org.isgh.paciente.beans.Leito</class>
+		<class>br.org.isgh.paciente.beans.InternacaoLeitoCentroCirurgico</class>
+		<class>br.org.isgh.paciente.beans.InternacaoLeito</class>
+		<class>br.org.isgh.paciente.beans.InternacaoAtendimento</class>
+		<class>br.org.isgh.paciente.beans.InternacaoAlta</class>
+		<class>br.org.isgh.paciente.beans.Internacao</class>
+		<class>br.org.isgh.paciente.beans.InterditaLeito</class>
+		<class>br.org.isgh.paciente.beans.Interconsulta</class>
+		<class>br.org.isgh.paciente.beans.FormacaoMedica</class>
+		<class>br.org.isgh.paciente.beans.ExameSolic</class>
+		<class>br.org.isgh.paciente.beans.ExameSituacao</class>
+		<class>br.org.isgh.paciente.beans.Exame</class>
+		<class>br.org.isgh.paciente.beans.EspecialidadeEmergencia</class>
+		<class>br.org.isgh.paciente.beans.Especialidade</class>
+		<class>br.org.isgh.paciente.beans.Escolaridade</class>
+		<class>br.org.isgh.paciente.beans.Escala</class>
+		<class>br.org.isgh.paciente.beans.Enfermaria</class>
+		<class>br.org.isgh.paciente.beans.Emergencia</class>
+		<class>br.org.isgh.paciente.beans.Diaria</class>
+		<class>br.org.isgh.paciente.beans.Destino</class>
+		<class>br.org.isgh.paciente.beans.Cor</class>
+		<class>br.org.isgh.paciente.beans.ConsultaTipo</class>
+		<class>br.org.isgh.paciente.beans.Conselho</class>
+		<class>br.org.isgh.paciente.beans.Clinica</class>
+		<class>br.org.isgh.paciente.beans.ClassificacaoRisco</class>
+		<class>br.org.isgh.paciente.beans.Cid10</class>
+		<class>br.org.isgh.paciente.beans.ChaveMov</class>
+		<class>br.org.isgh.paciente.beans.Chave</class>
+		<class>br.org.isgh.paciente.beans.BolsaMov</class>
+		<class>br.org.isgh.paciente.beans.Bolsa</class>
+		<class>br.org.isgh.paciente.beans.Bloco</class>
+		<class>br.org.isgh.paciente.beans.AcompanhanteMov</class>
+		<class>br.org.isgh.paciente.beans.Acompanhante</class>
+			
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.driver.OracleDriver" /> 						
+			<property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@10.1.1.18:1521:desenv" />						
+			<property name="javax.persistence.jdbc.user" value="medpoint" />
+			<property name="javax.persistence.jdbc.password" value="sysmed" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />	
+			<property name="hibernate.connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider"/>		
+			<property name="hibernate.c3p0.min_size" value="5" />
+			<property name="hibernate.c3p0.max_size" value="120" />
+			<property name="hibernate.c3p0.timeout" value="1200" />		    						
+			<property name="hibernate.show_sql" value="true" />
+		</properties>
+	</persistence-unit>
+	
+	<persistence-unit name="seghgwa" transaction-type="RESOURCE_LOCAL">		
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>br.org.isgh.paciente.beans.Usuario</class>
+		<class>br.org.isgh.paciente.beans.Uf</class>
+		<class>br.org.isgh.paciente.beans.Turno</class>
+		<class>br.org.isgh.paciente.beans.TransferenciaBloco</class>
+		<class>br.org.isgh.paciente.beans.TipoTelefone</class>
+		<class>br.org.isgh.paciente.beans.TipoCertidao</class>
+		<class>br.org.isgh.paciente.beans.SituacaoFamiliar</class>
+		<class>br.org.isgh.paciente.beans.Sexo</class>
+		<class>br.org.isgh.paciente.beans.Regulacao</class>
+		<class>br.org.isgh.paciente.beans.Referencia</class>
+		<class>br.org.isgh.paciente.beans.ProfissionalEspecialidade</class>
+		<class>br.org.isgh.paciente.beans.Profissional</class>
+		<class>br.org.isgh.paciente.beans.Parentesco</class>
+		<class>br.org.isgh.paciente.beans.Paciente</class>
+		<class>br.org.isgh.paciente.beans.Ocupacao</class>
+		<class>br.org.isgh.paciente.beans.Nacionalidade</class>
+		<class>br.org.isgh.paciente.beans.Municipio</class>
+		<class>br.org.isgh.paciente.beans.MarcacaoSituacao</class>
+		<class>br.org.isgh.paciente.beans.MarcacaoAtendimento</class>
+		<class>br.org.isgh.paciente.beans.Marcacao</class>
+		<class>br.org.isgh.paciente.beans.Leito</class>
+		<class>br.org.isgh.paciente.beans.InternacaoLeito</class>
+		<class>br.org.isgh.paciente.beans.Internacao</class>
+		<class>br.org.isgh.paciente.beans.FormacaoMedica</class>
+		<class>br.org.isgh.paciente.beans.Especialidade</class>
+		<class>br.org.isgh.paciente.beans.Escolaridade</class>
+		<class>br.org.isgh.paciente.beans.Escala</class>
+		<class>br.org.isgh.paciente.beans.Enfermaria</class>
+		<class>br.org.isgh.paciente.beans.Emergencia</class>
+		<class>br.org.isgh.paciente.beans.Destino</class>
+		<class>br.org.isgh.paciente.beans.Cor</class>
+		<class>br.org.isgh.paciente.beans.ConsultaTipo</class>
+		<class>br.org.isgh.paciente.beans.Conselho</class>
+		<class>br.org.isgh.paciente.beans.Clinica</class>
+		<class>br.org.isgh.paciente.beans.Cid10</class>
+		<class>br.org.isgh.paciente.beans.Bloco</class>
+		<class>br.org.isgh.paciente.beans.Acompanhante</class>
+	
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.driver.OracleDriver" />			
+			<property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@10.1.1.1:1521:svrhgwa" />						
+			<property name="javax.persistence.jdbc.user" value="seghgwa" />
+			<property name="javax.persistence.jdbc.password" value="sysseg" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+			<property name="hibernate.show_sql" value="true" />
+		</properties>
+	</persistence-unit>		
+</persistence>

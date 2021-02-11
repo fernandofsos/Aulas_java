@@ -1,0 +1,566 @@
+package br.org.isgh.seguranca.beans;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.FilterDefs;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.Proxy;
+
+import br.org.isgh.seguranca.filtros.UsuarioFiltro;
+
+
+@Entity(name="br.org.isgh.seguranca.beans.Usuario")
+@Table(name = "t_usuario", schema="seguranca")
+@SequenceGenerator(name = "S_USUARIO", sequenceName = "S_USUARIO", allocationSize = 1)
+@Proxy(lazy = true)
+@FilterDefs
+({
+	@FilterDef(name = "filtroEspecialidadeAtivo", parameters = @ParamDef(name = "flagAtivoEspecialidade", type = "string")),
+    @FilterDef(name = "filtroIsnEntidade", parameters = @ParamDef(name = "isnEntidadeDeff", type = "integer"))
+})
+public class Usuario implements Serializable 
+{
+	private static final long serialVersionUID = -3193254124752174451L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_USUARIO")
+	@Column(name = "isn_usuario")
+	private Integer isnUsuario;
+	
+	@Column(name = "dsc_usuario")
+	private String dscUsuario;
+	
+	@Column(name = "dsc_email")
+	private String dscEmail;
+	
+	@Column(name = "dsc_email_isgh")
+	private String dscEmailIsgh;	
+	
+	@Column(name = "dsc_login")
+	private String dscLogin;
+	
+	@Column(name = "dsc_senha")
+	private String dscSenha;
+	
+	@Column(name = "isn_conselho")
+	private Integer isnConselho;
+	
+	@Column(name = "num_conselho")
+	private String numConselho;
+	
+	@Column(name = "isn_formacao")
+	private Integer isnFormacao;
+	
+	@Column(name = "isn_setor")
+	private Integer isnSetor;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "dat_cadastro")
+	private Date datCadastro;
+	
+	@Column(name = "isn_tipo_telefone")
+	private Integer isnTipoTelefone;
+	
+	@Column(name = "num_telefone")
+	private String numTelefone;
+
+	@Column(name = "isn_tipo_telefone_2")
+	private Integer isnTipoTelefone2;
+	
+	@Column(name = "num_telefone_2")
+	private String numTelefone2;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "dat_desativacao")
+	private Date datDesativacao;
+	
+	@Column(name = "isn_uf_conselho")
+	private Integer isnUfConselho;
+	
+	@Column(name = "isn_usuario_cad")
+	private Integer isnUsuarioCad;
+	
+	@Column(name = "isn_entidade")
+	private Integer isnEntidade;
+	
+	@Column(name = "isn_profissional_old")
+	private Integer isnProfissionalOld;
+	
+	@Column(name = "flg_situacao")
+	private String flgSituacao;
+	
+	@Column(name = "num_violacoes")
+	private Integer numViolacoes;
+	
+	@Column(name = "dsc_assinatura")
+	private String dscAssinatura;
+	
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "isn_conselho", insertable = false, updatable = false)
+	private Conselho conselhoBean;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "isn_formacao", insertable = false, updatable = false)
+	private Formacao formacaoBean;   
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "isn_setor", insertable = false, updatable = false)
+	private Setor setorBean;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "isn_entidade", insertable = false, updatable = false)
+	private Entidade entidadeBean;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "isn_usuario_cad", insertable = false, updatable = false)
+	private Usuario usuarioBean;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "isn_uf_conselho", insertable = false, updatable = false)
+	private Uf ufBean; 
+    
+    @OneToMany(mappedBy="usuarioBean", fetch = FetchType.LAZY)
+    @Cascade(CascadeType.ALL)
+    private Set<UsuarioGrupo> usuarioGrupoBean;    
+    
+    @Column(name = "flg_vinculo")
+	private String flgVinculo;
+    
+    @Column(name = "flg_parecer")
+	private String flgParecer;
+    
+    @Column(name = "isn_categoria")
+	private Integer isnCategoria;
+    
+    @Column(name = "DSC_CPF")
+	private String dscCpf;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "isn_categoria", insertable = false, updatable = false)
+	private Categoria categoriaBean;
+    
+    @Column(name = "isn_vinculo")
+    private Integer isnVinculo;
+    
+    @Column(name = "isn_vinculo_tipo")
+    private Integer isnVinculoTipo;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "isn_vinculo_tipo", insertable = false, updatable = false)
+	private VinculoTipo vinculoTipoBean;
+	
+	@OneToMany(mappedBy="usuario", fetch = FetchType.LAZY)
+    @Cascade(CascadeType.ALL)
+	@Filter(name = "filtroIsnEntidade", condition = ":isnEntidadeDeff = isn_entidade")
+    private Set<UsuarioGrupoEntidade> usuarioGrupoEntidade;
+		
+	@OneToMany(mappedBy="usuario", fetch = FetchType.LAZY)
+    @Cascade(CascadeType.ALL)
+	private Set<UsuarioEntidade> listaUsuarioEntidade;
+	
+	@OneToMany(mappedBy="usuarioBean", fetch = FetchType.LAZY)
+    @Cascade(CascadeType.EVICT)
+    @Filter(name = "filtroEspecialidadeAtivo", condition = ":flagAtivoEspecialidade = flg_ativo")
+    private Set<UsuarioEspecialidade> usuarioEspecialidadeBean;    
+    
+    @Transient
+    private UsuarioEntidade usuarioEntidadeSelecionado;
+	
+    @Transient
+    private UsuarioFiltro filtro;
+     
+    @Transient
+    private List<Integer> listaGruposStr;    
+    
+    @Transient
+    private HashMap<String, Object> filtroMap;
+
+	public String getDscCpf()
+	{
+		return dscCpf;
+	}
+
+	public void setDscCpf(String dscCpf)
+	{
+		this.dscCpf = dscCpf;
+	}
+
+	public Integer getIsnUsuario() {
+		return isnUsuario;
+	}
+
+	public void setIsnUsuario(Integer isnUsuario) {
+		this.isnUsuario = isnUsuario;
+	}
+
+	public String getDscUsuario() {
+		return dscUsuario;
+	}
+
+	public void setDscUsuario(String dscUsuario) {
+		this.dscUsuario = dscUsuario;
+	}
+
+	public Set<UsuarioEspecialidade> getUsuarioEspecialidadeBean() {
+		return usuarioEspecialidadeBean;
+	}
+
+	public void setUsuarioEspecialidadeBean(
+			Set<UsuarioEspecialidade> usuarioEspecialidadeBean) {
+		this.usuarioEspecialidadeBean = usuarioEspecialidadeBean;
+	}
+
+	public String getDscEmail() {
+		return dscEmail;
+	}
+
+	public void setDscEmail(String dscEmail) {
+		this.dscEmail = dscEmail;
+	}
+
+	public String getDscLogin() {
+		return dscLogin;
+	}
+
+	public void setDscLogin(String dscLogin) {
+		this.dscLogin = dscLogin;
+	}
+
+	public String getDscSenha() {
+		return dscSenha;
+	}
+
+	public void setDscSenha(String dscSenha) {
+		this.dscSenha = dscSenha;
+	}
+
+	public Integer getIsnConselho() {
+		return isnConselho;
+	}
+
+	public void setIsnConselho(Integer isnConselho) {
+		this.isnConselho = isnConselho;
+	}
+
+	public Integer getIsnFormacao() {
+		return isnFormacao;
+	}
+
+	public void setIsnFormacao(Integer isnFormacao) {
+		this.isnFormacao = isnFormacao;
+	}
+
+	public Integer getIsnSetor() {
+		return isnSetor;
+	}
+
+	public void setIsnSetor(Integer isnSetor) {
+		this.isnSetor = isnSetor;
+	}
+
+	public Date getDatCadastro() {
+		return datCadastro;
+	}
+
+	public void setDatCadastro(Date datCadastro) {
+		this.datCadastro = datCadastro;
+	}
+
+	public Integer getIsnTipoTelefone() {
+		return isnTipoTelefone;
+	}
+
+	public void setIsnTipoTelefone(Integer isnTipoTelefone) {
+		this.isnTipoTelefone = isnTipoTelefone;
+	}
+
+	public String getNumTelefone() {
+		return numTelefone;
+	}
+
+	public void setNumTelefone(String numTelefone) {
+		this.numTelefone = numTelefone;
+	}
+
+	public Integer getIsnTipoTelefone2() {
+		return isnTipoTelefone2;
+	}
+
+	public void setIsnTipoTelefone2(Integer isnTipoTelefone2) {
+		this.isnTipoTelefone2 = isnTipoTelefone2;
+	}
+
+	public String getFlgSituacao() {
+		return flgSituacao;
+	}
+
+	public void setFlgSituacao(String flgSituacao) {
+		this.flgSituacao = flgSituacao;
+	}
+
+	public String getNumTelefone2() {
+		return numTelefone2;
+	}
+
+	public void setNumTelefone2(String numTelefone2) {
+		this.numTelefone2 = numTelefone2;
+	}
+
+	public Date getDatDesativacao() {
+		return datDesativacao;
+	}
+
+	public void setDatDesativacao(Date datDesativacao) {
+		this.datDesativacao = datDesativacao;
+	}
+
+	public Integer getIsnUfConselho() {
+		return isnUfConselho;
+	}
+
+	public void setIsnUfConselho(Integer isnUfConselho) {
+		this.isnUfConselho = isnUfConselho;
+	}
+
+	public Integer getIsnUsuarioCad() {
+		return isnUsuarioCad;
+	}
+
+	public void setIsnUsuarioCad(Integer isnUsuarioCad) {
+		this.isnUsuarioCad = isnUsuarioCad;
+	}
+
+	public Integer getIsnEntidade() {
+		return isnEntidade;
+	}
+
+	public void setIsnEntidade(Integer isnEntidade) {
+		this.isnEntidade = isnEntidade;
+	}
+
+	public String getNumConselho() {
+		return numConselho;
+	}
+
+	public void setNumConselho(String numConselho) {
+		this.numConselho = numConselho;
+	}
+
+	public Conselho getConselhoBean() {
+		return conselhoBean;
+	}
+
+	public void setConselhoBean(Conselho conselhoBean) {
+		this.conselhoBean = conselhoBean;
+	}
+
+	public Entidade getEntidadeBean() {
+		return entidadeBean;
+	}
+
+	public Formacao getFormacaoBean() {
+		return formacaoBean;
+	}
+
+	public void setFormacaoBean(Formacao formacaoBean) {
+		this.formacaoBean = formacaoBean;
+	}
+
+	public Setor getSetorBean() {
+		return setorBean;
+	}
+
+	public void setSetorBean(Setor setorBean) {
+		this.setorBean = setorBean;
+	}
+
+	public void setEntidadeBean(Entidade entidadeBean) {
+		this.entidadeBean = entidadeBean;
+	}
+
+	public UsuarioFiltro getFiltro() {
+		return filtro;
+	}
+
+	public void setFiltro(UsuarioFiltro filtro) {
+		this.filtro = filtro;
+	}
+
+	public List<Integer> getListaGruposStr() {
+		return listaGruposStr;
+	}
+
+	public void setListaGruposStr(List<Integer> listaGruposStr) {
+		this.listaGruposStr = listaGruposStr;
+	}
+
+	public Usuario getUsuarioBean() {
+		return usuarioBean;
+	}
+
+	public void setUsuarioBean(Usuario usuarioBean) {
+		this.usuarioBean = usuarioBean;
+	}
+
+	public Set<UsuarioGrupo> getUsuarioGrupoBean() {
+		return usuarioGrupoBean;
+	}
+
+	public void setUsuarioGrupoBean(Set<UsuarioGrupo> usuarioGrupoBean) {
+		this.usuarioGrupoBean = usuarioGrupoBean;
+	}
+
+	public Integer getNumViolacoes() {
+		return numViolacoes;
+	}
+
+	public void setNumViolacoes(Integer numViolacoes) {
+		this.numViolacoes = numViolacoes;
+	}
+
+	public String getDscEmailIsgh() {
+		return dscEmailIsgh;
+	}
+
+	public void setDscEmailIsgh(String dscEmailIsgh) {
+		this.dscEmailIsgh = dscEmailIsgh;
+	}
+
+	public HashMap<String, Object> getFiltroMap() {
+		return filtroMap;
+	}
+
+	public void setFiltroMap(HashMap<String, Object> filtroMap) {
+		this.filtroMap = filtroMap;
+	}
+
+	public Uf getUfBean() {
+		return ufBean;
+	}
+
+	public void setUfBean(Uf ufBean) {
+		this.ufBean = ufBean;
+	}
+
+	public String getFlgVinculo() {
+		return flgVinculo;
+	}
+
+	public void setFlgVinculo(String flgVinculo) {
+		this.flgVinculo = flgVinculo;
+	}
+
+	public String getFlgParecer() {
+		return flgParecer;
+	}
+
+	public void setFlgParecer(String flgParecer) {
+		this.flgParecer = flgParecer;
+	}
+
+	public Integer getIsnCategoria() {
+		return isnCategoria;
+	}
+
+	public void setIsnCategoria(Integer isnCategoria) {
+		this.isnCategoria = isnCategoria;
+	}
+
+	public Categoria getCategoriaBean() {
+		return categoriaBean;
+	}
+
+	public void setCategoriaBean(Categoria categoriaBean) {
+		this.categoriaBean = categoriaBean;
+	}
+
+	public Integer getIsnVinculo() {
+		return isnVinculo;
+	}
+
+	public void setIsnVinculo(Integer isnVinculo) {
+		this.isnVinculo = isnVinculo;
+	}
+
+	public Integer getIsnVinculoTipo() {
+		return isnVinculoTipo;
+	}
+
+	public void setIsnVinculoTipo(Integer isnVinculoTipo) {
+		this.isnVinculoTipo = isnVinculoTipo;
+	}
+
+	public VinculoTipo getVinculoTipoBean() {
+		return vinculoTipoBean;
+	}
+
+	public void setVinculoTipoBean(VinculoTipo vinculoTipoBean) {
+		this.vinculoTipoBean = vinculoTipoBean;
+	}
+
+	public Integer getIsnProfissionalOld() {
+		return isnProfissionalOld;
+	}
+
+	public void setIsnProfissionalOld(Integer isnProfissionalOld) {
+		this.isnProfissionalOld = isnProfissionalOld;
+	}
+
+	public Set<UsuarioGrupoEntidade> getUsuarioGrupoEntidade() {
+		return usuarioGrupoEntidade;
+	}
+
+	public void setUsuarioGrupoEntidade(
+			Set<UsuarioGrupoEntidade> usuarioGrupoEntidade) {
+		this.usuarioGrupoEntidade = usuarioGrupoEntidade;
+	}
+
+	public String getDscAssinatura() {
+		return dscAssinatura;
+	}
+
+	public void setDscAssinatura(String dscAssinatura) {
+		this.dscAssinatura = dscAssinatura;
+	}
+
+	public Set<UsuarioEntidade> getListaUsuarioEntidade() {
+		return listaUsuarioEntidade;
+	}
+
+	public void setListaUsuarioEntidade(List<UsuarioEntidade> usuarioEntidade) {
+		this.listaUsuarioEntidade = new HashSet<UsuarioEntidade>();
+		this.listaUsuarioEntidade.addAll(usuarioEntidade);
+	}
+
+	public UsuarioEntidade getUsuarioEntidadeSelecionado() {
+		return usuarioEntidadeSelecionado;
+	}
+
+	public void setUsuarioEntidadeSelecionado(UsuarioEntidade usuarioEntidadeSelecionado) {
+		this.usuarioEntidadeSelecionado = usuarioEntidadeSelecionado;
+	}
+}

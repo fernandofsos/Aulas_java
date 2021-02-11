@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+	
+	<script type="text/javascript" src="SCRIPTS/mascara.js"></script>
+	<script type="text/javascript" src="SCRIPTS/maskedinput-1.1.4.js"></script>
+	<script type="text/javascript" src="SCRIPTS/rotinasComuns.js"></script>
+	<script type="text/javascript" src="SCRIPTS/custom.js"></script>
+	
+   	<title>ISGH - SISTEMA DE PACIENTE</title>
+	<link rel="stylesheet" type="text/css" href="CSS/layout.css" />
+	<link rel="stylesheet" type="text/css" href="CSS/paciente.css" />
+	<link rel="shortcut icon" href="IMG/favicon.ico" type="image/x-icon" />
+	<script type="text/javascript">
+	<!--
+		sfHover = function() {
+			var sfEls = document.getElementById("navbar").getElementsByTagName("li");
+			for (var i=0; i<sfEls.length; i++) {
+				sfEls[i].onmouseover=function() {
+					this.className+=" hover";
+				}
+				sfEls[i].onmouseout=function() {
+					this.className=this.className.replace(new RegExp(" hover\\b"), "");
+				}
+			}
+		}
+		if (window.attachEvent) window.attachEvent("onload", sfHover);
+		
+		function alertCustomizado(alerta) {
+			document.getElementById('lblAlert').innerHTML = alerta;	
+			Richfaces.showModalPanel("panelAlert");
+			return false;
+		}
+
+        window.onbeforeunload = function (evt) 
+        {
+	     	if (typeof evt == 'undefined') 
+	        {
+	        	evt = window.event;
+	        }
+	        if (evt) 
+	        {
+	        	window.location = "#{request.contextPath}/template.jsf?descarregarTela=S";
+	        }
+        }
+        
+    //-->
+	</script>
+	
+	<style type="text/css">
+
+	  .areaPesquisa div:last-child:after {
+	    content: ".";
+	    display: block;
+	    height: 0;
+	    clear: both;
+	    visibility: hidden;
+	    }
+	    
+	  .tdTop {
+	  	vertical-align: top;
+	  	width:50%;
+	  }
+	
+	</style><!-- main stylesheet ends, CC with new stylesheet below... -->
+	
+	<!--[if IE]>
+	<style type="text/css">
+	  .areaPesquisa {
+	    zoom: 1;     /* triggers hasLayout */
+	    }  /* Only IE can see inside the conditional comment
+	    and read this CSS rule. Don't ever use a normal HTML
+	    comment inside the CC or it will close prematurely. */
+	</style>
+	<![endif]-->
+	
+	<ui:insert name="headHtml">
+	
+	</ui:insert>
+		
+</head>
+
+<a4j:keepAlive beanName="templateForm" />
+<a4j:keepAlive beanName="paginaPrincipalForm" />
+<a4j:keepAlive beanName="noticiaForm" />
+<body>
+
+	<rich:modalPanel id="modalPanelSenha" width="400" autosized="true" resizeable="false"  headerClass="headerPanel3">
+		<f:facet name="header">
+			<h:outputText value="Atualização de dados" />		
+		</f:facet>
+		<f:facet name="controls">
+		</f:facet>
+			<h:form id="atualizarSenhaForm">
+			<h:panelGroup layout="block" id="panelSenha"> 
+			 <fieldset>
+   				 <legend>INFORMAÇÕES PESSOAIS</legend>
+				<table class="tabela">
+					<tr>
+						<td class="tdCor" width="50px">Usuário: </td>
+						<td class="tdBranco">
+							<h:outputText value="#{sessionScope.loginUsuario.dscUsuario}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="50px">Login: </td>
+						<td class="tdBranco">
+							<h:outputText value="#{sessionScope.loginUsuario.dscLogin}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="50px">E-mail: </td>
+						<td class="tdBranco">
+							<h:outputText value="#{sessionScope.loginUsuario.dscEmail}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="50px">CPF: <h:outputText value="*" style="color:red;font-weight: bold;"/></td>
+						<td class="tdBranco">
+							<h:inputText value="#{paginaPrincipalForm.dscCpf}" styleClass="campoTexto"  size="20" id="cpf" maxlength="14" onkeypress="return formataCPF(event, this)">
+							</h:inputText>
+							<rich:jQuery selector="#cpf" query="bind('cut copy paste drag drop', function(event) {event.preventDefault();})" />
+						</td>
+					</tr>
+				</table>
+				</fieldset>
+				<br/>
+				<center>
+				<a4j:commandButton styleClass="botaoNovoItem" actionListener="#{paginaPrincipalForm.atualizarDadosCpf}" 
+							reRender="panelSenha" value="Atualizar Dados" 
+							oncomplete="if(#{paginaPrincipalForm.mensagem==''}){validar('Dados Atulizados com Sucesso !');#{rich:component('modalPanelSenha')}.hide()}else{validar('#{paginaPrincipalForm.mensagem}')}"/>
+				</center>
+			</h:panelGroup>
+			</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelPopup" width="1000" autosized="true" resizeable="false" rendered="#{sessionScope['noticiaDestaque'].isnNoticia != null}">
+		<f:facet name="header">
+			<h:outputText value="Notícia em Destaque" />		
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:form>
+					<a4j:commandLink action="#{templateForm.setOpenPopupSession(false)}" oncomplete="fechaPopup()">
+						<h:graphicImage value="IMG/fechar.png" id="fechaPopup" style="border:0" />
+					</a4j:commandLink>
+				</h:form>
+			</h:panelGroup>
+		</f:facet>
+		<h2><h:outputText value="#{sessionScope['noticiaDestaque'].dscTitulo}" /></h2>
+		<div style="width:1000px; height:600px; #{(sessionScope['noticiaDestaque'].extArquivo != null and sessionScope['noticiaDestaque'].pathArquivo != null and sessionScope['noticiaDestaque'].extArquivo eq 'PDF')?'':'display:none'}">
+			<object data="noticias/#{sessionScope['noticiaDestaque'].pathArquivo}" width="1000" height="580" type="application/pdf">
+	    		<embed src="noticias/#{sessionScope['noticiaDestaque'].pathArquivo}" type="application/pdf" />
+			</object>
+		</div>
+		<div style="#{(not empty sessionScope['noticiaDestaque'].extArquivo and sessionScope['noticiaDestaque'].extArquivo ne 'PDF')?'':'display:none'}">
+			<h:graphicImage value="noticias/#{sessionScope['noticiaDestaque'].pathArquivo}" rendered="#{(not empty sessionScope['noticiaDestaque'].pathArquivo)}" />
+		</div>
+		<div style="#{(empty sessionScope['noticiaDestaque'].extArquivo and not empty sessionScope['noticiaDestaque'].dscDescricao)?'':'display:none'}">
+			<blockquote>
+				<h:outputText value="#{sessionScope['noticiaDestaque'].dscDescricaoPrint}" escape="false" />
+			</blockquote>
+		</div>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelPdf" width="1000" autosized="true" resizeable="false">
+		<f:facet name="header">
+			<h:outputText value="Notícia" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="fechaPdf" style="border:0" />
+				<rich:componentControl for="panelPdf" attachTo="fechaPdf" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h2><h:outputText value="#{noticiaForm.noticia.dscTitulo}" /></h2>
+			<div style="width:1000px; height:600px; #{(noticiaForm.noticia.extArquivo != null and noticiaForm.noticia.pathArquivo != null and noticiaForm.noticia.extArquivo eq 'PDF')?'':'display:none'}">
+				<object data="noticias/#{noticiaForm.noticia.pathArquivo}" width="1000" height="580" type="application/pdf">
+	    			<embed src="noticias/#{noticiaForm.noticia.pathArquivo}" type="application/pdf" />
+				</object>
+			</div>
+			<div style="#{(noticiaForm.noticia.extArquivo != null and noticiaForm.noticia.extArquivo ne 'PDF')?'':'display:none'}">
+				<h:graphicImage value="noticias/#{noticiaForm.noticia.pathArquivo}" rendered="#{(not empty noticiaForm.noticia.pathArquivo)}" />
+			</div>
+			<div style="#{(noticiaForm.noticia.extArquivo == null and noticiaForm.noticia.dscDescricao != null)?'':'display:none'}">
+				<blockquote>
+					<h:outputText value="#{noticiaForm.noticia.dscDescricaoPrint}" escape="false" />
+				</blockquote>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelNoticia" autosized="true" resizeable="false">
+		<f:facet name="header">
+			<h:outputText value="Notícias" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="fechaNoticia" border="0" />
+				<rich:componentControl for="panelNoticia" attachTo="fechaNoticia" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<div style="width:1000px;">
+				<rich:dataGrid id="dtNoticias" value="#{noticiaForm.lstNoticias}" var="noticia" columns="2" elements="4" width="100%" reRender="ds" columnClasses="tdTop tdTop">
+		            <rich:panel style="#{(noticia.flgDestaque != null and noticia.flgDestaque eq 'S')?'background-color:#ffffbd;':''}">
+		                <f:facet name="header">
+		                    <h:outputText value="#{noticia.datCadastro}" />
+		                </f:facet>
+		                <table style="width:100%;" border="0">
+		                <tr>
+		                	<td colspan="2"><h2><h:outputText value="#{noticia.dscTitulo}" /></h2></td>
+		                </tr>
+		                <tr>
+		                	<td>
+		                		<h:outputText value="#{noticia.dscDescricao.substring(0,255)}..." rendered="#{noticia.dscDescricao.length() &gt; 255}" />
+		                		<h:outputText value="#{noticia.dscDescricao}" rendered="#{noticia.dscDescricao.length() &lt; 255}" />
+		                		<h:outputText value="#{noticia.dscDescricao}" rendered="#{noticia.dscDescricao.length() eq 255}" />
+		                	</td>
+		                	<td style="text-align:right">
+		                		<a4j:commandLink action="#{noticiaForm.showPdf}" oncomplete="Richfaces.showModalPanel('panelPdf')" 
+								                 reRender="panelPdf"
+								                 ajaxSingle="true" title="Visualizar notícia!">
+									<h:graphicImage value="images/icons/doc_32.png" style="border:0;" />
+									<f:setPropertyActionListener value="#{noticia}" target="#{noticiaForm.noticia}" />
+								</a4j:commandLink>
+		                	</td>
+		                </tr>
+		                </table>
+		            </rich:panel>
+		            <f:facet name="footer">
+		                <rich:datascroller fastControls="auto" id="ds" ajaxSingle="false" />
+		            </f:facet>
+		        </rich:dataGrid>
+		        <table border="0" cellspacing="10" cellpadding="0" class="legenda">
+				<tr>
+					<th valign="top">
+						<div>
+							<h:outputText value="Legenda:" />							
+						</div>
+					</th>
+					<td>
+						<div>
+							<h:outputText value="Em Destaque:" />
+							<span style="width:15px; height:15px; background-color:#ffffbd; border:1px solid #ccc"></span>
+						</div>
+					</td>
+				</tr>
+				</table>
+			</div>
+        </h:form>
+	</rich:modalPanel>
+
+    <!-- CABEÇALHO -->
+    <div id="divCabecalho">
+    	<h:form id="formCabecalho">
+    	<div id="divConteudoCabecalho">
+	    	<div id="divLogotipo">
+	    		<a4j:commandLink action="#{templateForm.retornaPaginaPrincipal}" onclick="navegacao(1)">
+	    	    	<h:graphicImage value="images/paciente/logo_paciente.png" style="border:0" />
+	    	    </a4j:commandLink>
+	    	</div>
+	    	<div id="divLabels">
+	    		<table cellspacing="10">
+	    		<tr>
+	    			<td><a4j:commandLink action="#{templateForm.retornaPaginaPrincipal}" onclick="navegacao(1)"><img src="images/paciente/btn_inicio.png" border="0"/></a4j:commandLink></td>
+	    			<td class="bemvindo">
+	    				<span class="nomeUsuario"><h:outputText value="#{sessionScope.loginUsuario.dscLogin.substring(0,20)}" rendered="#{sessionScope.loginUsuario.dscLogin.length()  &gt; 20}"  /><h:outputText value="#{sessionScope.loginUsuario.dscLogin}" rendered="#{sessionScope.loginUsuario.dscLogin.length()  &lt; 20}"  /><h:outputText value="#{sessionScope.loginUsuario.dscLogin}" rendered="#{sessionScope.loginUsuario.dscLogin.length()  == 20}"  /><h:outputText value="..." rendered="#{sessionScope.loginUsuario.dscLogin.length() > 20}"  /></span><br/>
+	    				<span class="dataSistema"><h:outputText value="#{templateForm.dataAtual}"/></span>
+	    			</td>
+	    			<td><a4j:commandLink action="#{templateForm.sairSistema}"><img src="images/paciente/btn_sair.png" border="0"/></a4j:commandLink></td>
+	    		</tr>
+	    		</table>
+	    	</div>	
+	    	<div id="divSepse" >
+	            <a style="display:none" id="linkSepse" href="http://www.isgh.org.br/intranet/index.php?option=com_content&amp;view=article&amp;id=1823&amp;Itemid=726" target="_blank"></a>
+				<h:commandLink onclick="document.getElementById('linkSepse').click();">
+			    	<h:graphicImage value="IMG/Sepse.png" width="90" height="40" style="float:right; margin-right:180px; margin-top:12px; border:0;" />		
+				</h:commandLink>
+				<div style="display:inline; float:right; border:0; margin:20px 20px 0px 0px; #{(noticiaForm.totalNoticiasAtivas ge 2)?'':'display:none'}">
+					<a4j:commandLink action="#{noticiaForm.pesquisarAtivas}" oncomplete="Richfaces.showModalPanel('panelNoticia')" reRender="panelNoticia" title="Notícias!">
+				    	<h:graphicImage value="images/carta.png" width="40" height="30" style="border:0" />
+					</a4j:commandLink>
+					<div class="countBotoes"><h:outputText value="#{noticiaForm.totalNoticiasAtivas}" /></div>
+				</div>
+        	</div>	
+	    	<div id="divLogoHgwa">
+	    		<h:graphicImage value="images/paciente/#{templateForm.logoUpa}" width="198" height="66" ></h:graphicImage>
+        	</div>
+        	<div id="divIcons">
+				<ul id="navbar"> 
+					<!-- The strange spacing herein prevents an IE6 whitespace bug. -->
+					<li><a href="#" title="Internados" class="img"><img src="images/paciente/icon_internados.png" border="0" title="Internados" /></a>
+						<ul>
+							<li><a4j:commandLink value="Eixos da Emergência" action="#{templateForm.chamaPaginaEixosEmergencia}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+							<li><a4j:commandLink value="Laboratório / Raio-X" action="#{templateForm.chamaPaginaLaboratorio}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+							<li><a4j:commandLink value="Pacientes Atendimento" action="#{templateForm.chamaPaginaAtendimento}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+							<li><a4j:commandLink value="Pacientes Recepção" action="#{templateForm.chamaPaginaRecepcao}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+							<li><a4j:commandLink value="Serviço Social" action="paginaPrincipalSocial" /></li>							
+						</ul>
+					</li>
+					<li><a href="#" title="Farmácia" class="img"><img src="images/paciente/icon_validacao_produto.png" border="0" title="Farmácia" /></a>
+						<ul>
+							<li><a4j:commandLink value="Validação Produto" action="#{templateForm.chamaPaginaValidacaoProduto}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+						</ul>
+					</li>
+					<li><a href="#" title="Assistência" class="img"><img src="images/paciente/icon_assistencia.png" border="0" title="Assistência" /></a>
+						<ul>
+							<li><a4j:commandLink value="Cadastros" action="#{templateForm.chamaPaginaCadastros}" oncomplete="navegacao('#{templateForm.retorno}')"/></li>
+							<li><a4j:commandLink value="NAC" action="#{templateForm.chamaPaginaNAC}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+							<li><a4j:commandLink value="Prescrição Padrão" action="#{templateForm.chamaPaginaPrescricaoPadrao}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>							
+						</ul>
+					</li>
+					<li><a href="#" title="Relatórios" class="img"><img src="images/paciente/icon_relatorios.png" border="0" title="Relatórios" /></a>
+						<ul>
+							<li><a4j:commandLink value="Censo Diário" action="#{templateForm.chamaPaginaCensoHospitalar}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+							<li><a4j:commandLink value="Estatística Emergência" action="#{templateForm.chamaPaginaEstatisticaEmergencia}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="#{templateForm.hospital=='UPA'}" /></li>
+							<li><a4j:commandLink value="Geral Exame" action="#{templateForm.chamaPaginaExameDetalhado}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="#{false}" /></li>
+							<li><a4j:commandLink value="Relatórios Gerencias" action="paginaPrincipalRelatorio"  /></li>
+							<li><a4j:commandLink value="Indicadores" action="#{templateForm.chamaPaginaIndicadores}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="false" /></li>
+							<li><a4j:commandLink value="Relatórios" action="#{templateForm.chamaPaginaRelatorios}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="false" /></li>
+							<li><a4j:commandLink value="Estatística Gerencial" action="#{templateForm.chamaPaginaEstatistica}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+							<li><a4j:commandLink value="Painel Eletrônico" action="#{templateForm.chamaPaginaPainelEletronico}" oncomplete="navegacao('#{templateForm.retorno}')" /></li>
+							<li><a4j:commandLink value="Relatório Epidemiológico" action="#{templateForm.chamaPaginaRelatorioEpidemiologico}" oncomplete="navegacao('#{templateForm.retorno}')"/></li>
+							<li><a4j:commandLink value="Relatório SINAN" action="#{templateForm.chamaPaginaRelatorioSinan}" oncomplete="navegacao('#{templateForm.retorno}')"/></li>
+							<li><a4j:commandLink value="Relatório SEPSE" action="#{templateForm.chamaPaginaRelatorioSepse}" oncomplete="navegacao('#{templateForm.retorno}')"/></li>
+
+						</ul>
+					</li>
+				</ul>
+	    	</div>
+		</div>
+		</h:form>
+	</div>
+
+	
+    <!-- CONTEUDO -->
+	<div id="conteudoGeral">
+		<div id="menuLateral" style="z-index: 2; margin-top:10px; " >
+		<f:subview id="menuPrincipal">
+		    <h:form>
+		    	<a4j:commandButton value="PAGINA INICIAL" 
+		    	      styleClass="botaoPaginaInicial"		    
+		    	      onclick="navegacao(1)"	       
+		        	  action="#{paginaPrincipalForm.retornaPaginaPrincipal}" >		          
+		    	</a4j:commandButton>
+	    		<rich:panelMenu mode="ajax" width="180">
+	    			<rich:panelMenuGroup label="Atendimento" expanded="true" >
+	            		<rich:panelMenuItem label="Eixos da Emergência" action="#{templateForm.chamaPaginaEixosEmergencia}" oncomplete="navegacao('#{templateForm.retorno}')" />	            			            		
+	    				<rich:panelMenuItem label="Internações Pendentes " onclick="navegacao(17)" rendered="#{templateForm.hospital=='HRC'}" />
+	    				<rich:panelMenuItem label="Laboratório / Raio-X" action="#{templateForm.chamaPaginaLaboratorio}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+	    				<rich:panelMenuItem label="Pacientes Atendimento" action="#{templateForm.chamaPaginaAtendimento}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+	    				<rich:panelMenuItem label="Pacientes Internados" onclick="navegacao(12)" rendered="#{templateForm.hospital=='HRC'}" />
+	    				<rich:panelMenuItem label="Pacientes Recepção" action="#{templateForm.chamaPaginaRecepcao}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+	    				<rich:panelMenuItem label="Serviço Social" action="paginaPrincipalSocial" />
+	    			</rich:panelMenuGroup>    	    
+	    			<rich:panelMenuGroup label="Farmácia" expanded="true" >
+	    			   <rich:panelMenuItem label="Validação Produto" action="#{templateForm.chamaPaginaValidacaoProduto}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+	    			</rich:panelMenuGroup>  
+	        		<rich:panelMenuGroup label="Administrativo" expanded="true" >
+    			        <rich:panelMenuItem label="Ambulatório" action="principalParaAmbulatorio" rendered="#{templateForm.hospital=='HRC'}"/>
+	            		<rich:panelMenuItem label="Cadastros" action="#{templateForm.chamaPaginaCadastros}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+	            		<rich:panelMenuItem label="NAC" action="#{templateForm.chamaPaginaNAC}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+	            		<rich:panelMenuItem label="Prescrição Padrão" action="#{templateForm.chamaPaginaPrescricaoPadrao}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+	            		<rich:panelMenuItem label="Ouvidoria Registro" onclick="navegacao(41)" />         	
+	            	</rich:panelMenuGroup>     
+	            	<rich:panelMenuGroup label="Movimentações" expanded="true" rendered="#{templateForm.hospital=='HRC'}"> 
+	            		<rich:panelMenuItem label="Movimentação de Leitos" onclick="navegacao(4)" rendered="#{templateForm.hospital=='HRC'}"/>
+	            	</rich:panelMenuGroup>  
+	            	<rich:panelMenuGroup label="Relatório/Consulta" expanded="true" >
+	            		<rich:panelMenuItem label="Censo Diário" action="#{templateForm.chamaPaginaCensoHospitalar}" oncomplete="navegacao('#{templateForm.retorno}')" />
+	            		<rich:panelMenuItem label="Estatística Emergência" action="#{templateForm.chamaPaginaEstatisticaEmergencia}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="#{templateForm.hospital=='UPA'}" />
+	            		<rich:panelMenuItem label="Geral Exames" action="#{templateForm.chamaPaginaExameDetalhado}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="#{false}"/>
+	            		<rich:panelMenuItem label="Geral Exames" action="#{templateForm.chamaPaginaExameDetalhado2}" oncomplete="navegacao('#{templateForm.retorno}')" />
+	            		<rich:panelMenuItem label="Relatórios Gerencias" action="paginaPrincipalRelatorio"  />
+	               		<rich:panelMenuItem label="Relatórios" action="#{templateForm.chamaPaginaRelatorios}" oncomplete="navegacao('#{templateForm.retorno}')" rendered="false" />
+	               		<rich:panelMenuItem label="Estatística Gerencial" action="#{templateForm.chamaPaginaEstatistica}" oncomplete="navegacao('#{templateForm.retorno}')" />
+	               		<rich:panelMenuItem label="Painel Eletrônico" action="#{templateForm.chamaPaginaPainelEletronico}" oncomplete="navegacao('#{templateForm.retorno}')" />
+	               		<rich:panelMenuItem label="Consulta de Exames (SIL)" onclick="document.getElementById('linkSIL').click();" style="display:none"/>           
+		          		<rich:panelMenuItem label="Relatório Epidemiológico" action="#{templateForm.chamaPaginaRelatorioEpidemiologico}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+		          		<rich:panelMenuItem label="Relatório SINAN" action="#{templateForm.chamaPaginaRelatorioSinan}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+		          		<rich:panelMenuItem label="Relatório SEPSE" action="#{templateForm.chamaPaginaRelatorioSepse}" oncomplete="navegacao('#{templateForm.retorno}')"/>
+	               		
+	               		<rich:panelMenuItem label="Exames Realizados" action="#{templateForm.chamaExameRealizados}" oncomplete="navegacao('#{templateForm.retorno}')"/>            
+	               		
+						<rich:panelMenuGroup label="Nutrição" expanded="true" >
+	            			<rich:panelMenuItem label="Dieta Zero" action="#{templateForm.chamaPaginaDietaZero}" oncomplete="navegacao('#{templateForm.retorno}')" />
+	            			<rich:panelMenuItem label="Controle de Dieta" action="#{templateForm.chamaPaginaControleDieta}" oncomplete="navegacao('#{templateForm.retorno}')" />
+	            		</rich:panelMenuGroup>                                               		
+	            		
+	            		<a style="display:none" id="linkSIL" href="#{templateForm.linkSil}" target="_blank">Abrir Sistema SIL</a>
+	            	</rich:panelMenuGroup>
+	            	<rich:panelMenuGroup label="Notícias" expanded="true">
+	            		<rich:panelMenuItem label="Editar Notícias" action="#{templateForm.chamaPaginaNoticias}" oncomplete="navegacao('#{templateForm.retorno}')" />
+	            	</rich:panelMenuGroup>
+	            	<rich:panelMenuGroup label="Configurações" expanded="true" >
+	            		<rich:panelMenuItem label="Editar Configurações" action="#{templateForm.chamaPaginaConfiguracoes}" oncomplete="navegacao('#{templateForm.retorno}')" />
+	            	</rich:panelMenuGroup>
+	        	</rich:panelMenu>
+	        </h:form>
+	    </f:subview>    
+	    </div>
+	    <div id="conteudoPagina">
+	        <div id="divMensagens">
+				<ui:insert name="mensagens">
+					<rich:messages id="msgErro" errorLabelClass="mensagemErro" styleClass="quadroErro" layout="list" rendered="#{templateForm.mensagensErro > 0}">			   			   		
+
+					</rich:messages>
+					<script>
+					#{(sessionScope['openPopup'] and sessionScope['noticiaDestaque'] != null)?'Richfaces.showModalPanel(\'panelPopup\')':''}
+					</script>
+				</ui:insert>
+			</div>
+			<ui:insert name="conteudo">
+			
+			</ui:insert>
+		</div>
+	</div><br clear="all"/>
+	
+	<!-- RODAPÉ -->
+	<div  style="z-index:-1; background-color: #EBF0F5; padding:10px; border-top:1px dotted #37639B;">
+	    <div style="margin-left: auto; margin-right: auto; width: 810px;">
+	    	<div style="float: left; padding-right: 10px; width: 136px;">
+	        	<img src="IMG/brasao.gif" alt="" style="vertical-align: middle;" />
+	    	</div>
+			
+			<div style="float: left; font-size:x-small;padding-top: 5px; width: 460px;">	
+				<center>
+				<h:outputText value="#{templateForm.descricaoGestao.vlrParametro}" /> 					     
+				<!--  
+				Governo do Ceará - Secretaria de Saúde<br />
+				-->
+				Desenvolvido por Instituto de Saúde e Gestão Hospitalar &copy; 2011 <br /> Contato: nti@isgh.org.br
+				</center> 
+			</div>	
+			
+			<div style="float: right; padding-left:  10px;padding-top: 5px; width: 100px;">
+	        	<img src="IMG/LogotipoISGH.gif" alt="Logotipo" style="vertical-align: middle;" />
+	    	</div>
+		</div>		
+	</div>
+	
+	
+	<rich:modalPanel id="panelAlert" autosized="true" width="400" resizeable="false">
+		<f:facet name="header">
+    		<h:panelGroup>
+				<h:graphicImage value="/IMG/alerta_small.png" style="border:0; margin-right:10px; vertical-align:middle;" />
+				<h:outputText value="Mensagem de Alerta" style="font-size:12px; font-weight: bold;"/>
+			</h:panelGroup>
+    	</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidelinkAlert" />
+				<rich:componentControl for="panelAlert" attachTo="hidelinkAlert" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmAlert">	   								
+			<fieldset class="fsPepResp">
+				<div>
+					<label id="lblAlert" style="font-size: 11px; color: black;">(Mensagem de Alerta)</label>
+				</div>
+			</fieldset>
+			<br clear="all"/>
+			<div style="text-align:center; margin-top:10px">
+				<a4j:commandButton id="btnOkAlert"  value="Ok"  styleClass="botaoModal" style="width:100px;">
+					<rich:componentControl for="panelAlert" attachTo="btnOkAlert" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+	
+	<script>
+	<!--
+	    function navegacao(tipo) {
+		    if (tipo == 1) {
+		    	window.location = "#{request.contextPath}/paginaPrincipal.jsf";
+		    } else if (tipo == 2) {
+		    	window.location = "#{request.contextPath}/cs_paciente.jsf";
+		    } else if (tipo == 3) {
+		    	window.location = "#{request.contextPath}/cs_referencia.jsf";
+		    } else if (tipo == 4) {
+		    	window.location = "#{request.contextPath}/movPaciente.jsf";
+		    } else if (tipo == 5) {
+		    	window.location = "#{request.contextPath}/cs_enfermaria.jsf";
+		    } else if (tipo == 6) {
+		    	window.location = "#{request.contextPath}/cs_leito.jsf";
+		    } else if (tipo == 7) {
+		    	window.location = "#{request.contextPath}/cs_clinica.jsf";
+		    } else if (tipo == 8) {
+		    	window.location = "#{request.contextPath}/cs_bloco.jsf";
+		    } else if (tipo == 9) {
+		    	window.location = "#{request.contextPath}/ajustesMovimentos.jsf";
+	    	} else if (tipo == 10) {
+	    		window.location = "#{request.contextPath}/cs_exame.jsf";		    			
+	    	} else if (tipo == 11) {
+	    		window.location = "#{request.contextPath}/cs_interconsulta.jsf";	    			
+	    	} else if (tipo == 12) {
+	    		window.location = "#{request.contextPath}/cs_internados.jsf";
+	    	} else if (tipo == 13) {
+	    		window.location = "#{request.contextPath}/cs_relatorioNac.jsf";
+	    	} else if (tipo == 14) {
+	    		window.location = "#{request.contextPath}/cs_chaveBolsa.jsf";
+	    	} else if (tipo == 15) {
+	    		window.location = "#{request.contextPath}/cs_emergencia.jsf";
+	    	} else if (tipo == 16) {
+	    		window.location = "#{request.contextPath}/eixosEmergencia.jsf";	
+	    	} else if (tipo == 17) {
+	    		window.location = "#{request.contextPath}/cs_InternadosPendentes.jsf";	
+	    	} else if (tipo == 18) {
+	    		window.location = "#{request.contextPath}/cs_censoHospitalar.jsf";	
+	    	} else if (tipo == 19) {
+	    		window.location = "#{request.contextPath}/cs_estatisticaEmergencia.jsf";	
+	    	} else if (tipo == 20) {
+	    		window.location = "#{request.contextPath}/cs_cid10.jsf";
+	    	} else if (tipo == 21) {
+	    		window.location = "#{request.contextPath}/cs_validaInternacao.jsf";
+		    } else if (tipo == 22) {
+	    		window.location = "#{request.contextPath}/cs_ocupacao.jsf";
+		    } else if (tipo == 23) {
+	    		window.location = "#{request.contextPath}/cs_internacoesValidadas.jsf";
+		    } else if (tipo == 30) {
+	    		window.location = "#{request.contextPath}/cd_migrarEscala.jsf";
+		    } else if (tipo == 24) {
+		    	window.location = "#{request.contextPath}/cd_escala.jsf";
+		    } else if (tipo == 25) {
+		    	window.location = "#{request.contextPath}/cd_marcacao.jsf";
+		    } else if (tipo == 26) {
+		    	window.location = "#{request.contextPath}/cd_geracaoEscala.jsf";
+		    } else if (tipo == 27) {
+		    	window.location = "#{request.contextPath}/cs_agendamentoAmbulatorial.jsf";
+		    } else if (tipo == 28) {
+		    	window.location = "#{request.contextPath}/cs_exameRealizado.jsf";
+		    } else if (tipo == 31) {
+    		    window.location = "#{request.contextPath}/cs_indicadores.jsf";
+	        } else if (tipo == 32) {
+    		    window.location = "#{request.contextPath}/cs_pacienteAtendimento.jsf";
+	        } else if (tipo == 33) {
+    		    window.location = "#{request.contextPath}/cs_laboratorio.jsf";
+	        } else if (tipo == 34) {
+    		    window.location = "#{request.contextPath}/cs_farmacia.jsf";
+	        } else if (tipo == 35) {
+   		    	window.location = "#{request.contextPath}/cs_exame_detalhado.jsf";
+	        } else if (tipo == 36) {
+   		    	window.location = "#{request.contextPath}/cs_assistenteSocial.jsf";
+	        } else if (tipo == 37) {
+  		    	window.location = "#{request.contextPath}/cs_estatistica.jsf";
+	        } else if (tipo == 38) {
+  		    	window.location = "#{request.contextPath}/painelEletronico.jsf";
+	        } else if (tipo == 39) {
+ 		    	window.location = "#{request.contextPath}/cd_configuracoes.jsf";
+	        } else if (tipo == 41) {
+ 	 		   	window.location = "#{request.contextPath}/cs_registroOuvidoria.jsf"; 	
+	        } else if (tipo == 42) {
+  		    	window.location = "#{request.contextPath}/cs_exame_detalhado2.jsf";
+	        } else if (tipo == 43) {
+ 		    	window.location = "#{request.contextPath}/paginaPrincipalCadastros.jsf"; 
+	        } else if (tipo == 44) {
+		    	window.location = "#{request.contextPath}/paginaPrincipalNAC.jsf"; 	
+	        } else if (tipo == 45) {
+		    	window.location = "#{request.contextPath}/cs_relatorioEpidemiologico.jsf"; 	
+	        } else if (tipo == 46) {
+		    	window.location = "#{request.contextPath}/cs_relatorio_sinan.jsf"; 	
+	        } else if (tipo == 47) {
+		    	window.location = "#{request.contextPath}/cs_noticia.jsf"; 	
+	        } else if (tipo == 48) {
+		    	window.location = "#{request.contextPath}/cs_produto.jsf"; 	
+	        } else if (tipo == 49) {
+		    	window.location = "#{request.contextPath}/cs_relatorio_sepse.jsf"; 	
+	        } else if (tipo == 50) {
+		    	window.location = "#{request.contextPath}/cs_prescricao_padrao.jsf"; 	
+	        } else if (tipo == 51) {
+		    	window.location = "#{request.contextPath}/cs_indicador_dieta_zero.jsf"; 	
+	        } else if (tipo == 52) {
+		    	window.location = "#{request.contextPath}/cs_controleLiberacaoDieta.jsf"; 	
+	        } else if (tipo == 99){
+	       		window.alert("Usuário sem permissão")
+	        }
+	       	 
+	    }
+
+	    function validar(msg)
+		{
+			if(msg != '')
+			{
+				alert(msg);
+			}
+		}
+	    
+	    function fechaPopup() {
+	    	Richfaces.hideModalPanel('panelPopup');
+	    }
+	    
+	   if(#{sessionScope.loginUsuario.dscCpf == null})
+	   {
+	   	#{rich:component('modalPanelSenha')}.show();
+	   }
+	 //-->  
+	</script>
+	
+	<script type="text/javascript" src="SCRIPTS/sessaounica.js"></script>
+</body>
+</html>

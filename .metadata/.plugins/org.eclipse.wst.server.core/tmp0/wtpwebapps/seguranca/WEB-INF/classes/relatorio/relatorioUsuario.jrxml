@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioUsuario" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="conselhoBean" class="br.org.isgh.seguranca.beans.Conselho">
+		<fieldDescription><![CDATA[conselhoBean]]></fieldDescription>
+	</field>
+	<field name="datCadastro" class="java.util.Date">
+		<fieldDescription><![CDATA[datCadastro]]></fieldDescription>
+	</field>
+	<field name="datDesativacao" class="java.util.Date">
+		<fieldDescription><![CDATA[datDesativacao]]></fieldDescription>
+	</field>
+	<field name="dscEmail" class="java.lang.String">
+		<fieldDescription><![CDATA[dscEmail]]></fieldDescription>
+	</field>
+	<field name="dscEmailIsgh" class="java.lang.String">
+		<fieldDescription><![CDATA[dscEmailIsgh]]></fieldDescription>
+	</field>
+	<field name="dscLogin" class="java.lang.String">
+		<fieldDescription><![CDATA[dscLogin]]></fieldDescription>
+	</field>
+	<field name="dscSenha" class="java.lang.String">
+		<fieldDescription><![CDATA[dscSenha]]></fieldDescription>
+	</field>
+	<field name="dscUsuario" class="java.lang.String">
+		<fieldDescription><![CDATA[dscUsuario]]></fieldDescription>
+	</field>
+	<field name="entidadeBean" class="br.org.isgh.seguranca.beans.Entidade">
+		<fieldDescription><![CDATA[entidadeBean]]></fieldDescription>
+	</field>
+	<field name="filtro" class="br.org.isgh.seguranca.filtros.UsuarioFiltro">
+		<fieldDescription><![CDATA[filtro]]></fieldDescription>
+	</field>
+	<field name="filtroMap" class="java.util.HashMap">
+		<fieldDescription><![CDATA[filtroMap]]></fieldDescription>
+	</field>
+	<field name="flgSituacao" class="java.lang.String">
+		<fieldDescription><![CDATA[flgSituacao]]></fieldDescription>
+	</field>
+	<field name="formacaoBean" class="br.org.isgh.seguranca.beans.Formacao">
+		<fieldDescription><![CDATA[formacaoBean]]></fieldDescription>
+	</field>
+	<field name="isnConselho" class="java.lang.Integer">
+		<fieldDescription><![CDATA[isnConselho]]></fieldDescription>
+	</field>
+	<field name="isnEntidade" class="java.lang.Integer">
+		<fieldDescription><![CDATA[isnEntidade]]></fieldDescription>
+	</field>
+	<field name="isnFormacao" class="java.lang.Integer">
+		<fieldDescription><![CDATA[isnFormacao]]></fieldDescription>
+	</field>
+	<field name="isnSetor" class="java.lang.Integer">
+		<fieldDescription><![CDATA[isnSetor]]></fieldDescription>
+	</field>
+	<field name="isnTipoTelefone" class="java.lang.Integer">
+		<fieldDescription><![CDATA[isnTipoTelefone]]></fieldDescription>
+	</field>
+	<field name="isnTipoTelefone2" class="java.lang.Integer">
+		<fieldDescription><![CDATA[isnTipoTelefone2]]></fieldDescription>
+	</field>
+	<field name="isnUfConselho" class="java.lang.Integer">
+		<fieldDescription><![CDATA[isnUfConselho]]></fieldDescription>
+	</field>
+	<field name="isnUsuario" class="java.lang.Integer">
+		<fieldDescription><![CDATA[isnUsuario]]></fieldDescription>
+	</field>
+	<field name="isnUsuarioCad" class="java.lang.Integer">
+		<fieldDescription><![CDATA[isnUsuarioCad]]></fieldDescription>
+	</field>
+	<field name="listaGruposStr" class="java.util.List">
+		<fieldDescription><![CDATA[listaGruposStr]]></fieldDescription>
+	</field>
+	<field name="numConselho" class="java.lang.String">
+		<fieldDescription><![CDATA[numConselho]]></fieldDescription>
+	</field>
+	<field name="numTelefone" class="java.lang.String">
+		<fieldDescription><![CDATA[numTelefone]]></fieldDescription>
+	</field>
+	<field name="numTelefone2" class="java.lang.String">
+		<fieldDescription><![CDATA[numTelefone2]]></fieldDescription>
+	</field>
+	<field name="numViolacoes" class="java.lang.Integer">
+		<fieldDescription><![CDATA[numViolacoes]]></fieldDescription>
+	</field>
+	<field name="setorBean" class="br.org.isgh.seguranca.beans.Setor">
+		<fieldDescription><![CDATA[setorBean]]></fieldDescription>
+	</field>
+	<field name="usuarioBean" class="br.org.isgh.seguranca.beans.Usuario">
+		<fieldDescription><![CDATA[usuarioBean]]></fieldDescription>
+	</field>
+	<field name="usuarioEspecialidadeBean" class="java.util.Set">
+		<fieldDescription><![CDATA[usuarioEspecialidadeBean]]></fieldDescription>
+	</field>
+	<field name="usuarioGrupoBean" class="java.util.Set">
+		<fieldDescription><![CDATA[usuarioGrupoBean]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="118" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="97" height="42"/>
+				<imageExpression><![CDATA[this.getClass().getClassLoader().getResource("imagens/LogoHGWA.gif")]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="85" width="555" height="22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DADOS DO USUÁRIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="97" y="2" width="231" height="40"/>
+				<box leftPadding="7"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Governo do Estado do Ceará
+Secretária de Saúde do Estado do Ceará - SUS
+Hospital Geral Dr. Waldemar Alcântara - HGWA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="363" y="2" width="192" height="40"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[ISGH
+Instituto de Saúde e Gestão Hospitalar
+Organização Social de Saúde]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="202" splitType="Stretch">
+			<staticText>
+				<reportElement x="19" y="56" width="56" height="22"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Login:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="12" width="462" height="22"/>
+				<box leftPadding="8"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{dscUsuario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="19" y="34" width="56" height="22"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="56" width="462" height="22"/>
+				<box leftPadding="8"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{dscLogin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="19" y="78" width="56" height="22"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Senha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="12" width="56" height="22"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="34" width="462" height="22"/>
+				<box leftPadding="8"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{dscEmailIsgh}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="78" width="462" height="22"/>
+				<box leftPadding="8"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{dscSenha}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="19" y="0" width="518" height="1"/>
+			</line>
+			<line>
+				<reportElement x="19" y="123" width="518" height="1"/>
+			</line>
+			<line>
+				<reportElement x="19" y="186" width="518" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="19" y="134" width="290" height="42"/>
+				<box leftPadding="7"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[- Sua senha é de uso pessoal e intransferível;
+- Nunca compartilhe sua senha com terceiros;
+- Mais informações, entre em contato com: nti@isgh.org.br]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="19" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement x="379" y="0" width="176" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="204" height="13"/>
+				<box leftPadding="7"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Sistema de Seguranca - v 1.0]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<title>SISTEMA DE PACIENTE - Pesquisar Paciente</title>	
+</ui:define>
+<ui:define name="conteudo">
+<a4j:keepAlive beanName="pacienteForm" />
+<a4j:keepAlive beanName="geralForm" />
+<a4j:keepAlive beanName="pacienteInternadoForm" />
+<a4j:keepAlive beanName="internadosPendentesForm" />
+
+<rich:modalPanel id="panelExtorno" autosized="true" width="570" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->	
+	<f:facet name="header">
+		<h:outputText value="ESTORNO DA INTERNAÇÃO"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="hidelink2" />
+			<rich:componentControl for="panelExtorno" attachTo="hidelink2" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Alta">	      
+		<div class="dadosPaciente geralCampos">
+		    <div class="col400">
+			   	<h:outputText style="width: 60px;" value="Paciente:"/>
+				<h:outputText value="#{internadosPendentesForm.paciente.dscNome}" style="font-weight: bold" />
+			</div>
+			<div class="col120">
+				<label>Nº Prontuario: </label>
+				<h:outputText value="#{internadosPendentesForm.paciente.numProntuario}" style="font-weight: bold" />
+			</div>
+			<div class="col400">
+			   	<label style="width: 60px; display: inline-block">Mãe: </label>
+				<h:outputText value="#{internadosPendentesForm.paciente.dscMae}" style="font-weight: bold" />
+			</div>				
+		</div>
+		<div class="geralCampos">
+			<div class="linhaFormulario textoConfirmacao" >
+			    <div style="float: left; margin-right: 40px">		
+					<label>Usuário/Conselho:</label>
+					<h:inputText value="#{internadosPendentesForm.usuario}" maxlength="20" styleClass="inputText" style="width: 80px"/>
+				</div>
+				<div style="float: left;">		
+					<label>Senha/Assinatura:</label>
+					<h:inputSecret value="#{internadosPendentesForm.senha}" maxlength="20"  styleClass="inputText" style="width: 80px"/>
+				</div>
+			</div>		
+		</div>
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkAlta" value="OK" 
+						   action="#{internadosPendentesForm.extornarInternacao}"
+						   oncomplete="this.disabled=false; avisosPesquisa(#{internadosPendentesForm.avisoErro})"
+						   style="margin-right: 10px" 
+						   styleClass="botaoModal"
+						   reRender="tabelaPaciente"
+						   onclick="this.disabled=true" >				
+			</a4j:commandButton>			
+			<a4j:commandButton id="btnCancelAlta"  value="Cancelar"  styleClass="botaoModal">
+				<rich:componentControl for="panelExtorno" attachTo="btnCancelAlta" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		</div>
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+
+<a4j:form>
+   	<div style="margin-bottom: 55px">
+   	    <label class="cabAreaPesquisa">PACIENTES PENDENTES PARA INTERNAÇÃO</label>	    
+	    <div class="areaPesquisa">
+	    	<div class="col320">
+	           <label>Internações pendentes:</label>
+	           <h:outputText id="totalGeral" value="#{internadosPendentesForm.totalInternados}" styleClass="totalizador2" />	          
+	        </div>       	       
+	        <div class="col450" style="text-align: right; padding-top: 5px">
+		       <a4j:commandButton id="btnRefresh" 
+		       		image="IMG/atualizar2.gif"
+		       		alt="Desfazer a pesquisa" 
+	                action="#{internadosPendentesForm.relerLista}"
+		    		reRender="tabelaPaciente,totalGeral" />							           
+	        </div>	       
+	    </div>
+		<div id="">
+			<rich:dataTable id="tabelaPaciente"
+					onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+					value="#{internadosPendentesForm.lstPacientePendentes}" 
+					var="internado" 
+					rows="30"					 
+					style="width: 100%"										 
+					reRender="ds,totalPesq">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column>
+							<h:outputText value="Sel" /> <!-- 3 -->
+						</h:column>						
+						<h:column>
+							<h:outputText value="Prontuário" /> <!-- 5 -->
+						</h:column>
+						<h:column>
+							<h:outputText value="Paciente" /> <!-- 60 -->
+						</h:column>
+						<h:column>
+							<h:outputText value="Nome da mãe" /> <!-- 60 -->
+						</h:column>						
+						<h:column>
+							<h:outputText value="Origem" /> <!-- 5 -->
+						</h:column>
+						<h:column>
+							<h:outputText value="Ações" /> <!-- 5 -->
+						</h:column>
+					</rich:columnGroup>
+				</f:facet>
+				
+				<rich:column width="3%">
+					<center>
+						<a4j:commandLink id="selecionar" ajaxSingle="true" action="csInterPendentesCdIntenacaoPaciente" title="Interna Paciente" >
+							<h:graphicImage id="imgSelecionar02" url="IMG/selecionar.png" style="border:0;" />							
+							<f:setPropertyActionListener value="#{false}" target="#{internacaoForm.desabilitar}" />
+							<f:setPropertyActionListener value="#{true}" target="#{internacaoForm.novaInternacao}"/>		  			
+							<f:setPropertyActionListener value="#{'N'}" target="#{internacaoForm.objInternacao.flgSemAndar}"/>
+							<f:setPropertyActionListener value="#{'N'}" target="#{internacaoForm.objInternacao.flgPreso}"/>
+							<f:setPropertyActionListener value="#{internado.paciente}" target="#{internacaoForm.objPaciente}"/>
+							<f:setPropertyActionListener value="#{internado}" target="#{internacaoForm.objInternacao}"/>
+							<f:setPropertyActionListener value="#{false}" target="#{internacaoForm.btnCancelar}"/>
+							<f:setPropertyActionListener value="#{true}" target="#{internacaoForm.btnCancelarPendentes}"/>	 
+						</a4j:commandLink>
+					</center>
+				</rich:column>
+								
+				<rich:column width="5%">
+					<center>
+						<h:outputText value="#{internado.paciente.numProntuario}" />
+					</center>
+				</rich:column>
+				
+				<rich:column width="30%">				    
+					<h:outputText value="#{internado.paciente.dscNome} " />
+					<h:panelGroup rendered="#{internado.paciente.flgVre == 'S'}">
+					   <h:graphicImage id="imgCCIH" url="IMG/iconeCCIH.png" style="border:0;" />
+					</h:panelGroup>    				
+				</rich:column>
+				
+				<rich:column width="30%">
+					<h:outputText value="#{internado.paciente.dscMae} " />
+				</rich:column>
+				
+				<rich:column width="20%">
+					<h:outputText value="#{internado.referencia.dscReferencia}" />
+				</rich:column>
+				
+				<rich:column width="10%">
+					<a4j:commandButton id="btnExtornar" 
+					     reRender="panelExtorno"
+					     value="Extornar"
+					     oncomplete="Richfaces.showModalPanel('panelExtorno')"  >
+					     <f:setPropertyActionListener value="#{internado.paciente}" target="#{internadosPendentesForm.paciente}"/>
+					     <f:setPropertyActionListener value="#{internado}" target="#{internadosPendentesForm.objInternacao}"/>
+					</a4j:commandButton>     
+				</rich:column>
+				
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+		</div>
+	</div>
+	<script type="text/javascript">
+	     function avisosPesquisa(erro) {
+		     if (erro==2) {
+		    	 alert("Não há pacientes cadastrados que atendam a esta pesquisa.");
+		     } else if (erro==1) {
+			     alert("O leito da emergência ocupado por este paciente já está ocupado, não é possivel extornar essa internação.");			     
+		     } else if (erro==3) {
+		    	 alert("Usuário e/ou senha invalidos, ou usuário não é do NAC.");
+		     } else if (erro==4) {
+		    	 alert("Erro de banco de dados ao extornar internação.");
+		     } else if (erro==5) {
+		    	 alert("Internação não veio da emergência.");	  		     	 
+		     } else {
+		    	 Richfaces.hideModalPanel('panelExtorno'); 
+		     }       
+	     }
+	</script>
+</a4j:form>	
+</ui:define>
+</ui:composition>
+</html>

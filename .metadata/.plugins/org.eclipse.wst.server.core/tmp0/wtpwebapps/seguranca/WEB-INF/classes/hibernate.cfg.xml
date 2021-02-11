@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+
+		<!-- Database connection settings -->
+		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+		<property name="hibernate.connection.url">jdbc:postgresql://192.168.60.120:5432/PACIENTE_MAIN_21_12_2020</property>
+		<property name="hibernate.connection.username">postgres</property>
+		<property name="hibernate.connection.password">@isgh#upa</property>
+		<property name="hibernate.format_sql">false</property>
+		<property name="hibernate.default_schema">seguranca</property>
+		<property name="hibernate.connection.pool_size">1</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+		<property name="hibernate.show_sql">true</property>
+		<!-- end Database connection settings -->
+
+		<!-- seguranca mappings -->
+		<mapping class="br.org.isgh.seguranca.beans.Sistema" />
+		<mapping class="br.org.isgh.seguranca.beans.Formacao" />
+		<mapping class="br.org.isgh.seguranca.beans.Usuario" />
+		<mapping class="br.org.isgh.seguranca.beans.Conselho" />
+		<mapping class="br.org.isgh.seguranca.beans.Entidade" />
+		<mapping class="br.org.isgh.seguranca.beans.Categoria" />
+		<mapping class="br.org.isgh.seguranca.beans.Especialidade" />
+		<mapping class="br.org.isgh.seguranca.beans.GrupoTelaAcao" />
+		<mapping class="br.org.isgh.seguranca.beans.Setor" />
+		<mapping class="br.org.isgh.seguranca.beans.TelaAcao" />
+		<mapping class="br.org.isgh.seguranca.beans.UsuarioEspecialidade" />
+		<mapping class="br.org.isgh.seguranca.beans.UsuarioEntidade" />
+		<mapping class="br.org.isgh.seguranca.beans.Acao" />
+		<mapping class="br.org.isgh.seguranca.beans.Grupo" />
+		<mapping class="br.org.isgh.seguranca.beans.UsuarioGrupo" />
+		<mapping class="br.org.isgh.seguranca.beans.Permissao" />
+		<mapping class="br.org.isgh.seguranca.beans.TipoTelefone" />
+		<mapping class="br.org.isgh.seguranca.beans.Uf" />
+		<mapping class="br.org.isgh.seguranca.beans.Vinculo" />
+		<mapping class="br.org.isgh.seguranca.beans.VinculoTipo" />
+		<mapping class="br.org.isgh.seguranca.beans.Parametro" />
+		<mapping class="br.org.isgh.seguranca.beans.UsuarioGrupoEntidade" />
+		<mapping class="br.org.isgh.seguranca.beans.Contratante" />
+
+		<!-- seguranca log mappings -->
+		<mapping class="br.org.isgh.seguranca.beans.log.SistemaLog" />
+		<mapping class="br.org.isgh.seguranca.beans.log.TelaAcaoLog" />
+		<mapping class="br.org.isgh.seguranca.beans.log.PermissaoLog" />
+		<mapping class="br.org.isgh.seguranca.beans.log.UsuarioLog" />
+		<mapping class="br.org.isgh.seguranca.beans.log.UsuarioGrupoLog" />
+		<mapping class="br.org.isgh.seguranca.beans.log.UsuarioGrupoEntidadeLog" />
+		<!-- end seguranca log mappings -->
+
+		<!-- seguranca oracle mappings -->
+		<mapping class="br.org.isgh.seguranca.oracle.UsuarioOracle" />
+		<mapping class="br.org.isgh.seguranca.oracle.ProfissionalOracle" />
+		<mapping class="br.org.isgh.seguranca.oracle.ProfissionalSincOracle" />
+		<mapping class="br.org.isgh.seguranca.oracle.UsuarioProfOracle" />
+		<!-- end seguranca oracle mappings -->
+
+		<!-- end seguranca mappings -->
+	</session-factory>
+</hibernate-configuration>

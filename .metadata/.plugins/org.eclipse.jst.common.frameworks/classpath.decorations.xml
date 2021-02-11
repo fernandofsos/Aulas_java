@@ -1,0 +1,7 @@
+<classpath>
+  <container id="pacienteupa!org.eclipse.jst.j2ee.internal.web.container">
+    <entry id="/home/sergio/git/pacienteupa/WebContent/WEB-INF/lib/seguranca.jar">
+      <source-attachment-path>/seguranca</source-attachment-path>
+    </entry>
+  </container>
+</classpath>

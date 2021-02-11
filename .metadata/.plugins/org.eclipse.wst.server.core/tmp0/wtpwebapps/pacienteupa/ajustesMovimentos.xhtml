@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">    
+	<ui:define name="conteudo">		
+	<a4j:keepAlive beanName="ajustesMovimentosForm" />
+	
+	<rich:modalPanel id="panelStatus" autosized="true" >  
+ 		<h:panelGrid columns="2"> 
+ 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 			<h:outputText value="Carregando..." />
+ 		</h:panelGrid> 
+ 	</rich:modalPanel> 
+ 	
+	<rich:modalPanel id="panelExclusao" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+		<f:facet name="header">
+			<h:outputText value="EXCLUIR MOVIMENTO"></h:outputText>		
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="hidelink2" />
+				<rich:componentControl for="panelExclusao" attachTo="hidelink2" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form>	      
+			<div class="dadosPaciente">
+		    	<div class="col420">
+		       		<span style="width: 60px; display: inline-block">Paciente:</span>
+					<h:outputText value="#{ajustesMovimentosForm.paciente.dscNome}" style="font-weight: bold" />
+				</div>
+				<div class="col150">
+					<label>Prontuário: </label>
+					<h:outputText value="#{ajustesMovimentosForm.paciente.numProntuario}" style="font-weight: bold" />
+				</div>
+				<div class="col420">
+					<label style="width: 60px; display: inline-block">Mãe: </label>
+					<h:outputText value="#{ajustesMovimentosForm.paciente.dscMae}"/>
+				</div>
+				<div class="col150">
+			    	<div style="float: left; margin-right: 10px">
+						<label>Idade: </label>
+						<h:outputText value="#{ajustesMovimentosForm.paciente.idade}"/>
+					</div>
+					<div>
+						<label>Sexo: </label>
+						<h:outputText value="#{ajustesMovimentosForm.paciente.sexo.sglSexo}" />
+					</div>
+				</div>
+			</div>
+			
+			<h:panelGroup layout="block" rendered="#{ajustesMovimentosForm.bAlta}">
+		    	<label>ALTA DE PACIENTE</label>
+		    
+			    <h:panelGroup styleClass="linhaFormulario" layout="block">		    
+					<label class="label largura100">Motivo da alta:</label>
+					<h:inputText value="#{ajustesMovimentosForm.motivoAlta}" styleClass="inputText" readonly="true"/>			
+				</h:panelGroup>
+			
+				<h:panelGroup styleClass="linhaFormulario" layout="block">	
+					<label class="label largura100">Hospital destino:</label>	
+					<h:inputText value="#{ajustesMovimentosForm.hospitalDestino}" styleClass="inputText" readonly="true"/>				
+				</h:panelGroup>			
+				
+				<h:panelGroup styleClass="linhaFormulario" layout="block">						
+					<label class="label largura100">Observações:</label>
+					<h:inputTextarea value="#{ajustesMovimentosForm.internacaoLeito.dscObsAlta}" 
+				                 styleClass="campoObservacao" 
+				                 readonly="true"/>
+				</h:panelGroup>		
+				
+				<h:panelGroup styleClass="linhaFormulario" layout="block">	
+					<label class="label largura100">Usuário:</label>	
+					<h:inputText value="#{ajustesMovimentosForm.usuarioMovimento}" styleClass="inputText" readonly="true"/>				
+				</h:panelGroup>			
+			</h:panelGroup>
+			
+			<h:panelGroup layout="block" rendered="#{ajustesMovimentosForm.bObito}">
+		    	<label>OBITO DE PACIENTE</label>                
+                
+				<h:panelGroup styleClass="linhaFormulario" layout="block">						
+					<label class="label largura100">Observações:</label>
+					<h:inputTextarea value="#{ajustesMovimentosForm.internacaoLeito.dscObsAlta}" 
+				                 styleClass="campoObservacao" 
+				                 readonly="true"/>
+				</h:panelGroup>
+				<h:panelGroup styleClass="linhaFormulario" layout="block" >	
+					<label class="label largura100">Usuário:</label>	
+					<h:inputText value="#{ajustesMovimentosForm.usuarioMovimento}" styleClass="inputText" readonly="true"/>				
+				</h:panelGroup>						
+			</h:panelGroup>
+			
+			<h:panelGroup layout="block" rendered="#{ajustesMovimentosForm.bTransferencia}">
+		    	<label>TRANSFERÊNCIA</label>
+		    	
+				<h:panelGroup styleClass="linhaFormulario" layout="block">						
+					<label class="label largura100">Unidade Anterior:</label>
+					<h:inputTextarea />
+				</h:panelGroup>			
+				<h:panelGroup styleClass="linhaFormulario" layout="block">						
+					<label class="label largura100">Leito Anterior:</label>
+					<h:inputTextarea />
+				</h:panelGroup>			
+			</h:panelGroup>
+			
+			<div style="text-align: center; margin-top: 10px">
+				<a4j:commandButton id="btnOk" value="OK" 
+						   action="#{ajustesMovimentosForm.confirmarExclusaoMovimento}"
+						   oncomplete="this.disabled=false;" 
+						   reRender="dtEnfermarias,totaisClinica"
+						   style="margin-right: 10px" 
+						   styleClass="botaoModal"
+						   onclick="this.disabled=true" >				
+				</a4j:commandButton>			
+				<a4j:commandButton id="btnCancel"  value="Cancelar"  styleClass="botaoModal">
+					<rich:componentControl for="panelExclusao" attachTo="btnCancel" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>	
+	</rich:modalPanel>
+	
+	<a4j:status id="status" 
+                onstart="#{rich:component('panelStatus')}.show()" 
+                onstop="#{rich:component('panelStatus')}.hide()" >
+ 	</a4j:status>
+ 	
+	<h:form>   
+	    
+		<div style="margin-bottom: 55px">			
+    		<div class="cabPesquisa">
+    		    <div class="col170">
+    		        <h5>Movimentação da unidade</h5>
+    		    </div>
+        		<div class="col300">        		        		
+	        		<h:outputText value="Data do movimento: " />
+	        		<rich:calendar id="datMovimento" 
+	        		               value="#{ajustesMovimentosForm.dataMovimento}" 
+	        		               datePattern="dd/MM/yyyy" />
+	        	</div>	
+	        	<div class="col300">
+	        		<h:outputText value="Unidade: " />
+	        		<h:selectOneMenu id="selUnidade" 
+	        		                 value="#{ajustesMovimentosForm.isnUnidadeSelecionada}"
+	        		                 style="width: 200px">
+	        			<a4j:support reRender="tblMovimentos"
+						             action="#{ajustesMovimentosForm.pesquisarMovimento}"
+						             event="onchange" >
+						</a4j:support>		 
+						<f:selectItems value="#{ajustesMovimentosForm.sliUnidades}" />
+	        		</h:selectOneMenu>					
+				</div>
+    		</div>	
+			<!-- FIM CAMPOS DE BUSCA -->
+		
+			<!-- CONTEUDO DA TABELA -->
+			<div>
+				<rich:dataTable id="tblMovimentos"
+					onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+					value="#{ajustesMovimentosForm.lstMovimentos}" 
+					var="movimento" 
+					rows="20"					 
+					style="width: 800px"															 
+					reRender="ds">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<h:column>
+								<h:outputText value="Ação" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Enf./Leito" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Pront." />
+							</h:column>
+							<h:column>
+								<h:outputText value="Paciente" />
+							</h:column>							
+							<h:column>
+								<h:outputText value="Dt.Entrada" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Dt.Saída" />
+							</h:column>							
+							<h:column>
+								<h:outputText value="Destino" />
+							</h:column>
+							<h:column>
+								<h:outputText value="Detalhes" />
+							</h:column>
+						</rich:columnGroup>
+					</f:facet>
+				  
+					<rich:column width="5%">
+						<center>
+							<h:graphicImage id="imgSelecao" url="IMG/selecionar.png" style="border:0;" />	
+						    <a4j:commandLink action="#{ajustesMovimentosForm.excluirMovimento}" 
+						                     oncomplete="avisosErro(#{ajustesMovimentosForm.erroAjuste})"
+						                     reRender="panelExclusao" >						                     									
+								<f:setPropertyActionListener value="#{movimento}" target="#{ajustesMovimentosForm.internacaoLeito}"/>						
+							</a4j:commandLink>
+						</center>
+					</rich:column>
+				
+					<rich:column>
+						<h:outputText value="#{movimento.leito.enfermaria.dscEnfermaria}.#{movimento.leito.dscLeito}" />
+					</rich:column>
+					
+					<rich:column>
+						<h:outputText value="#{movimento.internacao.paciente.numProntuario}" />
+					</rich:column>
+				
+					<rich:column>
+						<h:outputText value="#{movimento.internacao.paciente.dscNome}" />
+					</rich:column>
+
+					<rich:column>
+						<h:outputText value="#{movimento.datInternacao}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+						<h:outputText value="  " />
+						<h:outputText value="#{movimento.horaInternacao}" />
+					</rich:column>
+		
+					<rich:column>
+						<h:outputText value="#{movimento.datAlta}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>				
+						<h:outputText value="  " />		
+						<h:outputText value="#{movimento.horaAlta}" />
+					</rich:column>
+		
+					<rich:column>
+						<h:outputText value="#{movimento.destino.dscDestino}" />
+					</rich:column>						
+		
+					<rich:column>
+						<center>												
+							<h:graphicImage id="imgDetalhes" url="IMG/detalhes.png" style="border:0;" />
+							<rich:toolTip for="imgDetalhes" layout="block" direction="bottom-left"
+							              style="font-family: Verdana; font-size: 15px; text-align:left">
+							    <h:panelGroup layout="block" rendered="#{movimento.destino.isnDestino==5}">
+				    				<div>
+										<label>Clinica destino:</label>
+										<h:outputText value="#{movimento.leitoTransf.enfermaria.clinica.dscClinica}" style="font-weight: bold" />
+									</div>
+									<div>
+										<label>Leito destino:</label>
+										<h:outputText value="#{movimento.leitoTransf.enfermaria.dscEnfermaria}.#{movimento.leitoTransf.dscLeito}" style="font-weight: bold" />
+									</div>											
+								</h:panelGroup>
+								<h:panelGroup layout="block" rendered="#{movimento.destino.isnDestino==4}">
+				    				<div>
+										<label>Observação:</label>
+										<h:outputText value="#{movimento.dscObsAlta}" style="font-weight: bold"/>
+									</div>																		
+								</h:panelGroup>
+								<h:panelGroup layout="block" rendered="#{movimento.destino.isnDestino==1}">
+				    				<div>
+										<label>Motivo:</label>
+										<h:outputText value="#{movimento.motivoAlta}" style="font-weight: bold" />
+									</div>		
+									<div>
+										<label>Hospital:</label>
+										<h:outputText value="#{movimento.hospitalDestino}" style="font-weight: bold" />
+									</div>				
+									<div>
+										<label>Observação: </label>
+										<h:outputText value="#{movimento.dscObsAlta}" style="font-weight: bold" />
+									</div>												
+								</h:panelGroup>
+							</rich:toolTip>
+						</center>
+					</rich:column>
+					
+					<f:facet name="footer">
+						<rich:datascroller id="ds" ajaxSingle="false" />
+					</f:facet>					
+				</rich:dataTable>				
+			</div>
+		</div>
+		<script type="text/javascript">
+	    	function avisosErro(tipo) {		    	
+		     	if (tipo==1) {
+			    	alert("Não é possivel excluir este movimento.");
+		     	} else if (tipo==2) {
+		    		alert("Não há pacientes cadastrados que atendam a esta pesquisa.");
+		     	} else {
+			     	Richfaces.showModalPanel('panelExclusao');
+		     	}
+	     	}
+		</script>
+	</h:form>	
+</ui:define>
+</ui:composition>
+</html>

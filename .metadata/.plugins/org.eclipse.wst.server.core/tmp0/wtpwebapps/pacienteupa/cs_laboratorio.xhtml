@@ -1,0 +1,1548 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="headHtml">
+
+	</ui:define>
+	<ui:define name="conteudo">
+
+		<a4j:keepAlive beanName="laboratorioForm" />
+
+		<rich:modalPanel id="panelStatus" autosized="true">
+			<h:panelGrid columns="2">
+				<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px" />
+				<h:outputText value="Carregando..." />
+			</h:panelGrid>
+		</rich:modalPanel>
+
+		<h:form id="formularioLaboratorio">
+			<div id="geral">
+				<div class="tituloPagina">LABORATÓRIO / RAIO-X</div>
+				<div class="quadroAtendimento">
+					<fieldset>
+						<h:panelGrid columns="3">
+							<label><b>Agrupar por:</b></label>
+							<rich:spacer width="450" />
+							<a4j:commandButton id="btnRefresh" image="IMG/atualizar2.gif"
+								alt="Atualizar"
+								action="#{laboratorioForm.executarPesquisaGeral}"
+								reRender="formularioLaboratorio" />
+						</h:panelGrid>
+						<h:panelGrid>
+							<h:selectOneRadio value="#{laboratorioForm.tpAgrupamento}"
+								styleClass="radioButton">
+								<f:selectItem itemValue="3" itemLabel="EIXO" />
+								<f:selectItem itemValue="1" itemLabel="PACIENTE" />
+								<f:selectItem itemValue="2" itemLabel="EXAME" />
+								<f:selectItem itemValue="4" itemLabel="SOLICITADO" />
+								<a4j:support event="onclick" reRender="formularioLaboratorio"
+									action="#{laboratorioForm.executarPesquisaGeral}" />
+							</h:selectOneRadio>
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{laboratorioForm.tpAgrupamento==2 and laboratorioForm.parametroFiltrarPorExameGrupo == 'S'}"
+							id="idBarros" styleClass="radioButton">
+							<h:selectManyCheckbox id="exameGrupo"
+								value="#{laboratorioForm.vetorExameGrupo}">
+								<f:selectItems value="#{laboratorioForm.sliExameGrupo}" />
+								<a4j:support event="onclick"
+									actionListener="#{laboratorioForm.filtrarPorGrupoExame}"
+									reRender="formularioLaboratorio" />
+							</h:selectManyCheckbox>
+						</h:panelGrid>
+						<h:panelGrid columns="2">
+							<h:outputText style="background-color: #FF6262;color: #FF6262;"
+								value="LEGENDA ISGH" />
+							<span>NECESSITA DE AUTORIZAÇÃO DO COORDENADOR DA UNIDADE
+								OU DIREÇÃO ISGH</span>
+							<h:outputText style="background-color: #FFFF80;color: #FFFF80;"
+								value="LEGENDA ISGH" />
+							<span>NECESSITA DE AUTORIZAÇÃO DO CHEFE DE EQUIPE OU
+								COORDENADOR DA UNIDADE</span>
+						</h:panelGrid>
+					</fieldset>
+				</div>
+			</div>
+
+			<div>
+
+				<rich:tabPanel switchType="client" style="width: 100%;"
+					rendered="#{laboratorioForm.tpAgrupamento != 4}">
+					<rich:tab label="EXAMES PENDENTES"
+						style="width: 100%; height: 15px;">
+
+						<!-- PANEL DE AGRUPAMENTO POR EIXO -->
+
+						<h:panelGroup layout="block" id="panelTableEixo"
+							rendered="#{laboratorioForm.tpAgrupamento == 3}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorEixo}" var="listaEixo" rows="15"
+								id="listaEixo" reRender="dsEixo">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Eixos</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<h:column rendered="#{listaEixo.existePaciente}">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expandEixo" value="IMG/expand.gif"
+											onclick="toggleDetailsEixo(this);" />
+										<h:outputText value="#{listaEixo.dscClinica}" />
+									</h:panelGrid>
+
+									<rich:dataTable
+										style="width: 100%; display: none; background-color:#F8F8FF;"
+										id="detailEixo" value="#{listaEixo.listInternacaoLeitoArray}"
+										var="detailEixo">
+										<rich:column id="eix" style="width: 100%;"
+											rendered="#{detailEixo.internacaoPepBean.pacientePepBean.examePendente}">
+											<h:graphicImage id="expandEixoSub" value="IMG/expand.gif"
+												onclick="toggleDetailsEixoSub(this);"
+												style="margin-left: 25px;" />
+											<h:panelGroup>
+												<a4j:commandLink styleClass="link"
+													oncomplete="#{rich:component('panPaciente')}.show();"
+													value="  #{detailEixo.internacaoPepBean.pacientePepBean.dscNome} - #{detailEixo.internacaoPepBean.pacientePepBean.numProntuario}"
+													action="#{laboratorioForm.popularDadosPaciente}"
+													reRender="panPaciente">
+													<f:setPropertyActionListener
+														target="#{laboratorioForm.isnPaciente}"
+														value="#{detailEixo.internacaoPepBean.pacientePepBean.isnPaciente}" />
+												</a4j:commandLink>
+											</h:panelGroup>
+											<rich:dataTable
+												onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+												onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+												style="width: 100%; display: none;" id="detailEixoSub"
+												value="#{detailEixo.internacaoPepBean.listExameSolicitacao}"
+												var="detailEixoSub">
+												<rich:column id="eix"
+													style="width: 100%;background-color:#{(detailEixoSub.examePepBean.isnDisponibilidade == 3)?'#FF6262':  (detailEixoSub.examePepBean.isnDisponibilidade == 2) ? '#FFFF80' : 'white' };"
+													title="#{detailEixoSub.title}">
+													<h:selectBooleanCheckbox
+														value="#{detailEixoSub.exameSelecionado}"
+														rendered="#{detailEixoSub.isnExameSituacao == 1}"
+														style="width: 12px; height: 12px; margin-left: 50px;" />
+													<h:graphicImage id="vistoEixo" value="IMG/visto.png"
+														style="border:white; width: 12px; height: 12px; margin-left: 50px;"
+														title="EXAME REALIZADO"
+														rendered="#{detailEixoSub.isnExameSituacao == 2}" />
+													<h:panelGroup>
+														<h:outputText
+															value="  #{detailEixoSub.examePepBean.dscExame} #{detailEixoSub.dscExameCompl}" />
+													</h:panelGroup>
+												</rich:column>
+											</rich:dataTable>
+										</rich:column>
+									</rich:dataTable>
+								</h:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsEixo" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR EIXO -->
+
+
+
+						<!-- PANEL DE AGRUPAMENTO POR PACIENTE -->
+
+						<h:panelGroup layout="block" id="panelTable"
+							rendered="#{laboratorioForm.tpAgrupamento == 1}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorPaciente}" var="lista" rows="15"
+								id="lista" reRender="ds">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Pacientes</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<rich:column rendered="#{lista.pacientePepBean.examePendente}">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expand" value="IMG/expand.gif"
+											onclick="toggleDetails(this);" />
+										<a4j:commandLink styleClass="link"
+											oncomplete="#{rich:component('panPaciente')}.show();"
+											value="#{lista.pacientePepBean.dscNome} - #{lista.pacientePepBean.numProntuario} ( #{lista.dscClinica} )"
+											action="#{laboratorioForm.popularDadosPaciente}"
+											reRender="panPaciente">
+											<f:setPropertyActionListener
+												target="#{laboratorioForm.isnPaciente}"
+												value="#{lista.pacientePepBean.isnPaciente}" />
+										</a4j:commandLink>
+									</h:panelGrid>
+									<rich:dataTable
+										onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										style="width: 100%; display: none;" id="details"
+										value="#{lista.listExameSolicitacao}" var="detail">
+										<rich:column id="exm"
+											style="width: 100%;background-color:#{(detail.examePepBean.isnDisponibilidade == 3)?'#FF6262':  (detail.examePepBean.isnDisponibilidade == 2) ? '#FFFF80' : 'white' };"
+											title="#{detail.title}">
+											<f:facet name="header">Realizar Exames</f:facet>
+											<h:selectBooleanCheckbox value="#{detail.exameSelecionado}"
+												rendered="#{detail.isnExameSituacao == 1}"
+												style="width: 12px; height: 12px; margin-left: 25px;" />
+											<h:graphicImage id="visto" value="IMG/visto.png"
+												style="border:white; width: 12px; height: 12px; margin-left: 25px;"
+												title="EXAME REALIZADO"
+												rendered="#{detail.isnExameSituacao == 2}" />
+											<h:panelGroup>
+												<h:outputText
+													value=" #{detail.examePepBean.dscExame} #{detail.dscExameCompl}" />
+											</h:panelGroup>
+										</rich:column>
+									</rich:dataTable>
+								</rich:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="ds" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR PACIENTE -->
+
+
+
+						<!-- PANEL DE AGRUPAMENTO POR EXAME -->
+
+						<h:panelGroup layout="block" id="panelTableExame"
+							rendered="#{laboratorioForm.tpAgrupamento == 2}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorExame}" var="listaExame"
+								rows="15" id="listaExame" reRender="dsExame">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Exames</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<rich:column rendered="#{listaExame.existePaciente}"
+									style="background-color:#{(listaExame.isnDisponibilidade == 3)?'#FF6262':  (listaExame.isnDisponibilidade == 2) ? '#FFFF80' : 'white' };">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expandExame" value="IMG/expand.gif"
+											onclick="toggleDetailsExame(this);" />
+										<h:outputText value="#{listaExame.dscExame}" />
+									</h:panelGrid>
+									<rich:dataTable
+										onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										style="width: 100%; display: none;" id="detailExame"
+										value="#{listaExame.listExameSolicitacao}" var="detailExame">
+										<rich:column id="pexm" style="width: 100%;"
+											title="#{detailExame.title}">
+											<h:selectBooleanCheckbox
+												value="#{detailExame.exameSelecionado}"
+												rendered="#{detailExame.isnExameSituacao == 1}"
+												style="width: 12px; height: 12px; margin-left: 25px;" />
+											<h:graphicImage id="visto" value="IMG/visto.png"
+												style="border:white; width: 12px; height: 12px; margin-left: 25px;"
+												title="EXAME REALIZADO"
+												rendered="#{detailExame.isnExameSituacao == 2}" />
+											<h:panelGroup>
+												<a4j:commandLink styleClass="link"
+													oncomplete="#{rich:component('panPaciente')}.show();"
+													value=" #{detailExame.internacaoPepBean.pacientePepBean.dscNome} - #{detailExame.internacaoPepBean.pacientePepBean.numProntuario} ( #{detailExame.internacaoPepBean.dscClinica} )"
+													action="#{laboratorioForm.popularDadosPaciente}"
+													reRender="panPaciente">
+													<f:setPropertyActionListener
+														target="#{laboratorioForm.isnPaciente}"
+														value="#{detailExame.internacaoPepBean.pacientePepBean.isnPaciente}" />
+												</a4j:commandLink>
+											</h:panelGroup>
+										</rich:column>
+									</rich:dataTable>
+								</rich:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="ds" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR EXAME -->
+						<div class="quadroAtendimento"
+							style="height: 30px; text-align: center;">
+							<a4j:commandButton value="Realizar Exames"
+								action="#{laboratorioForm.realizarExames}"
+								style="margin-top:5px;" styleClass="botaoModal"
+								oncomplete="validar('#{laboratorioForm.mensagem}');"
+								reRender="panelTable,panelTableExame,panelTableEixo,panelTableEixoRealizado, panelTableRealizado,panelTableExameRealizado" />
+						</div>
+
+
+					</rich:tab>
+					
+					
+					
+					<!-- ================================================================ EXAMES COLETADOS =============================================================================== -->
+
+					<rich:tab label="EXAMES COLETADOS" style="width: 100%;">
+
+						<!-- PANEL DE AGRUPAMENTO POR EIXO -->
+						<h:panelGroup layout="block" id="panelTableEixoColetado"
+							rendered="#{laboratorioForm.tpAgrupamento == 3}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorEixoRealizado}"
+								var="listaEixoRealizado" rows="15" id="listaEixoColetado"
+								reRender="dsEixoColetado">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Eixo</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<h:column>
+									<h:panelGrid columns="2"
+										rendered="#{listaEixoRealizado.existePacienteRealizado}">
+										<h:graphicImage id="expandEixoColetado"
+											value="IMG/expand.gif"
+											onclick="toggleDetailsEixoColetado(this);" />
+										<h:outputText value="#{listaEixoRealizado.dscClinica}" />
+									</h:panelGrid>
+
+									<rich:dataTable
+										style="width: 100%; display: none; background-color:#F8F8FF;"
+										id="detailEixoColetado"
+										value="#{listaEixoRealizado.listInternacaoLeitoArray}"
+										var="detailEixoRealizado">
+										<rich:column id="eixColetado" style="width: 100%;"
+											rendered="#{detailEixoRealizado.internacaoPepBean.pacientePepBean.exameRealizado}">
+											<h:graphicImage id="expandEixoSubColetado"
+												value="IMG/expand.gif"
+												onclick="toggleDetailsEixoSubColetado(this);"
+												style="margin-left: 25px;" />
+											<h:panelGroup>
+												<a4j:commandLink styleClass="link"
+													oncomplete="#{rich:component('panPaciente')}.show();"
+													value="  #{detailEixoRealizado.internacaoPepBean.pacientePepBean.dscNome} - #{detailEixoRealizado.internacaoPepBean.pacientePepBean.numProntuario}"
+													action="#{laboratorioForm.popularDadosPaciente}"
+													reRender="panPaciente">
+													<f:setPropertyActionListener
+														target="#{laboratorioForm.isnPaciente}"
+														value="#{detailEixoRealizado.internacaoPepBean.pacientePepBean.isnPaciente}" />
+												</a4j:commandLink>
+											</h:panelGroup>
+
+											<rich:dataTable
+												onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+												onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+												style="width: 100%; display: none;"
+												id="detailEixoSubColetado"
+												value="#{detailEixoRealizado.internacaoPepBean.listExameSolicitacao}"
+												var="detailEixoSubRealizado">
+												<rich:column id="eix" style="width: 100%;" title="#{detailEixoSubRealizado.title}">
+														<h:outputText value="#{detailEixoSubRealizado.examePepBean.dscExame} #{detailEixoSubRealizado.dscExameCompl}" style="margin-left:50px; font-size:11px"/>
+												</rich:column>
+											</rich:dataTable>
+
+										</rich:column>
+									</rich:dataTable>
+								</h:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsEixoColetado" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR EIXO -->
+
+
+						<!-- PANEL DE AGRUPAMENTO POR PACIENTE -->
+
+						<h:panelGroup layout="block" id="panelTableColetado"
+							rendered="#{laboratorioForm.tpAgrupamento == 1}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorPacienteRealizado}"
+								var="listaRealizado" rows="15" id="listaColetado"
+								reRender="dsColetado">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Pacientes</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<h:column
+									rendered="#{listaRealizado.pacientePepBean.exameRealizado}">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expandRealizado" value="IMG/expand.gif"
+											onclick="toggleDetailsColetado(this);" />
+										<a4j:commandLink styleClass="link"
+											oncomplete="#{rich:component('panPaciente')}.show();"
+											value="#{listaRealizado.pacientePepBean.dscNome} - #{listaRealizado.pacientePepBean.numProntuario} ( #{listaRealizado.dscClinica} )"
+											action="#{laboratorioForm.popularDadosPaciente}"
+											reRender="panPaciente">
+											<f:setPropertyActionListener
+												target="#{laboratorioForm.isnPaciente}"
+												value="#{listaRealizado.pacientePepBean.isnPaciente}" />
+										</a4j:commandLink>
+									</h:panelGrid>
+									<rich:dataTable
+										onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										style="width: 100%; display: none;" id="detailsColetado"
+										value="#{listaRealizado.listExameSolicitacao}"
+										var="detailRealizado">
+										<rich:column id="exmColetado" style="width: 100%;"
+											title="#{detail.title}">
+											
+												<h:outputText value=" #{detailRealizado.examePepBean.dscExame} #{detailRealizado.dscExameCompl}" style="margin-left:50px; font-size:11px"/>
+											
+										</rich:column>
+									</rich:dataTable>
+								</h:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsColetado" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR PACIENTE -->
+
+
+
+						<!-- PANEL DE AGRUPAMENTO POR EXAME -->
+
+						<h:panelGroup layout="block" id="panelTableExameColetado"
+							rendered="#{laboratorioForm.tpAgrupamento == 2}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorExameRealizado}"
+								var="listaExameRealizado" rows="15" id="listaExameColetado"
+								reRender="dsExameColetado">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Exames</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<h:column
+									rendered="#{listaExameRealizado.existePacienteRealizado}">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expandExameRealizado"
+											value="IMG/expand.gif"
+											onclick="toggleDetailsExameColetado(this);" />
+										<h:outputText value="#{listaExameRealizado.dscExame}" />
+									</h:panelGrid>
+									<rich:dataTable
+										onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										style="width: 100%; display: none;" id="detailExameColetado"
+										value="#{listaExameRealizado.listExameSolicitacao}"
+										var="detailExameRealizado">
+										<rich:column id="pexmColetado" style="width: 100%;"
+											title="#{detailExameRealizado.title}">
+											
+											<h:panelGroup style="margin-left:11px">
+												<a4j:commandLink styleClass="link"
+													oncomplete="#{rich:component('panPaciente')}.show();"
+													value=" #{detailExameRealizado.internacaoPepBean.pacientePepBean.dscNome} - #{detailExameRealizado.internacaoPepBean.pacientePepBean.numProntuario} ( #{detailExameRealizado.internacaoPepBean.dscClinica} )"
+													action="#{laboratorioForm.popularDadosPaciente}"
+													reRender="panPaciente">
+													<f:setPropertyActionListener
+														target="#{laboratorioForm.isnPaciente}"
+														value="#{detailExameRealizado.internacaoPepBean.pacientePepBean.isnPaciente}" />
+												</a4j:commandLink>
+											</h:panelGroup>
+										</rich:column>
+									</rich:dataTable>
+								</h:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsExameColetado" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR EXAME -->
+
+						<a4j:support event="onlabelclick"
+							action="#{laboratorioForm.pesquisaLaboratorioColetado}"
+							reRender="panelTableEixoColetado,panelTableExameColetado,panelTableColetado" />
+
+					</rich:tab>
+					
+					
+
+					<!-- ================================================================ EXAMES REALIZADOS =============================================================================== -->
+
+					<rich:tab label="EXAMES REALIZADOS" style="width: 100%;">
+						<table>
+							<tr>
+								<td>Data de Realização:</td>
+								<td class="fonte14"><rich:calendar id="datInicial"
+										value="#{laboratorioForm.datInicio}" datePattern="dd/MM/yyyy"
+										showWeeksBar="false" enableManualInput="true"
+										oninputkeypress="return formataData(event, this)" /> <font
+									size="1"><h:outputText value=" a " /></font> <rich:calendar
+										id="datFinal" value="#{laboratorioForm.datFim}"
+										datePattern="dd/MM/yyyy" showWeeksBar="false"
+										enableManualInput="true"
+										oninputkeypress="return formataData(event, this)" /></td>
+								<td><span style="width: 11px"><a4j:commandButton
+											image="IMG/imgFiltrar.gif"
+											action="#{laboratorioForm.pesquisaLaboratorioRealizado}"
+											reRender="panelTableEixoRealizado,panelTableExameRealizado,panelTableRealizado" /></span>
+								</td>
+							</tr>
+						</table>
+
+						<!-- PANEL DE AGRUPAMENTO POR EIXO -->
+						<h:panelGroup layout="block" id="panelTableEixoRealizado"
+							rendered="#{laboratorioForm.tpAgrupamento == 3}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorEixoRealizado}"
+								var="listaEixoRealizado" rows="15" id="listaEixoRealizado"
+								reRender="dsEixoRealizado">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Eixo</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<h:column>
+									<h:panelGrid columns="2"
+										rendered="#{listaEixoRealizado.existePacienteRealizado}">
+										<h:graphicImage id="expandEixoRealizado"
+											value="IMG/expand.gif"
+											onclick="toggleDetailsEixoRealizado(this);" />
+										<h:outputText value="#{listaEixoRealizado.dscClinica}" />
+									</h:panelGrid>
+
+									<rich:dataTable
+										style="width: 100%; display: none; background-color:#F8F8FF;"
+										id="detailEixoRealizado"
+										value="#{listaEixoRealizado.listInternacaoLeitoArray}"
+										var="detailEixoRealizado">
+										<rich:column id="eixRealizado" style="width: 100%;"
+											rendered="#{detailEixoRealizado.internacaoPepBean.pacientePepBean.exameRealizado}">
+											<h:graphicImage id="expandEixoSubRealizado"
+												value="IMG/expand.gif"
+												onclick="toggleDetailsEixoSubRealizado(this);"
+												style="margin-left: 25px;" />
+											<h:panelGroup>
+												<a4j:commandLink styleClass="link"
+													oncomplete="#{rich:component('panPaciente')}.show();"
+													value="  #{detailEixoRealizado.internacaoPepBean.pacientePepBean.dscNome} - #{detailEixoRealizado.internacaoPepBean.pacientePepBean.numProntuario}"
+													action="#{laboratorioForm.popularDadosPaciente}"
+													reRender="panPaciente">
+													<f:setPropertyActionListener
+														target="#{laboratorioForm.isnPaciente}"
+														value="#{detailEixoRealizado.internacaoPepBean.pacientePepBean.isnPaciente}" />
+												</a4j:commandLink>
+											</h:panelGroup>
+
+											<rich:dataTable
+												onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+												onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+												style="width: 100%; display: none;"
+												id="detailEixoSubRealizado"
+												value="#{detailEixoRealizado.internacaoPepBean.listExameSolicitacao}"
+												var="detailEixoSubRealizado">
+												<rich:column id="eix" style="width: 100%;"
+													title="#{detailEixoSubRealizado.title}">
+													<h:selectBooleanCheckbox
+														value="#{detailEixoSubRealizado.exameSelecionado}"
+														rendered="#{detailEixoSubRealizado.isnExameSituacao == 1}"
+														style="width: 12px; height: 12px; margin-left: 50px;" />
+													<h:graphicImage id="vistoEixo" value="IMG/visto.png"
+														style="border:white; width: 12px; height: 12px; margin-left: 50px;"
+														title="EXAME REALIZADO"
+														rendered="#{detailEixoSubRealizado.isnExameSituacao == 2}" />
+													<h:panelGroup>
+														<h:outputText
+															value="  #{detailEixoSubRealizado.examePepBean.dscExame} #{detailEixoSubRealizado.dscExameCompl}" />
+													</h:panelGroup>
+												</rich:column>
+											</rich:dataTable>
+
+										</rich:column>
+									</rich:dataTable>
+								</h:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsEixoRealizado" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR EIXO -->
+
+
+						<!-- PANEL DE AGRUPAMENTO POR PACIENTE -->
+
+						<h:panelGroup layout="block" id="panelTableRealizado"
+							rendered="#{laboratorioForm.tpAgrupamento == 1}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorPacienteRealizado}"
+								var="listaRealizado" rows="15" id="listaRealizado"
+								reRender="dsRealizado">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Pacientes</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<h:column
+									rendered="#{listaRealizado.pacientePepBean.exameRealizado}">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expandRealizado" value="IMG/expand.gif"
+											onclick="toggleDetailsRealizado(this);" />
+										<a4j:commandLink styleClass="link"
+											oncomplete="#{rich:component('panPaciente')}.show();"
+											value="#{listaRealizado.pacientePepBean.dscNome} - #{listaRealizado.pacientePepBean.numProntuario} ( #{listaRealizado.dscClinica} )"
+											action="#{laboratorioForm.popularDadosPaciente}"
+											reRender="panPaciente">
+											<f:setPropertyActionListener
+												target="#{laboratorioForm.isnPaciente}"
+												value="#{listaRealizado.pacientePepBean.isnPaciente}" />
+										</a4j:commandLink>
+									</h:panelGrid>
+									<rich:dataTable
+										onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										style="width: 100%; display: none;" id="detailsRealizado"
+										value="#{listaRealizado.listExameSolicitacao}"
+										var="detailRealizado">
+										<rich:column id="exmRealizado" style="width: 100%;"
+											title="#{detail.title}">
+											<h:selectBooleanCheckbox
+												value="#{detailRealizado.exameSelecionado}"
+												rendered="#{detailRealizado.isnExameSituacao == 1}"
+												style="width: 12px; height: 12px; margin-left: 25px;" />
+											<h:graphicImage id="vistoRealizado" value="IMG/visto.png"
+												style="border:white; width: 12px; height: 12px; margin-left: 25px;"
+												title="EXAME REALIZADO"
+												rendered="#{detailRealizado.isnExameSituacao == 2}" />
+											<h:panelGroup>
+												<h:outputText
+													value=" #{detailRealizado.examePepBean.dscExame} #{detailRealizado.dscExameCompl}" />
+											</h:panelGroup>
+										</rich:column>
+									</rich:dataTable>
+								</h:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsRealizado" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR PACIENTE -->
+
+
+
+						<!-- PANEL DE AGRUPAMENTO POR EXAME -->
+
+						<h:panelGroup layout="block" id="panelTableExameRealizado"
+							rendered="#{laboratorioForm.tpAgrupamento == 2}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorExameRealizado}"
+								var="listaExameRealizado" rows="15" id="listaExameRealizado"
+								reRender="dsExameRealizado">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Exames</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<h:column
+									rendered="#{listaExameRealizado.existePacienteRealizado}">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expandExameRealizado"
+											value="IMG/expand.gif"
+											onclick="toggleDetailsExameRealizado(this);" />
+										<h:outputText value="#{listaExameRealizado.dscExame}" />
+									</h:panelGrid>
+									<rich:dataTable
+										onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										style="width: 100%; display: none;" id="detailExameRealizado"
+										value="#{listaExameRealizado.listExameSolicitacao}"
+										var="detailExameRealizado">
+										<rich:column id="pexmRealizado" style="width: 100%;"
+											title="#{detailExameRealizado.title}">
+											<h:selectBooleanCheckbox
+												value="#{detailExameRealizado.exameSelecionado}"
+												rendered="#{detailExameRealizado.isnExameSituacao == 1}"
+												style="width: 12px; height: 12px; margin-left: 25px;" />
+											<h:graphicImage id="visto" value="IMG/visto.png"
+												style="border:white; width: 12px; height: 12px; margin-left: 25px;"
+												title="EXAME REALIZADO"
+												rendered="#{detailExameRealizado.isnExameSituacao == 2}" />
+											<h:panelGroup>
+												<a4j:commandLink styleClass="link"
+													oncomplete="#{rich:component('panPaciente')}.show();"
+													value=" #{detailExameRealizado.internacaoPepBean.pacientePepBean.dscNome} - #{detailExameRealizado.internacaoPepBean.pacientePepBean.numProntuario} ( #{detailExameRealizado.internacaoPepBean.dscClinica} )"
+													action="#{laboratorioForm.popularDadosPaciente}"
+													reRender="panPaciente">
+													<f:setPropertyActionListener
+														target="#{laboratorioForm.isnPaciente}"
+														value="#{detailExameRealizado.internacaoPepBean.pacientePepBean.isnPaciente}" />
+												</a4j:commandLink>
+											</h:panelGroup>
+										</rich:column>
+									</rich:dataTable>
+								</h:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsExameRealizado" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR EXAME -->
+
+						<a4j:support event="onlabelclick"
+							action="#{laboratorioForm.pesquisaLaboratorioRealizado}"
+							reRender="panelTableEixoRealizado,panelTableExameRealizado,panelTableRealizado" />
+
+					</rich:tab>
+
+
+					<!-- ============================================================ENVIO DE EXAMES VIA WEB SERVICE==================================================================== -->
+					<rich:tab label="ENVIAR/CANCELAR EXAMES"
+						style="width: 100%; height: 15px;"
+						rendered="#{laboratorioForm.tpAgrupamento == 1 and laboratorioForm.flgComunicaWs == 'S'}">
+
+						<!-- PANEL DE AGRUPAMENTO POR EIXO -->
+
+						<h:panelGroup layout="block" id="panelTableEixoEnvio"
+							rendered="#{laboratorioForm.tpAgrupamento == 3}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorEixo}" var="listaEixo" rows="15"
+								id="listaEixoEnvio" reRender="dsEixoEnvio">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Eixos</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<h:column rendered="#{listaEixo.existePaciente}">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expandEixo" value="IMG/expand.gif"
+											onclick="toggleDetailsEixo(this);" />
+										<h:outputText value="#{listaEixo.dscClinica}" />
+									</h:panelGrid>
+
+									<rich:dataTable
+										style="width: 100%; display: none; background-color:#F8F8FF;"
+										id="detailEixo" value="#{listaEixo.listInternacaoLeitoArray}"
+										var="detailEixo">
+										<rich:column id="eix" style="width: 100%;"
+											rendered="#{detailEixo.internacaoPepBean.pacientePepBean.examePendente}">
+											<h:graphicImage id="expandEixoSub" value="IMG/expand.gif"
+												onclick="toggleDetailsEixoSub(this);"
+												style="margin-left: 25px;" />
+											<h:panelGroup>
+												<a4j:commandLink styleClass="link"
+													oncomplete="#{rich:component('panPaciente')}.show();"
+													value="  #{detailEixo.internacaoPepBean.pacientePepBean.dscNome} - #{detailEixo.internacaoPepBean.pacientePepBean.numProntuario}"
+													action="#{laboratorioForm.popularDadosPaciente}"
+													reRender="panPaciente">
+													<f:setPropertyActionListener
+														target="#{laboratorioForm.isnPaciente}"
+														value="#{detailEixo.internacaoPepBean.pacientePepBean.isnPaciente}" />
+												</a4j:commandLink>
+											</h:panelGroup>
+											<rich:dataTable
+												onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+												onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+												style="width: 100%; display: none;" id="detailEixoSubEnvio"
+												value="#{detailEixo.internacaoPepBean.listExameSolicitacao}"
+												var="detailEixoSub">
+												<rich:column id="eix" style="width: 100%;"
+													title="#{detailEixoSub.title}">
+													<h:selectBooleanCheckbox
+														value="#{detailEixoSub.exameSelecionado}"
+														rendered="#{detailEixoSub.isnExameSituacao == 1}"
+														style="width: 12px; height: 12px; margin-left: 50px;" />
+													<h:graphicImage id="vistoEixo" value="IMG/visto.png"
+														style="border:white; width: 12px; height: 12px; margin-left: 50px;"
+														title="EXAME REALIZADO"
+														rendered="#{detailEixoSub.isnExameSituacao == 2}" />
+													<h:panelGroup>
+														<h:outputText
+															value="  #{detailEixoSub.examePepBean.dscExame} #{detailEixoSub.dscExameCompl}" />
+													</h:panelGroup>
+												</rich:column>
+											</rich:dataTable>
+										</rich:column>
+									</rich:dataTable>
+								</h:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsEixoEnvio" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR EIXO -->
+
+
+
+						<!-- PANEL DE AGRUPAMENTO POR PACIENTE -->
+
+						<h:panelGroup layout="block" id="panelTableEnvio"
+							rendered="#{laboratorioForm.tpAgrupamento == 1}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorPaciente}" var="lista" rows="15"
+								id="listaEnvio" reRender="dsEnvio">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Pacientes</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<rich:column rendered="#{lista.pacientePepBean.examePendente}">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expand" value="IMG/expand.gif"
+											onclick="toggleDetailsEnvio(this);" />
+										<a4j:commandLink styleClass="link"
+											oncomplete="#{rich:component('panPaciente')}.show();"
+											value="#{lista.pacientePepBean.dscNome} - #{lista.pacientePepBean.numProntuario} ( #{lista.dscClinica} )"
+											action="#{laboratorioForm.popularDadosPaciente}"
+											reRender="panPaciente">
+											<f:setPropertyActionListener
+												target="#{laboratorioForm.isnPaciente}"
+												value="#{lista.pacientePepBean.isnPaciente}" />
+										</a4j:commandLink>
+									</h:panelGrid>
+									<rich:dataTable
+										onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										style="width: 100%; display: none;" id="detailsEnvio"
+										value="#{lista.listExameSolicitacao}" var="detail">
+										<rich:column id="exm1"
+											style="width: 50%;background-color:#{(detail.examePepBean.isnDisponibilidade == 3)?'#FF6262':  (detail.examePepBean.isnDisponibilidade == 2) ? '#FFFF80' : 'white' };"
+											title="#{detail.title}">
+											<f:facet name="header">Enviar Exames</f:facet>
+											<h:selectBooleanCheckbox
+												value="#{detail.exameSelecionadoEnviar}"
+												rendered="#{detail.flgEnvio == 'N' and detail.examePepBean.isnExameGrupo != 2}"
+												style="width: 12px; height: 12px; margin-left: 25px;" />
+											<h:graphicImage id="visto3" value="IMG/visto.png"
+												style="border:white; width: 12px; height: 12px; margin-left: 25px;"
+												title="EXAME ENVIADO" rendered="#{detail.flgEnvio == 'S'}" />
+											<h:panelGroup>
+												<h:outputText
+													value=" #{detail.examePepBean.dscExame} #{detail.dscExameCompl}" />
+											</h:panelGroup>
+										</rich:column>
+										<rich:column id="exm" style="width: 50%;"
+											title="#{detail.title}">
+											<f:facet name="header">Cancelar Exames</f:facet>
+											<h:selectBooleanCheckbox
+												value="#{detail.exameSelecionadoCancelar}"
+												rendered="#{detail.flgEnvio == 'S' and detail.examePepBean.isnExameGrupo != 2 and (detail.exameSolicitacaoWsDetalheBean.flgLaudo == null or detail.exameSolicitacaoWsDetalheBean.flgLaudo eq 'N')}"
+												style="width: 12px; height: 12px; margin-left: 25px;" />
+											<h:graphicImage id="visto4" value="IMG/excluir.png"
+												style="border:white; width: 12px; height: 12px; margin-left: 25px;"
+												title="EXAME NÃO ENVIADO"
+												rendered="#{detail.flgEnvio == 'N'}" />
+											<h:panelGroup>
+												<h:outputText
+													value=" #{detail.examePepBean.dscExame} #{detail.dscExameCompl}" />
+											</h:panelGroup>
+										</rich:column>
+									</rich:dataTable>
+								</rich:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsEnvio" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR PACIENTE -->
+
+
+
+						<!-- PANEL DE AGRUPAMENTO POR EXAME -->
+
+						<h:panelGroup layout="block" id="panelTableExameEnvio"
+							rendered="#{laboratorioForm.tpAgrupamento == 2}">
+							<rich:dataTable style="width: 100%; background-color:#F1F1F1;"
+								value="#{laboratorioForm.listPorExame}" var="listaExame"
+								rows="15" id="listaExameEnvio" reRender="dsExameEnvio">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<h:column>
+											<h:outputText>Exames</h:outputText>
+										</h:column>
+									</rich:columnGroup>
+								</f:facet>
+								<h:column rendered="#{listaExame.existePaciente}">
+									<h:panelGrid columns="2">
+										<h:graphicImage id="expandExame" value="IMG/expand.gif"
+											onclick="toggleDetailsExame(this);" />
+										<h:outputText value="#{listaExame.dscExame}" />
+									</h:panelGrid>
+									<rich:dataTable
+										onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										style="width: 100%; display: none;" id="detailExameEnvio"
+										value="#{listaExame.listExameSolicitacao}" var="detailExame">
+										<rich:column id="pexm" style="width: 100%;"
+											title="#{detailExame.title}">
+											<h:selectBooleanCheckbox
+												value="#{detailExame.exameSelecionado}"
+												rendered="#{detailExame.isnExameSituacao == 1 and detailExame.examePepBean.isnExameGrupo != 2}"
+												style="width: 12px; height: 12px; margin-left: 25px;" />
+											<h:graphicImage id="visto" value="IMG/visto.png"
+												style="border:white; width: 12px; height: 12px; margin-left: 25px;"
+												title="EXAME REALIZADO"
+												rendered="#{detailExame.isnExameSituacao == 2}" />
+											<h:panelGroup>
+												<a4j:commandLink styleClass="link"
+													oncomplete="#{rich:component('panPaciente')}.show();"
+													value=" #{detailExame.internacaoPepBean.pacientePepBean.dscNome} - #{detailExame.internacaoPepBean.pacientePepBean.numProntuario} ( #{detailExame.internacaoPepBean.dscClinica} )"
+													action="#{laboratorioForm.popularDadosPaciente}"
+													reRender="panPaciente">
+													<f:setPropertyActionListener
+														target="#{laboratorioForm.isnPaciente}"
+														value="#{detailExame.internacaoPepBean.pacientePepBean.isnPaciente}" />
+												</a4j:commandLink>
+											</h:panelGroup>
+										</rich:column>
+									</rich:dataTable>
+								</h:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="dsExameEnvio" ajaxSingle="false" />
+								</f:facet>
+
+							</rich:dataTable>
+						</h:panelGroup>
+
+						<!-- FIM PANEL AGRUPAMENTO POR EXAME -->
+
+						<div class="quadroAtendimento"
+							style="height: 30px; width: 99.7%; text-align: center;">
+							<a4j:commandButton value="Cadastrar Exames (EM)"
+								action="#{laboratorioForm.cadastrarExamesWS}"
+								style="margin-top:5px;" styleClass="botaoModal"
+								oncomplete="validar('#{laboratorioForm.mensagem}');"
+								reRender="panelTable,panelTableExame,panelTableEixo,panelTableEixoRealizado, panelTableRealizado,panelTableExameRealizado,panelTableEixoEnvio,panelTableExameEnvio,detailsEnvio,listaEnvio"
+								rendered="#{laboratorioForm.tpAgrupamento == 1}" />
+
+							<rich:spacer width="10" />
+
+							<a4j:commandButton value="Cancelar Exames"
+								action="#{laboratorioForm.cancelarExamesWS}"
+								style="margin-top:5px;" styleClass="botaoModal"
+								oncomplete="validar('#{laboratorioForm.mensagem}');"
+								reRender="panelTable,panelTableExame,panelTableEixo,panelTableEixoRealizado, panelTableRealizado,panelTableExameRealizado,panelTableEixoEnvio,panelTableExameEnvio,detailsEnvio,listaEnvio" />
+						</div>
+
+
+					</rich:tab>
+
+				</rich:tabPanel>
+
+				<h:panelGroup id="panelSolicitados" style="width:100%" rendered="#{laboratorioForm.tpAgrupamento == 4}">
+					<label>Paciente</label>
+					<a4j:commandButton image="IMG/pesquisa.gif" id="btnPaciente"
+						action="#{laboratorioForm.abrirPaciente}"
+						oncomplete="Richfaces.showModalPanel('panPacienteSel');"
+						reRender="panPacienteSel" >
+					</a4j:commandButton>
+					<br />
+				</h:panelGroup>
+				<rich:tabPanel id="tabPanelSolicitados" switchType="client"
+					style="width: 100%;"
+					rendered="#{laboratorioForm.tpAgrupamento == 4}">
+					<rich:tab label="EXAMES SOLICITADOS"
+						style="width: 100%; height: 15px;"
+						rendered="#{laboratorioForm.tpAgrupamento == 4}">
+
+						<rich:dataTable id="dtHistoricoGer"
+							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							value="#{laboratorioForm.listaInternac}" var="internacao"
+							rows="15" style="width:100%;">
+
+							<f:facet name="header">
+								<rich:columnGroup>
+									<h:column>
+										<h:outputText>Internações</h:outputText>
+									</h:column>
+								</rich:columnGroup>
+							</f:facet>
+
+							<rich:columnGroup style="width:100%;"
+								onRowMouseOver="this.style.backgroundColor='#f1f1f1'"
+								onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+								<rich:column style="background-color:#F1F1F1; text-align:left;width:100%;">
+									<h:panelGrid columns="5" >
+										<h:graphicImage id="expandSolic" value="IMG/expand.gif"		onclick="toggleDetailsSolic(this);" />
+											Internação: <strong> <h:outputText style="font-weight:bold;font-size:10px;"	value="#{internacao.isnInternacao}" />
+										</strong> Data Cadastro: <strong> <h:outputText style="font-weight:bold;font-size:10px;" value="#{internacao.datCadastro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</strong>
+									</h:panelGrid>
+								
+									<!-- Exames -->
+									<rich:dataTable var="exame"
+										value="#{internacao.listExameSolicAuxArray}"
+										style="width:640px;display: none;"
+										onRowMouseOver="this.style.backgroundColor='#f1f1f1'"
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										id="detailsSolicitados">
+										
+										<rich:column id="eixu" style="width: 640px;">
+										
+										<div style="float:left; width:20px">
+											<h:graphicImage id="expandSolic" value="IMG/expand.gif"		onclick="toggleDetailsAux(this);" />
+										</div>
+										<div style="float:left">
+											<h:outputText style="font-weight:bold;font-size:10px;"	value="Solicitação: #{exame.isnExameSolicAux}" />
+											- Data Solicitação: <strong> <h:outputText style="font-weight:bold;font-size:10px;" value="#{exame.datSolicitacao}">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</h:outputText>
+												</strong>
+										</div>
+										<div style="float:right">
+										
+										
+										<t:commandLink action="#{laboratorioForm.visualizarExameAgrupado}" 
+													title="VISUALIZAR EXAME AGRUPADO"  
+													target="_blank"
+													rendered="#{exame.possuiExameLaboratorio}">
+									   			<h:graphicImage value="IMG/impressora.png" style="float:right"/>
+									  			<f:setPropertyActionListener value="#{exame}" target="#{laboratorioForm.auxVo}"/>					  								
+									  		</t:commandLink>
+											
+										</div>
+										<div style="clear:both"/>
+	
+										<rich:dataTable
+												onRowMouseOver="this.style.backgroundColor='#FFFFCC'"
+												onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+												style="width: 600px;display: none;" id="detailEixoSubAux"
+												value="#{exame.exameSolicPepBean}"
+												var="detailEixoSubi">		
+										
+										<rich:column id="exameSolic" style="width: 600px;background-color:#{(detailEixoSubi.examePepBean.isnDisponibilidade == 3)?'#FF6262':
+										  (detailEixoSubi.examePepBean.isnDisponibilidade == 2) ? '#FFFF80' : 'white' };"
+										 >
+										
+										
+										
+										<div style="float:left">
+											<h:outputText  value=" #{detailEixoSubi.examePepBean.dscExame}"/>
+										</div>
+										<div style="float:right">
+											
+											
+											<t:commandLink action="#{laboratorioForm.visualizarExame}" 
+													title="VISUALIZAR EXAME" 
+													rendered="#{(detailEixoSubi.examePepBean.isnExameGrupo == 3) and !(empty detailEixoSubi.datRealizacao)}" 
+													target="_blank" 
+													oncomplete="show_html('#{emergenciaForm.filePath}')">
+									   			<h:graphicImage value="IMG/impressora.png" style="float:right"/>
+									  			<f:setPropertyActionListener value="#{detailEixoSubi}" target="#{laboratorioForm.exameSolicLaudo}"/>					  								
+									  		</t:commandLink>
+										</div>
+										<div style="clear:both"/>
+											
+										</rich:column>
+										</rich:dataTable>
+										</rich:column>
+									</rich:dataTable>
+								</rich:column>
+									<!-- Fim Exames -->
+
+									<!-- Prescrições -->
+						
+							</rich:columnGroup>
+						</rich:dataTable>
+
+
+					</rich:tab>
+
+				</rich:tabPanel>
+
+
+			</div>
+
+
+
+
+			<a4j:status id="statusPanel"
+				onstart="Richfaces.showModalPanel('panelStatus');"
+				onstop="#{rich:component('panelStatus')}.hide()">
+			</a4j:status>
+
+			<script>
+				function toggleDetails(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':details';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+
+				function toggleDetailsEnvio(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailsEnvio';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+
+				function toggleDetailsRealizado(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailsRealizado';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+				
+				function toggleDetailsColetado(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailsColetado';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+
+				function toggleDetailsExame(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailExame';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+
+				function toggleDetailsExameRealizado(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailExameRealizado';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+				
+				function toggleDetailsExameColetado(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailExameColetado';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+
+				function toggleDetailsEixo(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailEixo';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+
+				function toggleDetailsEixoSub(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailEixoSub';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+
+				function toggleDetailsEixoRealizado(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailEixoRealizado';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+				
+				function toggleDetailsEixoColetado(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailEixoColetado';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+
+				function toggleDetailsEixoSubRealizado(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailEixoSubRealizado';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+				
+				function toggleDetailsEixoSubColetado(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailEixoSubColetado';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'block';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+				
+				function toggleDetailsSolic(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailsSolicitados';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'table';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+				
+				function toggleDetailsAux(image) {
+					var detailsId = image.id.substring(0, image.id
+							.lastIndexOf(':'))
+							+ ':detailEixoSubAux';
+					var details = document.getElementById(detailsId);
+					if (details.style.display == 'none') {
+						details.style.display = 'table';
+						image.src = 'IMG/collapse.gif';
+					} else {
+						details.style.display = 'none';
+						image.src = 'IMG/expand.gif';
+					}
+				}
+				
+				function validar(msg) {
+					if (msg != '') {
+						alert(msg);
+					}
+				}
+			</script>
+
+		</h:form>
+
+		<!--INICIO - PANEL INFORMANDO OS DADOS DO PACIENTE -->
+
+		<rich:modalPanel id="panPaciente" autosized="false" width="600"
+			height="300" resizeable="false" headerClass="headerPanel3">
+
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="DADOS DO PACIENTE"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="IMG/fechar.png" id="fechaPanel" />
+					<rich:componentControl for="panPaciente" attachTo="fechaPanel"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+
+			<h:form id="formPaciente">
+
+
+				<fieldset class="font12">
+					<legend>
+						<b>PACIENTE</b>
+					</legend>
+					<table class="tabela">
+						<tr>
+							<td class="tdBranco" width="80%"><b>Prontuário: </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.pacientePepBean.numProntuario}" /><b>
+									- </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.pacientePepBean.dscNome}" />
+							</td>
+						</tr>
+						<tr>
+							<td class="tdBranco" width="80%"><b>Data de Nascimento:
+							</b> <h:outputText
+									value="#{laboratorioForm.objInternacao.pacientePepBean.datNascimento}" />
+							</td>
+						</tr>
+						<tr>
+							<td class="tdBranco" width="80%"><b>Sexo: </b> <h:outputText
+									value="MASCULINO"
+									rendered="#{laboratorioForm.objInternacao.pacientePepBean.isnSexo == 1}" />
+								<h:outputText value="FEMININO"
+									rendered="#{laboratorioForm.objInternacao.pacientePepBean.isnSexo == 3}" />
+							</td>
+						</tr>
+
+						<tr>
+							<td class="tdBranco" width="100%"><b>Nome da Mãe: </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.pacientePepBean.dscMae}" />
+							</td>
+						</tr>
+
+						<tr>
+							<td class="tdBranco" width="80%"><b>Identidade: </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.pacientePepBean.numRG}" />
+								<b> Orgão: </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.pacientePepBean.dscOrgaoEmissaoRg}" />
+							</td>
+						</tr>
+
+						<tr>
+							<td class="tdBranco" width="80%"><b>Admissão: </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.pacientePepBean.datCadastro}" />
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+
+				<fieldset>
+					<legend>
+						<b>LOCALIZAÇÃO/CONTATO</b>
+					</legend>
+					<table class="tabela">
+						<tr>
+							<td class="tdBranco" width="100%"><b>Endereço: </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.dscEndereco}" /></td>
+						</tr>
+
+						<tr>
+							<td class="tdBranco" width="100%"><b>CEP: </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.numCep}" /></td>
+						</tr>
+						<tr>
+							<td class="tdBranco" width="100%"><b>Bairro: </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.dscBairro}" /></td>
+						</tr>
+						<tr>
+							<td class="tdBranco" width="100%"><b>Telefone: </b> <h:outputText
+									value="#{laboratorioForm.objInternacao.numDdd1} #{laboratorioForm.objInternacao.numTelefone1}" />
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+
+			</h:form>
+
+		</rich:modalPanel>
+
+		<!--FIM - PANEL INFORMANDO OS DADOS DO PACIENTE -->
+
+
+		<rich:modalPanel id="panPacienteSel" autosized="false" width="700"
+			height="450" resizeable="false" headerClass="headerPanel3">
+			<!-- BARRA DE TITULO MODAL-->
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Pesquisa de Paciente"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="IMG/fechar.png" id="fechaPanelPaciente" />
+					<rich:componentControl for="panPacienteSel"
+						attachTo="fechaPanelPaciente" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+
+			<h:form id="formPacienteSel">
+				<fieldset style="background-color: #F5F5F5">
+
+					<div style="height: 30px;">
+						<div class="colLeft" style="width: 15%;">
+							<label class="font10"><b>Prontuário:</b></label>
+						</div>
+						<div class="colLeft largura220">
+							<h:inputText value="#{laboratorioForm.nmProntuario}"
+								maxlength="10" styleClass="campoTexto largura200"
+								onblur="this.value.toUpperCase();" style="width: 50px;"
+								id="nmProntuario" onkeypress="return enter(event);" />
+						</div>
+					</div>
+
+					<div style="height: 30px;">
+						<div class="colLeft" style="width: 15%;">
+							<label class="font10"><b>Nome:</b></label>
+						</div>
+						<div class="colLeft largura220">
+							<h:inputText value="#{laboratorioForm.nmPaciente}"
+								maxlength="100" styleClass="campoTexto largura200"
+								onblur="this.value.toUpperCase();" style="width: 450px;"
+								id="nmPaciente" onkeypress="return enter(event);" />
+						</div>
+					</div>
+
+					<div style="height: 20px">
+						<div class="colLeft" style="width: 100%;">
+							<a4j:commandButton style="width: 80px; height: 20px;"
+								oncomplete="validaMarcacao('#{laboratorioForm.mensagem}');"
+								id="pesquisar" value="PESQUISAR"
+								action="#{laboratorioForm.pesquisarPaciente}"
+								reRender="formPacienteSel" />
+
+						</div>
+					</div>
+
+				</fieldset>
+
+				<div>
+					<rich:dataTable id="tabelaPaciente"
+						onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+						value="#{laboratorioForm.listPaciente}" var="listaPaciente"
+						rows="10" rowKeyVar="linha" style="width: 680px; cursor: pointer;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<h:column>
+									<h:outputText width="5%" />
+								</h:column>
+								<h:column>
+									<h:outputText width="10%" value="Prontuário" />
+								</h:column>
+								<h:column>
+									<h:outputText width="85%" value="Nome" />
+								</h:column>
+							</rich:columnGroup>
+						</f:facet>
+
+						<rich:column align="center" width="5%" sortable="true">
+							<a4j:commandLink action="#{laboratorioForm.retornarPaciente}"
+								reRender="tabPanelSolicitados"
+								oncomplete="#{rich:component('panPacienteSel')}.hide()">
+								<h:graphicImage id="imgSelecionarPaciente"
+									url="IMG/selecionar.png" style="border:0;" />
+								<f:setPropertyActionListener value="#{listaPaciente}"
+									target="#{laboratorioForm.objPaciente}" />
+							</a4j:commandLink>
+						</rich:column>
+
+						<rich:column width="10%" sortable="true">
+							<h:outputText value="#{listaPaciente.numProntuario}" />
+						</rich:column>
+
+						<rich:column width="85%" sortable="true">
+							<h:outputText value="#{listaPaciente.dscNome}" />
+						</rich:column>
+
+						<f:facet name="footer">
+							<rich:datascroller id="ds" ajaxSingle="false" />
+						</f:facet>
+					</rich:dataTable>
+				</div>
+			</h:form>
+		</rich:modalPanel>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

@@ -1,0 +1,2 @@
+INDEX VERSION 1.4+/home/sergio/eclipse-workspace/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+1856080324.index

@@ -1,0 +1,302 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	
+	<session-factory>
+		<!-- Database connection settings (PACIENTE DESENV) -->
+	    <!--<property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property> -->
+	    <!-- <property name="connection.url">jdbc:oracle:thin:@10.1.1.2:1521:svrhgwa1</property>  --> 
+	    <!-- <property name="connection.url">jdbc:oracle:thin:@10.1.1.18:1521:svrhrcde</property>  -->
+		<!-- <property name="connection.username">medpoint</property> -->
+		<!-- <property name="connection.password">sysmed</property>  -->
+		<!-- <property name="hibernate.connection.pool_size">25</property> -->
+	    <!-- <property name="hibernate.format_sql">true</property>  -->
+		<!-- <property name="hibernate.default_schema">medpoint</property> --> 
+			
+		<!-- JDBC connection pool (use the built-in) -->
+		<!-- <property name="connection.pool_size">1</property> --> 
+		
+		<!-- SQL dialect -->
+		 <!-- <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property> --> 
+		
+		 <!-- Database connection settings (PACIENTE PRODUCAO) -->
+		 <property name="connection.driver_class">org.postgresql.Driver</property>
+		 <!-- 
+		 <property name="connection.url">jdbc:postgresql://186.225.39.3:5400/UPA</property> 
+		 <property name="connection.url">jdbc:postgresql://10.1.2.39:5432/UPA</property> 
+		 <property name="connection.password">@isgh#upa</property>
+		 <property name="connection.url">jdbc:postgresql://187.60.45.214:5400/UPA</property> 
+		 <property name="connection.url">jdbc:postgresql://10.6.0.226:5432/UPA</property> 
+		 <property name="connection.url">jdbc:postgresql://10.2.1.4:5432/UPA</property>
+		  -->
+		 <!-- 
+		 <property name="connection.url">jdbc:postgresql://10.1.1.84:5432/UPA_TREINAMENTO</property>
+		 <property name="connection.url">jdbc:postgresql://187.60.45.214:5400/UPA</property>
+		 <property name="connection.url">jdbc:postgresql://177.200.80.50:5400/UPA</property>
+		 <property name="connection.url">jdbc:postgresql://186.225.51.122:5400/UPA</property>
+		 <property name="connection.url">jdbc:postgresql://10.1.1.25:5432/UPAPF_2</property>
+		 <property name="connection.url">jdbc:postgresql://10.2.2.4:5432/UPA</property>
+		 <property name="connection.password">@admin#isgh</property>
+		 <property name="connection.url">jdbc:postgresql://10.1.1.25:5432/UPA_MS_PROD_ALMOX</property>
+		 <property name="connection.url">jdbc:postgresql://192.168.252.192:5432/UPA</property>
+		 <property name="connection.url">jdbc:postgresql://192.168.252.192:5432/UPA_CC_PRESC_HML</property>
+		 <property name="connection.url">jdbc:postgresql://186.225.51.250:5400/UPA</property>
+		 <property name="connection.url">jdbc:postgresql://192.168.252.192:5432/UPA_MS_HML</property>
+		 --> 
+		 <property name="connection.url">jdbc:postgresql://192.168.60.151:5433/UPA_MS_17_01_2020</property>
+		 <property name="connection.username">postgres</property>
+		 <property name="connection.password">@isgh#upa</property>
+		 <property name="hibernate.connection.pool_size">120</property>
+		 <property name="hibernate.format_sql">true</property>
+		 <property name="hibernate.show_sql">false</property>
+		 <property name="hibernate.default_schema">medpoint</property> 
+		 
+		 <!-- 
+		  -->
+		<property name="hibernate.c3p0.max_size">160</property>
+		<property name="hibernate.c3p0.min_size">5</property>
+		<property name="hibernate.c3p0.timeout">1200</property>
+		<property name="hibernate.c3p0.max_statements">10000</property>
+		<property name="hibernate.c3p0.idle_test_period">3600</property>
+		<property name="hibernate.c3p0.acquire_increment">4</property>
+		<property name="hibernate.c3p0.preferredTestQuery">select 1;</property>
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>			 
+	 	
+		
+		 <!-- SQL dialect -->
+		 <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>  
+	
+		 <!-- Disable the second-level cache -->
+		 <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property> 
+		
+		 <!-- Echo all executed SQL to stdout -->
+ 
+		 <!-- paciente mappings -->
+		
+			<mapping class="br.org.isgh.rh.beans.PlantaoEscala"/>
+			<mapping class="br.org.isgh.rh.beans.PlantaoDiaria"/>
+	
+			<mapping class="br.org.isgh.ambulatorio.beans.PacienteBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.TipoConsultaBean"/>			
+			<mapping class="br.org.isgh.ambulatorio.beans.MarcacaoBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.InternacaoBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.InternacaoLeitoBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.MarcacaoObsBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.MarcacaoSituacaoBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.EscalaBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.EnfermariaBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.LeitoBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.log.EscalaBeanLog"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.log.MarcacaoBeanLog"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.ClinicaBean"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.InternacaoTransBean"/>
+			<mapping class="br.org.isgh.seguranca.beans.Categoria"/>
+			<mapping class="br.org.isgh.ouvidoria.beans.RegistroOuvidoria"/>
+			<mapping class="br.org.isgh.ouvidoria.beans.TipoOuvidoria"/>
+			
+			<mapping class="br.org.isgh.paciente.beans.Profissional"/>
+			<mapping class="br.org.isgh.paciente.beans.ConfiguracaoLog"/>
+			<mapping class="br.org.isgh.paciente.beans.Interconsulta"/>
+			<mapping class="br.org.isgh.paciente.beans.Referencia"/>
+			<mapping class="br.org.isgh.paciente.beans.Internacao"/>
+			<mapping class="br.org.isgh.paciente.beans.Escolaridade"/>
+			<mapping class="br.org.isgh.paciente.beans.Municipio"/>
+			<mapping class="br.org.isgh.paciente.beans.Ocupacao"/>
+			<mapping class="br.org.isgh.paciente.beans.Paciente"/>
+			<mapping class="br.org.isgh.paciente.beans.PlanoSaude"/>
+			<mapping class="br.org.isgh.paciente.beans.SituacaoFamiliar"/>
+			<mapping class="br.org.isgh.paciente.beans.TipoAtendimento"/>
+			<mapping class="br.org.isgh.paciente.beans.TipoTelefone"/>
+			<mapping class="br.org.isgh.paciente.beans.Uf"/>
+			<mapping class="br.org.isgh.paciente.beans.TipoCertidao"/>
+			<mapping class="br.org.isgh.paciente.beans.Cor"/>
+			<mapping class="br.org.isgh.paciente.beans.Nacionalidade"/>
+			<mapping class="br.org.isgh.paciente.beans.Sexo"/>
+			<mapping class="br.org.isgh.paciente.beans.Acompanhante"/>
+			<mapping class="br.org.isgh.paciente.beans.Parentesco"/>
+			<mapping class="br.org.isgh.paciente.beans.InternacaoLeito"/>
+			<mapping class="br.org.isgh.paciente.beans.Destino"/>
+			<mapping class="br.org.isgh.paciente.beans.Leito"/>
+			<mapping class="br.org.isgh.paciente.beans.InterditaLeito"/>
+			<mapping class="br.org.isgh.paciente.beans.Regulacao"/>
+			<mapping class="br.org.isgh.paciente.beans.Enfermaria"/>
+			<mapping class="br.org.isgh.paciente.beans.Clinica"/>
+			<mapping class="br.org.isgh.paciente.beans.ClinicaSetor"/>
+			<mapping class="br.org.isgh.paciente.beans.Bloco"/>
+			<mapping class="br.org.isgh.paciente.beans.Especialidade"/>
+			<mapping class="br.org.isgh.paciente.beans.Parametro"/>
+			<mapping class="br.org.isgh.paciente.beans.Cid10"/>
+			<mapping class="br.org.isgh.paciente.beans.Cid10Categoria"/>
+			<mapping class="br.org.isgh.paciente.beans.Cid10Grupo"/>
+			<mapping class="br.org.isgh.paciente.beans.AtendimentoDengue"/>
+			<mapping class="br.org.isgh.paciente.beans.ItemDengue"/>
+			<mapping class="br.org.isgh.paciente.beans.InternacaoAtendimentoAcidente"/>
+  			<mapping class="br.org.isgh.paciente.beans.TipoAcidenteVeiculo"/>
+  			<mapping class="br.org.isgh.paciente.beans.RegiaoAfetada"/>
+  			<mapping class="br.org.isgh.paciente.beans.PosicaoAcidente"/>
+  			<mapping class="br.org.isgh.paciente.beans.AcidenteRegiaoAfetada"/>
+  			<mapping class="br.org.isgh.paciente.beans.Noticia"/>
+  			<mapping class="br.org.isgh.paciente.beans.NoticiaCategoria"/>	
+			<mapping class="br.org.isgh.paciente.beans.ProtocoloSepse"/>
+			<mapping class="br.org.isgh.paciente.beans.EmailSepse"/>
+			<mapping class="br.org.isgh.paciente.beans.Procedimento"/>	
+			<mapping class="br.org.isgh.paciente.beans.DietaItem"/>
+			<mapping class="br.org.isgh.paciente.beans.Dieta"/>	
+			<mapping class="br.org.isgh.paciente.beans.InternacaoAtendimento"/>			
+			<mapping class="br.org.isgh.paciente.beans.InternacaoAtendimentoProcedimento"/>	
+			<mapping class="br.org.isgh.paciente.beans.AtendimentoChikungunya"/>
+			<mapping class="br.org.isgh.paciente.beans.JustificativaReposicaoVolemica"/>
+			<mapping class="br.org.isgh.paciente.beans.SintomaSepseEnf"/>
+			<mapping class="br.org.isgh.paciente.beans.SinaisSirs"/>
+			<mapping class="br.org.isgh.paciente.beans.SinaisSirsRisco"/>
+			<mapping class="br.org.isgh.paciente.beans.ProtocoloSepseSinaisResp"/>
+			<mapping class="br.org.isgh.paciente.beans.ProtocoloSepseSinais"/>
+			<mapping class="br.org.isgh.paciente.beans.FocoPrescricaoSepse"/>
+			<mapping class="br.org.isgh.paciente.beans.TipoFoco"/>
+			<mapping class="br.org.isgh.paciente.beans.FocoSepse"/>
+			<mapping class="br.org.isgh.paciente.beans.PrescricaoItemSepse"/>
+			<mapping class="br.org.isgh.paciente.beans.EvolucaoSepse"/>
+			<mapping class="br.org.isgh.paciente.beans.EvolucaoSepseSinais"/>
+			<mapping class="br.org.isgh.paciente.beans.PrescricaoPepItemDietaZero"/>
+			<mapping class="br.org.isgh.paciente.beans.PrescricaoPepItemContadorAntib"/>
+			<mapping class="br.org.isgh.paciente.beans.VolumePrescricaoSepse"/>
+			
+			<mapping class="br.org.isgh.pep.beans.ExamePepBean"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoEnfermagemPep"/>
+			<mapping class="br.org.isgh.pep.beans.TipoPrescricaoPep"/>
+			<mapping class="br.org.isgh.pep.beans.ProdutoTipoPrescricao"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoUpaBean"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoUpaFarmBean"/>
+			<mapping class="br.org.isgh.pep.beans.PacientePepBean"/>
+			<mapping class="br.org.isgh.pep.beans.ExameSolicitacaoPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.SexoPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.EnfermariaPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.LeitoPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.ExameSituacaoPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.InternacaoPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.InternacaoLeitoPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.PacienteAlergia"/>
+			<mapping class="br.org.isgh.pep.beans.InternacaoDoc"/>
+			<mapping class="br.org.isgh.pep.beans.InternacaoDocTipo"/>
+			<mapping class="br.org.isgh.pep.beans.InternacaoChamadaPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.InternacaoPrescPep"/>
+			<mapping class="br.org.isgh.pep.beans.ItemInternacaoPrescPep"/>
+			<mapping class="br.org.isgh.pep.beans.ClassificacaoRiscoPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.ClassificacaoRiscoAud"/>
+			<mapping class="br.org.isgh.pep.beans.ClassificacaoRiscoAudItem"/>
+			<mapping class="br.org.isgh.pep.beans.ClassificacaoRiscoAuditoria"/>
+			<mapping class="br.org.isgh.pep.beans.RiscoPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.InternacaoAtendimentoPepBean"/>
+			<mapping class="br.org.isgh.paciente.beans.InternacaoAtendimento"/>			
+			<mapping class="br.org.isgh.pep.beans.FluxogramaPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.InternacaoEvolucao"/>
+			<mapping class="br.org.isgh.pep.beans.ReferenciaPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.ExameAgrupamentoPepBean"/>
+			<mapping class="br.org.isgh.pep.beans.ProdutoUpaBean"/>
+			<mapping class="br.org.isgh.pep.beans.ItemKitBean"/>
+			<mapping class="br.org.isgh.pep.beans.KitBean"/>
+			<mapping class="br.org.isgh.pep.beans.SincFarmBean"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPep"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepIs"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepItem"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepItemEletrolitos"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepItemProcedimento"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepItemCuidadosGerais"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepTipo"/>			
+			<mapping class="br.org.isgh.pep.beans.FichaPepiBean"/>	
+			<mapping class="br.org.isgh.pep.beans.FichaItemPepiBean"/>	
+			<mapping class="br.org.isgh.pep.beans.GrupoMedicamentoBean"/>	
+			<mapping class="br.org.isgh.pep.beans.PrescricaoObs"/>	
+			<mapping class="br.org.isgh.pep.beans.PrescricaoVia"/>		
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPosologia"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPadraoPep"/>		
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPadraoItemPep"/>		
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepTemp"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepTempLog"/>		
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepItemVazao"/>					
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPadraoItemVazao"/>					
+			
+			<mapping class="br.org.isgh.paciente.beans.Bairro"/>
+			<mapping class="br.org.isgh.paciente.beans.Regional"/>
+			<mapping class="br.org.isgh.ambulatorio.beans.log.InternacaoTransBeanLog"/>
+			<mapping class="br.org.isgh.pep.beans.ExameGrupo"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoUpaColetivoBean"/>
+			<mapping class="br.org.isgh.pep.beans.AssistenteSocialAnotacaoBean"/>
+			<mapping class="br.org.isgh.pep.beans.AssistenteSocialCategoriaBean"/>
+			<mapping class="br.org.isgh.pep.beans.AssistenteSocialDeclaracaoBean"/>
+			<mapping class="br.org.isgh.pep.beans.AssistenteSocialDeclaracaoTipoBean"/>
+			<mapping class="br.org.isgh.pep.beans.NumeroAtendimentoMedicoBean"/>
+			<mapping class="br.org.isgh.pep.beans.NumeroClassificacaoRiscoBean"/>
+			<mapping class="br.org.isgh.pep.beans.PerfilTransfBean"/>
+			<mapping class="br.org.isgh.pep.beans.PerfilTransfItemBean"/>
+			<mapping class="br.org.isgh.pep.beans.PacienteEmergenciaOtimizadoBean"/>
+			<mapping class="br.org.isgh.pep.beans.PacienteEmergenciaTabletOtimizado"/>
+			<mapping class="br.org.isgh.pep.beans.PacEmerOtmTemp"/>
+			<!-- <mapping class="br.org.isgh.pep.beans.InternacaoReferenciaBean"/> -->
+			<mapping class="br.org.isgh.paciente.beans.Pais"/>
+			<mapping class="br.org.isgh.pep.beans.ExameSolicitacaoWsBean"/>
+			<mapping class="br.org.isgh.pep.beans.ExameSolicitacaoWsDetalheBean"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPep"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepIs"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepItem"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepTipo"/>			
+			<mapping class="br.org.isgh.pep.beans.TransAnotacaoBean"/>			
+			<mapping class="br.org.isgh.pep.beans.InternacaoDocLog"/>	
+			  <mapping class="br.org.isgh.pep.beans.ExameEmergenciaPepBean"/>
+			  <mapping class="br.org.isgh.pep.beans.ConsultaEmergenciaPepBean"/>
+			  <mapping class="br.org.isgh.pep.beans.ConsultaEmergenciaEnfPepBean"/>	
+			  <mapping class="br.org.isgh.pep.beans.MensagemSesaTemp"/>	
+			
+			<mapping class="br.org.isgh.pep.beans.AutorizacaoCcihPepiBean"/>
+			<mapping class="br.org.isgh.pep.beans.ObsAnaliseFarmaciaBean"/>	
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPadraoItemEletrolitos"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPadraoItemNebulizacao"/>
+			<mapping class="br.org.isgh.pep.beans.PrescricaoPepItemNebulizacao"/>		
+		<!-- end paciente mappings  -->
+			
+		<!-- seguranca mappings -->
+			
+			<mapping class="br.org.isgh.seguranca.beans.Usuario"/>
+			<mapping class="br.org.isgh.seguranca.beans.Sistema"/>
+			<mapping class="br.org.isgh.seguranca.beans.Formacao"/>
+			<mapping class="br.org.isgh.seguranca.beans.Conselho"/>
+			<mapping class="br.org.isgh.seguranca.beans.Entidade"/>
+			<mapping class="br.org.isgh.seguranca.beans.Especialidade"/>
+			<mapping class="br.org.isgh.seguranca.beans.GrupoTelaAcao"/>
+			<mapping class="br.org.isgh.seguranca.beans.Setor"/>
+			<mapping class="br.org.isgh.seguranca.beans.TelaAcao"/>
+			<mapping class="br.org.isgh.seguranca.beans.UsuarioEspecialidade"/>
+			<mapping class="br.org.isgh.seguranca.beans.Acao"/>
+			<mapping class="br.org.isgh.seguranca.beans.Grupo"/>
+			<mapping class="br.org.isgh.seguranca.beans.UsuarioGrupo"/>
+			<mapping class="br.org.isgh.seguranca.beans.Permissao"/>
+			<mapping class="br.org.isgh.seguranca.beans.TipoTelefone"/>
+			<mapping class="br.org.isgh.seguranca.beans.Uf"/>
+			<mapping class="br.org.isgh.seguranca.beans.log.SistemaLog"/>
+			<mapping class="br.org.isgh.seguranca.beans.log.TelaAcaoLog"/>
+			<mapping class="br.org.isgh.seguranca.beans.log.PermissaoLog"/>
+			<mapping class="br.org.isgh.seguranca.beans.log.UsuarioLog"/>
+			<mapping class="br.org.isgh.seguranca.beans.log.UsuarioGrupoLog"/>
+			<mapping class="br.org.isgh.seguranca.beans.Vinculo"/>
+			<mapping class="br.org.isgh.seguranca.beans.VinculoTipo"/>
+			<mapping class="br.org.isgh.seguranca.beans.Parametro"/>
+			
+		
+
+
+		<!-- end seguranca mappings  -->
+			
+		<!-- almox mappings -->		
+			<mapping class="br.org.isgh.almox.beans.Produto"/>
+			<mapping class="br.org.isgh.almox.beans.ProdutoDiluicao" />
+		<!-- end almox mappings  -->
+		
+			<mapping class="br.org.isgh.paciente.forms.Prescricao"/>
+			<mapping class="br.org.isgh.paciente.forms.PrescricaoTipo"/>
+			<mapping class="br.org.isgh.paciente.forms.PrescricaoItens"/>
+	</session-factory>
+	
+</hibernate-configuration>

@@ -1,0 +1,5 @@
+package curso_array.entities;
+
+public class Product {
+
+}

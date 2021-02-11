@@ -1,0 +1,1273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#cs_ambulatoriosPendentes.xhtml"
+  PATH="/cs_ambulatoriosPendentes.xhtml" SHAPE="32,833,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_ambulatoriosPendentes.xhtml:0" NAME="item"
+   PATH="/cs_ambulatoriosPendentes.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csAmbulatoriosPendentes_cdPaciente::#cd_paciente.xhtml"
+    NAME="output" PATH="/cd_paciente.xhtml"
+    TARGET="rules:#cd_paciente.xhtml"
+    TITLE="csAmbulatoriosPendentes_cdPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_paciente.xhtml" PATH="/cs_paciente.xhtml"
+  SHAPE="1376,33,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_paciente.xhtml:0" NAME="item"
+   PATH="/cs_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csPaciente_cdPaciente::#cd_paciente.xhtml"
+    NAME="output" PATH="/cd_paciente.xhtml"
+    TARGET="rules:#cd_paciente.xhtml" TITLE="csPaciente_cdPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_paciente.xhtml:1" NAME="item1"
+   PATH="/cs_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csPaciente_cdPaciente::#cd_paciente.xhtml"
+    NAME="output" PATH="/cd_paciente.xhtml"
+    TARGET="rules:#cd_paciente.xhtml" TITLE="csPaciente_cdPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_paciente.xhtml:2" NAME="item2"
+   PATH="/cs_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csPacienteCsGeral::#cs_geral.xhtml"
+    NAME="output" PATH="/cs_geral.xhtml" TARGET="rules:#cs_geral.xhtml"
+    TITLE="csPacienteCsGeral" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_paciente.xhtml:3" NAME="item3"
+   PATH="/cs_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csPacienteParaPrincipal::#paginaPrincipal.xhtml" NAME="output"
+    PATH="/paginaPrincipal.xhtml" TARGET="rules:#paginaPrincipal.xhtml"
+    TITLE="csPacienteParaPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_censoHospitalar.xhtml"
+  PATH="/cs_censoHospitalar.xhtml" SHAPE="2224,1025,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_censoHospitalar.xhtml:0" NAME="item"
+   PATH="/cs_censoHospitalar.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_censoHospitalar::#cs_censoHospitalar.xhtml" NAME="output"
+    PATH="/cs_censoHospitalar.xhtml"
+    TARGET="rules:#cs_censoHospitalar.xhtml" TITLE="cs_censoHospitalar" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_emergencia.xhtml"
+  PATH="/cs_emergencia.xhtml" SHAPE="1104,833,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_emergencia.xhtml:0" NAME="item"
+   PATH="/cs_emergencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cs_emergencia::#cs_emergencia.xhtml"
+    NAME="output" PATH="/cs_emergencia.xhtml"
+    TARGET="rules:#cs_emergencia.xhtml" TITLE="cs_emergencia" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_emergencia.xhtml:1" NAME="item1"
+   PATH="/cs_emergencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_emergenciaTocd_atendimentoMedico::#cd_atendimentoMedico.xhtml"
+    NAME="output" PATH="/cd_atendimentoMedico.xhtml"
+    TARGET="rules:#cd_atendimentoMedico.xhtml"
+    TITLE="cs_emergenciaTocd_atendimentoMedico" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#eixosEmergencia.xhtml"
+  PATH="/eixosEmergencia.xhtml" SHAPE="1136,2593,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#eixosEmergencia.xhtml:0" NAME="item"
+   PATH="/eixosEmergencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="eixosEmergencia::#eixosEmergencia.xhtml"
+    NAME="output" PATH="/eixosEmergencia.xhtml"
+    TARGET="rules:#eixosEmergencia.xhtml" TITLE="eixosEmergencia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="eixosEmergencia_cd_atendimentoMedico::#cd_atendimentoMedico.xhtml"
+    NAME="output1" PATH="/cd_atendimentoMedico.xhtml"
+    TARGET="rules:#cd_atendimentoMedico.xhtml"
+    TITLE="eixosEmergencia_cd_atendimentoMedico" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_exame_detalhado.xhtml"
+  PATH="/cs_exame_detalhado.xhtml" SHAPE="32,7297,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_exame_detalhado.xhtml:0" NAME="item"
+   PATH="/cs_exame_detalhado.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csExameDetalhado::#cs_exame_detalhado.xhtml"
+    NAME="output" PATH="/cs_exame_detalhado.xhtml"
+    TARGET="rules:#cs_exame_detalhado.xhtml" TITLE="csExameDetalhado" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_assistenteSocial.xhtml"
+  PATH="/cs_assistenteSocial.xhtml" SHAPE="656,9617,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_assistenteSocial.xhtml:0" NAME="item"
+   PATH="/cs_assistenteSocial.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_assistenteSocial::#cs_assistenteSocial.xhtml" NAME="output"
+    PATH="/cs_assistenteSocial.xhtml"
+    TARGET="rules:#cs_assistenteSocial.xhtml"
+    TITLE="cs_assistenteSocial" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_assistenteSocial_para_cd_assistenteSocial::#cd_assistenteSocial.xhtml"
+    NAME="output1" PATH="/cd_assistenteSocial.xhtml"
+    TARGET="rules:#cd_assistenteSocial.xhtml"
+    TITLE="cs_assistenteSocial_para_cd_assistenteSocial" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_paciente.xhtml" PATH="/cd_paciente.xhtml"
+  SHAPE="288,33,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_paciente.xhtml:0" NAME="item"
+   PATH="/cd_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdPaciente_csPaciente::#cs_paciente.xhtml"
+    NAME="output" PATH="/cs_paciente.xhtml"
+    TARGET="rules:#cs_paciente.xhtml" TITLE="cdPaciente_csPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_paciente.xhtml:1" NAME="item1"
+   PATH="/cd_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdPaciente_cdInternacaoPaciente::#cd_internacaoPaciente.xhtml"
+    NAME="output" PATH="/cd_internacaoPaciente.xhtml"
+    TARGET="rules:#cd_internacaoPaciente.xhtml"
+    TITLE="cdPaciente_cdInternacaoPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_paciente.xhtml:2" NAME="item2"
+   PATH="/cd_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdPaciente_csEmergencia::#cs_emergencia.xhtml" NAME="output"
+    PATH="/cs_emergencia.xhtml" TARGET="rules:#cs_emergencia.xhtml"
+    TITLE="cdPaciente_csEmergencia" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_paciente.xhtml:3" NAME="item3"
+   PATH="/cd_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdPacienteParaCdEmergencia::#cd_emergencia.xhtml" NAME="output"
+    PATH="/cd_emergencia.xhtml" TARGET="rules:#cd_emergencia.xhtml"
+    TITLE="cdPacienteParaCdEmergencia" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_paciente.xhtml:4" NAME="item4"
+   PATH="/cd_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdPacientePrincipal::#paginaPrincipal.xhtml"
+    NAME="output" PATH="/paginaPrincipal.xhtml"
+    TARGET="rules:#paginaPrincipal.xhtml" TITLE="cdPacientePrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_paciente.xhtml:5" NAME="item5"
+   PATH="/cd_paciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdPacienteCdEmergencia::#cd_emergenciaExame.xhtml" NAME="output"
+    PATH="/cd_emergenciaExame.xhtml"
+    TARGET="rules:#cd_emergenciaExame.xhtml"
+    TITLE="cdPacienteCdEmergencia" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_geral.xhtml" PATH="/cs_geral.xhtml"
+  SHAPE="832,33,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_geral.xhtml:0" NAME="item"
+   PATH="/cs_geral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csGeral_csPaciente::#cs_paciente.xhtml"
+    NAME="output" PATH="/cs_paciente.xhtml"
+    TARGET="rules:#cs_paciente.xhtml" TITLE="csGeral_csPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_geral.xhtml:1" NAME="item1"
+   PATH="/cs_geral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csGeral_cdInternacaoPaciente::#cd_internacaoPaciente.xhtml"
+    NAME="output" PATH="/cd_internacaoPaciente.xhtml"
+    TARGET="rules:#cd_internacaoPaciente.xhtml"
+    TITLE="csGeral_cdInternacaoPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_geral.xhtml:2" NAME="item2"
+   PATH="/cs_geral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csGeral_csEmergencia::#cs_emergencia.xhtml"
+    NAME="output" PATH="/cs_emergencia.xhtml"
+    TARGET="rules:#cs_emergencia.xhtml" TITLE="csGeral_csEmergencia" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_geral.xhtml:3" NAME="item3"
+   PATH="/cs_geral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csGeralParaPrincipal::#paginaPrincipal.xhtml" NAME="output"
+    PATH="/paginaPrincipal.xhtml" TARGET="rules:#paginaPrincipal.xhtml"
+    TITLE="csGeralParaPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_geral.xhtml:4" NAME="item4"
+   PATH="/cs_geral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csGeralParaCdEmergencia::#cd_emergencia.xhtml" NAME="output"
+    PATH="/cd_emergencia.xhtml" TARGET="rules:#cd_emergencia.xhtml"
+    TITLE="csGeralParaCdEmergencia" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_geral.xhtml:5" NAME="item5"
+   PATH="/cs_geral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csGeralMovPaciente::#movPaciente.xhtml"
+    NAME="output" PATH="/movPaciente.xhtml"
+    TARGET="rules:#movPaciente.xhtml" TITLE="csGeralMovPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_geral.xhtml:6" NAME="item6"
+   PATH="/cs_geral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csGeralcdAcompanhantes::#cd_acompanhante.xhtml" NAME="output"
+    PATH="/cd_acompanhante.xhtml" TARGET="rules:#cd_acompanhante.xhtml"
+    TITLE="csGeralcdAcompanhantes" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_geral.xhtml:7" NAME="item7"
+   PATH="/cs_geral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csGeral_CsHistoricoMovPaciente::#cs_historicomovpaciente.xhtml"
+    NAME="output" PATH="/cs_historicomovpaciente.xhtml"
+    TARGET="rules:#cs_historicomovpaciente.xhtml"
+    TITLE="csGeral_CsHistoricoMovPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_geral.xhtml:8" NAME="item8"
+   PATH="/cs_geral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csGeral_cdEmergenciaExame::#cd_emergenciaExame.xhtml"
+    NAME="output" PATH="/cd_emergenciaExame.xhtml"
+    TARGET="rules:#cd_emergenciaExame.xhtml"
+    TITLE="csGeral_cdEmergenciaExame" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_internacaoPaciente.xhtml"
+  PATH="/cd_internacaoPaciente.xhtml" SHAPE="560,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_internacaoPaciente.xhtml:0" NAME="item"
+   PATH="/cd_internacaoPaciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdInternacaoCsPaciente::#cs_paciente.xhtml"
+    NAME="output" PATH="/cs_paciente.xhtml"
+    TARGET="rules:#cs_paciente.xhtml" TITLE="cdInternacaoCsPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_internacaoPaciente.xhtml:1" NAME="item1"
+   PATH="/cd_internacaoPaciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdInternacaoPaciente_csPaciente::#cs_paciente.xhtml"
+    NAME="output" PATH="/cs_paciente.xhtml"
+    TARGET="rules:#cs_paciente.xhtml"
+    TITLE="cdInternacaoPaciente_csPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_internacaoPaciente.xhtml:2" NAME="item2"
+   PATH="/cd_internacaoPaciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdInternacaoPaciente_csGeral::#cs_geral.xhtml" NAME="output"
+    PATH="/cs_geral.xhtml" TARGET="rules:#cs_geral.xhtml"
+    TITLE="cdInternacaoPaciente_csGeral" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_internacaoPaciente.xhtml:3" NAME="item3"
+   PATH="/cd_internacaoPaciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdInterPacienteCsInterPendentes::#cs_InternadosPendentes.xhtml"
+    NAME="output" PATH="/cs_InternadosPendentes.xhtml"
+    TARGET="rules:#cs_InternadosPendentes.xhtml"
+    TITLE="cdInterPacienteCsInterPendentes" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_referencia.xhtml"
+  PATH="/cd_referencia.xhtml" SHAPE="1104,1121,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_referencia.xhtml:0" NAME="item"
+   PATH="/cd_referencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdReferenciaFromCsReferencia::#cs_referencia.xhtml"
+    NAME="output" PATH="/cs_referencia.xhtml"
+    TARGET="rules:#cs_referencia.xhtml"
+    TITLE="cdReferenciaFromCsReferencia" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_referencia.xhtml:1" NAME="item1"
+   PATH="/cd_referencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdHospRefPrincipal::#paginaPrincipal.xhtml"
+    NAME="output" PATH="/paginaPrincipal.xhtml"
+    TARGET="rules:#paginaPrincipal.xhtml" TITLE="cdHospRefPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_referencia.xhtml"
+  PATH="/cs_referencia.xhtml" SHAPE="1376,1137,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_referencia.xhtml:0" NAME="item"
+   PATH="/cs_referencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csReferenciaFromCdReferencia::#cd_referencia.xhtml"
+    NAME="output" PATH="/cd_referencia.xhtml"
+    TARGET="rules:#cd_referencia.xhtml"
+    TITLE="csReferenciaFromCdReferencia" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_referencia.xhtml:1" NAME="item1"
+   PATH="/cs_referencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csHopsRefPrincipal::#paginaPrincipal.xhtml"
+    NAME="output" PATH="/paginaPrincipal.xhtml"
+    TARGET="rules:#paginaPrincipal.xhtml" TITLE="csHopsRefPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#paginaPrincipal.xhtml"
+  PATH="/paginaPrincipal.xhtml" SHAPE="1648,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:0" NAME="item"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdOcupacao::#cs_ocupacao.xhtml"
+    NAME="output" PATH="/cs_ocupacao.xhtml"
+    TARGET="rules:#cs_ocupacao.xhtml" TITLE="cdOcupacao" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:1" NAME="item1"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csOcupacao::#cs_ocupacao.xhtml"
+    NAME="output" PATH="/cs_ocupacao.xhtml"
+    TARGET="rules:#cs_ocupacao.xhtml" TITLE="csOcupacao" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:2" NAME="item2"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csUf::#cs_uf.xhtml" NAME="output"
+    PATH="/cs_uf.xhtml" TARGET="rules:#cs_uf.xhtml" TITLE="csUf" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:3" NAME="item3"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdUf::#cd_uf.xhtml" NAME="output"
+    PATH="/cd_uf.xhtml" TARGET="rules:#cd_uf.xhtml" TITLE="cdUf" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="alterarSenha::#alterarSenha.jsf"
+    NAME="output1" PATH="/alterarSenha.jsf"
+    TARGET="rules:#alterarSenha.jsf" TITLE="alterarSenha" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:4" NAME="item4"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csMunicipio::#cs_municipio.xhtml"
+    NAME="output" PATH="/cs_municipio.xhtml"
+    TARGET="rules:#cs_municipio.xhtml" TITLE="csMunicipio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="paginaPrincipalRelatorio::#paginaPrincipalRelatorio.xhtml"
+    NAME="output2" PATH="/paginaPrincipalRelatorio.xhtml"
+    TARGET="rules:#paginaPrincipalRelatorio.xhtml"
+    TITLE="paginaPrincipalRelatorio" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:5" NAME="item5"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdMunicipio::#cd_municipio.xhtml"
+    NAME="output" PATH="/cd_municipio.xhtml"
+    TARGET="rules:#cd_municipio.xhtml" TITLE="cdMunicipio" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:6" NAME="item6"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csCid10::#cs_cid10.xhtml" NAME="output"
+    PATH="/cs_cid10.xhtml" TARGET="rules:#cs_cid10.xhtml"
+    TITLE="csCid10" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:7" NAME="item7"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdCid10::#cd_cid10.xhtml" NAME="output"
+    PATH="/cd_cid10.xhtml" TARGET="rules:#cd_cid10.xhtml"
+    TITLE="cdCid10" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:8" NAME="item8"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csClinica::#cs_clinica.xhtml" NAME="output"
+    PATH="/cs_clinica.xhtml" TARGET="rules:#cs_clinica.xhtml"
+    TITLE="csClinica" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:9" NAME="item9"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdClinica::#cd_clinica.xhtml" NAME="output"
+    PATH="/cd_clinica.xhtml" TARGET="rules:#cd_clinica.xhtml"
+    TITLE="cdClinica" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:10" NAME="item10"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csEnfermaria::#cs_enfermaria.xhtml"
+    NAME="output" PATH="/cs_enfermaria.xhtml"
+    TARGET="rules:#cs_enfermaria.xhtml" TITLE="csEnfermaria" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:11" NAME="item11"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdEnfermaria::#cd_enfermaria.xhtml"
+    NAME="output" PATH="/cd_enfermaria.xhtml"
+    TARGET="rules:#cd_enfermaria.xhtml" TITLE="cdEnfermaria" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:12" NAME="item12"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csLeito::#cs_leito.xhtml" NAME="output"
+    PATH="/cs_leito.xhtml" TARGET="rules:#cs_leito.xhtml"
+    TITLE="csLeito" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:13" NAME="item13"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdLeito::#cd_leito.xhtml" NAME="output"
+    PATH="/cd_leito.xhtml" TARGET="rules:#cd_leito.xhtml"
+    TITLE="cdLeito" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:14" NAME="item14"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csBloco::#cs_bloco.xhtml" NAME="output"
+    PATH="/cs_bloco.xhtml" TARGET="rules:#cs_bloco.xhtml"
+    TITLE="csBloco" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:15" NAME="item15"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdBloco::#cd_bloco.xhtml" NAME="output"
+    PATH="/cd_bloco.xhtml" TARGET="rules:#cd_bloco.xhtml"
+    TITLE="cdBloco" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_censoHospitalar::#cs_censoHospitalar.xhtml" NAME="output1"
+    PATH="/cs_censoHospitalar.xhtml"
+    TARGET="rules:#cs_censoHospitalar.xhtml" TITLE="cs_censoHospitalar" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_emergencia::#cs_emergencia.xhtml"
+    NAME="output2" PATH="/cs_emergencia.xhtml"
+    TARGET="rules:#cs_emergencia.xhtml" TITLE="cs_emergencia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="eixosEmergencia::#eixosEmergencia.xhtml"
+    NAME="output3" PATH="/eixosEmergencia.xhtml"
+    TARGET="rules:#eixosEmergencia.xhtml" TITLE="eixosEmergencia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_pacienteAtendimento::#cs_pacienteAtendimento.xhtml"
+    NAME="output4" PATH="/cs_pacienteAtendimento.xhtml"
+    TARGET="rules:#cs_pacienteAtendimento.xhtml"
+    TITLE="cs_pacienteAtendimento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:16" NAME="item16"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="principalParaCdEmergencia::#cd_emergencia.xhtml" NAME="output"
+    PATH="/cd_emergencia.xhtml" TARGET="rules:#cd_emergencia.xhtml"
+    TITLE="principalParaCdEmergencia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="recepcaoTablet::#cs_recepcaoTablet.xhtml"
+    NAME="output1" PATH="/cs_recepcaoTablet.xhtml"
+    TARGET="rules:#cs_recepcaoTablet.xhtml" TITLE="recepcaoTablet" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:17" NAME="item17"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="principalParaCsPaciente::#cs_paciente.xhtml"
+    NAME="output" PATH="/cs_paciente.xhtml"
+    TARGET="rules:#cs_paciente.xhtml" TITLE="principalParaCsPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:18" NAME="item18"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csInternados::#cs_internados.xhtml"
+    NAME="output" PATH="/cs_internados.xhtml"
+    TARGET="rules:#cs_internados.xhtml" TITLE="csInternados" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:19" NAME="item19"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="paginaPrincipal_movPaciente::#movPaciente.xhtml" NAME="output"
+    PATH="/movPaciente.xhtml" TARGET="rules:#movPaciente.xhtml"
+    TITLE="paginaPrincipal_movPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:20" NAME="item20"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="principalCsHopRef::#cs_referencia.xhtml"
+    NAME="output" PATH="/cs_referencia.xhtml"
+    TARGET="rules:#cs_referencia.xhtml" TITLE="principalCsHopRef" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:21" NAME="item21"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="principalCdHospRef::#cd_referencia.xhtml"
+    NAME="output" PATH="/cd_referencia.xhtml"
+    TARGET="rules:#cd_referencia.xhtml" TITLE="principalCdHospRef" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#paginaPrincipal.xhtml:22" NAME="item22"
+   PATH="/paginaPrincipal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csValidaInternacao::#cs_validaInternacao.xhtml" NAME="output"
+    PATH="/cs_validaInternacao.xhtml"
+    TARGET="rules:#cs_validaInternacao.xhtml" TITLE="csValidaInternacao" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_ocupacao.xhtml" PATH="/cs_ocupacao.xhtml"
+  SHAPE="1920,993,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_ocupacao.xhtml:0" NAME="item"
+   PATH="/cs_ocupacao.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csOcupacaoFromCdOcupacao::#cs_ocupacao.xhtml" NAME="output"
+    PATH="/cs_ocupacao.xhtml" TARGET="rules:#cs_ocupacao.xhtml"
+    TITLE="csOcupacaoFromCdOcupacao" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_ocupacao.xhtml:1" NAME="item1"
+   PATH="/cs_ocupacao.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdOcupacaoFromCsOcupacao::#cs_ocupacao.xhtml" NAME="output"
+    PATH="/cs_ocupacao.xhtml" TARGET="rules:#cs_ocupacao.xhtml"
+    TITLE="cdOcupacaoFromCsOcupacao" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_uf.xhtml" PATH="/cs_uf.xhtml"
+  SHAPE="1920,1137,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_uf.xhtml:0" NAME="item"
+   PATH="/cs_uf.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csUfFromCdUf::#cd_uf.xhtml" NAME="output"
+    PATH="/cd_uf.xhtml" TARGET="rules:#cd_uf.xhtml" TITLE="csUfFromCdUf" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_uf.xhtml" PATH="/cd_uf.xhtml"
+  SHAPE="2144,1121,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_uf.xhtml:0" NAME="item"
+   PATH="/cd_uf.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdUfFromCsUf::#cs_uf.xhtml" NAME="output"
+    PATH="/cs_uf.xhtml" TARGET="rules:#cs_uf.xhtml" TITLE="cdUfFromCsUf" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_municipio.xhtml"
+  PATH="/cs_municipio.xhtml" SHAPE="1920,1281,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_municipio.xhtml:0" NAME="item"
+   PATH="/cs_municipio.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csMunicipioFromCdMunicipio::#cd_municipio.xhtml" NAME="output"
+    PATH="/cd_municipio.xhtml" TARGET="rules:#cd_municipio.xhtml"
+    TITLE="csMunicipioFromCdMunicipio" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_municipio.xhtml"
+  PATH="/cd_municipio.xhtml" SHAPE="2144,1265,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_municipio.xhtml:0" NAME="item"
+   PATH="/cd_municipio.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdMunicipioFromCsMunicipio::#cs_municipio.xhtml" NAME="output"
+    PATH="/cs_municipio.xhtml" TARGET="rules:#cs_municipio.xhtml"
+    TITLE="cdMunicipioFromCsMunicipio" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_cid10.xhtml" PATH="/cs_cid10.xhtml"
+  SHAPE="1104,1265,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_cid10.xhtml:0" NAME="item"
+   PATH="/cs_cid10.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csCid10FromCdCid10::#cd_cid10.xhtml"
+    NAME="output" PATH="/cd_cid10.xhtml" TARGET="rules:#cd_cid10.xhtml"
+    TITLE="csCid10FromCdCid10" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_cid10.xhtml:1" NAME="item1"
+   PATH="/cs_cid10.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csCid10PaginaPrincipal::#paginaPrincipal.xhtml" NAME="output"
+    PATH="/paginaPrincipal.xhtml" TARGET="rules:#paginaPrincipal.xhtml"
+    TITLE="csCid10PaginaPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_cid10.xhtml" PATH="/cd_cid10.xhtml"
+  SHAPE="1376,1281,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_cid10.xhtml:0" NAME="item"
+   PATH="/cd_cid10.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdCid10FromCsCid10::#cs_cid10.xhtml"
+    NAME="output" PATH="/cs_cid10.xhtml" TARGET="rules:#cs_cid10.xhtml"
+    TITLE="cdCid10FromCsCid10" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_cid10.xhtml:1" NAME="item1"
+   PATH="/cd_cid10.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdCid10PaginaPrincipal::#paginaPrincipal.xhtml" NAME="output"
+    PATH="/paginaPrincipal.xhtml" TARGET="rules:#paginaPrincipal.xhtml"
+    TITLE="cdCid10PaginaPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_clinica.xhtml" PATH="/cs_clinica.xhtml"
+  SHAPE="1920,1425,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_clinica.xhtml:0" NAME="item"
+   PATH="/cs_clinica.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csClinicaFromCdClinica::#cd_clinica.xhtml"
+    NAME="output" PATH="/cd_clinica.xhtml"
+    TARGET="rules:#cd_clinica.xhtml" TITLE="csClinicaFromCdClinica" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_clinica.xhtml" PATH="/cd_clinica.xhtml"
+  SHAPE="2144,1409,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_clinica.xhtml:0" NAME="item"
+   PATH="/cd_clinica.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdClinicaFromCsClinica::#cs_clinica.xhtml"
+    NAME="output" PATH="/cs_clinica.xhtml"
+    TARGET="rules:#cs_clinica.xhtml" TITLE="cdClinicaFromCsClinica" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_enfermaria.xhtml"
+  PATH="/cs_enfermaria.xhtml" SHAPE="1104,1409,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_enfermaria.xhtml:0" NAME="item"
+   PATH="/cs_enfermaria.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csEnfermariaFromCdEnfermaria::#cd_enfermaria.xhtml"
+    NAME="output" PATH="/cd_enfermaria.xhtml"
+    TARGET="rules:#cd_enfermaria.xhtml"
+    TITLE="csEnfermariaFromCdEnfermaria" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_enfermaria.xhtml:1" NAME="item1"
+   PATH="/cs_enfermaria.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csPacientePrincipal::#paginaPrincipal.xhtml"
+    NAME="output" PATH="/paginaPrincipal.xhtml"
+    TARGET="rules:#paginaPrincipal.xhtml" TITLE="csPacientePrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_enfermaria.xhtml"
+  PATH="/cd_enfermaria.xhtml" SHAPE="1376,1425,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_enfermaria.xhtml:0" NAME="item"
+   PATH="/cd_enfermaria.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdEnfermariaFromCsEnfermaria::#cs_enfermaria.xhtml"
+    NAME="output" PATH="/cs_enfermaria.xhtml"
+    TARGET="rules:#cs_enfermaria.xhtml"
+    TITLE="cdEnfermariaFromCsEnfermaria" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_enfermaria.xhtml:1" NAME="item1"
+   PATH="/cd_enfermaria.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdEnfermariaPrincipal::#paginaPrincipal.xhtml" NAME="output"
+    PATH="/paginaPrincipal.xhtml" TARGET="rules:#paginaPrincipal.xhtml"
+    TITLE="cdEnfermariaPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_leito.xhtml" PATH="/cs_leito.xhtml"
+  SHAPE="1104,1553,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_leito.xhtml:0" NAME="item"
+   PATH="/cs_leito.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csLeitoFromCdLeito::#cd_leito.xhtml"
+    NAME="output" PATH="/cd_leito.xhtml" TARGET="rules:#cd_leito.xhtml"
+    TITLE="csLeitoFromCdLeito" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_leito.xhtml:1" NAME="item1"
+   PATH="/cs_leito.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csLeitoPaginaPrincipal::#paginaPrincipal.xhtml" NAME="output"
+    PATH="/paginaPrincipal.xhtml" TARGET="rules:#paginaPrincipal.xhtml"
+    TITLE="csLeitoPaginaPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_leito.xhtml" PATH="/cd_leito.xhtml"
+  SHAPE="1376,1569,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_leito.xhtml:0" NAME="item"
+   PATH="/cd_leito.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdLeitoFromCsLeito::#cs_leito.xhtml"
+    NAME="output" PATH="/cs_leito.xhtml" TARGET="rules:#cs_leito.xhtml"
+    TITLE="cdLeitoFromCsLeito" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_leito.xhtml:1" NAME="item1"
+   PATH="/cd_leito.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdLeitoPaginaPrincipal::#paginaPrincipal.xhtml" NAME="output"
+    PATH="/paginaPrincipal.xhtml" TARGET="rules:#paginaPrincipal.xhtml"
+    TITLE="cdLeitoPaginaPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_bloco.xhtml" PATH="/cs_bloco.xhtml"
+  SHAPE="1920,849,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_bloco.xhtml:0" NAME="item"
+   PATH="/cs_bloco.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csBlocoFromCdBloco::#cd_bloco.xhtml"
+    NAME="output" PATH="/cd_bloco.xhtml" TARGET="rules:#cd_bloco.xhtml"
+    TITLE="csBlocoFromCdBloco" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_bloco.xhtml:1" NAME="item1"
+   PATH="/cs_bloco.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csBlocoPrincipal::#paginaPrincipal.xhtml"
+    NAME="output" PATH="/paginaPrincipal.xhtml"
+    TARGET="rules:#paginaPrincipal.xhtml" TITLE="csBlocoPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_bloco.xhtml" PATH="/cd_bloco.xhtml"
+  SHAPE="2144,833,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_bloco.xhtml:0" NAME="item"
+   PATH="/cd_bloco.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdBlocoFromCsBloco::#cs_bloco.xhtml"
+    NAME="output" PATH="/cs_bloco.xhtml" TARGET="rules:#cs_bloco.xhtml"
+    TITLE="cdBlocoFromCsBloco" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_bloco.xhtml:1" NAME="item1"
+   PATH="/cd_bloco.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdBlocoPrincipal::#paginaPrincipal.xhtml"
+    NAME="output" PATH="/paginaPrincipal.xhtml"
+    TARGET="rules:#paginaPrincipal.xhtml" TITLE="cdBlocoPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#login.xhtml" PATH="/login.xhtml"
+  SHAPE="1376,849,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#login.xhtml:0" NAME="item"
+   PATH="/login.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="login_paciente::#paginaPrincipal.xhtml"
+    NAME="output" PATH="/paginaPrincipal.xhtml"
+    TARGET="rules:#paginaPrincipal.xhtml" TITLE="login_paciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#login.xhtml:1" NAME="item1"
+   PATH="/login.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="sucesso::#principal.xhtml" NAME="output"
+    PATH="/principal.xhtml" TARGET="rules:#principal.xhtml"
+    TITLE="sucesso" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="loginAlterarSenha::#alterarSenha.xhtml"
+    NAME="output1" PATH="/alterarSenha.xhtml"
+    TARGET="rules:#alterarSenha.xhtml" TITLE="loginAlterarSenha" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="loginRecuperarSenha::#recuperarSenha.xhtml"
+    NAME="output2" PATH="/recuperarSenha.xhtml"
+    TARGET="rules:#recuperarSenha.xhtml" TITLE="loginRecuperarSenha" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_emergencia.xhtml"
+  PATH="/cd_emergencia.xhtml" SHAPE="1104,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_emergencia.xhtml:0" NAME="item"
+   PATH="/cd_emergencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdEmergenciaParaPrincipal::#paginaPrincipal.xhtml" NAME="output"
+    PATH="/paginaPrincipal.xhtml" TARGET="rules:#paginaPrincipal.xhtml"
+    TITLE="cdEmergenciaParaPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_emergencia.xhtml:1" NAME="item1"
+   PATH="/cd_emergencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdEmergencia_csGeral::#cs_geral.xhtml"
+    NAME="output" PATH="/cs_geral.xhtml" TARGET="rules:#cs_geral.xhtml"
+    TITLE="cdEmergencia_csGeral" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_emergencia.xhtml:2" NAME="item2"
+   PATH="/cd_emergencia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdEmergencia_csPaciente::#cs_paciente.xhtml"
+    NAME="output" PATH="/cs_paciente.xhtml"
+    TARGET="rules:#cs_paciente.xhtml" TITLE="cdEmergencia_csPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_internados.xhtml"
+  PATH="/cs_internados.xhtml" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_internados.xhtml:0" NAME="item"
+   PATH="/cs_internados.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csInternadosParaCsGeral::#cs_geral.xhtml"
+    NAME="output" PATH="/cs_geral.xhtml" TARGET="rules:#cs_geral.xhtml"
+    TITLE="csInternadosParaCsGeral" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_internados.xhtml:1" NAME="item1"
+   PATH="/cs_internados.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csInternadosParaPrincipal::#paginaPrincipal.xhtml" NAME="output"
+    PATH="/paginaPrincipal.xhtml" TARGET="rules:#paginaPrincipal.xhtml"
+    TITLE="csInternadosParaPrincipal" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_internados.xhtml:2" NAME="item2"
+   PATH="/cs_internados.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_internados_cd_paciente::#cd_paciente.xhtml" NAME="output"
+    PATH="/cd_paciente.xhtml" TARGET="rules:#cd_paciente.xhtml"
+    TITLE="cs_internados_cd_paciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_internados.xhtml:3" NAME="item3"
+   PATH="/cs_internados.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csInternadosCdAcompanhante::#cd_acompanhante.xhtml"
+    NAME="output" PATH="/cd_acompanhante.xhtml"
+    TARGET="rules:#cd_acompanhante.xhtml"
+    TITLE="csInternadosCdAcompanhante" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_acompanhante.xhtml"
+  PATH="/cd_acompanhante.xhtml" SHAPE="560,833,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_acompanhante.xhtml:0" NAME="item"
+   PATH="/cd_acompanhante.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdAcompanhanteCsGeral::#cs_geral.xhtml"
+    NAME="output" PATH="/cs_geral.xhtml" TARGET="rules:#cs_geral.xhtml"
+    TITLE="cdAcompanhanteCsGeral" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_historicomovpaciente.xhtml"
+  PATH="/cs_historicomovpaciente.xhtml" SHAPE="560,977,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_historicomovpaciente.xhtml:0" NAME="item"
+   PATH="/cs_historicomovpaciente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csHistoricoMovPaciente_csGeral::#cs_geral.xhtml" NAME="output"
+    PATH="/cs_geral.xhtml" TARGET="rules:#cs_geral.xhtml"
+    TITLE="csHistoricoMovPaciente_csGeral" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_exame.xhtml" PATH="/cs_exame.xhtml"
+  SHAPE="32,1697,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_exame.xhtml:0" NAME="item"
+   PATH="/cs_exame.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="csExameCdExame::#cd_exame.xhtml"
+    NAME="output" PATH="/cd_exame.xhtml" TARGET="rules:#cd_exame.xhtml"
+    TITLE="csExameCdExame" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_exame.xhtml" PATH="/cd_exame.xhtml"
+  SHAPE="240,1713,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_exame.xhtml:0" NAME="item"
+   PATH="/cd_exame.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdExameCsExame::#cs_exame.xhtml"
+    NAME="output" PATH="/cs_exame.xhtml" TARGET="rules:#cs_exame.xhtml"
+    TITLE="cdExameCsExame" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_interconsulta.xhtml"
+  PATH="/cs_interconsulta.xhtml" SHAPE="32,1809,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_interconsulta.xhtml:0" NAME="item"
+   PATH="/cs_interconsulta.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csInterconsultaCdInterconsulta::#cd_interconsulta.xhtml"
+    NAME="output" PATH="/cd_interconsulta.xhtml"
+    TARGET="rules:#cd_interconsulta.xhtml"
+    TITLE="csInterconsultaCdInterconsulta" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_interconsulta.xhtml"
+  PATH="/cd_interconsulta.xhtml" SHAPE="240,1825,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_interconsulta.xhtml:0" NAME="item"
+   PATH="/cd_interconsulta.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdInterconsultaCsInterconsulta::#cs_interconsulta.xhtml"
+    NAME="output" PATH="/cs_interconsulta.xhtml"
+    TARGET="rules:#cs_interconsulta.xhtml"
+    TITLE="cdInterconsultaCsInterconsulta" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_emergenciaExame.xhtml"
+  PATH="/cd_emergenciaExame.xhtml" SHAPE="1104,977,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_emergenciaExame.xhtml:0" NAME="item"
+   PATH="/cd_emergenciaExame.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdEmergenciaExameCsPaciente::#cs_paciente.xhtml" NAME="output"
+    PATH="/cs_paciente.xhtml" TARGET="rules:#cs_paciente.xhtml"
+    TITLE="cdEmergenciaExameCsPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_InternadosPendentes.xhtml"
+  PATH="/cs_InternadosPendentes.xhtml" SHAPE="288,849,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_InternadosPendentes.xhtml:0" NAME="item"
+   PATH="/cs_InternadosPendentes.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csInterPendentesCdIntenacaoPaciente::#cd_internacaoPaciente.xhtml"
+    NAME="output" PATH="/cd_internacaoPaciente.xhtml"
+    TARGET="rules:#cd_internacaoPaciente.xhtml"
+    TITLE="csInterPendentesCdIntenacaoPaciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_validaInternacao.xhtml"
+  PATH="/cs_validaInternacao.xhtml" SHAPE="288,993,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_validaInternacao.xhtml:0" NAME="item"
+   PATH="/cs_validaInternacao.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="csValidaInternacaoCdValidaInternacao::#cd_validaInternacao.xhtml"
+    NAME="output" PATH="/cd_validaInternacao.xhtml"
+    TARGET="rules:#cd_validaInternacao.xhtml"
+    TITLE="csValidaInternacaoCdValidaInternacao" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_validaInternacao.xhtml"
+  PATH="/cd_validaInternacao.xhtml" SHAPE="32,977,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_validaInternacao.xhtml:0" NAME="item"
+   PATH="/cd_validaInternacao.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cdValidaCsValida::#cs_validaInternacao.xhtml" NAME="output"
+    PATH="/cs_validaInternacao.xhtml"
+    TARGET="rules:#cs_validaInternacao.xhtml" TITLE="cdValidaCsValida" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="32,1921,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="paginaPrincipalRelatorio::#paginaPrincipalRelatorio.xhtml"
+    NAME="output" PATH="/paginaPrincipalRelatorio.xhtml"
+    TARGET="rules:#paginaPrincipalRelatorio.xhtml"
+    TITLE="paginaPrincipalRelatorio" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:1" PATH="*" SHAPE="32,3217,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:1" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="principalParaNAC::#paginaPrincipalNAC.xhtml"
+    NAME="output" PATH="/paginaPrincipalNAC.xhtml"
+    TARGET="rules:#paginaPrincipalNAC.xhtml" TITLE="principalParaNAC" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="principalParaCadastros::#paginaPrincipalCadastros.xhtml"
+    NAME="output1" PATH="/paginaPrincipalCadastros.xhtml"
+    TARGET="rules:#paginaPrincipalCadastros.xhtml"
+    TITLE="principalParaCadastros" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="principalParaAmbulatorio::#paginaPrincipalAmbulatorio.xhtml"
+    NAME="output2" PATH="/paginaPrincipalAmbulatorio.xhtml"
+    TARGET="rules:#paginaPrincipalAmbulatorio.xhtml"
+    TITLE="principalParaAmbulatorio" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_escala.xhtml" PATH="/cd_escala.xhtml"
+  SHAPE="256,1937,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_escala.xhtml:0" NAME="item"
+   PATH="/cd_escala.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cd_escala::#cd_escala.xhtml" NAME="output"
+    PATH="/cd_escala.xhtml" TARGET="rules:#cd_escala.xhtml"
+    TITLE="cd_escala" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_marcacao.xhtml" PATH="/cs_marcacao.xhtml"
+  SHAPE="304,3233,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_marcacao.xhtml:0" NAME="item"
+   PATH="/cs_marcacao.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="al_marcacao::#al_marcacao.xhtml"
+    NAME="output" PATH="/al_marcacao.xhtml"
+    TARGET="rules:#al_marcacao.xhtml" TITLE="al_marcacao" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#al_marcacao.xhtml" PATH="/al_marcacao.xhtml"
+  SHAPE="32,3553,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#al_marcacao.xhtml:0" NAME="item"
+   PATH="/al_marcacao.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cs_marcacao::#cs_marcacao.xhtml"
+    NAME="output" PATH="/cs_marcacao.xhtml"
+    TARGET="rules:#cs_marcacao.xhtml" TITLE="cs_marcacao" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_geracaoEscala.xhtml"
+  PATH="/cd_geracaoEscala.xhtml" SHAPE="304,3681,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_geracaoEscala.xhtml:0" NAME="item"
+   PATH="/cd_geracaoEscala.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cd_geracaoEscala::#cd_geracaoEscala.xhtml"
+    NAME="output" PATH="/cd_geracaoEscala.xhtml"
+    TARGET="rules:#cd_geracaoEscala.xhtml" TITLE="cd_geracaoEscala" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_marcacao.xhtml" PATH="/cd_marcacao.xhtml"
+  SHAPE="256,3009,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_marcacao.xhtml:0" NAME="item"
+   PATH="/cd_marcacao.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cd_marcacao::#cd_marcao.xhtml" NAME="output"
+    PATH="/cd_marcao.xhtml" TARGET="rules:#cd_marcao.xhtml"
+    TITLE="cd_marcacao" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_agendamentoAmbulatorial.xhtml"
+  PATH="/cs_agendamentoAmbulatorial.xhtml" SHAPE="304,3569,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_agendamentoAmbulatorial.xhtml:0"
+   NAME="item" PATH="/cs_agendamentoAmbulatorial.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_agendamentoAmbulatorial::#cs_agendamentoAmbulatorial.xhtml"
+    NAME="output" PATH="/cs_agendamentoAmbulatorial.xhtml"
+    TARGET="rules:#cs_agendamentoAmbulatorial.xhtml"
+    TITLE="cs_agendamentoAmbulatorial" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_migrarEscala.xhtml"
+  PATH="/cd_migrarEscala.xhtml" SHAPE="272,3041,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_migrarEscala.xhtml:0" NAME="item"
+   PATH="/cd_migrarEscala.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cd_migrarEscala::#cd_migrarEscala.xhtml"
+    NAME="output" PATH="/cd_migrarEscala.xhtml"
+    TARGET="rules:#cd_migrarEscala.xhtml" TITLE="cd_migrarEscala" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_atendimentoAmbulatorial.xhtml"
+  PATH="/cs_atendimentoAmbulatorial.xhtml" SHAPE="304,3793,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_atendimentoAmbulatorial.xhtml:0"
+   NAME="item" PATH="/cs_atendimentoAmbulatorial.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_atendimentoAmbulatorial::#cs_atendimentoAmbulatorial.xhtml"
+    NAME="output" PATH="/cs_atendimentoAmbulatorial.xhtml"
+    TARGET="rules:#cs_atendimentoAmbulatorial.xhtml"
+    TITLE="cs_atendimentoAmbulatorial" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_confirmarAmbulatorial.xhtml"
+  PATH="/cs_confirmarAmbulatorial.xhtml" SHAPE="304,3905,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_confirmarAmbulatorial.xhtml:0" NAME="item"
+   PATH="/cs_confirmarAmbulatorial.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_confirmarAmbulatorial::#cs_confirmarAmbulatorial.xhtml"
+    NAME="output" PATH="/cs_confirmarAmbulatorial.xhtml"
+    TARGET="rules:#cs_confirmarAmbulatorial.xhtml"
+    TITLE="cs_confirmarAmbulatorial" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_atendimentoMedico.xhtml"
+  PATH="/cd_atendimentoMedico.xhtml" SHAPE="1120,1505,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_atendimentoMedico.xhtml:0" NAME="item"
+   PATH="/cd_atendimentoMedico.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cd_atendimentoMedicoTocs_emergencia::#cs_emergencia.xhtml"
+    NAME="output" PATH="/cs_emergencia.xhtml"
+    TARGET="rules:#cs_emergencia.xhtml"
+    TITLE="cd_atendimentoMedicoTocs_emergencia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cd_atendimentoMedico_eixosEmergencia::#eixosEmergencia.xhtml"
+    NAME="output1" PATH="/eixosEmergencia.xhtml"
+    TARGET="rules:#eixosEmergencia.xhtml"
+    TITLE="cd_atendimentoMedico_eixosEmergencia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="atentidmentoToTransferencia::#cd_internacaoTrans.xhtml"
+    NAME="output2" PATH="/cd_internacaoTrans.xhtml"
+    TARGET="rules:#cd_internacaoTrans.xhtml"
+    TITLE="atentidmentoToTransferencia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cd_atendimentoMedico_cs_pacienteAtendimento::#cs_pacienteAtendimento.xhtml"
+    NAME="output3" PATH="/cs_pacienteAtendimento.xhtml"
+    TARGET="rules:#cs_pacienteAtendimento.xhtml"
+    TITLE="cd_atendimentoMedico_cs_pacienteAtendimento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_atendimentoMedico.xhtml:1" NAME="item1"
+   PATH="/cd_atendimentoMedico.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="atendimentoMedicoTointernacaoTrans::#cd_internacaoTrans.xhtml"
+    NAME="output" PATH="/cd_internacaoTrans.xhtml"
+    TARGET="rules:#cd_internacaoTrans.xhtml"
+    TITLE="atendimentoMedicoTointernacaoTrans" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_pacienteAtendimento.xhtml"
+  PATH="/cs_pacienteAtendimento.xhtml" SHAPE="864,2817,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_pacienteAtendimento.xhtml:0" NAME="item"
+   PATH="/cs_pacienteAtendimento.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="pacienteAtendimentoTointernacaoTrans::#cd_internacaoTrans.xhtml"
+    NAME="output" PATH="/cd_internacaoTrans.xhtml"
+    TARGET="rules:#cd_internacaoTrans.xhtml"
+    TITLE="pacienteAtendimentoTointernacaoTrans" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_pacienteAtendimento::#cs_pacienteAtendimento.xhtml"
+    NAME="output1" PATH="/cs_pacienteAtendimento.xhtml"
+    TARGET="rules:#cs_pacienteAtendimento.xhtml"
+    TITLE="cs_pacienteAtendimento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_pacienteAtendimentoToAtendimento::#cd_atendimentoMedico.xhtml"
+    NAME="output2" PATH="/cd_atendimentoMedico.xhtml"
+    TARGET="rules:#cd_atendimentoMedico.xhtml"
+    TITLE="cs_pacienteAtendimentoToAtendimento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cs_pacienteAtendimento.xhtml:1" NAME="item1"
+   PATH="/cs_pacienteAtendimento.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="pacienteAtendimentoTointernacaoTrans::#cd_internacaoTrans.xhtml"
+    NAME="output" PATH="/cd_internacaoTrans.xhtml"
+    TARGET="rules:#cd_internacaoTrans.xhtml"
+    TITLE="pacienteAtendimentoTointernacaoTrans" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_internacaoTrans.xhtml"
+  PATH="/cd_internacaoTrans.xhtml" SHAPE="1136,2801,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_internacaoTrans.xhtml:0" NAME="item"
+   PATH="/cd_internacaoTrans.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="internacaoTransToatendimentoMedico::#cd_atendimentoMedico.xhtml"
+    NAME="output" PATH="/cd_atendimentoMedico.xhtml"
+    TARGET="rules:#cd_atendimentoMedico.xhtml"
+    TITLE="internacaoTransToatendimentoMedico" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_internacaoTrans.xhtml:1" NAME="item1"
+   PATH="/cd_internacaoTrans.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="internacaoTransTopacienteAtendimento::#cs_pacienteAtendimento.xhtml"
+    NAME="output" PATH="/cs_pacienteAtendimento.xhtml"
+    TARGET="rules:#cs_pacienteAtendimento.xhtml"
+    TITLE="internacaoTransTopacienteAtendimento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#cd_internacaoTrans.xhtml:2" NAME="item2"
+   PATH="/cd_internacaoTrans.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cd_internacaoTrans::#cs_pacienteAtendimento.xhtml" NAME="output"
+    PATH="/cs_pacienteAtendimento.xhtml"
+    TARGET="rules:#cs_pacienteAtendimento.xhtml"
+    TITLE="cd_internacaoTrans" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_laboratorio.xhtml"
+  PATH="/cs_laboratorio.xhtml" SHAPE="240,7313,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_laboratorio.xhtml:0" NAME="item"
+   PATH="/cs_laboratorio.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cs_laboratorio::#cs_laboratorio.xhtml"
+    NAME="output" PATH="/cs_laboratorio.xhtml"
+    TARGET="rules:#cs_laboratorio.xhtml" TITLE="cs_laboratorio" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_farmacia.xhtml" PATH="/cs_farmacia.xhtml"
+  SHAPE="448,7297,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_farmacia.xhtml:0" NAME="item"
+   PATH="/cs_farmacia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cs_farmacia::#cs_farmacia.xhtml"
+    NAME="output" PATH="/cs_farmacia.xhtml"
+    TARGET="rules:#cs_farmacia.xhtml" TITLE="cs_farmacia" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_bairro.xhtml" PATH="/cs_bairro.xhtml"
+  SHAPE="336,5633,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_bairro.xhtml:0" NAME="item"
+   PATH="/cs_bairro.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cs_bairro::#cs_bairro.xhtml" NAME="output"
+    PATH="/cs_bairro.xhtml" TARGET="rules:#cs_bairro.xhtml"
+    TITLE="cs_bairro" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:2" PATH="*" SHAPE="32,7073,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:2" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cd_escala::#cd_escala.xhtml" NAME="output"
+    PATH="/cd_escala.xhtml" TARGET="rules:#cd_escala.xhtml"
+    TITLE="cd_escala" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_marcacao::#cs_marcacao.xhtml"
+    NAME="output1" PATH="/cs_marcacao.xhtml"
+    TARGET="rules:#cs_marcacao.xhtml" TITLE="cs_marcacao" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cd_marcacao::#cd_marcacao.xhtml"
+    NAME="output2" PATH="/cd_marcacao.xhtml"
+    TARGET="rules:#cd_marcacao.xhtml" TITLE="cd_marcacao" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_agendamentoAmbulatorial::#cs_agendamentoAmbulatorial.xhtml"
+    NAME="output3" PATH="/cs_agendamentoAmbulatorial.xhtml"
+    TARGET="rules:#cs_agendamentoAmbulatorial.xhtml"
+    TITLE="cs_agendamentoAmbulatorial" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cd_migrarEscala::#cd_migrarEscala.xhtml"
+    NAME="output4" PATH="/cd_migrarEscala.xhtml"
+    TARGET="rules:#cd_migrarEscala.xhtml" TITLE="cd_migrarEscala" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cd_geracaoEscala::#cd_geracaoEscala.xhtml"
+    NAME="output5" PATH="/cd_geracaoEscala.xhtml"
+    TARGET="rules:#cd_geracaoEscala.xhtml" TITLE="cd_geracaoEscala" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_atendimentoAmbulatorial::#cs_atendimentoAmbulatorial.xhtml"
+    NAME="output6" PATH="/cs_atendimentoAmbulatorial.xhtml"
+    TARGET="rules:#cs_atendimentoAmbulatorial.xhtml"
+    TITLE="cs_atendimentoAmbulatorial" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_confirmarAmbulatorial::#cs_confirmarAmbulatorial.xhtml"
+    NAME="output7" PATH="/cs_confirmarAmbulatorial.xhtml"
+    TARGET="rules:#cs_confirmarAmbulatorial.xhtml"
+    TITLE="cs_confirmarAmbulatorial" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_ambulatoriosPendentes::#cs_ambulatoriosPendentes.xhtml"
+    NAME="output8" PATH="/cs_ambulatoriosPendentes.xhtml"
+    TARGET="rules:#cs_ambulatoriosPendentes.xhtml"
+    TITLE="cs_ambulatoriosPendentes" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_internacoesValidadas::#cs_internacoesValidadas.xhtml"
+    NAME="output9" PATH="/cs_internacoesValidadas.xhtml"
+    TARGET="rules:#cs_internacoesValidadas.xhtml"
+    TITLE="cs_internacoesValidadas" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_gerenciaPaciente::#cs_gerenciaPaciente.xhtml" NAME="output10"
+    PATH="/cs_gerenciaPaciente.xhtml"
+    TARGET="rules:#cs_gerenciaPaciente.xhtml"
+    TITLE="cs_gerenciaPaciente" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_chaveBolsa::#cs_chaveBolsa.xhtml"
+    NAME="output11" PATH="/cs_chaveBolsa.xhtml"
+    TARGET="rules:#cs_chaveBolsa.xhtml" TITLE="cs_chaveBolsa" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_validaInternacao::#cs_validaInternacao.xhtml" NAME="output12"
+    PATH="/cs_validaInternacao.xhtml"
+    TARGET="rules:#cs_validaInternacao.xhtml"
+    TITLE="cs_validaInternacao" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_interconsulta::#cs_interconsulta.xhtml"
+    NAME="output13" PATH="/cs_interconsulta.xhtml"
+    TARGET="rules:#cs_interconsulta.xhtml" TITLE="cs_interconsulta" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_exame::#cs_exame.xhtml" NAME="output14"
+    PATH="/cs_exame.xhtml" TARGET="rules:#cs_exame.xhtml"
+    TITLE="cs_exame" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_cid10::#cs_cid10.xhtml" NAME="output15"
+    PATH="/cs_cid10.xhtml" TARGET="rules:#cs_cid10.xhtml"
+    TITLE="cs_cid10" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_ocupacao::#cs_ocupacao.xhtml"
+    NAME="output16" PATH="/cs_ocupacao.xhtml"
+    TARGET="rules:#cs_ocupacao.xhtml" TITLE="cs_ocupacao" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_bloco::#cs_bloco.xhtml" NAME="output17"
+    PATH="/cs_bloco.xhtml" TARGET="rules:#cs_bloco.xhtml"
+    TITLE="cs_bloco" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_referencia::#cs_referencia.xhtml"
+    NAME="output18" PATH="/cs_referencia.xhtml"
+    TARGET="rules:#cs_referencia.xhtml" TITLE="cs_referencia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_leito::#cs_leito.xhtml" NAME="output19"
+    PATH="/cs_leito.xhtml" TARGET="rules:#cs_leito.xhtml"
+    TITLE="cs_leito" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_enfermaria::#cs_enfermaria.xhtml"
+    NAME="output20" PATH="/cs_enfermaria.xhtml"
+    TARGET="rules:#cs_enfermaria.xhtml" TITLE="cs_enfermaria" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_clinica::#cs_clinica.xhtml"
+    NAME="output21" PATH="/cs_clinica.xhtml"
+    TARGET="rules:#cs_clinica.xhtml" TITLE="cs_clinica" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_paciente::#cs_paciente.xhtml"
+    NAME="output22" PATH="/cs_paciente.xhtml"
+    TARGET="rules:#cs_paciente.xhtml" TITLE="cs_paciente" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cs_bairro::#cs_bairro.xhtml" NAME="output23"
+    PATH="/cs_bairro.xhtml" TARGET="rules:#cs_bairro.xhtml"
+    TITLE="cs_bairro" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#alterarSenha.xhtml"
+  PATH="/alterarSenha.xhtml" SHAPE="1952,1921,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#alterarSenha.xhtml:0" NAME="item"
+   PATH="/alterarSenha.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="alterarSenha::#alterarSenha.xhtml"
+    NAME="output" PATH="/alterarSenha.xhtml"
+    TARGET="rules:#alterarSenha.xhtml" TITLE="alterarSenha" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#movPaciente.xhtml" PATH="/movPaciente.xhtml"
+  SHAPE="1920,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#cd_marcao.xhtml" PATH="/cd_marcao.xhtml"
+  SHAPE="464,2993,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#cs_internacoesValidadas.xhtml"
+  PATH="/cs_internacoesValidadas.xhtml" SHAPE="320,4785,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#login.jsf" PATH="/login.jsf"
+  SHAPE="240,7201,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#cs_recepcaoTablet.xhtml"
+  PATH="/cs_recepcaoTablet.xhtml" SHAPE="2224,1137,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#principal.xhtml" PATH="/principal.xhtml"
+  SHAPE="1952,1713,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#recuperarSenha.xhtml"
+  PATH="/recuperarSenha.xhtml" SHAPE="1952,1601,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#paginaPrincipalCadastros.xhtml"
+  PATH="/paginaPrincipalCadastros.xhtml" SHAPE="256,3121,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#cs_chaveBolsa.xhtml"
+  PATH="/cs_chaveBolsa.xhtml" SHAPE="320,4817,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#alterarSenha.jsf" PATH="/alterarSenha.jsf"
+  SHAPE="2224,17,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#cs_gerenciaPaciente.xhtml"
+  PATH="/cs_gerenciaPaciente.xhtml" SHAPE="336,5521,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#paginaPrincipalNAC.xhtml"
+  PATH="/paginaPrincipalNAC.xhtml" SHAPE="256,3009,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#paginaPrincipalNAC.xhtml:0" NAME="item"
+   PATH="/paginaPrincipalNAC.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="principalNacTOcs_exame::#cs_exame.xhtml"
+    NAME="output" PATH="/cs_exame.xhtml" TARGET="rules:#cs_exame.xhtml"
+    TITLE="principalNacTOcs_exame" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#paginaPrincipalAmbulatorio.xhtml"
+  PATH="/paginaPrincipalAmbulatorio.xhtml" SHAPE="272,3041,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#paginaPrincipalAmbulatorio.xhtml:0"
+   NAME="item" PATH="/paginaPrincipalAmbulatorio.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cdEscala::#cd_escala.jsf.xhtml"
+    NAME="output" PATH="/cd_escala.jsf.xhtml"
+    TARGET="rules:#cd_escala.jsf.xhtml" TITLE="cdEscala" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cdGeracaoEscala::#cd_geracaoEscala.xhtml"
+    NAME="output1" PATH="/cd_geracaoEscala.xhtml"
+    TARGET="rules:#cd_geracaoEscala.xhtml" TITLE="cdGeracaoEscala" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cdMigrarEscala::#cd_migrarEscala.xhtml"
+    NAME="output2" PATH="/cd_migrarEscala.xhtml"
+    TARGET="rules:#cd_migrarEscala.xhtml" TITLE="cdMigrarEscala" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="#cdMarcacao::#cd_marcacao.xhtml"
+    NAME="output3" PATH="/cd_marcacao.xhtml"
+    TARGET="rules:#cd_marcacao.xhtml" TITLE="/cdMarcacao" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cdMarcacao::#cd_marcacao.xhtml"
+    NAME="output4" PATH="/cd_marcacao.xhtml"
+    TARGET="rules:#cd_marcacao.xhtml" TITLE="cdMarcacao" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="agendamentoAmbulatorial::#cs_atendimentoAmbulatorial.xhtml"
+    NAME="output5" PATH="/cs_atendimentoAmbulatorial.xhtml"
+    TARGET="rules:#cs_atendimentoAmbulatorial.xhtml"
+    TITLE="agendamentoAmbulatorial" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="atendimentoAmbulatorio::#cs_agendamentoAmbulatorial.xhtml"
+    NAME="output6" PATH="/cs_agendamentoAmbulatorial.xhtml"
+    TARGET="rules:#cs_agendamentoAmbulatorial.xhtml"
+    TITLE="atendimentoAmbulatorio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="agendamentoAmbulatorial::#cs_confirmarAmbulatorial.xhtml"
+    NAME="output7" PATH="/cs_confirmarAmbulatorial.xhtml"
+    TARGET="rules:#cs_confirmarAmbulatorial.xhtml"
+    TITLE="agendamentoAmbulatorial" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="csAmbulatoriosPendentes::#cs_ambulatoriosPendentes.xhtml"
+    NAME="output8" PATH="/cs_ambulatoriosPendentes.xhtml"
+    TARGET="rules:#cs_ambulatoriosPendentes.xhtml"
+    TITLE="csAmbulatoriosPendentes" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cd_assistenteSocial.xhtml"
+  PATH="/cd_assistenteSocial.xhtml" SHAPE="656,9617,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cd_assistenteSocial.xhtml:0" NAME="item"
+   PATH="/cd_assistenteSocial.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cd_assistenteSocial::#cd_assistenteSocial.xhtml" NAME="output"
+    PATH="/cd_assistenteSocial.xhtml"
+    TARGET="rules:#cd_assistenteSocial.xhtml"
+    TITLE="cd_assistenteSocial" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="cd_assistenteSocial_para_cs_assistenteSocial::#cs_assistenteSocial.xhtml"
+    NAME="output1" PATH="/cs_assistenteSocial.xhtml"
+    TARGET="rules:#cs_assistenteSocial.xhtml"
+    TITLE="cd_assistenteSocial_para_cs_assistenteSocial" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cs_atendimentoMedico.xhtml"
+  PATH="/cs_atendimentoMedico.xhtml" SHAPE="656,9681,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#cs_atendimentoMedico.xhtml:0" NAME="item"
+   PATH="/cs_atendimentoMedico.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_atendimentoMedico::#cs_atendimentoMedico.xhtml" NAME="output"
+    PATH="/cs_atendimentoMedico.xhtml"
+    TARGET="rules:#cs_atendimentoMedico.xhtml"
+    TITLE="cs_atendimentoMedico" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#paginaPrincipalRelatorio.xhtml"
+  PATH="/paginaPrincipalRelatorio.xhtml" SHAPE="2224,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#paginaPrincipalRelatorio.xhtml:0" NAME="item"
+   PATH="/paginaPrincipalRelatorio.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cs_atendimentoMedico::#cs_atendimentoMedico.xhtml" NAME="output"
+    PATH="/cs_atendimentoMedico.xhtml"
+    TARGET="rules:#cs_atendimentoMedico.xhtml"
+    TITLE="cs_atendimentoMedico" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:3" PATH="*" SHAPE="32,9649,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:3" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="logout::#login.jsf" NAME="output"
+    PATH="/login.jsf" TARGET="rules:#login.jsf" TITLE="logout" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+</PROCESS>

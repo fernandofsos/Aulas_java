@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RelAtendimento2" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CAMINHO_IMG_BRASAO" class="java.lang.String"/>
+	<parameter name="p1" class="java.lang.Integer"/>
+	<parameter name="CAMINHO_IMG_UPA" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select distinct(i.isn_internacao),
+                p.num_prontuario as prontuario,
+                p.dsc_nome as nome,
+		p.dat_nascimento,
+		medpoint.idade(p.dat_nascimento) as idade,
+		s.dsc_sexo as sexo,
+		i.dsc_endereco as endereco,
+		i.dsc_bairro as bairro,
+		i.isn_municipio as municipio,
+		i.isn_uf as estado,
+		i.num_cep as cep,
+		us.dsc_usuario as usuario,
+		it.dat_trans,
+		it.dsc_resumo_clinico,
+		it.dsc_exame as exame,
+		it.dsc_terapeutica as terapeutica,
+		it.dsc_referencia as referencia,
+		it.dsc_obs as observacao,
+		it.isn_usuario as usuario,
+		us.dsc_login as login,
+		m.dsc_municipio as dsc_municipio,
+		u.dsc_uf as dsc_uf,
+		it.dsc_hipotese_diagnostica,
+		it.dsc_justificativa_outros,
+		pt.dsc_perfil_transf_item,
+		it.isn_cid10,
+		cid.cod_cid10,
+		cid.dsc_cid10,
+(select vlr_parametro from medpoint.t_parametro where isn_parametro = 10) as endereco_completo,
+(SELECT VLR_PARAMETRO FROM MEDPOINT.T_PARAMETRO WHERE ISN_PARAMETRO = 13) AS DSC_UNIDADE
+from medpoint.t_internacao i inner join medpoint.t_paciente p on i.isn_paciente = p.isn_paciente
+			     inner join medpoint.t_internacao_trans it on i.isn_internacao = it.isn_internacao
+			     inner join medpoint.t_sexo s on p.isn_sexo = s.isn_sexo
+			     inner join medpoint.t_municipio m on i.isn_municipio = m.isn_municipio
+			     inner join medpoint.t_uf u on u.isn_uf = m.isn_uf
+			     left join medpoint.t_perfil_transf_item pt on pt.isn_perfil_transf_item = it.isn_perfil_transf_item
+			     inner join seguranca.t_usuario us on it.isn_usuario = us.isn_usuario
+			     left join medpoint.t_cid10 cid on cid.isn_cid10 = it.isn_cid10
+		where i.isn_internacao = $P{p1} and it.isn_internacao_trans = (select max(isn_internacao_trans) from medpoint.t_internacao_trans where isn_internacao = $P{p1})]]>
+	</queryString>
+	<field name="isn_internacao" class="java.lang.Integer"/>
+	<field name="prontuario" class="java.lang.String"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="dat_nascimento" class="java.sql.Date"/>
+	<field name="idade" class="java.lang.String"/>
+	<field name="sexo" class="java.lang.String"/>
+	<field name="endereco" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="municipio" class="java.lang.Integer"/>
+	<field name="estado" class="java.lang.Integer"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="usuario" class="java.lang.String"/>
+	<field name="dat_trans" class="java.sql.Date"/>
+	<field name="dsc_resumo_clinico" class="java.lang.String"/>
+	<field name="exame" class="java.lang.String"/>
+	<field name="terapeutica" class="java.lang.String"/>
+	<field name="referencia" class="java.lang.String"/>
+	<field name="observacao" class="java.lang.String"/>
+	<field name="login" class="java.lang.String"/>
+	<field name="dsc_municipio" class="java.lang.String"/>
+	<field name="dsc_uf" class="java.lang.String"/>
+	<field name="dsc_hipotese_diagnostica" class="java.lang.String"/>
+	<field name="dsc_justificativa_outros" class="java.lang.String"/>
+	<field name="dsc_perfil_transf_item" class="java.lang.String"/>
+	<field name="isn_cid10" class="java.lang.Integer"/>
+	<field name="cod_cid10" class="java.lang.String"/>
+	<field name="dsc_cid10" class="java.lang.String"/>
+	<field name="endereco_completo" class="java.lang.String"/>
+	<field name="dsc_unidade" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="51" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="50" width="555" height="1"/>
+			</line>
+			<image>
+				<reportElement x="437" y="0" width="117" height="33"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_BRASAO}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="310" y="0" width="127" height="33"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_UPA}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="310" y="34" width="242" height="16"/>
+				<box leftPadding="4"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_unidade}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="310" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="32" width="310" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORGANIZAÇÃO SOCIAL SAÚDE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="310" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDADE DE PRONTO ATENDIMENTO - UPA]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="38" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="332" y="35" width="85" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sexo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="298" y="35" width="34" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sexo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="50" width="40" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="483" y="35" width="72" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{prontuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="323" y="65" width="231" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_uf}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="167" y="35" width="131" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{idade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="38" y="20" width="516" height="15" isPrintWhenDetailOverflows="true"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="298" y="50" width="30" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="35" width="66" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prontuário:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="80" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="35" width="80" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Nasc:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="328" y="50" width="74" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cep}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="442" y="50" width="132" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{bairro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="148" y="0" width="258" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIO MÉDICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="35" width="38" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Idade:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="60" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="80" y="35" width="49" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_nascimento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="52" y="65" width="246" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_municipio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="298" y="65" width="25" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="65" width="52" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cidade:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="50" width="238" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{endereco}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="280" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="10" width="117" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resumo Clínico:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="1" y="105" width="553" height="15"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{terapeutica}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="50" width="116" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Exames Realizados:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="1" y="210" width="156" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Observações Complementares:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="1" y="90" width="115" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Terapêutica Utilizada:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="1" y="65" width="553" height="15" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{exame}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="1" y="25" width="554" height="15"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_resumo_clinico}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="1" y="225" width="554" height="15" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{observacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="170" width="156" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hospital de Referência:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="1" y="185" width="555" height="15"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{referencia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="1" y="130" width="156" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hipótese Diagnóstico]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="1" y="148" width="553" height="15"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{isn_cid10}==null ? $F{dsc_hipotese_diagnostica} : $F{dsc_cid10}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="1" y="265" width="554" height="15" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_justificativa_outros}==null?$F{dsc_perfil_transf_item}:$F{dsc_perfil_transf_item} + " - " + $F{dsc_justificativa_outros}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="250" width="156" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Perfil:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="78" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="64" width="555" height="14"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Unidade mantida com recursos públicos, provenientes de seus impostos e contribuições sociais.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="63" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="-18" y="49" width="592" height="14"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{endereco_completo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="48" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="150" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Médico:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement positionType="Float" x="-1" y="32" width="556" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_trans}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="17" width="555" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{usuario}+" "+$F{login}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

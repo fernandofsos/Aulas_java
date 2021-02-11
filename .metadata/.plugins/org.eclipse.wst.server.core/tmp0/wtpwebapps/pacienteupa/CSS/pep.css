@@ -1,0 +1,154 @@
+#divCabecalho { width: 100%; height: 110px; background: url(../images/pep/bg_top.png);
+                background-repeat: repeat-x; margin: 0 0 0 0;  padding: 0px 0px 0 0; }
+#divConteudoCabecalho { margin-left: auto; margin-right: auto; width: 100%; height:55px;  }
+#divLogotipo {  width: 150px; float: left; }
+#divLabels{
+	position:absolute;
+	top:-4px;
+	left:50%;
+	margin-left:-144px;
+}
+#divIcons{
+	position:absolute;
+	top:58px;
+	left:50%;
+	margin-left:-290px;
+	z-index: 20;
+}
+#divIcons ul{
+	list-style: none;
+}
+#divIcons li{
+	list-style: none;
+	float: left;
+	margin:2px;
+	padding:0px;
+	display: block;
+}
+#divIcons ul a {
+	padding: 4px 12px 4px 12px;
+	display: block;
+	line-height: 50px;
+	text-decoration: none;
+	font-size: 21px;
+	color: #371C1C;
+}
+#divIcons li a:hover{
+	background-color:#ACBECE;
+}
+#divIcons li a:active{
+	background-color:#ACBECE;
+}
+
+
+.divIcons ul{
+	list-style: none;
+}
+.divIcons li{
+	list-style: none;
+	float: left;
+	margin:2px;
+	padding:0px;
+	display: block;
+}
+.divIcons ul a {
+	padding: 4px 12px 4px 12px;
+	display: block;
+	line-height: 50px;
+	text-decoration: none;
+	font-size: 21px;
+	color: #371C1C;
+}
+.divIcons li a:hover{
+	background-color:#ACBECE;
+}
+.divIcons li a:active{
+	background-color:#ACBECE;
+}
+
+
+#divLogoHgwa{
+	position: absolute; 
+	top:-3px; 
+	right:0px; 
+	z-index: 15;
+}
+#dataDeHoje{
+	position: absolute; 
+	top:-3px; 
+	right:0px;
+}
+
+td.bemvindo{
+	width:140px;
+	height:36px;
+	background:url(../images/pep/bem_vindo.png);
+	text-align:center;
+	padding-top:18px;
+	line-height:16px;
+}
+span.nomeUsuario{
+	color:white;
+	font-weight:bold;
+}
+span.dataSistema{
+	color:green;
+	font-size:9px;
+}
+.fsPep legend{
+	margin-bottom: 5px;
+}
+.legendas{
+	text-align:right;
+}
+
+.tituloPagina { 
+	background: #5DA099;
+    font-family: Verdana; 
+    font-size: 13px; 
+    font-weight: bold; 
+    color: #fff; 
+    border-top: solid 1px #bbb; 
+    border-right: solid 1px #bbb; 
+    border-left: solid 1px #bbb;
+    line-height: 15px; 
+    text-align: center;
+    padding:4px;
+}
+.quadroEdicao { border: solid 1px #DDD; padding: 0px; background-color: #f9f9f9; overflow: auto;}
+.quadroEdicao div{ padding:10px 10px 10px 10px; float:left;}
+
+input.botaoModal100, input.botaoModal, .botaoExcluir, .botaoVoltar {
+	background:#528D87;
+	border:1px solid #5DA099;
+	display:inline-block;
+	color:#ffffff;
+	font-family:arial;
+	font-size:13px;
+	_font-size:16px;
+	font-weight:bold;
+	padding:6px 10px;
+	text-decoration:none;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	-moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	text-shadow:1px 1px 0px #1570cd;
+}
+input.botaoModal100:hover, input.botaoModal:hover, .botaoExcluir:hover, .botaoVoltar:hover{
+	background:#5DA099;
+}
+
+/*FORMS DE ADMISSAO*/
+.linhaFormulario div{
+	margin-bottom:4px;
+}
+div.infoTopo{
+	position:absolute;
+	top:110px;
+	right:0px;
+	padding:0 0 10px 10px;
+}
+.fsPep{margin-top:10px;}

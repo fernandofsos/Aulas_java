@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="headHtml">
+ 
+	</ui:define>
+	
+	<ui:define name="conteudo">
+	<a4j:keepAlive beanName="escalaForm" />
+	
+	<!-- MODAL PANEL DE SELEÇÃO DA CLINICA/ HOSPITAL -->
+	<rich:modalPanel id="panProfissional" autosized="false" width="700" height="450" resizeable="false" headerClass="headerPanel3">
+		<!-- BARRA DE TITULO MODAL-->
+    	<f:facet name="header">
+			<h:panelGroup>
+       			<h:outputText value="Pesquisa de Profisssional"></h:outputText>
+       		</h:panelGroup>
+    	</f:facet>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanel"/>
+        		<rich:componentControl for="panProfissional" attachTo="fechaPanel" operation="hide" event="onclick"/>
+        	</h:panelGroup>
+    	</f:facet>
+    	
+    	<h:form id="formProfissional">
+    		<fieldset style="background-color: #F5F5F5">
+                		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 15%;">     
+	       				<label class="font12" >Nome *</label>
+	       			</div>
+	       			<div class="colLeft largura220">
+	       				<h:inputText value="#{escalaForm.nmUsuario}" maxlength="50" styleClass="campoTexto largura200" onblur="this.value.toUpperCase();" style="width: 450px;" id="nmProfissional" onkeypress="return enter(event);"/>
+	       			</div>	       			       
+	    		</div>
+	    		<div style="height: 30px">
+				    <div class="colLeft" style="width: 15%;">     
+	       				<label class="font12">Especialidade *</label>
+	       			</div>
+	       			<div class="col190">
+	       				<h:selectOneMenu id="espProfissional" 
+											 style="width: 180px"
+											 value="#{escalaForm.isnEspecialidade}">
+								<f:selectItems value="#{escalaForm.listaEspecialidade}" />
+						</h:selectOneMenu>
+	       			</div>       			   
+	    		</div>
+	    		<div style="height: 20px">
+				    <div class="colLeft" style="width: 100%;">     
+	       				<a4j:commandButton style="width: 80px; height: 20px;" id="pesquisar" value="Pesquisar" actionListener="#{escalaForm.pesquisar}" reRender="formProfissional" oncomplete="validar('#{escalaForm.mensagem}');"/>
+	       			</div>
+	    		</div>
+    		</fieldset>
+    		
+    		
+    		<div>
+			<rich:dataTable id="tabelaPaciente"
+							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							value="#{escalaForm.listUsrEsp}" 
+							var="listaProfissional" 
+							rows="10"
+							rowKeyVar="linha" 
+							style="width: 680px"										 
+							reRender="ds"
+							binding="#{escalaForm.tblData}">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column>
+							<h:outputText width="3%" value="Sel." />
+						</h:column>
+						<h:column>
+							<h:outputText width="50%" value="Nome" />
+						</h:column>
+						<h:column>
+							<h:outputText width="47%" value="Especialidade" />
+						</h:column>						
+					</rich:columnGroup>
+				</f:facet>
+				
+					<rich:column width="3%" sortable="true">
+						<a4j:commandLink action="#{escalaForm.selecionarProfissional}" reRender="cdEscala" oncomplete="#{rich:component('panProfissional')}.hide()">
+							<h:graphicImage id="imagemProfissional" url="IMG/selecionar.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{listaProfissional}" target="#{escalaForm.ususarioEspescialidade}" />
+						</a4j:commandLink>
+					</rich:column>
+					<rich:column width="50%" sortable="true">
+						<h:outputText value="#{listaProfissional.usuarioBean.dscUsuario}" />
+					</rich:column>
+					<rich:column width="47%" sortable="true">
+						<h:outputText value="#{listaProfissional.especialidadeBean.dscEspecialidade}" />
+					</rich:column>
+
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+		</div>
+		
+		<script language="JavaScript">
+		function validar(msg)
+		{
+			if(msg != '')
+			{
+				alert(msg);
+				if(document.getElementById('cdEscala:idQtdAtendimento').value == 0)
+				{
+					document.getElementById('cdEscala:idQtdAtendimento').value = '';
+				}
+			}
+		}
+		
+		function enter(e) 
+		{
+			var keycode;
+			
+			if (window.event) 
+			{
+				keycode = window.event.keyCode;
+			} 
+			else 
+			{
+				keycode = e.which;	
+			}
+			if (keycode == 13) 
+			{
+				alert('Não é possível utilizar a tecla Enter');
+				return false;
+			}
+		}
+		</script>
+		
+   	</h:form>
+    	
+    	
+ 	</rich:modalPanel>	
+	<!-- FINAL DO MODAL PANEL DE INTERNACAO DE PACIENTE -->    
+	
+        <style>
+            .scrolls{
+                width:680px;
+                height:330px;
+                overflow:auto;
+            }
+        </style>	
+	
+	<!-- MODAL PANEL VIZUALIZAR CONSULTÓRIOS -->
+	<rich:modalPanel id="panelConsultorios" autosized="false" width="700" height="450" resizeable="false" headerClass="headerPanel3">
+
+	<!-- BARRA DE TITULO MODAL-->
+	   	<f:facet name="header">
+			<h:panelGroup>
+	      			<h:outputText value="Pesquisar Consultórios"></h:outputText>
+	      		</h:panelGroup>
+	   	</f:facet>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fecharPanel"/>
+        		<rich:componentControl for="panelConsultorios" attachTo="fecharPanel" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+    	
+		<h:form id="formConsultorios">
+			<fieldset style="background-color: #F5F5F5">
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 15%; height: 30px;">     
+	       				<label>Data da Escala</label>
+	       			</div>
+	       			<div class="colLeft" style="height: 30px;">
+	       				<rich:calendar id="datEscalaInicial" value="#{escalaForm.datEscalaInicial}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)" />
+	       				<h:outputText value=" a " />
+	       				<rich:calendar id="datEscalaFinal" value="#{escalaForm.datEscalaFinal}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)" />
+	       			</div>	       			       
+	    		</div>	
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 100%; height: 30px;">     
+	       				<a4j:commandButton style="width: 80px; height: 20px;" id="pesquisarCons" value="Pesquisar" actionListener="#{escalaForm.pesquisarCosnultoriosEscalas}" reRender="formConsultorios" oncomplete="validar('#{escalaForm.mensagem}');"/>
+	       			</div>
+	    		</div>
+			</fieldset>			
+			<h:panelGroup layout="block" styleClass="scrolls">
+				<rich:dataTable id="tabelaConsultorio"
+						value="#{escalaForm.listaConsultorios}" 
+						var="rst" 
+						style="width: 680px; overflow: auto;"
+						rowClasses="par, impar" 
+						rows="5"
+						rowKeyVar="myRow">										 
+					<f:facet name="header">
+						<rich:columnGroup>
+							<rich:column colspan="5">
+								<h:outputText value="Consultórios / Escalas" />
+							</rich:column>
+						</rich:columnGroup>
+					</f:facet>			
+					<rich:column style="text-align: left; font-weight: bold;" colspan="5">
+							<h:outputText value="#{rst.dscLeito}" />
+					</rich:column>
+					
+					<rich:subTable id="tblConsultorioEscalas" var="esc" value="#{rst.listaEscalasList}" rendered="#{not empty rst.listaEscalasList}" rowClasses="#{myRow mod 2 == 0 ? 'par' : 'impar'}" >
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{esc.datEscala}" />
+						</rich:column>					
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{esc.nomeDiaSemana}" />
+						</rich:column>					
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{esc.horInicio}" />
+						</rich:column>					
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{esc.horFim}" />
+						</rich:column>					
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{esc.usuarioBean.dscUsuario}" />
+						</rich:column>					
+					</rich:subTable>				
+					
+					<f:facet name="footer">
+						<rich:datascroller id="idDataScroller" ajaxSingle="false" />
+					</f:facet>				
+					
+				</rich:dataTable>
+			</h:panelGroup>
+		</h:form>    	
+	
+	</rich:modalPanel>   
+	<!-- FIM DO MODAL PANEL VIZUALIZAR CONSULTÓRIOS -->
+	
+	<h:form id="cdEscala" >	
+			
+		<div id="geral">
+		   	<label class="cabAreaPesquisa">CADASTRO DE ESCALA</label>  	 
+			<div class="areaPesquisa">     	 
+        		<div>
+        		
+        			<label>Profissional</label> <a4j:commandButton image="IMG/pesquisa.gif" 
+        			                                                  id="btnProfissional"
+											           		      actionListener="#{escalaForm.abrirProfissional}"
+											           		      oncomplete="Richfaces.showModalPanel('panProfissional');"
+												    		    reRender="panProfissional" /> 
+        		 
+                	<fieldset>
+                		<table>
+                			<tr>
+                				<td align="right">
+                					<label><b>Nome:</b></label>
+                				</td>
+                				<td>
+                					<label><h:outputText value="#{escalaForm.nomeProfissional}" /></label> 
+                				</td>
+                			</tr>
+                			<tr>
+                				<td>
+                					<label><b>Especialidade:</b></label>
+                				</td>
+                				<td>
+                					<label><h:outputText value="#{escalaForm.especialidade}" /></label>
+                				</td>
+                			</tr>
+						</table>         	
+                	
+					</fieldset>
+            	</div>
+            	<br />
+            	<h:panelGroup id="camposFormulario" rendered="#{escalaForm.estadoTela == 1 or escalaForm.estadoTela == 2}" layout="block">
+            		<fieldset>
+	            		<table >
+	               			<tr>
+	               				<td align="right" style="width: 25%">
+	               					<label><b>Data da Escala</b></label>
+	               				</td>
+	               				<td>
+	               					<rich:calendar id="datEscala" value="#{escalaForm.escala.datEscala}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)"/>
+	               				</td>
+	               			</tr>            		
+	               			<tr>
+	               				<td align="right">
+	               					<label><b>Nr. Atendimentos</b></label>
+	               				</td>
+	               				<td>
+	               					<h:inputText id="idQtdAtendimento" value="#{escalaForm.escala.qtdAtendimento}" size="6" maxlength="4" onkeypress="return soNumero(event, this)" />
+	               				</td>
+	               			</tr>            		
+	               			<tr>
+	               				<td align="right">
+	               					<label><b>Turno</b></label>
+	               				</td>
+	               				<td>
+	               					<h:selectOneMenu id="idTurno" value="#{escalaForm.escala.isnTurno}" >
+	               						<f:selectItem itemValue="" itemLabel="SELECIONE"/>
+	               						<f:selectItem itemValue="1" itemLabel="MANHA"/>
+	               						<f:selectItem itemValue="2" itemLabel="TARDE"/>
+	               					</h:selectOneMenu>
+	               				</td>
+	               			</tr>            		
+	               			<tr>
+	               				<td align="right">
+	               					<label><b>Horário</b></label>
+	               				</td>
+	               				<td>
+	               					<h:inputText id="idHoraInicio" value="#{escalaForm.escala.horInicio}" size="6" maxlength="4" onkeypress="return soNumero(event, this)" >
+	               						<rich:jQuery query="mask('99:99')" selector="#idHoraInicio" binding="#{escalaForm.escala.horInicio}"/>
+	               					</h:inputText>
+	               					<label><b><h:outputText value=" a " /></b></label> 
+	               					<h:inputText id="idHoraFim" value="#{escalaForm.escala.horFim}" size="6" maxlength="4" onkeypress="return soNumero(event, this)" >
+	               						<rich:jQuery query="mask('99:99')" selector="#idHoraFim" binding="#{escalaForm.escala.horFim}"/>
+	               					</h:inputText>
+	               				</td>
+	               			</tr>            		
+	               			<tr>
+	               				<td align="right">
+	               					<label><b>Consultório</b></label>
+	               				</td>
+	               				<td>
+	               					<h:selectOneMenu id="idConsultorio" value="#{escalaForm.escala.isnLeito}" >
+	               						<f:selectItem itemValue="" itemLabel="SELECIONE"/>
+	               						<f:selectItems value="#{escalaForm.listaLeitos}" />
+	               					</h:selectOneMenu>
+	               				</td>
+	               			</tr>
+	               		</table>
+	               		<h:panelGroup id="camposFormularioAlterar" rendered="#{escalaForm.estadoTela == 2}" layout="block">
+		               		<table>      
+		          			    <tr>
+		               				<td align="right" style="width: 21%">
+		               					<label><b>Situação</b></label>
+		               				</td>
+		               				<td>
+		               					<h:selectOneMenu id="idSituacao" value="#{escalaForm.escala.isnEscalaSituacao}" >
+		               						<f:selectItem itemValue="" itemLabel="SELECIONE"/>
+		               						<f:selectItem itemValue="1" itemLabel="ATIVO"/>
+		               						<f:selectItem itemValue="2" itemLabel="CANCELADO"/>
+		               					</h:selectOneMenu>
+		               				</td>
+		               			</tr>
+		               			 <tr>
+		                				<td align="right">
+		                					<label><b>Justificativa</b></label>
+		                				</td>
+		                				<td >
+		                					<h:inputTextarea cols="85" id="dscJustificativa" onkeyup="verificaTamanho('cdEscala',this, 400, 'lblCaracteres');" onblur="upper(this);" value="#{escalaForm.escala.dscJustificativa}" style="text-transform:uppercase"/>
+		                					<br/><label id="lblCaracteres">(400 caracteres restantes)</label>
+		                				</td>
+		                			</tr>
+		            	  </table>
+	            	  </h:panelGroup>
+            		</fieldset>
+            	</h:panelGroup>
+            	
+            	<br />
+            	
+				<h:panelGroup id="idDivBotoes" layout="block" rendered="#{escalaForm.estadoTela == 1}">
+					<a4j:commandButton id="idGravar"
+										value="Gravar"
+										action="#{escalaForm.gravar}"
+										onclick="this.disabled=true"
+										oncomplete="validar('#{escalaForm.mensagem}');"
+										styleClass="botaoModal100"
+										style="margin-right: 10px;"
+										reRender="cdEscala, panelEscalasProf">
+					</a4j:commandButton>
+					<h:outputText value=" " />
+					<a4j:commandButton id="idVerLeitos"
+										value="Ver Consultórios"
+										actionListener="#{escalaForm.visualizarConsultorios}"
+										onclick="this.disabled=true"
+										oncomplete="Richfaces.showModalPanel('panelConsultorios');"
+										styleClass="botaoModal100"
+										style="margin-right: 10px;"
+										reRender="cdEscala, panelConsultorios">
+					</a4j:commandButton>
+				</h:panelGroup>
+				<h:panelGroup id="idDivBotoesAlterar" layout="block" rendered="#{escalaForm.estadoTela == 2}">
+					<a4j:commandButton id="idAlterar"
+										value="Alterar"
+										action="#{escalaForm.alterar}"
+										onclick="this.disabled=true"
+										oncomplete="validar('#{escalaForm.mensagem}');"
+										styleClass="botaoModal100"
+										style="margin-right: 10px;"
+										reRender="cdEscala">
+					</a4j:commandButton>
+					<h:outputText value=" " />
+					<a4j:commandButton id="idCancelar"
+										value="Cancelar"
+										action="#{escalaForm.cancelar}"
+										onclick="this.disabled=true"
+										oncomplete="this.disabled=false;"
+										styleClass="botaoModal100"
+										style="margin-right: 10px;"
+										reRender="cdEscala">
+					</a4j:commandButton>
+				</h:panelGroup>
+				<h:panelGroup id="idDivConsultorio" layout="block" rendered="#{escalaForm.estadoTela == null or escalaForm.estadoTela == 0}">
+					<a4j:commandButton id="idVerLeitos2"
+										value="Ver Consultórios"
+										actionListener="#{escalaForm.visualizarConsultorios}"
+										onclick="this.disabled=true"
+										oncomplete="Richfaces.showModalPanel('panelConsultorios');"
+										styleClass="botaoModal100"
+										style="margin-right: 10px;"
+										reRender="cdEscala, panelConsultorios">
+					</a4j:commandButton>				
+				</h:panelGroup>
+            	
+            	<br />
+            	
+				<h:panelGroup id="panelEscalasProf" layout="block" rendered="#{escalaForm.estadoTela == 1 or escalaForm.estadoTela == 2}">
+	        		<fieldset>
+	        			<legend>Escalas</legend>
+	        			
+	        			<rich:dataTable id="tblDataEscalaId" value="#{escalaForm.tabela}" binding="#{escalaForm.tblDataEscala}" var="rst" style="width: 100%;" rows="5" rowKeyVar="linha">
+	        				<f:facet name="header">
+								<rich:columnGroup>
+									<rich:column style="text-align: center;width: 5%;">
+										Data
+									</rich:column>
+									<rich:column style="text-align: center;">
+										Dia da Semana
+									</rich:column>
+									<rich:column style="text-align: center;">
+										Hora Início
+									</rich:column>
+									<rich:column style="text-align: center;">
+										Hora Fim
+									</rich:column>	
+									<rich:column style="text-align: center;">
+										Consultório
+									</rich:column>	
+									<rich:column style="text-align: center;">
+										Situação
+									</rich:column>	
+									<rich:column style="text-align: center;">
+										Qtd. Atendimentos Total
+									</rich:column>	
+									<rich:column style="text-align: center;">
+										Qtd. Atendimentos Marcados
+									</rich:column>	
+									<rich:column style="text-align: center;">
+									</rich:column>	
+								</rich:columnGroup>	
+							</f:facet>
+								
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{rst.datEscala}" converter="ConversorDeDatas" />
+						</rich:column>
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{rst.nomeDiaSemana}" />
+						</rich:column>
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{rst.horInicio}" />
+						</rich:column>
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{rst.horFim}" />
+						</rich:column>
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{rst.leitoBean.dscLeito}" />
+						</rich:column>
+						<rich:column style="text-align: left;">
+							<h:outputText value="ATIVA" rendered="#{rst.isnEscalaSituacao == 1}"/>
+							<h:outputText value="CANCELADA" rendered="#{rst.isnEscalaSituacao == 2}" style="color: red;"/>
+							<h:outputText value="SUSPENSA" rendered="#{rst.isnEscalaSituacao == 3}"/>
+						</rich:column>
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{rst.qtdAtendimento}" />
+						</rich:column>
+						<rich:column style="text-align: left;">
+							<h:outputText value="#{rst.qtdMarcadas}" />
+						</rich:column>
+						<rich:column style="text-align: center;">
+							<a4j:commandButton image="/IMG/icone_alterar.gif" style="border:white; width: 12px; height: 12px;" title="ALTERAR" actionListener="#{escalaForm.preparaAlterar}" reRender="cdEscala" oncomplete="validar('#{escalaForm.mensagem}');" />
+						</rich:column>	
+						
+						<f:facet name="footer">
+							<rich:datascroller id="idScroll" ajaxSingle="false" />
+						</f:facet>											
+							
+	        			</rich:dataTable>
+	        			
+	        		</fieldset>
+	        		</h:panelGroup>
+            	
+        	</div>
+        	
+	      	<br style="clear: both"/>
+	        	        
+		</div>		
+	</h:form>
+	
+	</ui:define>
+	
+</ui:composition>
+
+</html>

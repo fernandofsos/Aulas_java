@@ -1,0 +1,2378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:c="http://sourceforge.net/projects/jsf-comp"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="headHtml">
+		<style>
+h4 {
+	text-align: center;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<a4j:keepAlive beanName="estatisticaForm" />
+		<style>
+.rich-panel-header {
+	text-align: center !important;
+}
+</style>
+		<rich:modalPanel id="panelStatus" autosized="true">
+			<h:panelGrid columns="2" width="180">
+				<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px" />
+				<h:outputText value="Atualizando, aguarde..." />
+			</h:panelGrid>
+		</rich:modalPanel>
+
+		<h:form id="estatistica">
+			<div class="cabAreaPesquisa">ESTATÍSTICA GERENCIAL</div>
+			<h:panelGroup styleClass="areaPesquisa" layout="block" id="filtros"
+				style="height:80px">
+				<div>
+					<label style="font-weight: bold">Indicadores</label><br />
+					<h:selectOneMenu id="selOrdem"
+						value="#{estatisticaForm.numIndicador}" style="width: 180px">
+						<f:selectItem
+							itemLabel="Número de Atendimentos (Adulto x Infantil)"
+							itemValue="1" />
+						<f:selectItem
+							itemLabel="Número de Atendimentos Odontológico (Adulto x Infantil)"
+							itemValue="20" />
+						<f:selectItem itemLabel="Atendimentos por Cor Adulto"
+							itemValue="2" />
+						<f:selectItem itemLabel="Atendimentos por Cor Infantil"
+							itemValue="3" />
+						<f:selectItem itemLabel="Atendimentos por Cor Total" itemValue="4" />
+						<f:selectItem
+							itemLabel="Pacientes Atendidos Dentro do Limite Espera Adulto"
+							itemValue="5" />
+						<f:selectItem
+							itemLabel="Pacientes Atendidos Dentro do Limite Espera Infantil"
+							itemValue="19" />
+						<f:selectItem itemLabel="Pacientes Classificados e Não Atendidos"
+							itemValue="6" />
+						<f:selectItem
+							itemLabel="Pacientes Cadastrados, Não Classificados e Nem Atendidos"
+							itemValue="7" />
+						<f:selectItem itemLabel="Tempo Médio de Espera" itemValue="8" />
+						<f:selectItem itemLabel="Tempo Máximo de Espera" itemValue="9" />
+						<f:selectItem itemLabel="Número Total de Transferências"
+							itemValue="10" />
+						<f:selectItem
+							itemLabel="Número Total de Transferências em Mais de 24hrs"
+							itemValue="11" />
+						<f:selectItem
+							itemLabel="Pacientes Não Transferidos com Transferência Solicitada"
+							itemValue="12" />
+						<f:selectItem itemLabel="Pacientes Adultos Transferidos"
+							itemValue="13" />
+						<f:selectItem itemLabel="Pacientes Infantis Transferidos"
+							itemValue="14" />
+						<f:selectItem itemLabel="Decisão Clínica" itemValue="15" />
+						<f:selectItem
+							itemLabel="Tempo médio decorrido entre o registro e a classificação do paciente"
+							itemValue="16" />
+						<!-- 		    	<f:selectItem itemLabel="Tempo médio decorrido entre a classificação e o atendimento médico" itemValue="17"/> -->
+						<f:selectItem itemLabel="Diagnósticos de entrada geral"
+							itemValue="18" />
+
+						<f:selectItem itemLabel="Atendimento por Sexo e Idade"
+							itemValue="22" />
+						<f:selectItem itemLabel="Atendimento por Bairros" itemValue="23" />
+						<f:selectItem itemLabel="Atedimento por sexo" itemValue="29" />
+						<f:selectItem itemLabel="Alta" itemValue="26" />
+						<f:selectItem itemLabel="Permanência" itemValue="21" />
+						<f:selectItem itemLabel="Tempo Médio de espera " itemValue="25" />
+						<f:selectItem
+							itemLabel="Tempo permanência entre 24 e 48 horas e acima de 48 horas"
+							itemValue="28" />
+						<f:selectItem itemLabel="Tempo Médio de espera por Perfil"
+							itemValue="30" />
+						<f:selectItem itemLabel="Transferências após 24h para UTI" itemValue="24" />
+						<f:selectItem itemLabel="Transferências Solicitadas, Reguladas e Efetivadas"
+							itemValue="27" />
+						<f:selectItem itemLabel="Transferências por referência"
+							itemValue="31" />
+						<f:selectItem itemLabel="Transferências por referência e perfil"
+							itemValue="32" />
+						<f:selectItem itemLabel="Taxa de Decisão"
+							itemValue="33" />
+						<f:selectItem itemLabel="Tempo das Regulações"
+							itemValue="34" />
+						<f:selectItem itemLabel="Tempo de transferência: até 24h, entre 24h e 48h e acima de 48h"
+							itemValue="35" />
+						<f:selectItem
+							itemLabel="Óbitos (Adulto x Infantil)"
+							itemValue="36" />
+						<f:selectItem
+							itemLabel="Óbitos por Permanência"
+							itemValue="37" />	
+						<f:selectItem
+							itemLabel="Dados Covid"
+							itemValue="38" />	
+						<!-- 
+	       			<f:selectItem itemLabel="Perfil Transferência" itemValue="15"/>
+	       			<f:selectItem itemLabel="Pacientes Cadastrados na Recepção" itemValue="16"/>
+	       			 -->
+						<a4j:support event="onchange" reRender="estatistica:filtros, estatistica:div-periodo" />
+					</h:selectOneMenu>
+				</div>
+				<h:panelGroup layout="block" id="div-periodo">
+					<label style="font-weight: bold">Período:* </label><br />
+					<rich:calendar id="datInicial"
+						value="#{estatisticaForm.dataInicial}"
+						ondateselected="checkBirthDate(this,event.rich.date);"
+						oninputchange="checkBirthDate(this,event.rich.date);"
+						datePattern="dd/MM/yyyy"/>
+					<div style="margin-bottom: 8px" />
+					<rich:calendar id="datFinal" value="#{estatisticaForm.dataFinal}"
+						ondateselected="checkBirthDateFinal(this,event.rich.date);"
+						oninputchange="checkBirthDateFinal(this,event.rich.date);"
+						datePattern="dd/MM/yyyy"
+						 />
+					<br />
+				</h:panelGroup>
+				<h:panelGroup styleClass="col150"
+					style="margin-right:10px;margin-top: 4px;"
+					rendered="#{estatisticaForm.numIndicador==18}">
+					<label style="font-weight: bold">Clinica*: </label>
+					<br />
+					<h:selectOneMenu value="#{estatisticaForm.isnClinica}">
+						<f:selectItems value="#{estatisticaForm.lstClinica}" />
+					</h:selectOneMenu>
+
+				</h:panelGroup>
+				<h:panelGroup styleClass="selecaoTipo" layout="block" style="padding-top:20px" rendered="#{estatisticaForm.numIndicador eq 37}">
+			    	<h:selectOneRadio id="radioObitoPeriodo" value="#{estatisticaForm.radioObitoPeriodo}" >
+			    	     <f:selectItem id="radioObito50" itemLabel="Todos" itemValue="0"/>
+			    	     <f:selectItem id="radioObito24" itemLabel="Até 24h" itemValue="24"  />
+			    	     <f:selectItem id="radioObito48" itemLabel="Maior que 24h" itemValue="48"/>
+			    	</h:selectOneRadio>		    	
+			    </h:panelGroup>
+				<div class="col150" style="text-align: center">
+					<a4j:commandButton value="Pesquisar"
+						action="#{estatisticaForm.validar}"
+						style="height: 22px; 
+			       	              width:100px; 
+			       	              margin-bottom: 4px"
+						oncomplete="this.disabled=false; validaIndicador('#{estatisticaForm.erroIndicador}');"
+						reRender="estatistica">
+					</a4j:commandButton>
+
+					<br />
+					<h:commandButton value="Redefinir"
+						action="#{estatisticaForm.resetCampos}"
+						style="height: 22px; 
+	       	                       width:100px; 
+	       	                       margin-bottom: 4px"
+						reRender="estatistica" />
+					<br />
+					<!-- 	       	   	<a4j:commandButton value="Imprimir" style="height: 22px; width:100px"  -->
+					<!-- 	       	                       reRender="tblResumo,resumos,graficoRiscos"/> -->
+				</div>
+			</h:panelGroup>
+
+			<strong> <rich:messages layout="table" globalOnly="true"
+					errorClass="msgError" infoClass="msgError" warnClass="msgWarn"
+					id="messages" />
+			</strong>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan0" switchType="client"
+				rendered="#{estatisticaForm.flagInd0}">
+				<f:facet name="header">Número de Atendimentos (Adulto e Infantil)</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:panel>
+						<f:facet name="header">
+							<h:outputText
+								value="Número de Atendimentos (Adulto e Infantil) - De #{estatisticaForm.dataIniPan0} até #{estatisticaForm.dataFimPan0}" />
+						</f:facet>
+						<table style="width: 100%" class="rich-table" border="1">
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="ADULTO" /></td>
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="#{estatisticaForm.numAdultos}" /></td>
+							</tr>
+							<tr class="rich-tablerow linhaNormal">
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="INFANTIL" /></td>
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="#{estatisticaForm.numInfantil}" /></td>
+							</tr>
+							<tr class="rich-table-footer">
+								<td class="rich-table-footercell fonte13"><b><h:outputText
+											value="TOTAL" /></b></td>
+								<td class="rich-table-footercell fonte13"><b><h:outputText
+											value="#{estatisticaForm.totalAtendimentos}" /></b></td>
+							</tr>
+						</table>
+					</rich:panel>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos1"
+						datasource="#{estatisticaForm.dadosGraficoAtendimentos}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="green,orange" style="width:90%" height="250"
+						antialias="true"
+						title="Número de Atendimentos &#10;(Adulto e Infantil)&#10;De #{estatisticaForm.dataIniPan0} até #{estatisticaForm.dataFimPan0}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan20" switchType="client"
+				rendered="#{estatisticaForm.flagInd20}">
+				<f:facet name="header">Número de Atendimentos Odontológia (Adulto e Infantil)</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:panel>
+						<f:facet name="header">
+							<h:outputText
+								value="Número de Atendimentos Odontológia (Adulto e Infantil) - De #{estatisticaForm.dataIniPan20} até #{estatisticaForm.dataFimPan20}" />
+						</f:facet>
+						<table style="width: 100%" class="rich-table" border="1">
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="ADULTO" /></td>
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="#{estatisticaForm.numOdontoAdulto}" /></td>
+							</tr>
+							<tr class="rich-tablerow linhaNormal">
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="INFANTIL" /></td>
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="#{estatisticaForm.numOdontoCrianca}" /></td>
+							</tr>
+							<tr class="rich-table-footer">
+								<td class="rich-table-footercell fonte13"><b><h:outputText
+											value="TOTAL" /></b></td>
+								<td class="rich-table-footercell fonte13"><b><h:outputText
+											value="#{estatisticaForm.totalAtendimentosOdonto}" /></b></td>
+							</tr>
+						</table>
+					</rich:panel>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos20"
+						datasource="#{estatisticaForm.dadosGraficoAtendimentosOdonto}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="green,orange" style="width:100%" height="250"
+						antialias="true"
+						title="Número de Atendimentos Odontológicos (Adulto e Infantil)&#10;De #{estatisticaForm.dataIniPan20} até #{estatisticaForm.dataFimPan20}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan1" switchType="client"
+				rendered="#{estatisticaForm.flagInd1}">
+				<f:facet name="header">Atendimentos por Cor (Adulto)</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tblCorAdulto"
+						value="#{estatisticaForm.lstRiscosCorAdulto}" var="risco"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText
+										value="Atendimentos por Cor (Adulto)&#10;De #{estatisticaForm.dataIniPan1} até #{estatisticaForm.dataFimPan1}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="(%)" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup>
+							<rich:column styleClass="fonte13">
+								<h:graphicImage value="#{estatisticaForm.icones[risco.isn]}"
+									style="vertical-align: middle" />
+								<h:outputText value="#{risco.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{risco.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+							<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+								<h:outputText
+									value="#{risco.quantidade/estatisticaForm.totalRiscosCorAdulto*100}">
+									<f:convertNumber pattern="#,##0.00" />
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{estatisticaForm.totalRiscosCorAdulto}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13">
+									<center>
+										<h:outputText value="100,00" />
+									</center>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos2"
+						datasource="#{estatisticaForm.dadosGraficoAtendimentosCorAdulto}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="red,#FF8C00,yellow,green,blue,#FFFFFF,black"
+						style="width:100%" height="250" antialias="true"
+						title="Atendimentos por Cor (Adulto)&#10;De #{estatisticaForm.dataIniPan1} até #{estatisticaForm.dataFimPan1}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan2" switchType="client"
+				rendered="#{estatisticaForm.flagInd2}">
+				<f:facet name="header">Atendimentos por Cor (Infantil)</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tblCorInfantil"
+						value="#{estatisticaForm.lstRiscosCorInfantil}" var="inf"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText
+										value="Atendimentos por Cor (Infantil)&#10;De #{estatisticaForm.dataIniPan2} até #{estatisticaForm.dataFimPan2}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="(%)" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup>
+							<rich:column styleClass="fonte13">
+								<h:graphicImage value="#{estatisticaForm.icones[inf.isn]}"
+									style="vertical-align: middle" />
+								<h:outputText value="#{inf.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{inf.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+							<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+								<h:outputText
+									value="#{inf.quantidade/estatisticaForm.totalRiscosCorInfantil*100}">
+									<f:convertNumber pattern="#,##0.00" />
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{estatisticaForm.totalRiscosCorInfantil}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13">
+									<center>
+										<h:outputText value="100,00" />
+									</center>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos3"
+						datasource="#{estatisticaForm.dadosGraficoAtendimentosCorInfantil}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="red,#FF8C00,yellow,green,blue,#FFFFFF,black"
+						style="width:100%" height="250" antialias="true"
+						title="Atendimentos por Cor (Infantil)&#10;De #{estatisticaForm.dataIniPan2} até #{estatisticaForm.dataFimPan2}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan3" switchType="client"
+				rendered="#{estatisticaForm.flagInd3}">
+				<f:facet name="header">Atendimentos por Cor Total</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tblCor" value="#{estatisticaForm.lstRiscosCor}"
+						var="tot" rowClasses="linhaNormal,linhaDestaque"
+						style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText value="Atendimentos por Cor Total" />
+									<br />
+									<h:outputText
+										value="De #{estatisticaForm.dataIniPan3} até #{estatisticaForm.dataFimPan3}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="(%)" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup>
+							<rich:column styleClass="fonte13">
+								<h:graphicImage value="#{estatisticaForm.icones[tot.isn]}"
+									style="vertical-align: middle" />
+								<h:outputText value="#{tot.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{tot.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+							<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+								<h:outputText
+									value="#{tot.quantidade/estatisticaForm.totalRiscosCor*100}">
+									<f:convertNumber pattern="#,##0.00" />
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{estatisticaForm.totalRiscosCor}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13">
+									<center>
+										<h:outputText value="100,00" />
+									</center>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos4"
+						datasource="#{estatisticaForm.dadosGraficoAtendimentosCor}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="red,#FF8C00,yellow,green,blue,#FFFFFF,black"
+						style="width:100%" height="250" antialias="true"
+						title="Atendimentos por Cor Total&#10;De #{estatisticaForm.dataIniPan3} até #{estatisticaForm.dataFimPan3}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan4" switchType="client"
+				rendered="#{estatisticaForm.flagInd4}">
+				<f:facet name="header">Atendimentos Dentro do Limite Espera Adulto</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tblCorLimite"
+						value="#{estatisticaForm.lstRiscosLimite}" var="lim"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText
+										value="Atendimentos Dentro do Limite Espera Adulto" />
+									<br />
+									<h:outputText
+										value="De #{estatisticaForm.dataIniPan4} até #{estatisticaForm.dataFimPan4}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="(%)" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup>
+							<rich:column styleClass="fonte13">
+								<h:graphicImage value="#{estatisticaForm.icones[lim.isn]}"
+									style="vertical-align: middle" />
+								<h:outputText value="#{lim.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{lim.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+							<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+								<h:outputText
+									value="#{lim.quantidade/estatisticaForm.totalRiscosLimite*100}">
+									<f:convertNumber pattern="#,##0.00" />
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{estatisticaForm.totalRiscosLimite}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13">
+									<center>
+										<h:outputText value="100,00" />
+									</center>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos5"
+						datasource="#{estatisticaForm.dadosGraficoAtendimentosLimite}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="red,#FF8C00,yellow,green,blue,#FFFFFF,black"
+						style="width:100%" height="250" antialias="true"
+						title="Atendimentos Dentro do Limite&#10; Espera Adulto&#10;De #{estatisticaForm.dataIniPan4} até #{estatisticaForm.dataFimPan4}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan19" switchType="client"
+				rendered="#{estatisticaForm.flagInd19}">
+				<f:facet name="header">Atendimentos Dentro do Limite Espera Infantil</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable value="#{estatisticaForm.lstRiscosLimiteInfatil}"
+						var="lim" rowClasses="linhaNormal,linhaDestaque"
+						style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText
+										value="Atendimentos Dentro do Limite Espera Infantil" />
+									<br />
+									<h:outputText
+										value="De #{estatisticaForm.dataIniPan19} até #{estatisticaForm.dataFimPan19}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="(%)" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup>
+							<rich:column styleClass="fonte13">
+								<h:graphicImage value="#{estatisticaForm.icones[lim.isn]}"
+									style="vertical-align: middle" />
+								<h:outputText value="#{lim.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{lim.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+							<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+								<h:outputText
+									value="#{lim.quantidade/estatisticaForm.totalRiscosLimiteInfatil*100}">
+									<f:convertNumber pattern="#,##0.00" />
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText
+										value="#{estatisticaForm.totalRiscosLimiteInfatil}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13">
+									<center>
+										<h:outputText value="100,00" />
+									</center>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos19"
+						datasource="#{estatisticaForm.dadosGraficoAtendimentosLimiteInfantil}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="red,#FF8C00,yellow,green,blue,#FFFFFF,black"
+						style="width:90%" height="250" antialias="true"
+						title="Atendimentos Dentro do Limite&#10; Espera Infantil &#10;De #{estatisticaForm.dataIniPan4} até #{estatisticaForm.dataFimPan4}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan5" switchType="client"
+				rendered="#{estatisticaForm.flagInd5}">
+				<f:facet name="header">Pacientes Classificados e Não Atendidos </f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tblCorClassificados"
+						value="#{estatisticaForm.lstRiscosClassificados}" var="cla"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText value="Pacientes Classificados e Não Atendidos" />
+									<br />
+									<h:outputText
+										value="De #{estatisticaForm.dataIniPan5} até #{estatisticaForm.dataFimPan5}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="(%)" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup>
+							<rich:column styleClass="fonte13">
+								<h:graphicImage value="#{estatisticaForm.icones[cla.isn]}"
+									style="vertical-align: middle" />
+								<h:outputText value="#{cla.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{cla.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+							<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+								<h:outputText
+									value="#{cla.quantidade/estatisticaForm.totalRiscosClassificado*100}">
+									<f:convertNumber pattern="#,##0.00" />
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText
+										value="#{estatisticaForm.totalRiscosClassificado}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13">
+									<center>
+										<h:outputText value="100,00" />
+									</center>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos6"
+						datasource="#{estatisticaForm.dadosGraficoClassificados}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="red,#FF8C00,yellow,green,blue,#FFFFFF,black"
+						style="width:100%" height="250" antialias="true"
+						title="Pacientes Classificados e Não Atendidos&#10;De #{estatisticaForm.dataIniPan5} até #{estatisticaForm.dataFimPan5}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan6" switchType="client"
+				rendered="#{estatisticaForm.flagInd6}">
+				<f:facet name="header">Pacientes Cadastrados, Não Classificados e Nem Atendidos</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:panel>
+						<f:facet name="header">
+							<h:outputText
+								value="Pacientes Cadastrados, Não Classificados e Nem Atendidos - De #{estatisticaForm.dataIniPan6} até #{estatisticaForm.dataFimPan6}" />
+						</f:facet>
+						<table style="width: 100%" class="rich-table" border="1">
+							<tr class="rich-table-footer">
+								<td class="rich-table-footercell fonte13 textoCentralizado"><b><h:outputText
+											value="Total" /></b></td>
+								<td class="rich-table-footercell fonte13 textoCentralizado"><b><h:outputText
+											value="#{estatisticaForm.numNaoClassificados}" /></b></td>
+							</tr>
+						</table>
+					</rich:panel>
+				</div>
+			</rich:simpleTogglePanel>
+			<br style="clear: both" />
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan7" switchType="client"
+				rendered="#{estatisticaForm.flagInd7}">
+				<f:facet name="header">Tempo Médio de Espera</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tblCorTempo"
+						value="#{estatisticaForm.lstRiscosTempo}" var="tem"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText value="Tempo Médio de Espera" />
+									<br />
+									<h:outputText
+										value="De #{estatisticaForm.dataIniPan7} até #{estatisticaForm.dataFimPan7}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Tempo" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup>
+							<rich:column styleClass="fonte13">
+								<h:graphicImage value="#{estatisticaForm.icones[tem.isn]}"
+									style="vertical-align: middle" />
+								<h:outputText value="#{tem.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{tem.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+							<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+								<h:outputText value="#{tem.tempo}" />
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{estatisticaForm.totalRiscosTempo}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13">
+									<center>
+										<h:outputText value=" - " />
+									</center>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos7"
+						datasource="#{estatisticaForm.dadosGraficoTempoMedioEspera}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="red,#FF8C00,yellow,green,blue,#FFFFFF,black"
+						style="width:100%" height="250" antialias="true"
+						title="Tempo Médio de Espera&#10;De #{estatisticaForm.dataIniPan7} até #{estatisticaForm.dataFimPan7}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan8" switchType="client"
+				rendered="#{estatisticaForm.flagInd8}">
+				<f:facet name="header">Tempo Máximo de Espera</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tblCorTempoMax"
+						value="#{estatisticaForm.lstRiscosTempoMax}" var="max"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText value="Tempo Máximo de Espera" />
+									<br />
+									<h:outputText
+										value="De #{estatisticaForm.dataIniPan8} até #{estatisticaForm.dataFimPan8}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Tempo" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup>
+							<rich:column styleClass="fonte13">
+								<h:graphicImage value="#{estatisticaForm.icones[max.isn]}"
+									style="vertical-align: middle" />
+								<h:outputText value="#{max.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{max.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+							<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+								<h:outputText value="#{max.tempo}" />
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{estatisticaForm.totalRiscosTempoMax}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13">
+									<center>
+										<h:outputText value=" - " />
+									</center>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos8"
+						datasource="#{estatisticaForm.dadosGraficoTempoMaximoEspera}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="red,#FF8C00,yellow,green,blue,#FFFFFF,black"
+						style="width:100%" height="250" antialias="true"
+						title="Tempo Máximo de Espera&#10;De #{estatisticaForm.dataIniPan8} até #{estatisticaForm.dataFimPan8}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan9" switchType="client"
+				rendered="#{estatisticaForm.flagInd9}">
+				<f:facet name="header">Número Total de Transferências</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:panel>
+						<f:facet name="header">
+							<h:outputText
+								value="Número Total de Transferências - De #{estatisticaForm.dataIniPan9} até #{estatisticaForm.dataFimPan9}" />
+						</f:facet>
+						<table style="width: 100%" class="rich-table" border="1">
+							<tr class="rich-table-footer">
+								<td class="rich-table-footercell fonte13"><h:outputText
+										value="Total" /></td>
+								<td class="rich-table-footercell fonte13"><h:outputText
+										value="#{estatisticaForm.numTransferencias}" /></td>
+							</tr>
+						</table>
+					</rich:panel>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan10" switchType="client"
+				rendered="#{estatisticaForm.flagInd10}">
+				<f:facet name="header">Número Total de Transferências em Mais de 24h</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:panel>
+						<f:facet name="header">
+							<h:outputText
+								value="Número Total de Transferências em Mais de 24h - De #{estatisticaForm.dataIniPan10} até #{estatisticaForm.dataFimPan10}" />
+						</f:facet>
+						<table style="width: 100%" class="rich-table" border="1">
+							<tr class="rich-table-footer">
+								<td class="rich-table-footercell fonte13"><h:outputText
+										value="Total" /></td>
+								<td class="rich-table-footercell fonte13"><h:outputText
+										value="#{estatisticaForm.numTransferencias24h}" /></td>
+							</tr>
+						</table>
+					</rich:panel>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan11" switchType="client"
+				rendered="#{estatisticaForm.flagInd11}">
+				<f:facet name="header">Pacientes Não Transferidos com Transferência Solicitada</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:panel>
+						<f:facet name="header">
+							<h:outputText
+								value="Pacientes Não Transferidos com Transferência Solicitada - De #{estatisticaForm.dataIniPan11} até #{estatisticaForm.dataFimPan11}" />
+						</f:facet>
+						<table style="width: 100%" class="rich-table" border="1">
+							<tr class="rich-table-footer">
+								<td class="rich-table-footercell fonte13"><h:outputText
+										value="Total" /></td>
+								<td class="rich-table-footercell fonte13"><h:outputText
+										value="#{estatisticaForm.numTransfSolic}" /></td>
+							</tr>
+						</table>
+					</rich:panel>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan12" switchType="client"
+				rendered="#{estatisticaForm.flagInd12}">
+				<f:facet name="header">Pacientes Adultos Transferidos</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tblTransfAdulto"
+						value="#{estatisticaForm.lstTransfAdultoFinal}" var="adu"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%"
+						rowKeyVar="numLinha">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText value="Pacientes Adultos Transferidos" />
+									<br />
+									<h:outputText
+										value="De #{estatisticaForm.dataIniPan12} até #{estatisticaForm.dataFimPan12}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Hospital" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup
+							style="background-color:#{estatisticaForm.cores[numLinha]};">
+							<rich:column styleClass="fonte13">
+								<h:outputText value="#{adu.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{adu.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{estatisticaForm.totalTransfAdulto}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos9"
+						datasource="#{estatisticaForm.dadosGraficoNumTransfAdulto}"
+						type="bar" is3d="true" depth="5" legend="false"
+						colors="#FF6666,#FF0000,#CC0000,#990000,#660000,#FFCC33,#FF9900,#FF6600,#CC6600,#993300,#663300,#66FF99,#33FF33,#00CC00,#009900,#006600,#003300,#66FFFF,#33CCFF,#3366FF,#3333FF,#000099,#000066"
+						style="width:100%" height="450" antialias="true"
+						title="Pacientes Adultos Transferidos&#10;De #{estatisticaForm.dataIniPan12} até #{estatisticaForm.dataFimPan12}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan13" switchType="client"
+				rendered="#{estatisticaForm.flagInd13}">
+				<f:facet name="header">Pacientes Infantis Transferidos</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tblTransfInfantil"
+						value="#{estatisticaForm.lstTransfInfantilFinal}" var="adu"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%"
+						rowKeyVar="numLinha">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText value="Pacientes Infantis Transferidos" />
+									<br />
+									<h:outputText
+										value="De #{estatisticaForm.dataIniPan13} até #{estatisticaForm.dataFimPan13}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Hospital" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:columnGroup
+							style="background-color:#{estatisticaForm.cores[numLinha]};">
+							<rich:column styleClass="fonte13">
+								<h:outputText value="#{adu.descricao}" />
+							</rich:column>
+							<rich:column styleClass="fonte13 textoCentralizado">
+								<h:outputText value="#{adu.quantidade}">
+									<f:convertNumber pattern="#,##0" />
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+						<f:facet name="footer">
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">Total</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{estatisticaForm.totalTransfInfantil}">
+										<f:convertNumber pattern="#,##0" />
+									</h:outputText>
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos10"
+						datasource="#{estatisticaForm.dadosGraficoNumTransfInfantil}"
+						type="bar" is3d="true" depth="5" legend="false" style="width:100%"
+						height="450"
+						colors="#FF6666,#FF0000,#CC0000,#990000,#660000,#FFCC33,#FF9900,#FF6600,#CC6600,#993300,#663300,#66FF99,#33FF33,#00CC00,#009900,#006600,#003300,#66FFFF,#33CCFF,#3366FF,#3333FF,#000099,#000066"
+						antialias="true"
+						title="Pacientes Infantis Transferidos&#10;De #{estatisticaForm.dataIniPan13} até #{estatisticaForm.dataFimPan13}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan15" switchType="client"
+				rendered="#{estatisticaForm.flagInd15}">
+				<f:facet name="header">Decisão Clínica</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+
+					<rich:panel>
+						<f:facet name="header" style="text-align: center;">
+							<h:outputText
+								value="Decisão Clínica De #{estatisticaForm.dataIniPan15} até #{estatisticaForm.dataFimPan15}" />
+						</f:facet>
+						<table style="width: 100%" class="rich-table" border="1">
+							<tr class="rich-table-header-continue">
+								<th class="rich-table-headercell"></th>
+								<th class="rich-table-headercell"><h:outputText
+										value="TOTAL" style="font-weight:bold; font-size:11px" /></th>
+								<th class="rich-table-headercell"><h:outputText
+										value="MÉDIA" style="font-weight:bold; font-size:11px" /></th>
+							</tr>
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13"><strong><h:outputText
+											value="Domingo" /></strong></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.totalDomingo}" /></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.mediaDomingo}" /></td>
+							</tr>
+							<tr class="rich-tablerow linhaDestaque">
+								<td class="rich-table-cell fonte13"><strong><h:outputText
+											value="Segunda" /></strong></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.totalSegunda}" /></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.mediaSegunda}" /></td>
+							</tr>
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13"><strong><h:outputText
+											value="Terça" /></strong></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.totalTerca}" /></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.mediaTerca}" /></td>
+							</tr>
+							<tr class="rich-tablerow linhaDestaque">
+								<td class="rich-table-cell fonte13"><strong><h:outputText
+											value="Quarta" /></strong></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.totalQuarta}" /></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.mediaQuarta}" /></td>
+							</tr>
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13"><strong><h:outputText
+											value="Quinta" /></strong></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.totalQuinta}" /></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.mediaQuinta}" /></td>
+							</tr>
+							<tr class="rich-tablerow linhaDestaque">
+								<td class="rich-table-cell fonte13"><strong><h:outputText
+											value="Sexta" /></strong></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.totalSexta}" /></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.mediaSexta}" /></td>
+							</tr>
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13"><strong><h:outputText
+											value="Sábado" /></strong></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.totalSabado}" /></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.mediaSabado}" /></td>
+							</tr>
+						</table>
+					</rich:panel>
+
+				</div>
+			</rich:simpleTogglePanel>
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.flagInd16}">
+				<f:facet name="header">Tempo médio decorrido entre o registro e a classificação do paciente </f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="dataTempoResgistro"
+						value="#{estatisticaForm.lstTempoMedicaResgistroClassificacaoVo}"
+						var="obj" rowClasses="linhaNormal,linhaDestaque"
+						style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText
+										value="Tempo médio decorrido entre o registro e a classificação do paciente " />&#10;De<h:outputText
+										value=" #{estatisticaForm.dataIniPan16}" /> até <h:outputText
+										value=" #{estatisticaForm.dataFimPan16}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Média" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column>
+							<h:graphicImage value="#{estatisticaForm.icones[obj.isnRisco]}"
+								style="vertical-align: middle" />
+							<h:outputText value="#{obj.dscRisco}"></h:outputText>
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{obj.media}"></h:outputText>
+						</rich:column>
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.flagInd18}">
+				<f:facet name="header">Diagnósticos de entrada geral</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable
+						value="#{estatisticaForm.lstDiagnosticosEntradaGeral}" var="obj"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText
+										value="Diagnósticos de entrada geral &#10;De #{estatisticaForm.dataIniPan18} até #{estatisticaForm.dataFimPan18}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Clínica" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Cid10" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Qtd." />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{obj.dscClinica}"></h:outputText>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{obj.dscCid}"></h:outputText>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{obj.qtd}"></h:outputText>
+						</rich:column>
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.permanenciaPacientes.size() > 0}">
+				<f:facet name="header">Permanência</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tempogPermanencia"
+						value="#{estatisticaForm.permanenciaPacientes}" var="paciente"
+						rowClasses="linhaNormal,linhaDestaque" rows="20" reRender="ds"
+						style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="7">
+									<h:outputText value="Permanência " />
+									<h:outputText value="#{estatisticaForm.map['21']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Prontuário" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Nome" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Data Cadastro" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Chegada" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Data Alta" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Hora Alta" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Tempo permanência" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+
+						<rich:column>
+							<h:outputText value="#{paciente.numProntuario}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{paciente.dscNome}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{paciente.dataCadastro}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{paciente.horaChegada}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{paciente.dataAlta}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{paciente.horaAlta}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{paciente.permanencia}" />
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller id="ds" ajaxSingle="false" />
+						</f:facet>
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.tempoPermanenciasItens.size() > 0}">
+				<f:facet name="header">Tempo de permanência entre 24 horas e 48 horas e acima de 48 Horas</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tempoPermanencia"
+						value="#{estatisticaForm.tempoPermanenciasItens}" var="tempo"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText
+										value="Tempo de permanência entre 24 horas e 48 horas e acima de 48 Horas" />
+									<h:outputText value="#{estatisticaForm.map['28']}" />
+								</rich:column>
+								<rich:column colspan="2" breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column colspan="3">
+							<h:outputText value="#{tempo.tempo}"
+								style="font-weight: bold;font-size:11px" />
+						</rich:column>
+						<rich:subTable
+							onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							var="item" value="#{tempo.itens}">
+							<rich:column colspan="2">
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.tipo}" styleClass="fonte13"></h:outputText>
+							</rich:column>
+							<rich:column rendered="#{item.total != null}">
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.total}"></h:outputText>
+							</rich:column>
+							<rich:column rendered="#{item.media != null}">
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.media}"></h:outputText>
+							</rich:column>
+						</rich:subTable>
+						<rich:columnGroup rendered="#{tempo.total != null}">
+							<rich:column colspan="2">Total</rich:column>
+							<rich:column>
+								<h:outputText value="#{tempo.total}">
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.mediasEsperaItens.size() > 0}">
+				<f:facet name="header">Tempo médio decorrido entre a classificação e o atendimento médico</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="espera"
+						value="#{estatisticaForm.mediasEsperaItens}" var="espera"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText
+										value="Tempo médio decorrido entre a classificação e o atendimento médico" />
+									<h:outputText value="#{estatisticaForm.map['25']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Média" />
+								</rich:column>
+							</rich:columnGroup>
+
+						</f:facet>
+						<rich:column colspan="3">
+							<h:outputText value="#{espera.tipo}"
+								style="font-weight: bold;font-size:11px" />
+						</rich:column>
+
+						<rich:subTable
+							onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							var="item" value="#{espera.itens}">
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.risco}" styleClass="fonte13"></h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.quantidade}"></h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.media}"></h:outputText>
+							</rich:column>
+
+						</rich:subTable>
+
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.transferidosUti.size() > 0}">
+				<f:facet name="header">Quantidade transferidos para UTI</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="transferidosUti"
+						value="#{estatisticaForm.transferidosUti}" var="transferido"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText value="Quantidade transferidos para UTI" />
+									<h:outputText value="#{estatisticaForm.map['24']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Perfil" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+
+						</f:facet>
+						<rich:column>
+							<h:outputText value="#{transferido.tipo}" styleClass="fonte13" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{transferido.total}" />
+						</rich:column>
+
+
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.atendimentoBairros.size() > 0}">
+				<f:facet name="header">Atendimento por Bairros</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="atendBairro"
+						value="#{estatisticaForm.atendimentoBairros}" var="atendBairro"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText value="Atendimento por Bairros" />
+									<h:outputText value="#{estatisticaForm.map['23']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Bairro" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+
+						</f:facet>
+						<rich:column>
+							<h:outputText value="#{atendBairro.bairro}" styleClass="fonte13" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{atendBairro.total}" />
+						</rich:column>
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.idadeItens.size() > 0 }">
+				<f:facet name="header">Atendimento por Sexo e Idade</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="rg" value="#{estatisticaForm.idadeItens}"
+						var="idade" rowClasses="linhaNormal,linhaDestaque"
+						style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText value="Atendimento por Sexo e Idade " />
+									<h:outputText value="#{estatisticaForm.map['22']}" />
+								</rich:column>
+								<rich:column colspan="3" breakBefore="true">
+									<h:outputText value="Sexo" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Faixa Etária" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+
+						</f:facet>
+						<rich:column colspan="3">
+							<h:outputText value="#{idade.tipo}"
+								style="font-weight: bold;font-size:11px" />
+						</rich:column>
+
+						<rich:subTable
+							onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							var="item" value="#{idade.itens}">
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.faixa}" styleClass="fonte13 "></h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.total}"></h:outputText>
+							</rich:column>
+
+						</rich:subTable>
+						<rich:columnGroup>
+							<rich:column>Total</rich:column>
+							<rich:column>
+								<h:outputText value="#{idade.total}">
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.altaItens.size() > 0 }">
+				<f:facet name="header">Quantidade de Altas por Destino</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="altaItens" value="#{estatisticaForm.altaItens}"
+						var="alta" rowClasses="linhaNormal,linhaDestaque"
+						style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText value="Quantidade de Altas por Destino " />
+									<h:outputText value="#{estatisticaForm.map['26']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Destino" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+
+						</f:facet>
+
+						<rich:subTable
+							onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							var="item" value="#{alta.itens}">
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.destino}" styleClass="fonte13 "></h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.total}" styleClass="fonte13 "></h:outputText>
+							</rich:column>
+
+						</rich:subTable>
+
+						<rich:columnGroup>
+							<rich:column>Total</rich:column>
+							<rich:column>
+								<h:outputText value="#{alta.total}">
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.transferencias.size() > 0 }">
+				<f:facet name="header">Quantidade de Transferências Solicitadas, Reguladas e Efetivadas</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="transf"
+						value="#{estatisticaForm.transferencias}" var="transf"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText
+										value="Quantidade de Transferências Solicitadas, Reguladas e Efetivadas " />
+									<h:outputText value="#{estatisticaForm.map['27']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Tipo" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+
+						</f:facet>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{transf.tipo}" styleClass="fonte13 "></h:outputText>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{transf.total}"
+								styleClass="fonte13 textoCentralizado"></h:outputText>
+						</rich:column>
+
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.atendimentoSexos.size() > 0 }">
+				<f:facet name="header">Quantidade de atendimentos por sexo</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="mediaEspera"
+						value="#{estatisticaForm.atendimentoSexos}" var="atendSexo"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText value="Quantidade de atendimentos por sexo " />
+									<h:outputText value="#{estatisticaForm.map['29']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Tipo" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{atendSexo.tipo}" styleClass="fonte13 "></h:outputText>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{atendSexo.total}"
+								styleClass="fonte13 textoCentralizado"></h:outputText>
+						</rich:column>
+
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.mediaEsperaPerfils.size() > 0}">
+				<f:facet name="header">Número e Tempo Médio de Espera na Transferência por Perfil</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="mediaEsperaPerfil"
+						value="#{estatisticaForm.mediaEsperaPerfils}" var="mediaEspera"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="3">
+									<h:outputText
+										value="Número e Tempo Médio de Espera na Transferência por Perfil" />
+									<h:outputText value="#{estatisticaForm.map['30']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Perfil" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Média" />
+								</rich:column>
+							</rich:columnGroup>
+
+						</f:facet>
+
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{mediaEspera.risco}"></h:outputText>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{mediaEspera.quantidade}"></h:outputText>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{mediaEspera.media}"></h:outputText>
+						</rich:column>
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.transferenciasReferencias.size() > 0 }">
+				<f:facet name="header">Quantidade de transferências por referências</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="transferenciasReferencias"
+						value="#{estatisticaForm.transferenciasReferencias}"
+						var="referencia" rowClasses="linhaNormal,linhaDestaque"
+						style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText
+										value="Quantidade de transferencias por referências " />
+									<h:outputText value="#{estatisticaForm.map['31']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Referência" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{referencia.tipo}" styleClass="fonte13 "></h:outputText>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{referencia.total}"
+								styleClass="fonte13 textoCentralizado"></h:outputText>
+						</rich:column>
+
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.transferenciaItens.size() > 0 }">
+				<f:facet name="header">Quantidade de transferências por referências e perfil</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="transfPerfil"
+						value="#{estatisticaForm.transferenciaItens}" var="transf"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText value="Transferências por referências e perfil" />
+									<h:outputText value="#{estatisticaForm.map['32']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Referência" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+
+						</f:facet>
+						<rich:column colspan="3">
+							<h:outputText value="#{transf.tipo}"
+								style="font-weight: bold;font-size:11px" />
+						</rich:column>
+
+						<rich:subTable
+							onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							var="item" value="#{transf.itens}">
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.tipo}" styleClass="fonte13 "></h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{item.total}"></h:outputText>
+							</rich:column>
+
+						</rich:subTable>
+
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+			
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan33" switchType="client"
+				rendered="#{estatisticaForm.flagInd33}">
+				<f:facet name="header">Taxa de Decisão</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+
+					<rich:panel>
+						<f:facet name="header" style="text-align: center;">
+							<h:outputText
+								value="Taxa de Decisão De #{estatisticaForm.dataIniPan33} até #{estatisticaForm.dataFimPan33}" />
+						</f:facet>
+						<table style="width: 100%" class="rich-table" border="1">
+							<tr class="rich-table-header-continue">
+								<th class="rich-table-headercell"><h:outputText
+										value="Classificação de Risco" style="font-weight:bold; font-size:11px" /></th>
+								<th class="rich-table-headercell"><h:outputText
+										value="%" style="font-weight:bold; font-size:11px" /></th>
+							</tr>
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13 textoCentralizado">
+									<strong>
+										<h:graphicImage url="IMG/risco_vermelho.gif" style="vertical-align: middle"/>
+									</strong>
+								</td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.taxaVermelho}" /></td>
+							</tr>
+							<tr class="rich-tablerow linhaDestaque">
+								<td class="rich-table-cell fonte13 textoCentralizado">
+									<strong>
+										<h:graphicImage url="IMG/risco_laranja.gif" style="vertical-align: middle"/>
+									</strong>
+								</td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.taxaLaranja}" /></td>
+							</tr>
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13 textoCentralizado">
+									<strong>
+										<h:graphicImage url="IMG/risco_amarelo.gif" style="vertical-align: middle"/>
+									</strong>
+								</td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.taxaAmarelo}" /></td>
+							</tr>
+							<tr class="rich-tablerow linhaDestaque">
+								<td class="rich-table-cell fonte13 textoCentralizado">
+									<strong>
+										<h:graphicImage url="IMG/risco_verde.gif" style="vertical-align: middle"/>
+									</strong>
+								</td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.taxaVerde}" /></td>
+							</tr>
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13 textoCentralizado"><strong><h:outputText
+											value="Geral" /></strong></td>
+								<td class="rich-table-cell fonte13 textoCentralizado"><h:outputText
+										value="#{estatisticaForm.taxaGeral}" /></td>
+							</tr>
+						</table>
+					</rich:panel>
+
+				</div>
+			</rich:simpleTogglePanel>
+			
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.tempoRegulacoesItens.size() > 0}">
+				<f:facet name="header">Regulações realizadas até 24 horas, entre 24h e 48 horas e acima de 48 Horas</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tempoRegulacoes"
+						value="#{estatisticaForm.tempoRegulacoesItens}" var="tempoReg"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText
+										value="Regulações realizadas até 24 horas, entre 24h e 48 horas e acima de 48 Horas" />
+									<h:outputText value="#{estatisticaForm.map['34']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column colspan="3">
+							<h:outputText value="#{tempoReg.tempo}"
+								style="font-weight: bold;font-size:11px" />
+						</rich:column>
+						<rich:subTable
+							onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							var="itemReg" value="#{tempoReg.itens}">
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{itemReg.tipo}" styleClass="fonte13"></h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{itemReg.total}"></h:outputText>
+							</rich:column>
+
+						</rich:subTable>
+						<rich:columnGroup>
+							<rich:column>Total</rich:column>
+							<rich:column>
+								<h:outputText value="#{tempoReg.total}">
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+			
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" switchType="client"
+				rendered="#{estatisticaForm.tempoTransferenciaItens.size() > 0}">
+				<f:facet name="header">Tempo de transferência: até 24h, entre 24h e 48h e acima de 48h</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:dataTable id="tempoTransferencia"
+						value="#{estatisticaForm.tempoTransferenciaItens}" var="tempoTrans"
+						rowClasses="linhaNormal,linhaDestaque" style="width:100%">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column colspan="2">
+									<h:outputText
+										value="Tempo de transferência: até 24h, entre 24h e 48h e acima de 48h" />
+									<h:outputText value="#{estatisticaForm.map['35']}" />
+								</rich:column>
+								<rich:column breakBefore="true">
+									<h:outputText value="Classificação" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Quantidade" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column colspan="3">
+							<h:outputText value="#{tempoTrans.tempo}"
+								style="font-weight: bold;font-size:11px" />
+						</rich:column>
+						<rich:subTable
+							onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							var="itemT" value="#{tempoTrans.itens}">
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{itemT.tipo}" styleClass="fonte13"></h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header"></f:facet>
+								<h:outputText value="#{itemT.total}"></h:outputText>
+							</rich:column>
+
+						</rich:subTable>
+						<rich:columnGroup>
+							<rich:column>Total</rich:column>
+							<rich:column>
+								<h:outputText value="#{tempoTrans.total}">
+								</h:outputText>
+							</rich:column>
+						</rich:columnGroup>
+
+					</rich:dataTable>
+				</div>
+			</rich:simpleTogglePanel>
+			
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan36" switchType="client"
+				rendered="#{estatisticaForm.flagInd36}">
+				<f:facet name="header">Número de Óbitos (Adulto e Infantil)</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:panel>
+						
+						<table style="width: 100%" class="rich-table" border="1">
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="ADULTO" /></td>
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="#{estatisticaForm.numObitosAdultos}" /></td>
+							</tr>
+							<tr class="rich-tablerow linhaNormal">
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="INFANTIL" /></td>
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="#{estatisticaForm.numObitosInfantil}" /></td>
+							</tr>
+							<tr class="rich-table-footer">
+								<td class="rich-table-footercell fonte13"><b><h:outputText
+											value="TOTAL" /></b></td>
+								<td class="rich-table-footercell fonte13"><b><h:outputText
+											value="#{estatisticaForm.totalObitos}" /></b></td>
+							</tr>
+						</table>
+					</rich:panel>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos36"
+						datasource="#{estatisticaForm.dadosGraficoObitos}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="green,orange" style="width:90%" height="250"
+						antialias="true"
+						title="Número de Óbitos &#10;(Adulto e Infantil)&#10;De #{estatisticaForm.dataIniPan36} até #{estatisticaForm.dataFimPan36}">
+					</c:chart>
+				</div>
+			</rich:simpleTogglePanel>
+
+			<rich:simpleTogglePanel style="border:0px;" bodyClass="panel"
+				headerClass="headerPanel2" id="pan37" switchType="client"
+				rendered="#{estatisticaForm.flagInd37}">
+				<f:facet name="header">Óbitos por Permanência</f:facet>
+				<f:facet name="openMarker">
+					<h:graphicImage value="IMG/down.png"></h:graphicImage>
+				</f:facet>
+				<f:facet name="closeMarker">
+					<h:graphicImage value="IMG/up.png"></h:graphicImage>
+				</f:facet>
+				<div class="simpleTogglePanel">
+					<rich:panel>
+						<rich:dataTable id="tblObitos24H"
+							value="#{estatisticaForm.lstObitosGeral}" var="obt"
+							rowClasses="linhaNormal,linhaDestaque" style="width:100%"
+							rows="10"
+							reRender="dsObitos24H">
+							<f:facet name="header">
+								<rich:columnGroup>
+									<rich:column colspan="6">
+										<h:outputText value="Óbitos por Permanência" />
+										<br />
+										<h:outputText
+											value="#{estatisticaForm.titleObitos24H}" />
+									</rich:column>
+									<rich:column breakBefore="true">
+										<h:outputText value="Pront." />
+									</rich:column>
+									<rich:column>
+										<h:outputText value="Nome" />
+									</rich:column>
+									<rich:column>
+										<h:outputText value="Dt. Óbito Informada" />
+									</rich:column>
+									<rich:column>
+										<h:outputText value="Faixa Etária" />
+									</rich:column>
+									<rich:column>
+										<h:outputText value="Permanência" />
+									</rich:column>
+									<rich:column>
+										<h:outputText value="Qtd. Dias" />
+									</rich:column>
+								</rich:columnGroup>
+							</f:facet>
+							<rich:columnGroup>
+								<rich:column styleClass="fonte13">
+									<h:outputText value="#{obt.numProntuario}">
+										
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{obt.dscNome}">
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{obt.getDtObitoInfoFormatada()}" />
+								</rich:column>
+								<rich:column styleClass="fonte13 textoCentralizado">
+									<h:outputText value="#{obt.faixaEtaria}">
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+									<h:outputText value="#{obt.permanencia}">
+										
+									</h:outputText>
+								</rich:column>
+								<rich:column styleClass="fonte13 fonteNegrito textoCentralizado">
+									<h:outputText value="#{obt.dias}">
+										
+									</h:outputText>
+								</rich:column>
+							</rich:columnGroup>
+							
+							<f:facet name="footer">
+								<rich:datascroller for="tblObitos24H" id="dsObitos24H" ajaxSingle="false"/>
+							</f:facet>
+						
+						</rich:dataTable>
+						<br/>
+						<table style="width: 100%" class="rich-table" border="1">
+							<thead class="rich-table-thead">
+								<tr class="rich-table-header-continue">
+									<th class="rich-table-headercell">EIXO</th>
+									<th class="rich-table-headercell">QTD.</th>
+								</tr>
+							</thead>
+							<tr class="rich-table-firstrow linhaNormal">
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="ADULTO" /></td>
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="#{estatisticaForm.numObitos24HAdultos}" /></td>
+							</tr>
+							<tr class="rich-tablerow linhaNormal">
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="INFANTIL" /></td>
+								<td class="rich-table-cell fonte13"><h:outputText
+										value="#{estatisticaForm.numObitos24HInfantil}" /></td>
+							</tr>
+							<tr class="rich-table-footer">
+								<td class="rich-table-footercell fonte13"><b><h:outputText
+											value="TOTAL" /></b></td>
+								<td class="rich-table-footercell fonte13"><b><h:outputText
+											value="#{estatisticaForm.totalObitos24H}" /></b></td>
+							</tr>
+						</table>
+					</rich:panel>
+				</div>
+				<div class="simpleTogglePanel">
+					<c:chart id="graficoRiscos37"
+						datasource="#{estatisticaForm.dadosGraficoObitos24H}"
+						type="pie" is3d="true" depth="5" legend="false"
+						colors="green,orange" style="width:90%" height="250"
+						antialias="true"
+						title="Óbitos por Permanência &#10;#{estatisticaForm.titleObitos24H}">
+					</c:chart>
+				</div>
+				<div style="float:left;width:5%">
+					<center>
+						<t:commandLink id="pdfObitos24H" action="#{estatisticaForm.relatorioObitoPermanencia}" target="_blank" title="IMPRIMIR RELATÓRIO DE ÓBITOS">
+							<h:graphicImage id="imgAtendimento" url="IMG/impressora.png" style="border:0;width:20px" />
+							<!-- <div> f:setPropertyActionListener value="" target="" </div> -->							
+						</t:commandLink>
+					</center>
+				</div>	
+			</rich:simpleTogglePanel>
+			
+			<!-- dados covid -->
+			<div>
+				<ui:include src="panelEstatisticaCovid.xhtml"/>
+			</div>
+			
+			<a4j:status id="statusPanel"
+				onstart="Richfaces.showModalPanel('panelStatus');"
+				onstop="#{rich:component('panelStatus')}.hide()">
+			</a4j:status>
+			<script type="text/javascript">
+	<!--
+	     
+	     function validaIndicador(erro) {
+		     if (erro == 1) {
+			     alert("Obrigatório selecionar as datas inicial e final.");
+		     }else if (erro == 2) {
+			     alert("Data final não pode ser menor que a data inicial!");
+			     #{rich:component('datFinal')}.resetSelectedDate();
+		     }else if (erro == 3) {
+			     alert( "O intervalo entre as datas deve ser de no máximo dois meses (60 dias)!");
+		     }else if (erro == 4) {
+			     alert( "Obrigatório selecionar o período da consulta");
+		     }
+		     
+		}
+	
+	function checkBirthDate(obj, choosenDate) {
+			var now = new Date();
+        	var diff = now.getTime() - choosenDate.getTime();
+	        if (diff < 0) {
+	        	 alert("Data Inicial maior que a Data Atual!");
+	        	 #{rich:component('datInicial')}.resetSelectedDate();
+	        }
+	        
+	        return false; 
+	    }
+	
+	function checkBirthDateFinal(obj, choosenDate) {
+		var now = new Date();
+    	var diff = now.getTime() - choosenDate.getTime();
+        if (diff < 0) {
+        	 alert("Data Final maior que a Data Atual!");
+        	 #{rich:component('datFinal')}.resetSelectedDate();
+        }
+        
+        return false; 
+    }
+	
+		     //-->
+</script>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

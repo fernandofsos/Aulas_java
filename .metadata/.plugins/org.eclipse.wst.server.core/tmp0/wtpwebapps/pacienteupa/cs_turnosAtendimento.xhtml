@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<link rel="stylesheet" type="text/css" href="CSS/layoutCsPaciente.css" />
+	</ui:define>
+	<ui:define name="conteudo">
+
+<a4j:keepAlive beanName="numeroAtendimentoMedicoForm" />
+
+	<rich:modalPanel id="panelStatus" autosized="true">  
+ 		<h:panelGrid columns="2"> 
+ 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 			<h:outputText value="Carregando..." />
+ 		</h:panelGrid> 
+	</rich:modalPanel>
+
+<a4j:form id="formPesquisaId">
+
+<style>
+    .linhaPar {
+    	background-color: #CCCCCC;
+    }
+    .linhaImpar {
+    	background-color: #EEEEEE;
+    }
+</style>
+   
+	<div class="cabAreaPesquisa">ATENDIMENTO X DIA DA SEMANA / TURNOS</div>
+	<div class="areaPesquisa">
+		<h:panelGrid columns="2">
+			<h:panelGroup>
+				<label>Período:</label>
+			</h:panelGroup>
+			<h:panelGroup>
+				<rich:calendar value="#{numeroAtendimentoMedicoForm.datIniInicio}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10" />
+					<h:outputText value=" a "/>
+				<rich:calendar value="#{numeroAtendimentoMedicoForm.datIniFim}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10"/>		
+           		<a4j:commandButton image="IMG/pesquisa.gif" id="btnPesquisar" 
+           		        actionListener="#{numeroAtendimentoMedicoForm.pesquisarTurnos}" 
+           		        oncomplete="avisosPesquisa('#{numeroAtendimentoMedicoForm.mensagem}')"
+	    				reRender="formPesquisaId,formPesquisaId:atendimentoMedico" />			
+			</h:panelGroup>
+			
+			<h:panelGroup>
+				<label>Dia(s) da semana:</label>
+			</h:panelGroup>
+			<h:panelGroup>
+				<h:selectManyCheckbox id="diasSemana" value="#{numeroAtendimentoMedicoForm.diasSemana}">
+					<f:selectItem itemValue="1" itemLabel="Domingo" />
+					<f:selectItem itemValue="2" itemLabel="Segunda" />
+					<f:selectItem itemValue="3" itemLabel="Terça" />
+					<f:selectItem itemValue="4" itemLabel="Quarta" />
+					<f:selectItem itemValue="5" itemLabel="Quinta" />
+					<f:selectItem itemValue="6" itemLabel="Sexta" />
+					<f:selectItem itemValue="7" itemLabel="Sábado" />
+      			</h:selectManyCheckbox>				
+			</h:panelGroup>
+			
+			<h:panelGroup>
+				<label>Turno(s):</label>
+			</h:panelGroup>
+			<h:panelGroup>
+				<h:selectManyCheckbox id="turnos" value="#{numeroAtendimentoMedicoForm.turnos}">
+					<f:selectItem itemValue="1" itemLabel="Madrugada" />
+					<f:selectItem itemValue="2" itemLabel="Manhã" />
+					<f:selectItem itemValue="3" itemLabel="Tarde" />
+					<f:selectItem itemValue="4" itemLabel="Noite" />
+      			</h:selectManyCheckbox>				
+			</h:panelGroup>
+		</h:panelGrid>
+			<h:panelGroup>
+				<rich:simpleTogglePanel switchType="client" opened="false" label="Horários dos Turnos">
+           			<h:panelGrid columns="1">
+		           		<h:outputText value="Madrugada: 01:00:00 as 06:59:59 "/>
+		           		<h:outputText value="Manhã: 	07:00:00 as 12:59:59"/>
+		           		<h:outputText value="Tarde: 	13:00:00 as 18:59:59"/>
+		           		<h:outputText value="Noite: 	19:00:00 as 00:59:59"/>
+           			</h:panelGrid>
+         		</rich:simpleTogglePanel>
+			</h:panelGroup>
+	</div>
+	
+	<br />
+	
+	<h:panelGrid style="width: 100%;">
+			<rich:dataTable id="atendimentoMedico"
+					value="#{numeroAtendimentoMedicoForm.listaTurno}"
+					rendered="#{not empty numeroAtendimentoMedicoForm.listaTurno}" 
+					var="atend" 
+					rowKeyVar="myRow" 
+					style="width: 100%;"
+					rowClasses="linhaPar, linhaImpar"
+					reRender="ds">
+					
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column >
+							<h:outputText value="Dia da semana" />
+						</h:column>
+						<h:column>
+							<h:outputText value="Turno" />
+						</h:column>
+						<h:column>
+							<h:outputText value="Quantidade" />
+						</h:column>
+					</rich:columnGroup>
+				</f:facet>			
+				
+				<rich:column>
+					<h:outputText value="#{atend.dscDiaSemana}" />
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{atend.dscTurno}" />
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{atend.quantidade}" />
+				</rich:column>
+				
+			<f:facet name="footer">
+				<rich:columnGroup>
+					<rich:column style="text-align: left;" styleClass="totalizador3" colspan="2">Total:</rich:column>
+					<rich:column style="text-align: left;" styleClass="totalizador3">
+						<h:outputText value="#{numeroAtendimentoMedicoForm.totalAtendimentosTurno}" />
+					</rich:column>
+				</rich:columnGroup>
+			</f:facet>					
+				
+			</rich:dataTable>				
+	</h:panelGrid>
+	
+	
+	 
+    <a4j:status id="statusPanel"
+		   	onstart="Richfaces.showModalPanel('panelStatus');" 
+		    onstop="#{rich:component('panelStatus')}.hide()">
+	</a4j:status>	
+	
+	<script type="text/javascript">
+	     function avisosPesquisa(msg) {
+		     if(msg != '')
+		     {
+			     alert(msg);
+		     }
+	     }
+	</script>
+</a4j:form>	
+</ui:define>
+</ui:composition>
+</html>

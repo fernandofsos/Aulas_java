@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+      
+<ui:composition template="template.xhtml">
+	<ui:define name="conteudo">    
+	<!-- MODAL PANEL DE CLASSIFICAÇÃO DE RISCO -->
+	 <a4j:keepAlive beanName="censoEmergenciaForm" />
+	 
+	 <h:form id="csCensoHospitalar" >
+	    <label class="tituloPagina">CENSO EMERGÊNCIA</label> 
+		<h:panelGroup styleClass="areaPesquisa" layout="block" id="filtros" > 
+    		<div class="col320">        		        		
+	       		<label style="font-weight: bold">Período: </label><br />
+	       		<rich:calendar id="datInicial" 
+	       	               value="#{censoEmergenciaForm.dataInicial}" 
+	       		           datePattern="dd/MM/yyyy" />					        		               
+	       		<rich:calendar id="datFinal" 
+	       	               value="#{censoEmergenciaForm.dataFinal}" 
+	       	               datePattern="dd/MM/yyyy" />               
+	       	    <br/>    	       	    
+	       	</div>	       	
+	       	<div class="col270">	       		
+		    </div>		    
+	       	<div class="col150" style="text-align: center">
+	       	   	<h:commandButton value="Pesquisar"
+	       	              action="#{censoEmergenciaForm.atualizarInformacoes}"
+	       	              style="height: 22px; width:100px; margin-bottom: 4px"/>	       	     
+	       	   	<br/>	       	   	
+	       	   	<a4j:commandButton value="Imprimir" style="height: 22px; width:100px" 
+	       	                       reRender="tblResumo,resumos,graficoRiscos"/>
+	        </div>	
+    	</h:panelGroup> 		 		   		
+   		<h:panelGroup styleClass="areaPesquisa" layout="block" id="totaisEmergencia">
+		    <div class="col200" style="text-align: center">		       
+		   	   <label><b>Pacientes na Emergência</b></label><br/>
+		       <label class="totalizador">#{censoEmergenciaForm.totalRisco}</label>
+		    </div>
+		    <div class="col150" style="height: 60px"></div>
+		    <div>
+		        <div class="col100" style="height: 60px;">
+		            <br/>
+					<label><b>Classificação de Risco</b></label>		        		
+				</div>    
+		    	<div class="col320" style="overflow:auto; border: solid 1px #999">
+		      		<div class="totaisRisco bordaDir bordaBot">
+		           		<h:graphicImage url="IMG/risco_vermelho.gif" style="vertical-align: middle"/>
+				   		<label> <b>#{censoEmergenciaForm.totaisRiscos[0]}</b></label>			
+		        	</div>
+		      		<div class="totaisRisco bordaDir bordaBot">
+		           		<h:graphicImage url="IMG/risco_laranja.gif" style="vertical-align: middle"/>
+				   		<label><b>#{censoEmergenciaForm.totaisRiscos[1]}</b></label>					
+		      		</div>
+		      		<div class="totaisRisco bordaDir bordaBot">
+		           		<h:graphicImage url="IMG/risco_amarelo.gif" style="vertical-align: middle"/>
+				   		<label><b>#{censoEmergenciaForm.totaisRiscos[2]}</b></label>				
+		        	</div>
+		      		<div class="totaisRisco bordaBot">
+		           		<h:graphicImage url="IMG/risco_verde.gif" style="vertical-align: middle"/>
+				   		<label><b>#{censoEmergenciaForm.totaisRiscos[3]}</b></label>			
+		        	</div>		        	
+		        	<br style="clear: both"/>		        
+		         	<div class="totaisRisco bordaDir">
+		           		<h:graphicImage url="IMG/risco_azul.gif" style="vertical-align: middle"/>
+				   		<label><b>#{censoEmergenciaForm.totaisRiscos[4]}</b></label>					
+		      		</div>
+		      		<div class="totaisRisco bordaDir">
+		           		<h:graphicImage url="IMG/risco_branco.gif" style="vertical-align: middle"/>
+				   		<label><b>#{censoEmergenciaForm.totaisRiscos[5]}</b></label>				
+		        	</div>
+		        	<div class="totaisRisco bordaDir">
+		           		<h:graphicImage url="IMG/risco_cinza.gif" style="vertical-align: middle"/>
+				   		<label><b>#{censoEmergenciaForm.totaisRiscos[6]}</b></label>				
+		        	</div>
+		        </div>		        
+		    </div>
+		    <div class="col200" style="text-align: center">
+		    </div>
+		    <div class="col150" style="height: 60px"></div>
+		    <div>
+		        <div class="col100" style="height: 60px;">
+		            <br/>
+					<label><b>Saídas por Destino</b></label>		        		
+				</div>    
+		    	<div class="col320" style="overflow:auto; border: solid 1px #999">
+		      		<div class="totaisRisco bordaDir bordaBot">
+		           		<label>ALTAS:</label>
+				   		<label><b>#{censoEmergenciaForm.totaisDestinos[0]}</b></label>			
+		        	</div>
+		      		<div class="totaisRisco bordaDir bordaBot">
+		           		<label>ÓBITOS:</label>
+				   		<label><b>#{censoEmergenciaForm.totaisDestinos[3]}</b></label>					
+		      		</div>		      		
+		      		<div class="totaisRisco bordaDir">
+		           		<label>TRANSFERÊNCIAS:</label>
+				   		<label><b>#{censoEmergenciaForm.totaisDestinos[2]}</b></label>				
+		        	</div>
+		        	<div class="totaisRisco bordaDir">
+		           		<label>INTERNAÇÕES:</label>
+				   		<label><b>#{censoEmergenciaForm.totaisDestinos[3]}</b></label>				
+		        	</div>
+		        </div>		        
+		    </div>		    
+   		</h:panelGroup>   		 		
+		<br/>
+        <rich:simpleTogglePanel style="border:0px;" bodyClass="panel" headerClass="headerPanel2" id="panTransferencias">            	
+           	<f:facet name="header">OCUPAÇÃO DAS OBSERVAÇÕES</f:facet>
+           	<f:facet name="openMarker"><h:graphicImage value="IMG/down.png"></h:graphicImage></f:facet>
+           	<f:facet name="closeMarker"><h:graphicImage value="IMG/up.png"></h:graphicImage></f:facet>
+        </rich:simpleTogglePanel> 		                   		
+		<br/>
+		<br/>
+		<br/>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

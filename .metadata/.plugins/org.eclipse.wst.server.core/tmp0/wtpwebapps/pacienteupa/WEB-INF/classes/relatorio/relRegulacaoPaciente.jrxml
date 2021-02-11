@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relRegulacaoPaciente" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p1" class="java.lang.Integer"/>
+	<parameter name="CAMINHO_SUB_REPORT" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG_BRASAO" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG_UPA" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 	i.isn_internacao,p.num_prontuario,p.dsc_nome,p.num_rg, p.dsc_orgao_emissao_rg,p.num_cep,
+		i.dat_cadastro, p.dat_nascimento,s.dsc_sexo,i.dsc_endereco,i.dsc_endereco,p.dsc_mae,i.dsc_bairro,
+		medpoint.idade2(p.dat_nascimento, i.dat_cadastro) as idade,i.num_ddd_1,i.num_telefone_1,
+       (select vlr_parametro from medpoint.t_parametro where isn_parametro = 10) as endereco_completo,
+       (select vlr_parametro from medpoint.t_parametro where isn_parametro = 13) as dsc_unidade,
+		it.cod_regulacao_est, it.cod_regulacao_mun, it.dat_regulacao_est, it.dat_regulacao_mun,
+		it.cod_regulacao_samu, it.dat_regulacao_samu,
+		usrest.dsc_usuario as usuarioestado, usrmun.dsc_usuario as usuariomunicipio,
+		usrsamu.dsc_usuario as usuariosamu
+from medpoint.t_internacao_trans it
+		inner join medpoint.t_internacao i on it.isn_internacao = i.isn_internacao
+		inner join medpoint.t_paciente p on p.isn_paciente = i.isn_paciente
+		inner join medpoint.t_sexo s on s.isn_sexo = p.isn_sexo
+		left join  seguranca.t_usuario usrest on usrest.isn_usuario = it.isn_usuario_reg_est
+		left join  seguranca.t_usuario usrmun on usrmun.isn_usuario = it.isn_usuario_reg_mun
+		left join  seguranca.t_usuario usrsamu on usrsamu.isn_usuario = it.isn_usuario_reg_samu
+where it.isn_internacao_trans = $P{p1}]]>
+	</queryString>
+	<field name="isn_internacao" class="java.lang.Integer"/>
+	<field name="num_prontuario" class="java.lang.String"/>
+	<field name="dsc_nome" class="java.lang.String"/>
+	<field name="num_rg" class="java.lang.String"/>
+	<field name="dsc_orgao_emissao_rg" class="java.lang.String"/>
+	<field name="num_cep" class="java.lang.String"/>
+	<field name="dat_cadastro" class="java.sql.Date"/>
+	<field name="dat_nascimento" class="java.sql.Date"/>
+	<field name="dsc_sexo" class="java.lang.String"/>
+	<field name="dsc_endereco" class="java.lang.String"/>
+	<field name="dsc_mae" class="java.lang.String"/>
+	<field name="dsc_bairro" class="java.lang.String"/>
+	<field name="idade" class="java.lang.String"/>
+	<field name="num_ddd_1" class="java.lang.String"/>
+	<field name="num_telefone_1" class="java.lang.String"/>
+	<field name="endereco_completo" class="java.lang.String"/>
+	<field name="dsc_unidade" class="java.lang.String"/>
+	<field name="cod_regulacao_est" class="java.lang.String"/>
+	<field name="cod_regulacao_mun" class="java.lang.String"/>
+	<field name="dat_regulacao_est" class="java.sql.Timestamp"/>
+	<field name="dat_regulacao_mun" class="java.sql.Timestamp"/>
+	<field name="cod_regulacao_samu" class="java.lang.String"/>
+	<field name="dat_regulacao_samu" class="java.sql.Timestamp"/>
+	<field name="usuarioestado" class="java.lang.String"/>
+	<field name="usuariomunicipio" class="java.lang.String"/>
+	<field name="usuariosamu" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="397" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="343" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="17" width="343" height="17"/>
+				<box leftPadding="0"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_unidade}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="34" width="343" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORGANIZAÇÃO SOCIAL SAÚDE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="448" y="0" width="107" height="34"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_UPA}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="345" y="0" width="103" height="35"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG_BRASAO}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="139" width="62" height="15"/>
+				<box leftPadding="1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="64" width="556" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO PACIENTE/CADASTRO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="81" width="40" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="109" width="72" height="15"/>
+				<box leftPadding="1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Nasc.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="124" width="36" height="15"/>
+				<box leftPadding="1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mãe:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="40" y="81" width="515" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_nome}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="72" y="109" width="59" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_nascimento}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="36" y="124" width="326" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_mae}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="62" y="139" width="221" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_endereco}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="97" width="72" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prontuário:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="72" y="96" width="133" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_prontuario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="205" y="96" width="60" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Admissão:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="265" y="97" width="173" height="12"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_cadastro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="180" y="109" width="163" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{idade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="343" y="109" width="36" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sexo:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="379" y="109" width="69" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_sexo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="448" y="109" width="21" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="469" y="109" width="86" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_rg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="362" y="124" width="55" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefone:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="417" y="124" width="39" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_ddd_1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="456" y="124" width="99" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_telefone_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="283" y="139" width="42" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="325" y="139" width="144" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_bairro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="469" y="139" width="27" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="496" y="139" width="59" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_cep}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="131" y="109" width="49" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Idade:]]></text>
+			</staticText>
+			<frame>
+				<reportElement x="1" y="79" width="555" height="75"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+			</frame>
+			<staticText>
+				<reportElement x="0" y="155" width="555" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="16" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[REGULAÇÃO PACIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="207" width="143" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código Regulação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="222" width="143" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuário Regulação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="237" width="143" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Regulação:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="207" width="412" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cod_regulacao_est}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="222" width="412" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{usuarioestado}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="237" width="412" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{dat_regulacao_est}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="192" width="555" height="15"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="278" width="143" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código Regulação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="293" width="143" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuário Regulação Município:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="308" width="143" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Regulação:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="278" width="412" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cod_regulacao_mun}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="293" width="412" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{usuariomunicipio}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="308" width="412" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{dat_regulacao_mun}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="263" width="555" height="15"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[MUNICÍPIO]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="364" width="412" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{usuariosamu}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="364" width="143" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuário Regulação Município:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="349" width="412" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cod_regulacao_samu}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="349" width="143" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código Regulação:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="379" width="412" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{dat_regulacao_samu}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="379" width="143" height="15"/>
+				<box leftPadding="1"/>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Regulação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="334" width="555" height="15"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[SAMU]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<subreport>
+				<reportElement x="-20" y="0" width="576" height="15"/>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$P{p1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "relRegulacaoObservacao.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="55" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToBandHeight" x="0" y="41" width="555" height="14"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unidade mantida com recursos públicos, provenientes de seus impostos e contribuições sociais.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="205" y="12" width="100" height="15"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="-20" y="27" width="604" height="14"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{endereco_completo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

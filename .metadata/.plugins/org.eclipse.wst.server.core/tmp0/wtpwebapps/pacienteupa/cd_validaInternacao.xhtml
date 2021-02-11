@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+<head>
+	<script src="SCRIPTS/mascara.js" type="text/javascript"></script>
+</head>
+
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="pragma" content="no-cache" />	
+</ui:define>   
+<ui:define name="conteudo">    
+	<a4j:keepAlive beanName="obitoForm" />
+
+	<rich:modalPanel id="panelDiagnostico" autosized="false" width="700" height="450" resizeable="false"
+		                 headerClass="headerPanel3">
+			<!-- BARRA DE TITULO MODAL-->
+   		<f:facet name="header">
+   			<h:outputText value="PESQUISA DE DIAGNÓSTICO INICIAL - CID"></h:outputText>
+   		</f:facet>
+
+   		<f:facet name="controls">
+   		 	<h:panelGroup>
+       			<h:graphicImage value="IMG/fechar.png" styleClass="hidelink" id="hidelink2" />
+       			<rich:componentControl for="panelDiagnostico" attachTo="hidelink2" operation="hide" event="onclick" />
+       		</h:panelGroup>
+  		</f:facet>
+	    <!-- FIM DA BARRA DE TITULO MODAL-->
+	        
+   		<!-- CAMPOS DE BUSCA -->			 
+		<h:form id="formCid10">
+			<div style="height: 30px">
+			    <div class="colLeft">     
+       				<label class="font12">PESQUISAR:</label>
+       			</div>
+       			<div class="colLeft largura220">
+       				<h:inputText value="#{obitoForm.strCid10}" styleClass="campoTexto largura200" id="inputPesquisa"/>
+       			</div>
+       			<div class="colLeft">
+    				<a4j:commandButton image="IMG/pesquisa.gif" 
+    								   id="btnPesquisa" 
+	    			                   action="#{obitoForm.buscacid10}" 
+	    			                   reRender="tabelaCid" />
+	    			<rich:hotKey key="return" selector="#inputPesquisa" 
+		    		             handler="#{rich:element('btnPesquisa')}.click()"/>    			
+		  		</div>        
+    		</div>	    		
+    		<div class="margemBottom8">
+				<rich:extendedDataTable	id="tabelaCid"					    
+						onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+			            onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"		            	
+						value="#{obitoForm.lstCid10}" 
+						var="cid10" 
+						width="680px" 
+                 	    height="380px"
+                 	    noDataLabel="** Pesquisa Vazia **">
+                    <f:facet name="header">	
+                    	<rich:columnGroup>
+                        	<h:column><h:outputText>Sel.</h:outputText></h:column>
+                    		<h:column><h:outputText>Código</h:outputText></h:column>
+                    		<h:column><h:outputText>Descrição</h:outputText></h:column>
+                    		<h:column><h:outputText>Categoria</h:outputText></h:column>
+                    		<h:column><h:outputText>Fav</h:outputText></h:column>
+                    	</rich:columnGroup>	
+                    </f:facet>
+                 	    		
+					<rich:column width="5%">				    		
+						<center>
+							<a4j:commandLink id="selecionarCid10" styleClass="primeiro" reRender="mostraCid10">
+								<h:graphicImage id="imgSelecionar02" url="IMG/selecionar.png" style="border:0;" />	
+								<f:setPropertyActionListener value="#{cid10}" target="#{obitoForm.objCid10}"/>
+								<rich:componentControl for="panelDiagnostico" attachTo="selecionarCid10" operation="hide" event="onclick" />
+							</a4j:commandLink>
+						</center>
+					</rich:column>
+														
+					<rich:column width="10%" style="text-align: center; font-size: 12px">
+						<h:outputText value="#{cid10.codCid10}" />					
+					</rich:column>
+							
+					<rich:column width="60%" style="font-size: 12px">				    		
+						<h:outputText value="#{cid10.dscCid10}" />											
+					</rich:column>
+						
+					<rich:column  width="20%">
+						<h:outputText value="#{cid10.cid10Grupo.cid10Categoria.dscCid10Categoria}" />
+					</rich:column>
+						
+					<rich:column width="5%">
+			    		<h:graphicImage id="imgFav" url="#{(cid10.flgFavorito=='S')?'IMG/star_yellow.png':'IMG/star_grey.png'}" style="border:0;" />				
+					</rich:column>
+				</rich:extendedDataTable>
+			</div>
+		</h:form>		
+ 	</rich:modalPanel>	
+ 			
+ 	<rich:modalPanel id="panelDiagnosticoDg01" autosized="false" width="700" height="450" resizeable="false"
+		                 headerClass="headerPanel3">
+			<!-- BARRA DE TITULO MODAL-->
+   		<f:facet name="header">
+   			<h:outputText value="PESQUISA DE DIAGNÓSTICO INICIAL - CID"></h:outputText>
+   		</f:facet>
+
+   		<f:facet name="controls">
+   		 	<h:panelGroup>
+       			<h:graphicImage value="IMG/fechar.png" styleClass="hidelink" id="hidelink3" />
+       			<rich:componentControl for="panelDiagnosticoDg01" attachTo="hidelink3" operation="hide" event="onclick" />
+       		</h:panelGroup>
+  		</f:facet>
+	    <!-- FIM DA BARRA DE TITULO MODAL-->
+	        
+   		<!-- CAMPOS DE BUSCA -->			 
+		<h:form id="formCid10Dg01">
+			<div style="height: 30px">
+			    <div class="colLeft">     
+       				<label class="font12">PESQUISAR:</label>
+       			</div>
+       			<div class="colLeft largura220">
+       				<h:inputText value="#{obitoForm.strCid10}" styleClass="campoTexto largura200" id="inputPesquisaDg01"/>
+       			</div>
+       			<div class="colLeft">
+    				<a4j:commandButton image="IMG/pesquisa.gif" 
+    								   id="btnPesquisaDg01" 
+	    			                   action="#{obitoForm.buscacid10}" 
+	    			                   reRender="tabelaCidDg01" />
+	    			<rich:hotKey key="return" selector="#inputPesquisaDg01" 
+		    		             handler="#{rich:element('btnPesquisaDg01')}.click()"/>    			
+		  		</div>        
+    		</div>	    		
+    		<div class="margemBottom8">
+				<rich:extendedDataTable	id="tabelaCidDg01"					    
+						onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+			            onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"		            	
+						value="#{obitoForm.lstCid10}" 
+						var="cid10" 
+						width="680px" 
+                 	    height="380px"
+                 	    noDataLabel="** Pesquisa Vazia **">
+                    <f:facet name="header">	
+                    	<rich:columnGroup>
+                        	<h:column><h:outputText>Sel.</h:outputText></h:column>
+                    		<h:column><h:outputText>Código</h:outputText></h:column>
+                    		<h:column><h:outputText>Descrição</h:outputText></h:column>
+                    		<h:column><h:outputText>Categoria</h:outputText></h:column>
+                    		<h:column><h:outputText>Fav</h:outputText></h:column>
+                    	</rich:columnGroup>	
+                    </f:facet>
+                 	    		
+					<rich:column width="5%">				    		
+						<center>
+							<a4j:commandLink id="selecionarCid10Dg01" styleClass="primeiro" reRender="mostraCid10Dg01">
+								<h:graphicImage id="imgSelecionar02Dg01" url="IMG/selecionar.png" style="border:0;" />	
+								<f:setPropertyActionListener value="#{cid10}" target="#{obitoForm.objCid10Dg01}"/>
+								<rich:componentControl for="panelDiagnosticoDg01" attachTo="selecionarCid10Dg01" operation="hide" event="onclick" />
+							</a4j:commandLink>
+						</center>
+					</rich:column>
+														
+					<rich:column width="10%" style="text-align: center; font-size: 12px">
+						<h:outputText value="#{cid10.codCid10}" />					
+					</rich:column>
+							
+					<rich:column width="60%" style="font-size: 12px">				    		
+						<h:outputText value="#{cid10.dscCid10}" />											
+					</rich:column>
+						
+					<rich:column  width="20%">
+						<h:outputText value="#{cid10.cid10Grupo.cid10Categoria.dscCid10Categoria}" />
+					</rich:column>
+						
+					<rich:column width="5%">
+			    		<h:graphicImage id="imgFavDg01" url="#{(cid10.flgFavorito=='S')?'IMG/star_yellow.png':'IMG/star_grey.png'}" style="border:0;" />				
+					</rich:column>
+				</rich:extendedDataTable>
+			</div>
+		</h:form>		
+ 	</rich:modalPanel>	
+ 	 			
+ 	<rich:modalPanel id="panelDiagnosticoDg02" autosized="false" width="700" height="450" resizeable="false"
+		                 headerClass="headerPanel3">
+			<!-- BARRA DE TITULO MODAL-->
+   		<f:facet name="header">
+   			<h:outputText value="PESQUISA DE DIAGNÓSTICO INICIAL - CID"></h:outputText>
+   		</f:facet>
+
+   		<f:facet name="controls">
+   		 	<h:panelGroup>
+       			<h:graphicImage value="IMG/fechar.png" styleClass="hidelink" id="hidelink4" />
+       			<rich:componentControl for="panelDiagnosticoDg02" attachTo="hidelink4" operation="hide" event="onclick" />
+       		</h:panelGroup>
+  		</f:facet>
+	    <!-- FIM DA BARRA DE TITULO MODAL-->
+	        
+   		<!-- CAMPOS DE BUSCA -->			 
+		<h:form id="formCid10Dg02">
+			<div style="height: 30px">
+			    <div class="colLeft">     
+       				<label class="font12">PESQUISAR:</label>
+       			</div>
+       			<div class="colLeft largura220">
+       				<h:inputText value="#{obitoForm.strCid10}" styleClass="campoTexto largura200" id="inputPesquisaDg02"/>
+       			</div>
+       			<div class="colLeft">
+    				<a4j:commandButton image="IMG/pesquisa.gif" 
+    								   id="btnPesquisaDg02" 
+	    			                   action="#{obitoForm.buscacid10}" 
+	    			                   reRender="tabelaCidDg02" />
+	    			<rich:hotKey key="return" selector="#inputPesquisaDg02" 
+		    		             handler="#{rich:element('btnPesquisaDg02')}.click()"/>    			
+		  		</div>        
+    		</div>	    		
+    		<div class="margemBottom8">
+				<rich:extendedDataTable	id="tabelaCidDg02"					    
+						onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+			            onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"		            	
+						value="#{obitoForm.lstCid10}" 
+						var="cid10" 
+						width="680px" 
+                 	    height="380px"
+                 	    noDataLabel="** Pesquisa Vazia **">
+                    <f:facet name="header">	
+                    	<rich:columnGroup>
+                        	<h:column><h:outputText>Sel.</h:outputText></h:column>
+                    		<h:column><h:outputText>Código</h:outputText></h:column>
+                    		<h:column><h:outputText>Descrição</h:outputText></h:column>
+                    		<h:column><h:outputText>Categoria</h:outputText></h:column>
+                    		<h:column><h:outputText>Fav</h:outputText></h:column>
+                    	</rich:columnGroup>	
+                    </f:facet>
+                 	    		
+					<rich:column width="5%">				    		
+						<center>
+							<a4j:commandLink id="selecionarCid10Dg02" styleClass="primeiro" reRender="mostraCid10Dg02">
+								<h:graphicImage id="imgSelecionar02Dg01" url="IMG/selecionar.png" style="border:0;" />	
+								<f:setPropertyActionListener value="#{cid10}" target="#{obitoForm.objCid10Dg02}"/>
+								<rich:componentControl for="panelDiagnosticoDg02" attachTo="selecionarCid10Dg02" operation="hide" event="onclick" />
+							</a4j:commandLink>
+						</center>
+					</rich:column>
+														
+					<rich:column width="10%" style="text-align: center; font-size: 12px">
+						<h:outputText value="#{cid10.codCid10}" />					
+					</rich:column>
+							
+					<rich:column width="60%" style="font-size: 12px">				    		
+						<h:outputText value="#{cid10.dscCid10}" />											
+					</rich:column>
+						
+					<rich:column  width="20%">
+						<h:outputText value="#{cid10.cid10Grupo.cid10Categoria.dscCid10Categoria}" />
+					</rich:column>
+						
+					<rich:column width="5%">
+			    		<h:graphicImage id="imgFavDg02" url="#{(cid10.flgFavorito=='S')?'IMG/star_yellow.png':'IMG/star_grey.png'}" style="border:0;" />				
+					</rich:column>
+				</rich:extendedDataTable>
+			</div>
+		</h:form>		
+ 	</rich:modalPanel>		
+ 	
+	<rich:modalPanel id="panelDiagnosticoDg03" autosized="false" width="700" height="450" resizeable="false"
+		                 headerClass="headerPanel3">
+			<!-- BARRA DE TITULO MODAL-->
+   		<f:facet name="header">
+   			<h:outputText value="PESQUISA DE DIAGNÓSTICO INICIAL - CID"></h:outputText>
+   		</f:facet>
+
+   		<f:facet name="controls">
+   		 	<h:panelGroup>
+       			<h:graphicImage value="IMG/fechar.png" styleClass="hidelink" id="hidelink5" />
+       			<rich:componentControl for="panelDiagnosticoDg03" attachTo="hidelink5" operation="hide" event="onclick" />
+       		</h:panelGroup>
+  		</f:facet>
+	    <!-- FIM DA BARRA DE TITULO MODAL-->
+	        
+   		<!-- CAMPOS DE BUSCA -->			 
+		<h:form id="formCid10Dg03">
+			<div style="height: 30px">
+			    <div class="colLeft">     
+       				<label class="font12">PESQUISAR:</label>
+       			</div>
+       			<div class="colLeft largura220">
+       				<h:inputText value="#{obitoForm.strCid10}" styleClass="campoTexto largura200" id="inputPesquisaDg03"/>
+       			</div>
+       			<div class="colLeft">
+    				<a4j:commandButton image="IMG/pesquisa.gif" 
+    								   id="btnPesquisaDg03" 
+	    			                   action="#{obitoForm.buscacid10}" 
+	    			                   reRender="tabelaCidDg03" />
+	    			<rich:hotKey key="return" selector="#inputPesquisaDg03" 
+		    		             handler="#{rich:element('btnPesquisaDg03')}.click()"/>    			
+		  		</div>        
+    		</div>	    		
+    		<div class="margemBottom8">
+				<rich:extendedDataTable	id="tabelaCidDg03"					    
+						onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+			            onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"		            	
+						value="#{obitoForm.lstCid10}" 
+						var="cid10" 
+						width="680px" 
+                 	    height="380px"
+                 	    noDataLabel="** Pesquisa Vazia **">
+                    <f:facet name="header">	
+                    	<rich:columnGroup>
+                        	<h:column><h:outputText>Sel.</h:outputText></h:column>
+                    		<h:column><h:outputText>Código</h:outputText></h:column>
+                    		<h:column><h:outputText>Descrição</h:outputText></h:column>
+                    		<h:column><h:outputText>Categoria</h:outputText></h:column>
+                    		<h:column><h:outputText>Fav</h:outputText></h:column>
+                    	</rich:columnGroup>	
+                    </f:facet>
+                 	    		
+					<rich:column width="5%">				    		
+						<center>
+							<a4j:commandLink id="selecionarCid10Dg03" styleClass="primeiro" reRender="mostraCid10Dg03">
+								<h:graphicImage id="imgSelecionar02Dg01" url="IMG/selecionar.png" style="border:0;" />	
+								<f:setPropertyActionListener value="#{cid10}" target="#{obitoForm.objCid10Dg03}"/>
+								<rich:componentControl for="panelDiagnosticoDg03" attachTo="selecionarCid10Dg03" operation="hide" event="onclick" />
+							</a4j:commandLink>
+						</center>
+					</rich:column>
+														
+					<rich:column width="10%" style="text-align: center; font-size: 12px">
+						<h:outputText value="#{cid10.codCid10}" />					
+					</rich:column>
+							
+					<rich:column width="60%" style="font-size: 12px">				    		
+						<h:outputText value="#{cid10.dscCid10}" />											
+					</rich:column>
+						
+					<rich:column  width="20%">
+						<h:outputText value="#{cid10.cid10Grupo.cid10Categoria.dscCid10Categoria}" />
+					</rich:column>
+						
+					<rich:column width="5%">
+			    		<h:graphicImage id="imgFavDg03" url="#{(cid10.flgFavorito=='S')?'IMG/star_yellow.png':'IMG/star_grey.png'}" style="border:0;" />				
+					</rich:column>
+				</rich:extendedDataTable>
+			</div>
+		</h:form>		
+ 	</rich:modalPanel>
+ 	
+ 	
+ 						
+ 			
+	<h:form id="cadObito">	    
+		<div>
+      	    <label class="tituloPagina">INFORMAÇÕES DO PACIENTE</label>  	    
+      	    <div class="quadroEdicao">      	                 	    
+        		 <div class="col100">
+	              	<label>Prontuário:</label><br />
+					<h:outputText id="txtNumProntuario" 
+					              styleClass="campoVazio largura100" 
+					              style="width: 80px; 
+					              font-weight: bold"   							   
+								  value="#{obitoForm.objInternacaoLeito.internacao.paciente.numProntuario}"/>								  					
+                </div>   
+              	<div class="col180" >              		
+               		<label>Procedimento Cirurgico:</label><br />
+					<h:selectOneMenu id="ddpProcCirurgico" 
+						             style="width: 160px"
+						             styleClass="selectItens" 
+						             value="#{obitoForm.tipoNota}" >
+						<f:selectItem itemValue="S" itemLabel="SIM" />
+		            	<f:selectItem itemValue="N" itemLabel="NÃO" />
+		            	<a4j:support action="#{obitoForm.carregaNota}" event="onchange" ajaxSingle="true" reRender="ddpNota"/>
+					</h:selectOneMenu> 
+					<label></label><br />
+              	</div >              	
+              	<div class="col170">					
+	               	<label>Nota Avaliação:<span style="color:red;font-weight: bold;">*</span></label><br />
+					<h:selectOneMenu id="ddpNota" 
+					             	style="width: 150px"
+					             	styleClass="selectItens" 
+					             	value="#{obitoForm.objInternacaoLeito.internacao.notaAvaliacao}" >
+						<f:selectItems value="#{obitoForm.sliNota}" />
+					</h:selectOneMenu>					
+				</div>
+				<div class="col170">
+               		<label>#{(obitoForm.objInternacaoLeito.destino.isnDestino == '4'?'Tipo Óbito':'')}</label><br />
+					<h:selectOneMenu id="addDowntipoObito" 
+						             style="width: 150px"
+						             styleClass="selectItens" 
+						             value="#{obitoForm.objInternacaoLeito.internacao.numTipoObito}" 
+						             rendered="#{obitoForm.objInternacaoLeito.destino.isnDestino == 4}">
+					    <a4j:support id="sptMun" reRender="inputNemero" action="#{obitoForm.tipoObito}"
+					                 event="onchange" ajaxSingle="true"/>        
+						<f:selectItem itemValue="1" itemLabel="DOC ÓBITO" />
+						<f:selectItem itemValue="2" itemLabel="SVO" />
+						<f:selectItem itemValue="3" itemLabel="IML" />
+					</h:selectOneMenu> 
+				</div>
+        		<div class="col160">
+               		 <label>#{(obitoForm.objInternacaoLeito.destino.isnDestino == "4"?"Declaração Óbito:":"")}</label><br />
+					 <h:inputText id="inputNemero" 
+								  value="#{obitoForm.objInternacaoLeito.internacao.numDlcObito}"
+								  styleClass="campoTexto" 
+								  style="width:150px" 
+								  maxlength="10"
+								  rendered="#{obitoForm.objInternacaoLeito.destino.isnDestino == 4}"/>
+              	</div>				
+			</div> 
+			<br style="clear: both"/>
+         	<h3 class="subTitulo">DADOS DA INTERNAÇÃO</h3>
+         	<div class="quadroEdicao" >         	    
+         	 	<div class="col390">
+        	 		<label>Nome do paciente:<span style="color:red;font-weight: bold;">*</span></label><br />
+					<h:inputText id="inputNome" 
+					             style="width: 380px"
+					             styleClass="campoTexto"	
+					         	 value="#{obitoForm.objInternacaoLeito.internacao.paciente.dscNome}" >						
+					</h:inputText>									         	
+         	 	</div>
+         	 	<div class="col380">
+					<label>Nome do Mãe:<span style="color:red;font-weight: bold;">*</span></label><br />
+					<h:inputText id="inputNomeMae" 
+					             style="width: 370px;"
+					              styleClass="campoTexto"					             
+								 value="#{obitoForm.objInternacaoLeito.internacao.paciente.dscMae}"  />
+                    
+         	 	</div>
+         	 	<br style="clear: both;"/>
+         	    <div class="col160">
+        	 		<label>Sexo<span style="color:red;font-weight: bold;">*</span></label><br />
+					<h:selectOneMenu id="ddpSexos" 
+					                 style="width: 130px"
+					                 styleClass="selectItens" 
+					                 value="#{obitoForm.objInternacaoLeito.internacao.paciente.sexo.isnSexo}" >
+						<f:selectItems value="#{pacienteForm.sliSexo}" />
+					</h:selectOneMenu>					
+         	 	</div>  	
+         	 	<div class="col230">
+	         		<label>Data Nascimento<span style="color:red;font-weight: bold;">*</span></label><br />
+					<rich:calendar datePattern="dd/MM/yyyy" 
+								   id="inputDataNascimento"								   								      
+								   enableManualInput="true"  
+								   oninputkeydown="formataData(this);"								   								   
+								   converter="ConversorDeDatas"
+								   value="#{obitoForm.objInternacaoLeito.internacao.paciente.datNascimento}" />
+         	 	</div>
+         	 	<div class="col200">        	 	 	
+        	 		<label>UF<span style="color:red;font-weight: bold;">*</span></label><br />
+					<h:selectOneMenu id="dropDownUf" 
+									 style="width: 180px"
+									 styleClass="selectItens"			  
+									 value="#{obitoForm.objInternacaoLeito.internacao.paciente.ufNaturalidade.isnUf}">
+						<f:selectItems value="#{obitoForm.sliUf}" />
+					</h:selectOneMenu>
+				</div>
+         	 	<div class="col150">
+         	 		<label>Data Internação<span style="color:red;font-weight: bold;">*</span></label><br />
+					<rich:calendar datePattern="dd/MM/yyyy" 
+								   id="inputDataInternancao"								   								      
+								   enableManualInput="true"  
+								   oninputkeydown="formataData(this);"								   								   
+								   converter="ConversorDeDatas"
+								   value="#{obitoForm.objInternacaoLeito.internacao.datCadastro}" />					
+         	 	</div>
+         	 	<br style="clear: both;"/>
+         	 	<div class="col390">    				    				     	 	
+					<label>Clinica</label><br />										
+					<label class="campoVazio col380"><b>#{obitoForm.objInternacaoLeito.leito.enfermaria.clinica.dscClinica} - #{obitoForm.objInternacaoLeito.leito.enfermaria.dscEnfermaria}.#{obitoForm.objInternacaoLeito.leito.dscLeito}</b></label>										
+         	 	</div>
+         	 	<div class="col130">    				    				     	 	
+					<label>#{(obitoForm.objInternacaoLeito.destino.isnDestino == '4'?'Data Óbito':'Data Alta')}<span style="color:red;font-weight: bold;">*</span></label><br />
+					<rich:calendar datePattern="dd/MM/yyyy" 
+								   id="inputDataObito"								   								      
+								   enableManualInput="true"  
+								   oninputkeydown="formataData(this);"								   								   
+								   converter="ConversorDeDatas"
+								   value="#{obitoForm.objInternacaoLeito.datAlta}" />
+					
+         	 	</div>
+         	 	<div class="col80">
+					<label>#{(obitoForm.objInternacaoLeito.destino.isnDestino == '4'?'Hora Óbito':'Hora Alta')}</label><br />
+					<h:inputText id="inputHoraObito" 
+						         style="width: 50px;"
+						         styleClass="campoTexto"   					             
+								 value="#{obitoForm.objInternacaoLeito.horAlta}"  />
+ 					<span style="color:red;font-weight: bold;">*</span>
+         	 	</div>         	 	
+         	 	<div class="col380">        	 	 	
+        	 		<label>Médico<span style="color:red;font-weight: bold;">*</span></label><br />
+					<h:selectOneMenu id="dropMedico" 
+									 style="width: 370px" 
+									 styleClass="selectItens"	
+									 value="#{obitoForm.objProfissional.isnUsuario}">
+						<f:selectItems value="#{obitoForm.sliProfissional}" />
+					</h:selectOneMenu> 
+					
+         	 	</div>
+			</div>
+         	<br style="clear: both"/>
+         	<h3 class="subTitulo">DIAGNÓSTICO INICIAL</h3>		
+           	<div class="quadroEdicao" >         	 	         	 	   
+		        <div class="col100">
+            		<a4j:commandLink id="cmdCid10" reRender="tabelaCid" ajaxSingle="true">
+						<h:graphicImage id="imgbuscaCid10" url="IMG/pesquisar.gif" style="border:0;" />
+						<rich:componentControl for="panelDiagnostico" attachTo="cmdCid10" operation="show" event="onclick" />
+					</a4j:commandLink>
+					<h:outputLabel style="color:red;" value=" *" />
+				</div>				  
+				<div style="height: 30px">
+					<h:outputText id="mostraCid10" 
+			              value="#{obitoForm.objCid10.dscCid10}" 
+			              style="font-weight: 700;"  />
+				</div>   
+  	        </div>
+         	<br style="clear: both"/>
+         	<h3 class="subTitulo">#{(obitoForm.objInternacaoLeito.destino.isnDestino == '4'?'CAUSAS DO ÓBITO':'DIAGNOSTICOS')}</h3>	
+         	<div class="quadroEdicao" >         	 	 
+         	   	<div class="margemBottom8">
+					<label>#{(obitoForm.objInternacaoLeito.destino.isnDestino == '4'?'CAUSA - 1':'DIAGNOSTICO - 1')}<span style="color:red;font-weight: bold;">*</span></label><br />
+				        <div class="col100">
+		            		<a4j:commandLink id="cmdCid10Dg01" reRender="tabelaCid" ajaxSingle="true">
+								<h:graphicImage id="imgbuscaCid10Dg01" url="IMG/pesquisar.gif" style="border:0;" />
+								<rich:componentControl for="panelDiagnosticoDg01" attachTo="cmdCid10Dg01" operation="show" event="onclick" />
+							</a4j:commandLink>
+							<h:outputLabel style="color:red;" value=" *" />
+						</div>				  
+						<div style="height: 30px">
+							<h:outputText id="mostraCid10Dg01" 
+					              value="#{obitoForm.objCid10Dg01.dscCid10}" 
+					              style="font-weight: 700;"  />
+						</div>   
+         	 	</div>         	 	
+         	 	<div class="margemBottom8">
+					<label>#{(obitoForm.objInternacaoLeito.destino.isnDestino == '4'?'CAUSA - 2':'DIAGNOSTICO - 2')}</label><br/>         	       	         	       	
+				        <div class="col100">
+		            		<a4j:commandLink id="cmdCid10Dg02" reRender="tabelaCid" ajaxSingle="true">
+								<h:graphicImage id="imgbuscaCid10Dg02" url="IMG/pesquisar.gif" style="border:0;" />
+								<rich:componentControl for="panelDiagnosticoDg02" attachTo="cmdCid10Dg02" operation="show" event="onclick" />
+							</a4j:commandLink>							
+						</div>				  
+						<div style="height: 30px">
+							<h:outputText id="mostraCid10Dg02" 
+					              value="#{obitoForm.objCid10Dg02.dscCid10}" 
+					              style="font-weight: 700;"  />
+						</div> 
+        		</div>         		
+         	 	<div class="margemBottom8">
+					<label>#{(obitoForm.objInternacaoLeito.destino.isnDestino == '4'?'CAUSA - 3':'DIAGNOSTICO - 3')}</label><br />
+					<div class="col100">
+		            	<a4j:commandLink id="cmdCid10Dg03" reRender="tabelaCid" ajaxSingle="true">
+								<h:graphicImage id="imgbuscaCid10Dg03" url="IMG/pesquisar.gif" style="border:0;" />
+								<rich:componentControl for="panelDiagnosticoDg03" attachTo="cmdCid10Dg03" operation="show" event="onclick" />
+							</a4j:commandLink>							
+					</div>				  
+					<div style="height: 30px">
+						<h:outputText id="mostraCid10Dg03" 
+					             value="#{obitoForm.objCid10Dg03.dscCid10}" 
+					             style="font-weight: 700;"  />
+					</div> 
+				</div>        		
+        		<div>
+	       			<label>Observação complementares:</label><br />
+		   			<h:inputTextarea id="inputAreaObsInternacaoLeito" 
+	   	       		       	  		  style="width: 750px; height: 40px"
+	   	       		       	  		  styleClass="campoTexto"
+	           			   	   	      value="#{obitoForm.objInternacaoLeito.internacao.obsComplementares}" 
+			   			   	   		  maxlength="500" />
+         		</div>
+         	</div>		    		   
+	 		<div style="font-size: 0.65em; margin: 8px 0 8px 0; font-weight: bold">
+	 		    <h:outputText value="Cadastrado por: " />
+	 		    <h:outputText value="#{obitoForm.nomeUsuario}" />
+	 		</div>
+	 		<br style="clear: both"/>
+   			<div style="text-align: center; margin-bottom: 10px">
+				<a4j:commandButton id="btnGrava"
+		  	    		value="Gravar"
+						action="#{obitoForm.gravar}"
+						onclick="this.disabled=true"
+						oncomplete="this.disabled=false;validacaoCadastro(#{obitoForm.gravaObito})"	
+						styleClass="botaoModal100"				 
+						style="margin-right: 10px;">					
+				</a4j:commandButton>
+				<a4j:commandButton id="btnCancelar" 
+				   	 	value="Cancelar"
+				   	 	action="#{obitoForm.cancelar}"
+						styleClass="botaoModal100"
+						ajaxSingle="true" 
+						onclick="this.disabled=true">					
+				</a4j:commandButton>		  				
+			</div>
+			<br/>
+			<br/>
+			<br/>		
+   		</div>
+   		<script type="text/javascript">
+   		    function validacaoCadastro(erro) {   		   
+   		       if (erro==3) { //ok
+   		           alert("Usuário sem permissão.");   		           
+   		       } else if (erro==4) {//ok
+   		           alert("Campo sexo é obrigatório.");
+   		           document.getElementById("cadObito:ddpSexos").focus();			       	
+   		       } else if (erro==5) {//ok
+   		           alert("Nota de avaliação é obrigatório.");
+   		           document.getElementById("cadObito:ddpNota").focus();
+   		       } else if (erro==6) {//ok
+   		           alert("Informe a data de nascimento."); 
+   		           document.getElementById("cadObito:inputDataNascimento").focus();
+   		       } else if (erro==7) {
+   		           alert("Informe a data de internação.");
+   		           document.getElementById("cadObito:inputDataInternancao").focus();
+   		       } else if (erro==8) {
+   		           alert("Informe a data de óbito.");
+   		           document.getElementById("ccadObito:inputDataObito").focus();
+   		       } else if (erro==9) {//ok
+   		           alert("Informe a hora do óbito.");
+   		           document.getElementById("cadObito:inputHoraObito").focus();
+   		       } else if (erro==10) {
+   		           alert("Informe a naturalidade do paciente.");
+   		           document.getElementById("cadObito:dropDownUf").focus();
+   		       } else if (erro==11) {//ok
+   		           alert("Erro de gravação! Contate o NTI.");
+   		       } else if (erro==12) {//ok
+   		           alert("Nome do paciente é obrigatório");
+   		           document.getElementById("cadObito:inputNome").focus();
+   		       } else if (erro==13) {//ok
+   		           alert("Nome da mãe é obrigatório.");
+   		           document.getElementById("cadPaciente:inputNomeMae").focus();
+   		       } else if (erro==14) {//ok
+		           alert("Nome do médico é obrigatório.");
+		           document.getElementById("cadObito:dropMedico").focus();   
+  		       } else if (erro==15) {//ok
+		           alert("Informe CID 10 é obrigatório.");
+		           document.getElementById("cadObito:inputCid10").focus();      
+  		       } else if (erro==16) {//ok
+		           alert("Informe o número da declaração do óbito.");
+		           document.getElementById("cadObito:inputNemero").focus();      
+  		       } else if (erro==17) {//ok
+		           alert("Informe CAUSA -01 ou DIAGNOSTICO - 1 é obrigatório.");
+		           document.getElementById("cadObito:causa1").focus(); 
+		       } else if (erro==18) {//ok
+		           alert("Usuário sem permissão.");
+   		       } else {
+   	   		           alert("Validação cadastrada com sucesso.");
+   	   		           var btn = document.getElementById("cadObito:btnCancelar");
+   				       btn.click();	
+   	   		       }   
+   	   		   }		
+    	</script>
+	</h:form>
+	</ui:define>	
+</ui:composition>
+</html>

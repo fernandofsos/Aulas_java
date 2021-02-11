@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+<head>
+	<title><h:outputText value="#{bundle.tituloAplicacao}" /></title>
+	<script src="/#{bundle.pathAplicacao}/js/maskedinput-1.1.4.js"></script>
+	<script src="/#{bundle.pathAplicacao}/js/custom.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/layout.css" />
+	<link rel="stylesheet" type="text/css" href="/#{bundle.pathAplicacao}/css/geral.css" />
+	<!--[if IE]>
+	<style>
+	.tituloAplicacao {
+	 	background-color: white;
+	 	filter: progid:DXImageTransform.Microsoft.Chroma(color='white') progid:DXImageTransform.Microsoft.Alpha(opacity=100) progid:DXImageTransform.Microsoft.dropshadow(color=#ffffff,offX=1,offY=1) progid:DXImageTransform.Microsoft.dropshadow(color=#ffffff,offX=-1,offY=1) progid:DXImageTransform.Microsoft.dropshadow(color=#ffffff,offX=1,offY=-1) progid:DXImageTransform.Microsoft.dropshadow(color=#ffffff,offX=-1,offY=-1);
+	 	zoom: 1;
+	}
+	</style>
+	<![endif]-->
+	
+	<style>
+	    .button {
+	        padding: 5px 15px;
+	        font-size: 13px;
+	        font-weight: bold;
+	        background-color: #bac8ff;
+	        color: #333 !important;
+	    }
+	
+	</style>
+</head>	
+<body>
+	<div id="top">
+		<div id="topLogo">
+			<img src="/#{bundle.pathAplicacao}/imagens/logoIsgh.png" style="margin:0 0 0 0;" alt="ISGH - Segurança" border="0" />
+		</div>
+		<div id="topTituloAplicacao"><div class="tituloAplicacao"><h:outputText value="Sistema de Segurança" /></div></div>
+		<div id="topLogout">
+			<h:form id="logout">
+				<ui:insert name="logout">
+					<h:outputText value="#{sessionScope.loginUsuario.dscUsuario}" style="margin-bottom:5px" /><br/>
+					<t:commandLink action="#{loginForm.logout}" title="Sair do Sistema">
+						<h:graphicImage url="/imagens/logout.png" style="border:0px; width: 18px; height: 18px;" />
+					</t:commandLink>
+				</ui:insert>
+			</h:form>
+		</div>
+	</div>
+	<table cellpadding="0" cellspacing="0">
+	<tr style="vertical-align: top;">
+		<td width="10%">
+			<f:subview id="menuPrincipal">
+		    	<h:form>
+			    	<rich:panelMenu mode="ajax" width="80">
+		    			<rich:panelMenuGroup label="Menu" expanded="true" >
+		    				<rich:panelMenuItem label="Início" action="inicio" />
+		    				<rich:panelMenuItem label="Tela Ação" action="#{telaAcaoForm.preparaPesquisar}"/>
+		    				<rich:panelMenuItem label="Categoria" action="#{categoriaForm.preparaPesquisar}"/>
+		    				<rich:panelMenuItem label="Conselho" action="#{conselhoForm.preparaPesquisar}"/>
+		    				<rich:panelMenuItem label="Entidade" action="#{entidadeForm.preparaPesquisar}"/>
+		    				<rich:panelMenuItem label="Especialidade" action="#{especialidadeForm.preparaPesquisar}"/>
+							<rich:panelMenuItem label="Formação" action="#{formacaoForm.preparaPesquisar}"/>
+							<rich:panelMenuItem label="Grupo" action="#{grupoForm.preparaPesquisar}"/>
+		    				<rich:panelMenuItem label="Setor" action="#{setorForm.preparaPesquisar}"/>
+		    				<rich:panelMenuItem label="Sistema" action="#{sistemaForm.preparaPesquisar}"/>
+		    				<rich:panelMenuItem label="Usuário" action="#{usuarioForm.preparaPesquisar}"/>
+		    				<rich:panelMenuItem label="Permissão" action="#{permissaoLocalForm.preparaPesquisar}"/>
+		    			</rich:panelMenuGroup>
+		        	</rich:panelMenu>
+	        	</h:form>
+    		</f:subview>
+		</td>
+		<td>
+			<rich:panel>
+				<div id="contornoAreaForm">
+					<ui:insert name="title">
+						<h:panelGroup id="panelTitle" style="height:100%; width:100%;">
+							<div class="trTituloForm">
+								<br />
+								#{pageTitle}
+							</div>
+							<table>
+							<tr>
+								<td class="campoObrigatorio"><ui:insert name="requiredFieldsMessage" /></td>
+							</tr>
+							<tr>
+								<td>
+								    <a4j:outputPanel style="width:100%;height:100%;" ajaxRendered="true">
+									    <rich:messages  layout="table" globalOnly="true" errorClass="msgError" infoClass="msgInfo" warnClass="msgWarn" id="messages"/>
+									</a4j:outputPanel>
+								</td>
+							</tr>
+							</table>	
+						</h:panelGroup>		
+					</ui:insert>
+					<div class="interno">
+						<br />
+						<a4j:form id="formulario" enctype="application/x-www-form-urlencoded">
+							<ui:insert name="saveStateObjects" />
+							<ui:insert name="saveStateObjectsDefined" />
+							<ui:insert name="content" style="height:100%; width:100%;"/>
+							<ui:insert name="buttons" style="height:100%; width:100%;">
+								<div id="botao" style="visibility: visible;">
+									<table class="buttonTable">
+									<tr>
+										<td class="buttonItem">
+											<ui:insert name="buttonItens"/>
+										</td>
+									</tr>
+									</table>
+								</div>
+							</ui:insert>
+							<br/>
+							<ui:insert name="list"/>
+							<br/><br/><br/><br/><br/><br/>
+						</a4j:form>
+						<ui:insert name="modals" />
+					</div>
+				</div>
+			</rich:panel>
+		</td>		
+	</tr>
+	</table>
+	<rich:modalPanel id="panel_loading" autosized="true">
+		<table>
+		<tr>
+			<td><h:graphicImage url="/imagens/ajax-loader.gif" style="border:0px; vertical-align:middle;" /></td>
+			<td><h:outputText value="Aguarde..." /></td>
+		</tr>
+		</table>
+	</rich:modalPanel>
+	<a4j:status id="loading" onstart="Richfaces.showModalPanel('panel_loading')" onstop="Richfaces.hideModalPanel('panel_loading')" />
+	<!-- RODAPÉ -->
+	<div id="divRodape">
+	    <div style="float:center; margin-left:auto; margin-right:auto; width:600px;">
+			<p>Governo do Estado do Ceará - Secretaria de Saúde do Ceará</p>
+			<p>Desenvolvido por Instituto de Saúde e Gestão Hospitalar (c) 2011 - Contato: nti@isgh.org.br</p> 
+		</div>		
+	</div>
+</body>
+</html>

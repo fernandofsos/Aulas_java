@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<title>SISTEMA DE PACIENTE - Pesquisar Internações Pendentes</title>	
+</ui:define>
+<ui:define name="conteudo">
+	<a4j:keepAlive beanName="pacienteForm" />
+	<a4j:keepAlive beanName="geralForm" />
+	<a4j:keepAlive beanName="pacienteInternadoForm" />
+	<a4j:keepAlive beanName="obitoForm" />
+	
+	<a4j:form>
+   		<div style="margin-bottom: 55px">
+   	    	<label class="cabAreaPesquisa">VALIDAÇÃO DAS INTERNAÇÕES</label>	    
+			<div class="areaPesquisa">	              
+	       		<div class="col220" style="margin-top: 8px">	       
+	           		<label>Pesquisar:</label><br/>	           
+	           		<h:inputText id="inputPesquisa" 
+	                        value="#{obitoForm.filtroLista}"
+	                        styleClass="campoTexto" style="width:210px"/>
+	       		</div>
+	       		<div class="col170" style="margin-top: 8px">
+		       		<rich:spacer height="18px"/><br/>             
+	           		<h:selectOneMenu value="#{obitoForm.campoPesquisa}"
+	                            styleClass="selectItens"
+	                            style="width:160px">
+	           			<f:selectItem itemLabel="Nome/Prontuario" itemValue="1"/>	           			
+	           			<f:selectItem itemLabel="Nome Mãe" itemValue="2"/>	           			
+	           		</h:selectOneMenu>
+	       		</div>     
+	       		<div class="col180" style="margin-top: 8px">
+	           		<rich:spacer height="12px"/><br/>
+	           		<a4j:commandButton id="btnPesquisa" 
+	           			image="IMG/pesquisa.gif"
+	           			alt="Pesquisar" 
+	                	action="#{obitoForm.filtrarLista}"  
+		    			oncomplete="avisosPesquisa(#{obitoForm.erroPesquisa})"
+		    			reRender="tabelaPaciente,totalGeral" 
+		    			style="margin-right: 8px"/>
+		       		<a4j:commandButton id="btnRefresh" 
+		       			image="IMG/atualizar.gif"
+		       			alt="Desfazer a pesquisa" 
+	                	action="#{obitoForm.relerLista}"
+		    			reRender="tabelaPaciente,totalGeral,inputPesquisa" />		    			
+		       		<rich:hotKey key="return" selector="#inputPesquisa" 
+		    		             handler="#{rich:element('btnPesquisa')}.click()"/>
+	       		</div>	       		
+	       		<div class="col200" style="text-align: right">
+	           		<label>Registros:</label><br/>
+	           		<h:outputText id="totalGeral" value="#{obitoForm.totalInternados}" 
+	                              styleClass="totalizador2 "/>
+	       		</div>	       
+	    	</div>
+	    	<div id="">
+				<rich:dataTable id="tabelaPaciente"
+					onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+					value="#{obitoForm.lstInternacao}" 
+					var="internacaoLeito" 
+					rows="30"					 
+					style="width: 100%"										 
+					reRender="ds,totalGeral">					
+				
+					<!-- SELECIONE -->
+					<rich:column width="3%" headerClass="headColumn">
+					    <f:facet name="header">
+					    	<h:outputText value="SEL" />
+					    </f:facet>
+						<center>
+							<a4j:commandLink id="selecionar" ajaxSingle="true" action="csValidaInternacaoCdValidaInternacao" title="Acessar dados da internação" >
+								<h:graphicImage id="imgSelecionar02" url="IMG/selecionar.png" style="border:0;" />							
+								<f:setPropertyActionListener value="#{internacaoLeito}" target="#{obitoForm.objInternacaoLeito}" />
+							</a4j:commandLink>
+						</center>
+					</rich:column>
+					
+					<!-- PRONTUARIO -->
+					<rich:column width="5%" sortBy="#{internacaoLeito.internacao.paciente.numProntuario}"
+					             headerClass="headColumn">
+					    <f:facet name="header">
+					    	<h:outputText value="PRONT" />
+					    </f:facet>
+						<center>
+							<h:outputText value="#{internacaoLeito.internacao.paciente.numProntuario}" />
+						</center>
+					</rich:column>
+				
+					<!-- NOME -->
+					<rich:column width="30%" sortBy="#{internacaoLeito.internacao.paciente.dscNome}"
+					             headerClass="headColumn" >
+						<f:facet name="header">
+					    	<h:outputText value="PACIENTE"/>
+					    </f:facet>
+						<h:outputText value="#{internacaoLeito.internacao.paciente.dscNome}" />
+					</rich:column>
+				
+					<!-- NOME DA MÃE -->
+					<rich:column width="27%" headerClass="headColumn">
+					    <f:facet name="header">
+					    	<h:outputText value="NOME DA MÃE"  />
+					    </f:facet>
+						<h:outputText value="#{internacaoLeito.internacao.paciente.dscMae}" />
+					</rich:column>
+					
+					<!-- DESTINO -->
+					<rich:column width="20%" style="text-align: center" sortBy="#{internacaoLeito.destino.dscDestino}"
+					             headerClass="headColumn">
+					    <f:facet name="header">
+					    	<h:outputText value="UNIDADE" />
+					    </f:facet>
+						<h:outputText value="#{internacaoLeito.leito.enfermaria.clinica.dscClinica} - #{internacaoLeito.leito.enfermaria.dscEnfermaria}.#{internacaoLeito.leito.dscLeito}" />
+					</rich:column>
+					
+					<!-- DESTINO -->
+					<rich:column width="15%" style="text-align: center" sortBy="#{internacaoLeito.destino.dscDestino}"
+					             headerClass="headColumn">
+					    <f:facet name="header">
+					    	<h:outputText value="DESTINO" />
+					    </f:facet>
+						<h:outputText value="#{internacaoLeito.destino.dscDestino}" />
+					</rich:column>
+					
+					<!-- DATA ALTA -->
+					<rich:column width="10%" style="text-align: center" sortBy="#{internacaoLeito.datAltaFmt}" 
+					             headerClass="headColumn">
+					    <f:facet name="header">
+					    	<h:outputText value="DATA"/>
+					    </f:facet>
+						<h:outputText value="#{internacaoLeito.datAltaFmt} " />
+					</rich:column>
+					
+					<f:facet name="footer">
+						<rich:datascroller id="ds" ajaxSingle="false" />
+					</f:facet>
+				</rich:dataTable>
+			</div>
+		</div>
+		<script type="text/javascript">
+	    	 function avisosPesquisa(erro) {
+		     	if (erro==2) {
+		    	 	alert("Não há pacientes cadastrados que atendam a esta pesquisa.");
+		     	}
+	     	}
+		</script>
+	</a4j:form>	
+</ui:define>
+</ui:composition>
+</html>

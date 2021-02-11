@@ -1,0 +1,1282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioAtendimento" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.366026910730141"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="192"/>
+	<parameter name="p1" class="java.lang.Integer"/>
+	<parameter name="CAMINHO_IMG" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG2" class="java.lang.String"/>
+	<parameter name="CAMINHO_SUB_REPORT" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/feliciano/Documentos/pacienteupa/src/relatorio/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select distinct(i.isn_internacao),p.num_prontuario,p.dsc_nome,p.num_rg,p.num_rg,p.dsc_orgao_emissao_rg,i.num_cep,
+       i.dat_cadastro, p.dat_nascimento,i.isn_internacao,
+       s.dsc_sexo,i.dsc_endereco,i.dsc_endereco,p.dsc_mae,i.dsc_bairro,i.hor_chegada,
+       i.num_ddd_1,i.num_telefone_1,ir.dsc_queixa,ir.dat_registro,f.dsc_fluxograma,ia.dsc_hip_diag_odonto,ia.dsc_hda_odonto,ia.dsc_comorbidade_odonto,
+       ir.dsc_discriminador,ir.dsc_sato2,ir.dsc_glassgow,ir.dsc_glicemia,ir.dsc_regua_dor,ir.dsc_fc,ir.dsc_temperatura,
+       ri.dsc_risco,u.dsc_usuario,ir.hor_registro,ia.dsc_atendimento,ia.dsc_pa,ir.dsc_peso,cid.dsc_cid10,ia.isn_cid10,
+       ia.flg_acidente,ia.flg_agressao,ia.hipoteses_diagnostico,to_char(ia.dat_inicio_med,'dd/MM/yyyy HH24:MI') as dat_inicio_med,to_char(ia.dat_inicio_odonto, 'dd/MM/yyyy HH24:MI') as dat_inicio_odonto,ia.comorbidade, i.isn_internacao,
+       medpoint.idade2(p.dat_nascimento,i.dat_cadastro) as idade,
+       dm.dsc_destino_medico,uia.dsc_usuario as usuario_medico,uodon.dsc_usuario as usuario_odonto,uia.num_conselho,uodon.num_conselho as num_conselho_odonto,
+       (select vlr_parametro from medpoint.t_parametro where isn_parametro = 10) as endereco_completo,
+       (select vlr_parametro from medpoint.t_parametro where isn_parametro = 13) as dsc_unidade,
+p.flg_alergia, ir.flg_risco_queda,ir.flg_dengue,ir.dat_sintoma_dengue, ps.isn_protocolo_sepse,
+       ps.cod_tela1, ps.cod_tela2, ps.suspeita_infeccao, ir.isn_internacao_risco, ad.SINAIS_CHOQUE, ad.DATA_PRIMEIRO_SINTOMA, ad.SINAIS_SANGRAMENTO,
+        ad.PROVA_LACO, ad.PESO, gd.dsc_grupo, ad.isn_atendimento_dengue,ir.flg_chikungunya,ir.dat_sintoma_chikungunya
+       from medpoint.t_internacao i
+	    inner join medpoint.t_paciente p on i.isn_paciente = p.isn_paciente
+	    inner join medpoint.t_sexo s on p.isn_sexo = s.isn_sexo
+            left join (select * from medpoint.t_internacao_risco where
+            isn_internacao_risco =(select max(isn_internacao_risco)from medpoint.t_internacao_risco where isn_internacao = $P{p1}::integer))
+            ir on i.isn_internacao = ir.isn_internacao
+	    left join medpoint.t_fluxograma f on ir.isn_fluxograma = f.isn_fluxograma
+	    left join medpoint.t_risco ri on ir.isn_risco = ri.isn_risco
+	    left join seguranca.t_usuario u on ir.isn_usuario = u.isn_usuario
+	    left join (select * from medpoint.t_internacao_atendimento where
+            isn_internacao_atendimento =(select max(isn_internacao_atendimento) from medpoint.t_internacao_atendimento where isn_internacao = $P{p1}::integer))
+            ia on ia.isn_internacao = ir.isn_internacao
+	    left join seguranca.t_usuario uia on ia.isn_usuario_med = uia.isn_usuario
+	    left join seguranca.t_usuario uodon on ia.isn_usuario_odonto = uodon.isn_usuario
+            left join medpoint.t_destino_medico dm on ia.isn_clinica_destino = dm.isn_destino_medico
+            left join medpoint.t_protocolo_sepse ps on ps.isn_internacao = i.isn_internacao and ps.isn_protocolo_sepse = (select max(isn_protocolo_sepse) from medpoint.t_protocolo_sepse where isn_internacao = $P{p1}::integer)
+            left join medpoint.t_atendimento_dengue ad on ad.isn_internacao = i.isn_internacao
+            left join medpoint.t_grupo_dengue gd on gd.isn_grupo_dengue = ad.isn_grupo_dengue
+left join medpoint.t_cid10 cid on cid.isn_cid10 = ia.isn_cid10
+            where i.isn_internacao = $P{p1}::integer]]>
+	</queryString>
+	<field name="isn_internacao" class="java.lang.Integer"/>
+	<field name="num_prontuario" class="java.lang.String"/>
+	<field name="dsc_nome" class="java.lang.String"/>
+	<field name="num_rg" class="java.lang.String"/>
+	<field name="dsc_orgao_emissao_rg" class="java.lang.String"/>
+	<field name="num_cep" class="java.lang.String"/>
+	<field name="dat_cadastro" class="java.sql.Date"/>
+	<field name="dat_nascimento" class="java.sql.Date"/>
+	<field name="dsc_sexo" class="java.lang.String"/>
+	<field name="dsc_endereco" class="java.lang.String"/>
+	<field name="dsc_mae" class="java.lang.String"/>
+	<field name="dsc_bairro" class="java.lang.String"/>
+	<field name="hor_chegada" class="java.lang.String"/>
+	<field name="num_ddd_1" class="java.lang.String"/>
+	<field name="num_telefone_1" class="java.lang.String"/>
+	<field name="dsc_queixa" class="java.lang.String"/>
+	<field name="dat_registro" class="java.sql.Date"/>
+	<field name="dsc_fluxograma" class="java.lang.String"/>
+	<field name="dsc_hip_diag_odonto" class="java.lang.String"/>
+	<field name="dsc_hda_odonto" class="java.lang.String"/>
+	<field name="dsc_comorbidade_odonto" class="java.lang.String"/>
+	<field name="dsc_discriminador" class="java.lang.String"/>
+	<field name="dsc_sato2" class="java.lang.String"/>
+	<field name="dsc_glassgow" class="java.lang.String"/>
+	<field name="dsc_glicemia" class="java.lang.String"/>
+	<field name="dsc_regua_dor" class="java.lang.String"/>
+	<field name="dsc_fc" class="java.lang.String"/>
+	<field name="dsc_temperatura" class="java.lang.String"/>
+	<field name="dsc_risco" class="java.lang.String"/>
+	<field name="dsc_usuario" class="java.lang.String"/>
+	<field name="hor_registro" class="java.lang.String"/>
+	<field name="dsc_atendimento" class="java.lang.String"/>
+	<field name="dsc_pa" class="java.lang.String"/>
+	<field name="dsc_peso" class="java.lang.String"/>
+	<field name="dsc_cid10" class="java.lang.String"/>
+	<field name="isn_cid10" class="java.lang.Integer"/>
+	<field name="flg_acidente" class="java.lang.String"/>
+	<field name="flg_agressao" class="java.lang.String"/>
+	<field name="hipoteses_diagnostico" class="java.lang.String"/>
+	<field name="dat_inicio_med" class="java.lang.String"/>
+	<field name="dat_inicio_odonto" class="java.lang.String"/>
+	<field name="comorbidade" class="java.lang.String"/>
+	<field name="idade" class="java.lang.String"/>
+	<field name="dsc_destino_medico" class="java.lang.String"/>
+	<field name="usuario_medico" class="java.lang.String"/>
+	<field name="usuario_odonto" class="java.lang.String"/>
+	<field name="num_conselho" class="java.lang.String"/>
+	<field name="num_conselho_odonto" class="java.lang.String"/>
+	<field name="endereco_completo" class="java.lang.String"/>
+	<field name="dsc_unidade" class="java.lang.String"/>
+	<field name="flg_alergia" class="java.lang.String"/>
+	<field name="flg_risco_queda" class="java.lang.String"/>
+	<field name="flg_dengue" class="java.lang.String"/>
+	<field name="dat_sintoma_dengue" class="java.sql.Date"/>
+	<field name="isn_protocolo_sepse" class="java.lang.Integer"/>
+	<field name="cod_tela1" class="java.lang.Integer"/>
+	<field name="cod_tela2" class="java.lang.Integer"/>
+	<field name="suspeita_infeccao" class="java.lang.Boolean"/>
+	<field name="isn_internacao_risco" class="java.lang.Integer"/>
+	<field name="sinais_choque" class="java.lang.Boolean"/>
+	<field name="data_primeiro_sintoma" class="java.sql.Date"/>
+	<field name="sinais_sangramento" class="java.lang.Boolean"/>
+	<field name="prova_laco" class="java.lang.Boolean"/>
+	<field name="peso" class="java.lang.String"/>
+	<field name="dsc_grupo" class="java.lang.String"/>
+	<field name="isn_atendimento_dengue" class="java.lang.Integer"/>
+	<field name="flg_chikungunya" class="java.lang.String"/>
+	<field name="dat_sintoma_chikungunya" class="java.sql.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="87" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="36" width="317" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORGANIZAÇÃO SOCIAL SAÚDE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="19" width="317" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDADE DE PRONTO ATENDIMENTO - UPA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="2" width="317" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="317" y="48" width="238" height="17"/>
+				<box leftPadding="4"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_unidade}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="65" width="554" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="16" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[FICHA DE ATENDIMENTO]]></text>
+			</staticText>
+			<image>
+				<reportElement x="434" y="2" width="120" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="318" y="2" width="116" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG2}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="37" width="70" height="15"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Prontuário:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="72" y="52" width="57" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_nascimento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="467" y="82" width="27" height="15"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="17" width="40" height="20"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="52" width="72" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Nasc.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="281" y="82" width="42" height="15"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="70" y="37" width="195" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_prontuario}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="168" y="52" width="173" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{idade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="343" y="52" width="34" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sexo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="67" width="55" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefone:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="62" y="82" width="219" height="15"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_endereco}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="323" y="82" width="144" height="15"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_bairro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="40" y="17" width="515" height="20" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="2" width="555" height="15"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO PACIENTE/CADASTRO]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="377" y="52" width="47" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_sexo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="82" width="62" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="445" y="52" width="110" height="15"/>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_rg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="129" y="52" width="39" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Idade:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="325" y="37" width="83" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_cadastro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="265" y="37" width="60" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Admissão:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="454" y="67" width="101" height="15"/>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["(" + $F{num_ddd_1} + ") " + $F{num_telefone_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="67" width="36" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mãe:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="424" y="52" width="21" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="494" y="82" width="61" height="15"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_cep}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="36" y="67" width="362" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_mae}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="408" y="37" width="147" height="15"/>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{hor_chegada}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="147">
+			<frame>
+				<reportElement x="0" y="2" width="555" height="131"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement x="1" y="96" width="52" height="15"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Dengue]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="83" y="97" width="112" height="15"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Primeiro sintoma]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="53" y="97" width="30" height="13"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{flg_dengue}.equals('S')?"Sim":"Não")]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="195" y="97" width="75" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_sintoma_dengue}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="446" y="15" width="64" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_registro}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="271" y="98" width="80" height="15"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Chikungunya:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="393" y="98" width="80" height="15"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Prim/Sintoma]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="351" y="98" width="40" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{flg_chikungunya}.equals('S')?"Sim":"Não")]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="473" y="98" width="80" height="14"/>
+					<textElement/>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_sintoma_chikungunya}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement x="282" y="17" width="36" height="15"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Risco:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="408" y="115" width="54" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pulso/FC:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="78" y="32" width="477" height="31" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_queixa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="115" width="47" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sato02:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="462" y="115" width="91" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_fc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="330" y="115" width="42" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Régua:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="144" y="115" width="39" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Temp.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="17" width="77" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Classificador:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="126" y="115" width="19" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_glassgow}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="76" y="64" width="476" height="15" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_fluxograma}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="32" width="76" height="15"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Queixa:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="88" y="80" width="214" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_discriminador}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="211" y="115" width="54" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Glicemia:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="265" y="115" width="64" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_glicemia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="80" width="86" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Discriminador:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="64" width="76" height="15"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fluxograma:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="48" y="115" width="24" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_sato2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="512" y="17" width="43" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{hor_registro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="414" y="17" width="32" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="318" y="17" width="96" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_risco}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="372" y="115" width="36" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_regua_dor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="71" y="115" width="52" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Glasgow:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="3" width="555" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CLASSIFICAÇÃO DE RISCO]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="183" y="115" width="28" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_temperatura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="504" y="80" width="48" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[(($F{flg_alergia} != null && $F{flg_alergia}.equals("S"))?"Sim":"Não")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="450" y="80" width="54" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Alergia:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="401" y="80" width="48" height="15"/>
+				<box>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[(($F{flg_risco_queda} != null && $F{flg_risco_queda}.equals("S"))?"Sim":"Não")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="303" y="80" width="98" height="15"/>
+				<box leftPadding="0"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Risco de Queda:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement stretchType="RelativeToTallestObject" x="-20" y="133" width="575" height="13"/>
+				<subreportParameter name="p2">
+					<subreportParameterExpression><![CDATA[$F{isn_internacao_risco}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$P{p1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "subRelClassificacaoRiscoGeral.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="true">
+				<reportElement x="81" y="17" width="200" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_usuario}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="16">
+			<subreport>
+				<reportElement stretchType="RelativeToTallestObject" x="-19" y="1" width="575" height="13"/>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$P{p1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "subRelAlergi.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="107">
+			<printWhenExpression><![CDATA[$F{usuario_medico}!=null]]></printWhenExpression>
+			<frame>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="555" height="105" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement x="420" y="15" width="33" height="15"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="453" y="15" width="100" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{dat_inicio_med}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="57" y="45" width="41" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{flg_acidente}.equalsIgnoreCase("S") ? "Sim" : "Não"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="281" y="15" width="139" height="15"/>
+				<textElement markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Nº Atendimento: </b>"+$F{isn_internacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="213" y="45" width="35" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="15"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ATENDIMENTO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="163" y="45" width="48" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{flg_agressao}.equalsIgnoreCase("N") ? "Não" : "Sim"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="30" y="30" width="214" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_destino_medico}.equalsIgnoreCase("ALTA APÓS MEDICAÇÃO") ? "MEDICAÇÃO (ALTA APÓS MEDICAÇÃO)" : $F{dsc_destino_medico}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="300" y="60" width="255" height="15"/>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{comorbidade}==null?"":"<b>Comorbidade:</b> "+$F{comorbidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="318" y="30" width="28" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[P.A.:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="48" y="15" width="233" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{usuario_medico}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="15" width="48" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Médico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="75" width="555" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[HDA/Exame Físico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="30" width="30" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CRM:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="346" y="30" width="45" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_pa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="45" width="56" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Acidente:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="274" y="30" width="44" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_conselho}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="247" y="45" width="66" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_peso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="30" width="30" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Eixo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="98" y="45" width="65" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agressão:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="90" width="555" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_atendimento}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="60" width="300" height="15"/>
+				<box leftPadding="2" rightPadding="4">
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{isn_cid10}==null?"<b>Hipótese Diagnóstico: </b>"+$F{hipoteses_diagnostico}:"<b>Hipótese Diagnóstico: </b>" +$F{dsc_cid10}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="314" y="45" width="96" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Protocolo Sepse:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="410" y="45" width="44" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{isn_protocolo_sepse}==null || $F{cod_tela1}==null ) ? "Não" : (($F{cod_tela1} == 6 ) ? "Não" : $F{suspeita_infeccao} == false ? "Não" : "Sim")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="108">
+			<printWhenExpression><![CDATA[$F{usuario_odonto}!=null]]></printWhenExpression>
+			<frame>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="555" height="106" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement x="422" y="15" width="33" height="15"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="453" y="15" width="100" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{dat_inicio_odonto}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement x="1" y="44" width="56" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Acidente:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="300" y="60" width="255" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_comorbidade_odonto}==null?"":"<b>Comorbidade:</b> "+$F{dsc_comorbidade_odonto}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="57" y="45" width="41" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{flg_acidente}.equalsIgnoreCase("S") ? "Sim" : "Não"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="341" y="30" width="31" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_pa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="30" width="30" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Eixo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ATENDIMENTO ODONTOLÓGICO]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="295" y="15" width="127" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Nº Atendimento: </b>"+$F{isn_internacao}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="270" y="30" width="44" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_conselho_odonto}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="248" y="44" width="66" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_peso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="15" width="48" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Médico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="213" y="45" width="35" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="48" y="15" width="247" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{usuario_odonto}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="30" y="30" width="214" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_destino_medico}.equalsIgnoreCase("ALTA APÓS MEDICAÇÃO") ? "MEDICAÇÃO (ALTA APÓS MEDICAÇÃO)" : $F{dsc_destino_medico}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="91" width="555" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_hda_odonto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="98" y="45" width="65" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agressão:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="165" y="45" width="48" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{flg_agressao}.equalsIgnoreCase("N") ? "Não" : "Sim"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="244" y="30" width="30" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CRO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="30" width="28" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[P.A.:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="60" width="300" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2" rightPadding="4">
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_hip_diag_odonto}==null?"<b>Hipótese Diagnóstico:</b> ":($F{isn_cid10}==null?"<b>Hipótese Diagnóstico:</b> "+$F{dsc_hip_diag_odonto}:"<b>Hipótese Diagnóstico:</b> "+$F{dsc_cid10})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="75" width="555" height="15" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{usuario_odonto}.equalsIgnoreCase("") ? true : false]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[HDA/Exame Físico:]]></text>
+			</staticText>
+		</band>
+		<band height="66">
+			<printWhenExpression><![CDATA[$F{isn_atendimento_dengue}!=null]]></printWhenExpression>
+			<frame>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="555" height="66" isRemoveLineWhenBlank="true"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement x="0" y="15" width="106" height="15" isRemoveLineWhenBlank="true"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sinais de choque:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="106" y="15" width="33" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{sinais_choque} == false ? "Não" : "Sim"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="140" y="15" width="110" height="15" isRemoveLineWhenBlank="true"/>
+					<box leftPadding="0">
+						<leftPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Primeiros Sintomas:]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="250" y="16" width="64" height="14"/>
+					<textElement/>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{data_primeiro_sintoma}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="316" y="15" width="204" height="15" isRemoveLineWhenBlank="true"/>
+					<box leftPadding="0">
+						<leftPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Apresenta Sangramento Espontâneo:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="520" y="15" width="35" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{sinais_sangramento} == false ? "Não" : "Sim"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="1" y="31" width="40" height="15" isRemoveLineWhenBlank="true"/>
+					<box leftPadding="0">
+						<leftPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Peso:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="41" y="32" width="36" height="15">
+						<printWhenExpression><![CDATA[!$F{peso}.equals(0)]]></printWhenExpression>
+					</reportElement>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{peso}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="76" y="31" width="45" height="15" isRemoveLineWhenBlank="true"/>
+					<box leftPadding="0">
+						<leftPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Grupo:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="123" y="30" width="127" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_grupo}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="15" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[PROTOCOLO DENGUE]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="48" width="553" height="18"/>
+				<subreportParameter name="p2">
+					<subreportParameterExpression><![CDATA[$F{isn_atendimento_dengue}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "subItem_dengue.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="43">
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="2" width="555" height="34" isPrintWhenDetailOverflows="true"/>
+			</rectangle>
+			<subreport>
+				<reportElement x="1" y="18" width="552" height="16"/>
+				<subreportParameter name="CAMINHO_SUB_REPORT">
+					<subreportParameterExpression><![CDATA[$P{CAMINHO_SUB_REPORT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$F{isn_internacao}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "subRelProtocoloSepse.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="0" y="2" width="553" height="15" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[PROTOCOLO SEPSE]]></text>
+			</staticText>
+		</band>
+		<band height="14">
+			<subreport>
+				<reportElement positionType="Float" x="-21" y="0" width="576" height="14"/>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$P{p1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "subRelExamesGeral.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="12">
+			<subreport>
+				<reportElement positionType="Float" x="-21" y="0" width="576" height="12"/>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$P{p1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "relNovaPrescricaoPepGeral.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="16">
+			<subreport>
+				<reportElement x="-21" y="0" width="576" height="16"/>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$P{p1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "subRelEvolucaoGeral.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="57" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="1" y="34" width="555" height="14"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unidade mantida com recursos públicos, provenientes de seus impostos e contribuições sociais.]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="-19" y="19" width="593" height="14"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{endereco_completo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="33" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="1" y="17" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="248" y="1" width="100" height="15"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="483" y="49" width="73" height="8"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="49" width="97" height="8"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[relAtendimentoGeral]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

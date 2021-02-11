@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a4j="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:t="http://myfaces.apache.org/tomahawk"
+				xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+				template="crud_template.xhtml">
+
+	<ui:param name="crudBean" value="#{permissaoLocalForm}" />
+	
+	<ui:define name="requiredFieldsMessage">
+		<h:outputText value="#{bundle.todosCamposObrigatorios}" rendered="#{crudBean.updating}"/>
+		<h:outputText value="#{bundle.peloMenosUmCamposObrigatorio}" rendered="#{crudBean.searching}"/>
+	</ui:define>
+	
+	<ui:define name="saveStateObjectsDefined"> 
+		<t:saveState value="#{crudBean.listaGruposDestino}" />
+		<t:saveState value="#{crudBean.listaGrupos}" />
+	</ui:define>	
+	
+	<ui:define name="content">
+		<!-- Painel de Busca -->
+		<h:panelGroup id="panelGroupDePesquisa" style="height:100%; width:100%;" rendered="#{crudBean.searching}">
+			<f:subview id="viewBusca">
+				<table class="tabela">
+					<tr>
+						<td class="tdCor" width="200px">Código *</td>
+						<td class="tdBranco">
+							<h:inputText id="isnUsuario" value="#{crudBean.searchObject.isnUsuario}" styleClass="baseField" onblur="upper(this);" onkeypress="return soNumero(event, this)" size="10" maxlength="8" />
+						</td>
+					</tr>				
+					<tr>
+						<td class="tdCor" width="200px">Login *</td>
+						<td class="tdBranco">
+							<h:inputText value="#{crudBean.searchObject.filtro.dscLogin}" styleClass="baseField" onblur="upper(this);" size="70" maxlength="20" />
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Nome *</td>
+						<td class="tdBranco">
+							<h:inputText value="#{crudBean.searchObject.dscUsuario}" styleClass="baseField" size="70" onblur="upper(this);" maxlength="50" />
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Data do Cadastro *</td>
+						<td class="tdBranco">
+							<rich:calendar value="#{crudBean.searchObject.filtro.datCadastroInicio}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10" />
+								<h:outputText value=" a "/>
+							<rich:calendar value="#{crudBean.searchObject.filtro.datCadastroFim}" datePattern="dd/MM/yyyy" cellWidth="24px" cellHeight="22px" style="width:200px" showWeeksBar="false" inputSize="10"  enableManualInput="true" oninputkeypress="return formataData(event, this);" maxlength="10"/>						
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Situação</td>
+						<td class="tdBranco">
+							<div style="width:300px;">
+								<h:selectOneRadio value="#{crudBean.searchObject.flgSituacao}" styleClass="radioButton">
+												<f:selectItem itemValue="" itemLabel="Todos"/>
+												<f:selectItem itemValue="S" itemLabel="Ativo"/>
+												<f:selectItem itemValue="N" itemLabel="Inativo"/>
+												<f:selectItem itemValue="B" itemLabel="Bloqueado"/>
+								</h:selectOneRadio>
+							</div>	
+						</td>
+					</tr>
+				</table>
+				<mj:focus for="formulario:viewBusca:isnUsuario" />
+			</f:subview>
+		</h:panelGroup>
+		
+		<h:panelGroup id="panelGroupDeCadastro"  rendered="#{crudBean.updating}" style="height:100%; width:100%;">
+			<f:subview id="viewCadastro">
+				<rich:tabPanel switchType="client" style="width=100%;" headerAlignment="left" width="100%">
+					<rich:tab label="Grupos" style="width: 0%;" labelWidth="300px">
+						<table class="tabela" id="tabelaGrupos">							
+							<tr>
+								<td class="tdCor" style="text-align: center;width: 50%">Não Participa</td>
+								<td class="tdCor" style="text-align: center;width: 50%">Participa</td>
+							</tr>
+							<tr>
+								<td class="tdBranco" colspan="2">
+									<rich:pickList value="#{crudBean.listaGruposDestino}"
+													sourceListWidth="570" 
+													listsHeight="300" 
+													targetListWidth="570" 
+													showButtonsLabel="false" 
+													removeTitle="" 
+													copyAllTitle="" 
+													copyTitle=""
+													id="pick"
+													converter="simpleIndexConverter"
+													orderable="true">
+										<t:selectItems var="o" itemValue="#{o.value}" itemLabel="#{o.label}" value="#{crudBean.listaGrupos}" />
+									</rich:pickList>							
+								</td>
+							</tr>
+						</table>						
+					</rich:tab>				
+				</rich:tabPanel>
+			</f:subview>
+		</h:panelGroup>			
+	</ui:define>
+	
+	<ui:define name="list">
+		<!-- Painel de resultado da busca-->
+		<h:panelGroup id="panelGroupDeListagem" style="height:100%;width: 100%;" rendered="#{crudBean.searching}">
+			<f:subview id="viewListagem">
+				<rich:dataTable id="tblData" value="#{crudBean.searchResult}" binding="#{crudBean.tblData}" var="rst" style="width: 100%;" rowClasses="par,impar">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<rich:column style="text-align: center;width: 5%;">
+								Código
+							</rich:column>
+							<rich:column style="text-align: center;">
+								Login
+							</rich:column>
+							<rich:column style="text-align: center;">
+								Nome
+							</rich:column>
+							<rich:column style="text-align: center;">
+								Setor
+							</rich:column>
+							<rich:column style="text-align: center;">
+								Entidade
+							</rich:column>										
+							<rich:column style="text-align: center;width: 7%;">
+								Situação
+							</rich:column>
+							<rich:column style="text-align: center;width: 10%;">
+								Data do Cadastro
+							</rich:column>
+							<rich:column style="text-align: center;width: 3%;">
+							</rich:column>
+						</rich:columnGroup>
+					</f:facet>
+					
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.isnUsuario}" reRender="formulario"/>
+					</rich:column>
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.dscLogin}"/>
+					</rich:column>
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.dscUsuario}"/>
+					</rich:column>
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.setorBean.dscSetor}"/>
+					</rich:column>					
+					<rich:column style="text-align: left;">
+						<h:outputText value="#{rst.entidadeBean.dscEntidade}"/>
+					</rich:column>	
+					<rich:column style="text-align: left;">
+						<h:outputText value="ATIVO" rendered="#{rst.flgSituacao == 'S'}"/>
+						<h:outputText value="INATIVO" rendered="#{rst.flgSituacao == 'N'}"/>
+						<h:outputText value="BLOQUEADO" rendered="#{rst.flgSituacao == 'B'}"/>
+					</rich:column>
+					<rich:column style="text-align: center;">
+						<h:outputText value="#{rst.datCadastro}" reRender="formulario" />
+					</rich:column>
+					<rich:column style="text-align: center;">
+						<a4j:commandButton image="/imagens/icone_alterar.gif" style="border:white; width: 12px; height: 12px;" title="PERMISSÃO" actionListener="#{crudBean.preparaAlterar}" reRender="formulario, panelTitle"/>
+					</rich:column>
+				</rich:dataTable>
+			</f:subview>
+		</h:panelGroup>	
+	</ui:define>
+	
+	<ui:define name="buttonItens" style="height:100%; width:100%;">
+		<!-- Painel dos botoes de pesquisa -->
+		<h:panelGroup rendered="#{crudBean.searching}">
+			<a4j:commandButton image="imagens/bntPesquisa.png" style="border: 0; width: 154px; height: 29px;" id="pesquisar" value="Pesquisar" actionListener="#{crudBean.pesquisar}" reRender="tblData"/>
+		</h:panelGroup>
+		
+		<!-- Painel dos botoes de edicao -->
+		<h:panelGroup rendered="#{crudBean.updating || crudBean.viewing}">
+			<a4j:commandButton image="imagens/bntAlterar.png" style="border: 0; width: 154px; height: 29px;" id="alterar" value="Alterar" actionListener="#{crudBean.alterarPermissao}" rendered="#{crudBean.editing}" reRender="formulario, panelTitle"/>
+			<h:outputText value=" "/>
+			<a4j:commandButton image="imagens/bntCancelar.png" style="border: 0; width: 154px; height: 29px;" id="cancelar" value="Tela de Pesquisa" actionListener="#{crudBean.cancelar}" reRender="formulario, panelTitle" />
+		</h:panelGroup>
+	</ui:define>
+	
+</ui:composition>	

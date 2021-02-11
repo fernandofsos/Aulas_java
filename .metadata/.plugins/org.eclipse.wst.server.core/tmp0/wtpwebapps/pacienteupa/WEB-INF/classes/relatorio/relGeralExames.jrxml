@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relGeralExames" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="273"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CAMINHO_IMG" class="java.lang.String"/>
+	<parameter name="QUANTIDADE_REGISTRO" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG2" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="numProntuario" class="java.lang.String">
+		<fieldDescription><![CDATA[internacaoPepBean.pacientePepBean.numProntuario]]></fieldDescription>
+	</field>
+	<field name="dscNome" class="java.lang.String">
+		<fieldDescription><![CDATA[internacaoPepBean.pacientePepBean.dscNome]]></fieldDescription>
+	</field>
+	<field name="examePepBean" class="br.org.isgh.pep.beans.ExamePepBean">
+		<fieldDescription><![CDATA[examePepBean]]></fieldDescription>
+	</field>
+	<field name="datSolicitacao" class="java.util.Date">
+		<fieldDescription><![CDATA[datSolicitacao]]></fieldDescription>
+	</field>
+	<field name="datRealizacao" class="java.util.Date">
+		<fieldDescription><![CDATA[datRealizacao]]></fieldDescription>
+	</field>
+	<field name="datLaudo" class="java.util.Date">
+		<fieldDescription><![CDATA[datLaudo]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="83" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="63" width="802" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GERAL EXAMES]]></text>
+			</staticText>
+			<image>
+				<reportElement x="519" y="0" width="89" height="42"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="1" y="0" width="495" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE DE GESTÃO HOSPITALAR - ISGH]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="48" width="802" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Total de Exames: " + $P{QUANTIDADE_REGISTRO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="20" width="495" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDADE DE PRONTO ATENDIMENTO - UPA]]></text>
+			</staticText>
+			<image>
+				<reportElement x="633" y="0" width="96" height="42"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG2}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="17" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="16" width="802" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="172" y="1" width="378" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Exame]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="1" width="38" height="14"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pront.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="650" y="1" width="79" height="15"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Realização]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="563" y="1" width="84" height="15"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitação]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="802" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="38" y="1" width="134" height="15"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome do Paciente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="729" y="1" width="79" height="15"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Baixa/Laudo]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="38" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0" lineStyle="Dotted"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{numProntuario}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="650" y="0" width="79" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0" lineStyle="Dotted"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{datRealizacao}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="172" y="1" width="378" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<bottomPen lineWidth="0.0" lineStyle="Dotted"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{examePepBean}.getDscExame()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="563" y="1" width="84" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0" lineStyle="Dotted"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{datSolicitacao}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="0" y="15" width="802" height="1"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="39" y="0" width="133" height="15"/>
+				<box rightPadding="1">
+					<bottomPen lineWidth="0.0" lineStyle="Dotted"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dscNome}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="729" y="0" width="79" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0" lineStyle="Dotted"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{datLaudo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="17" width="802" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hospital mantido com recursos públicos provenientes de seus impostos e contribuições sociais.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="17" width="802" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="347" y="0" width="35" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="399" y="0" width="100" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="382" y="0" width="17" height="15"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[de]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

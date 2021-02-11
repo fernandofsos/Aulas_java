@@ -1,0 +1,529 @@
+body 
+{
+	font-family: calibri,arial;
+	font-size:12px;
+	color: darckblue;
+	margin: 0 0 0 0;
+	background: url("../IMG/fundoLogin.png");
+	background-position: top;
+	background-repeat:repeat-x;
+}
+
+.alerta{
+	font-family: arial;
+	font-size: 30px;
+	
+}
+
+.campoObrigatorio{
+	color: red;
+	font-size: 8pt;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.imgAlerta{
+	height: 170px;
+}
+
+.telalogin{
+	width: 480px;
+	height: 250px;
+	background-color: skyblue;
+}
+
+.labelForm{
+	font-family: calibri,arial;
+	font-size: 18px;
+}
+
+.cabecalho{
+	font-family: calibri,arial;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.sistema{
+	font-family: calibri,arial;
+	font-size: xx-large;
+	line-height: 100%;
+	color: white;
+}
+
+.cabecalhoLogin{
+	text-align: left;
+	padding: 5px 0 5px 0px;
+	background-color: #0099FF;
+	height: 30px;
+}
+
+table 
+{
+	font-family: calibri,arial;
+	font-size:11px;
+	width:100%;
+	color: darckblue;
+	margin: 0 0 0 0;
+	border-collapse:collapse;
+}
+
+.tdCor
+{
+	font-family: calibri,arial;
+	font-size: 8pt;
+	font-weight: bold;
+	color: #000000;
+	background-color: #F5F5F5;
+	padding-left: 4px;
+	height: 22px;
+    vertical-align: middle;
+}
+
+.msgWarm
+{
+FONT-FAMILY: calibri,arial;
+	font-weight: normal; 
+	color: green; 
+	padding-left: 10px; 
+	padding-top: 1px; 
+	padding-bottom: 1px; 
+	font-size: 14px; 
+	border: 0px solid #CCCC33; 
+	background-color: #FFFFCC; 
+	text-align: left; 
+}
+
+.msgError
+{
+	FONT-FAMILY: calibri,arial;
+	font-weight: normal; 
+	color: red; 
+	padding-left: 10px; 
+	padding-top: 1px; 
+	padding-bottom: 1px; 
+	font-size: 14px; 
+	border: 0px solid #CCCC33; 
+	background-color: #FFFFCC; 
+	text-align: left; 
+}
+
+.msgInfo
+{
+	FONT-FAMILY: calibri,arial;
+	font-weight: normal; 
+	color: blue; 
+	padding-left: 10px; 
+	padding-top: 1px; 
+	padding-bottom: 1px; 
+	font-size: 14px; 
+	border: 0px solid #CCCC33; 
+	background-color: #FFFFCC; 
+	text-align: left; 
+}
+
+.tdBranco
+{
+	background-color:  white;
+	color: #000000;
+	font-weight:normal;
+	font-family: Arial;
+	vertical-align: middle;
+	font-size: 12px;
+}
+
+.tdRed
+{
+	background-color:  white;
+	color: red;
+	font-weight:normal;
+	font-family: Arial;
+	vertical-align: middle;
+}
+
+th.cabecalho
+{
+	BACKGROUND-COLOR: #777777;
+	BORDER-STYLE: solid;
+	BORDER-WIDTH: 1px;
+	padding: 2px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-align: center;
+}
+
+tr.par 
+{
+	BACKGROUND-COLOR: #FFFFFF;
+}
+
+tr.impar
+{
+	BACKGROUND-COLOR: #F5F5F5;
+}
+
+td.coluna
+{
+	BORDER-STYLE: solid;
+	BORDER-WIDTH: 1px;
+	COLOR: #000000;
+	padding: 2px;
+	border-color: white;
+}
+
+.trTituloForm{
+	background-color: #CCDFF9;
+	height: 50px;
+	width: 100%; 
+	FONT-FAMILY: calibri,arial;
+	font-size: 16pt;
+	COLOR: darkblue;
+	display: block;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+#contornoAreaForm{
+	border-color: #BED6F8;
+	border-style: solid;
+	border-width: 1pt;
+}
+
+#contornoAreaForm .interno{
+	padding: 0px 4px 4px 4px; 
+}
+
+.tituloform
+{
+	width: 100%; 
+	FONT-FAMILY: calibri,arial;
+	font-size: 22pt;
+	COLOR: darkblue;
+	display: block;
+	padding-left: 15px;
+	padding-right: 15px;
+	vertical-align: middle;
+	border-bottom: 1px dotted rgb(200,199,199);  
+	border-right: 1px dotted rgb(200,199,199);  
+	
+}
+
+.tabela
+{
+	FONT-FAMILY:  calibri,arial;
+	BORDER-STYLE: solid;
+	BORDER-COLOR: #FFFFFF;
+	BORDER-WIDTH: 0px;
+	BACKGROUND-COLOR: #FFFFFF;
+	COLOR:#FFFFFF;
+	border-collapse:separate;
+}
+
+
+#divRodape 
+{ 
+	width: 100%; 
+	height: 25px; 
+	background-color: #E3E3E3; 
+	border-top: solid 1px #DDD;
+    padding: 6px; 
+    position: fixed; 
+    bottom:0; 
+    text-align: center; 
+    font-size: 0.8em; 
+    color: #444; 
+}
+             
+
+.botao  {
+	font-family: calibri,arial; 
+	font-size: xx-small; 
+	font-weight: bold; 
+	color:white; 
+	background-color: #808080; 
+	background-repeat: repeat;
+	background-attachment: scroll; 
+	cursor: hand;
+	background-position: 0% 50%;
+}
+
+a 
+{
+	font-family: calibri,arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #91260E;
+	text-decoration: none; 
+}
+
+a:hover 
+{
+	color: #C7A666;
+	text-decoration: underline;
+}
+
+.buttonTable 
+{
+	width:100%;
+	margin-top:4px;
+}
+
+input[type=button]{
+    height: 21px;
+    width: 100px;
+    color: #153b00; 
+    border-color: #153b00;
+    font-weight: bold;
+    background-image: url('/pacienteupa/IMG/fundo_botao.jpg');
+}
+
+input[type=submit]{
+    height: 21px;
+    width: 100px;
+    color: #153b00; 
+    border-color: blue;
+    font-weight: bold;
+    background-image: url('/seguranca/IMG/fundo_botao.jpg');
+}
+
+input[type=select] {
+	font-family: calibri,arial;
+	color: #000000;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #8EB9F2;
+	font-size: 8pt;
+	height: 18px;
+	line-height: 18px;
+	vertical-align: middle;
+}
+input[type=text] {
+	font-family: calibri,arial;
+	color: #000000;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #8EB9F2;
+	background-color: white;
+	font-size: 8pt;
+	height: 18px;
+	line-height: 18px;
+	vertical-align: middle;
+	text-transform: uppercase;
+}
+
+input[type=password] {
+	font-family: calibri,arial;
+	color: #000000;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #8EB9F2;
+	background-color: white;
+	font-size: 8pt;
+	height: 18px;
+	line-height: 18px;
+	vertical-align: middle;
+}
+
+input[type=radio] {
+	border-style: none; 
+	border-color: #8EB9F2;
+}
+
+.buttonItem 
+{
+
+    border-top: 1px dotted rgb(200,199,199);  
+ 	padding-top:4px;
+	font-size:11px;
+}
+
+input 
+{
+	font-size: 100%;
+	font-family: calibri,arial;
+	cursor: hand; 
+	BORDER-RIGHT: #8EB9F2; 1px solid; 
+	BORDER-TOP: #8EB9F2 1px solid; 
+	FONT-SIZE: 8pt; 
+	BORDER-LEFT: #8EB9F2 1px solid; 
+	COLOR: #000000; 
+	BORDER-BOTTOM: #8EB9F2 1px solid; 
+	FONT-FAMILY: Arial, Verdana, Helvetica, sans-serif; 
+	HEIGHT: 18px;
+}
+
+span.pagelinks 
+{
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px 2px 4px;
+	width: 98%;
+	display:block;
+	border-top: none;
+	margin-bottom: -5px;
+	text-align: left;
+}
+
+.messageTable 
+{
+	margin-top:10;
+	background-color: #FFFACD;
+    border: 1px solid red;
+    border-radius: 4px 4px 4px 4px;
+    color: red;
+    padding: 5px;
+}
+
+
+div.login {
+	margin-left: 8px;
+	padding: 16px 16px 40px 16px;
+	font-weight: normal;
+	--background-color: rgb(230,245,255);
+	--background-image: url("../IMG/topo_dir.gif");
+	border: 2px solid #e5e5e5;
+	width: 620px;
+	left: 190px;
+	position: relative; 
+}
+
+input.login{
+	font-size: 24px;
+	width: 97%;
+	padding: 3px;
+	margin-top: 2px;
+	margin-right: 6px;
+	margin-bottom: 16px;
+	border: 2px solid #e5e5e5;
+	background: #fbfbfb;
+	height: 30px;
+}
+
+td.login{
+	color: #777;
+	font-size: 18px;
+}
+
+input.botaoLogin{
+    font-family: "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
+	padding: 3px 10px;
+	border: none;
+	font-size: 12px;
+	border-width: 1px;
+	border-style: solid;
+	cursor: pointer;
+	text-decoration: none;
+	margin-top: -3px;
+}
+
+.rich-toolbar{
+    background-image: url('/pacienteupa/IMG/toolbar.jpg');
+}
+
+.rich-ddmenu-label-select{
+   background-color: #ffffff;
+   color: #000000; 
+}
+
+.rich-ddmenu-label-unselect{
+   color: #ffffff; 
+}
+
+.rich-menu-list-bg{
+   background-image: url('/pacienteupa/IMG/menu_esq.gif');
+   background-color: #93ca79;
+   background-position: 0px;
+   background-repeat: repeat-y;
+}
+
+a.branco {
+	font-family: calibri,arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: white;
+	text-decoration: none;
+}
+
+.baseField {
+ font-family: calibri,arial;
+ font-size: 11px;
+ font-weight: normal;
+ color: #444444;
+ background-color: #FFFFFF;
+ border: 1px #000000 solid;
+}
+
+.baseFieldRight {
+ font-family: calibri,arial;
+ font-size: 11px;
+ font-weight: normal;
+ text-align: right;
+ color: #444444;
+ background-color: #FFFFFF;
+ border: 1px #000000 solid;
+}
+
+.radioButton {
+ font-family: calibri,arial;
+ font-size: 14px;
+ font-weight: normal;
+ color: #444444;
+ background-color: #FFFFFF;
+ border: none;
+ font-weight:bold;
+}
+
+.tddivisor
+{
+BACKGROUND-COLOR: #FFFFFF;
+BORDER-STYLE: solid;
+BORDER-BOTTOM: #000000 2px solid;
+BORDER-LEFT: #000000 2px solid;
+BORDER-RIGHT: #FFFFFF 1px solid;
+BORDER-TOP: #FFFFFF 1px solid;
+COLOR: #000000;
+font-weight:bold;
+}
+
+.postitAmarelo
+{
+	background: no-repeat center;
+	background-image: url('pacienteupa/IMG/postit_amarelo.png');
+	color: blue;
+	border: 0px;
+}
+.postitAzul
+{
+	background: no-repeat center;
+	background-image: url('/pacienteupa/IMG/postit_azul.png');
+	color: blue;
+	border: 0px;
+}
+.postitLaranja
+{
+	background: no-repeat center;
+	background-image: url('/pacienteupa/IMG/postit_laranja.png');
+	color: blue;
+	border: 0px;
+}
+.postitVerde
+{
+	background: no-repeat center;
+	background-image: url('/pacienteupa/IMG/postit_verde.png');
+	color: blue;
+	border: 0px;
+}
+.postitVermelho
+{
+	background: no-repeat center;
+	background-image: url('/pacienteupa/IMG/postit_vermelho.png');
+	color: blue;
+	border: 0px;
+}
+table.tabelaSemBorda{  
+    border:none;  
+}
+  
+table.tabelaSemBorda td{  
+    border:none;  
+}

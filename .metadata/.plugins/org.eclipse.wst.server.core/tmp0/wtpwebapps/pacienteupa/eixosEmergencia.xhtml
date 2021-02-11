@@ -1,0 +1,1145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich">
+<head>
+    <script type="text/javascript" charset="UTF-8" src="SCRIPTS/movimentacoesLeitos.js"></script>
+    <script type="text/javascript" src="SCRIPTS/mascara.js"></script>
+    <script type="text/javascript" src="SCRIPTS/maskedinput-1.1.4.js"></script>
+    <script type="text/javascript" src="SCRIPTS/custom.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+</head>
+
+<body>
+<style>
+  <!--
+  .align-center span {
+     text-align: center;
+     margin-left: 10px;
+  }
+  -->
+
+</style>
+<a4j:keepAlive beanName="eixosEmergenciaForm" />
+<a4j:keepAlive beanName="emergenciaForm" />
+<a4j:keepAlive beanName="templateForm" />
+
+<rich:modalPanel id="panelStatus" autosized="true" >  
+ 	<h:panelGrid columns="2"> 
+ 		<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 		<h:outputText value="Carregando..." />
+ 	</h:panelGrid> 
+</rich:modalPanel> 
+
+
+<!--********************* MODAL PANEL TRANSPORTE  ************************-->
+<rich:modalPanel id="panelTransporte" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->
+	<f:facet name="header">
+		<h:outputText value="Transporte de Paciente"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="fechaTransporte" />
+			<rich:componentControl for="panelTransporte" attachTo="fechaTransporte" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Transporte"> 
+		<div class="dadosPaciente geralCampos">
+		    <div class="col400">
+		       	<label style="width: 60px; display: inline-block">Paciente: </label>
+				<h:outputText value="#{eixosEmergenciaForm.leito.paciente}" style="font-weight: bold" />
+			</div>
+			<div class="col200">
+				<label>Prontuário: </label>
+				<h:outputText value="#{eixosEmergenciaForm.leito.prontuario}" style="font-weight: bold"/>
+			</div>
+			<div class="col400">
+				<label style="width: 60px; display: inline-block">Mãe: </label>
+				<h:outputText value="#{eixosEmergenciaForm.leito.nmMae}"/>
+			</div>
+			<div class="col200">
+			    <div style="float: left; margin-right: 10px">
+					<label>Idade: </label>
+					<h:outputText value="#{eixosEmergenciaForm.leito.idade}"/>
+				</div>
+				<div>
+					<label>Sexo: </label>
+					<h:outputText value="#{eixosEmergenciaForm.leito.sexo}" />
+				</div>
+			</div>
+		</div>
+		<div class="geralCampos">
+		    <h:panelGroup styleClass="linhaFormulario" layout="block">	
+				<label class="label largura100">Hospital destino:</label>
+				<h:selectOneMenu id="dropHospitalDestino" value="#{eixosEmergenciaForm.isnReferencia}">
+					<f:selectItems value="#{eixosEmergenciaForm.sliReferencia}" />
+				</h:selectOneMenu>
+			</h:panelGroup>
+            <div class="linhaFormulario">
+				<label class="label largura100">Motivo saída:</label>
+				<h:inputText id="inputMotivo" style="width: 400px" maxlength="80" value="#{eixosEmergenciaForm.motivoInterdicao}"  />
+			</div>	
+			<div class="linhaFormulario">
+				<label class="label largura100">Observação:</label>
+				<h:inputTextarea id="obsTransf" value="#{eixosEmergenciaForm.strObs}" styleClass="campoObservacao" 
+				                 onkeyup="limitarTamanhoCampo(this,200)"/>
+			</div>	
+			<hr></hr>
+			<div class="linhaFormulario">
+			    <div style="float: left; margin-right: 40px">		
+					<label class="label largura110" >Usuário/Conselho:</label>
+					<h:inputText value="#{eixosEmergenciaForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 80px" />
+				</div>
+				<div style="float: left;">		
+					<label class="label largura110" >Senha/Assinatura:</label>
+					<h:inputSecret value="#{eixosEmergenciaForm.senhaAssinatura}" maxlength="20" style="width: 80px"/>
+				</div>
+			</div>				
+		</div>
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkTransp" value="OK" 
+							   action="#{eixosEmergenciaForm.transportePaciente}"
+							   onclick="this.disabled=true"
+							   oncomplete="this.disabled=false; avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelTransporte', false)"
+							   reRender="dtEnfermarias,dtTransporte,totaisClinica,dtExtras"
+							   style="margin-right: 10px" 
+							   styleClass="botaoModal">				
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnCancelTransp" value="Cancelar" styleClass="botaoModal">
+				<rich:componentControl for="panelTransporte" attachTo="btnCancelTransp" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		</div>
+		<!-- FIM CAMPOS DE BUSCA -->
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+
+
+<!-- *****  MODAL PANEL ALTA PACIENTE -->
+<rich:modalPanel id="panelAlta" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->	
+	<f:facet name="header">
+		<h:outputText value="ALTAS/OBITOS"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="hidelink2" />
+			<rich:componentControl for="panelAlta" attachTo="hidelink2" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Alta">	      
+		<div class="dadosPaciente geralCampos">
+		    <div class="col400">
+			       	<label style="width: 60px; display: inline-block">Paciente: </label>
+					<h:outputText value="#{eixosEmergenciaForm.leito.paciente}" style="font-weight: bold" />
+				</div>
+				<div class="col150">
+					<label>Nº atendimento: </label>
+					<h:outputText value="#{eixosEmergenciaForm.leito.prontuario}" style="font-weight: bold" />
+				</div>
+				<div class="col400">
+					<label>Data entrada: </label>
+					<h:outputText value="#{eixosEmergenciaForm.pacientePanel.datCadastro}" style="font-weight: bold">
+				       <f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>
+					<h:outputText value="#{eixosEmergenciaForm.pacientePanel.horChegada}" style="font-weight: bold"/>					
+					<label>Risco: </label>
+					<h:outputText value="#{eixosEmergenciaForm.pacientePanel.dscRisco}" style="font-weight: bold"/>
+				</div>
+				<div class="col160">
+				    <div style="float: left; margin-right: 10px">
+						<label>Idade: </label>
+						<h:outputText value="#{eixosEmergenciaForm.pacientePanel.idade}" style="font-weight: bold"/>
+					</div>
+					<div>
+						<label>Sexo: </label>
+						<h:outputText value="#{eixosEmergenciaForm.leito.sexo}" style="font-weight: bold"/>
+					</div>
+				</div>
+		</div>
+		<div class="dadosAlta geralCampos">
+		    <h:panelGroup styleClass="selecaoTipo" layout="block">
+		    	<h:selectOneRadio id="selectAltaObito" value="#{eixosEmergenciaForm.optAltaObito}" onclick="this.blur()">
+		    	     <f:selectItem id="tipoAlta" itemLabel="ALTA" itemValue="1"  />
+		    	     <f:selectItem id="tipoObito" itemLabel="ÓBITO" itemValue="2"/>
+		    	     <a4j:support event="onchange" action="#{eixosEmergenciaForm.limparModalAltaObito}" reRender="this,Alta:panelAltaGroup,Alta:panTabAlta,Alta:panTabObito" />
+		    	</h:selectOneRadio>		    	
+		    </h:panelGroup>
+		    <h:panelGroup id="panelAltaGroup" layout="block">
+			    <h:panelGroup id="panTabAlta" rendered="#{eixosEmergenciaForm.optAltaObito eq 1}">
+			         <hr></hr>
+				    <h:panelGroup styleClass="linhaFormulario" layout="block">		    
+						<label class="label largura100">Motivo da alta:</label>
+						<h:selectOneMenu id="motivoAlta" 
+										 value="#{eixosEmergenciaForm.isnMotivoAlta}"
+										 disabled = "#{eixosEmergenciaForm.optAltaObito==2}">
+							<f:selectItems value="#{eixosEmergenciaForm.sliMotivosAlta}" />
+							<a4j:support ajaxSingle="true" event="onchange" reRender="dropHospitalDestino" />
+						</h:selectOneMenu>			
+					</h:panelGroup>
+					
+					<h:panelGroup styleClass="linhaFormulario" layout="block">	
+						<label class="label largura100">Hospital destino:</label>
+						<h:selectOneMenu id="dropHospitalDestino" value="#{eixosEmergenciaForm.isnReferencia}" 
+										 disabled="#{! eixosEmergenciaForm.altaOutroHospital}">
+							<f:selectItems value="#{eixosEmergenciaForm.sliReferencia}" />
+						</h:selectOneMenu>
+					</h:panelGroup>			
+			    </h:panelGroup>
+			    <h:panelGroup id="panTabObito" rendered="#{eixosEmergenciaForm.optAltaObito eq 2}">
+			        <hr></hr>
+					<h:panelGroup styleClass="linhaFormulario" layout="block">	
+		        		<h:outputLabel value="INFORME A DATA DO ÓBITO" />
+		            </h:panelGroup>		
+				    <h:panelGroup styleClass="linhaFormulario" layout="block">	
+					    <div style="float: left; margin-right: 20px">			    
+							<label class="alturaLabel" style="text-align: right;">Data:</label>
+				    		<rich:calendar id="datObito" 
+								 value="#{eixosEmergenciaForm.dataObito}" 
+								 inputStyle="width:129px;font-size:10px!important" 
+								 datePattern="dd/MM/yyyy"
+								 ondateselected="checkBirthDate(this,event.rich.date);"
+								 oninputchange="checkBirthDate(this,event.rich.date);">
+				    	    </rich:calendar>
+				    	</div>    
+			    		<div style="float: left; margin-right: 20px">		    
+				    	    <label class="alturaLabel" style="text-align: right;">Hora:</label>
+				    	    <h:inputText id="hrObito" value="#{eixosEmergenciaForm.hrObito}" onkeyup="validarHora(document.getElementById('Alta:hrObito'))"></h:inputText>
+				    	    <rich:jQuery selector="#hrObito" query="mask('99:99')" timing="immediate" />
+			    	    </div>		
+					</h:panelGroup>
+				</h:panelGroup>
+		    </h:panelGroup>
+		  			
+			<hr></hr>
+			<div class="linhaFormulario" >
+			    <div style="float: left; margin-right: 40px">		
+					<label class="label largura110" >Usuário/Conselho:</label>
+					<h:inputText value="#{eixosEmergenciaForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 90px"/>
+				</div>
+				<div style="float: left;">		
+					<label class="label largura110" >Senha/Assinatura:</label>
+					<h:inputSecret value="#{eixosEmergenciaForm.senhaAssinatura}" maxlength="20"  styleClass="inputText" style="width: 90px"/>
+				</div>
+			</div>		
+		</div>
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkAlta" value="OK" 
+						   action="#{eixosEmergenciaForm.altaPaciente}"
+						   oncomplete="this.disabled=false; avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelAlta', false)" 
+						   reRender="dtEnfermarias,totaisEixo,tabelaPacientes"
+						   style="margin-right: 10px" 
+						   styleClass="botaoModal"
+						   onclick="this.disabled=true" >				
+			</a4j:commandButton>			
+			<a4j:commandButton id="btnCancelAlta"  value="Cancelar"  styleClass="botaoModal">
+				<rich:componentControl for="panelAlta" attachTo="btnCancelAlta" operation="hide" event="onclick" />				
+			</a4j:commandButton>
+		</div>
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+<!-- FINAL DO MODAL PANEL ALTA PACIENTE -->   
+
+<rich:modalPanel id="panelConfirmacao" autosized="true" width="500" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->	
+	<f:facet name="header">
+		<h:outputText value="CONFIRMAR A OPERAÇÃO"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="icoLibera" />
+			<rich:componentControl for="panelConfirmacao" attachTo="icoLibera" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="liberacao">
+	    <h:panelGroup layout="block" styleClass="linhaFormulario textoConfirmacao" rendered="#{eixosEmergenciaForm.isnAcoes==1}" >	             
+	          <label>CONFIRMA A ALOCAÇÃO DO PACIENTE NO LEITO?</label><br/>
+	          <label>PACIENTE: <b>#{eixosEmergenciaForm.paciente.dscNome}</b></label><br/>	  
+          
+		   	<h:panelGroup rendered="#{eixosEmergenciaForm.existeSepseView()}" style="float: left; align:left; text-align:left; width:100%;">
+			<fieldset style="font-size: 11px;">
+				<legend><b>Sepse</b></legend>
+				<h:outputLabel value="ATB" style="margin-right:10px;"/> <h:outputText style="font-size:11px;" value="Hora: "/> 
+ 				<h:inputText maxlength="5"
+				    onkeypress="javascript:return(formataHora(this,event))"
+				    onblur="tamanhoHora(this);"
+				    value="#{eixosEmergenciaForm.protocoloSepse.horaAtb}"
+				    style="width:50px" /> <h:outputText style="font-size:11px; color:red;" value=" *"/> 
+				<br/>
+				<h:outputText style="font-size:11px;" value="Volume: "/> <h:outputText style="font-size:11px; color:red;" value=" *"/>
+		    	<h:selectOneRadio id="selSepse" layout="pageDirection" value="#{eixosEmergenciaForm.protocoloSepse.codVolumeReposicao}">
+			        <f:selectItem itemLabel="Volume não prescrito" itemValue="1" />
+			        <f:selectItem itemLabel="Volume administrado menor/maior que prescrição médica" itemValue="2" />
+			        <f:selectItem itemLabel="Reposição volêmica conforme prescrição médica" itemValue="3" />
+			        <a4j:support event="onclick" reRender="liberacao"/>
+			    </h:selectOneRadio>
+				<a4j:outputPanel rendered="#{eixosEmergenciaForm.protocoloSepse.codVolumeReposicao == 2}">
+				    <fieldset style="font-size: 11px; width:400px;">
+						<legend><b>Reposição Volêmica: </b></legend>
+			   	    	<h:outputText style="font-size:11px;" value="Vol: "/> 
+			    		<h:inputText maxlength="7" value="#{eixosEmergenciaForm.protocoloSepse.volumeReposicao}"
+			    			onkeypress="return soNumero(event, this)" style="width:45px; text-transform: uppercase; margin-left:5px; margin-right:10px"/>			
+					    <h:outputText style="font-size:11px; color:red;" value=" *"/>
+						<h:outputText style="font-size:11px; margin-right:10px;" value=" ml"/>
+						<h:outputText style="font-size:11px;" value="Hora: "/> 
+		 				<h:inputText maxlength="5"
+						    onkeypress="javascript:return(formataHora(this,event))"
+						    onblur="tamanhoHora(this);"
+						    value="#{eixosEmergenciaForm.protocoloSepse.horaReposicao}"
+						    style="width:50px" /> <h:outputText style="font-size:11px; color:red;" value=" *"/>
+						<br style="clear:both;" />
+						<h:panelGrid columns="2">
+							<h:outputLabel value="Justificativa para não reposição volêmica completa" style="font-size:11px; font-weight: bold;"/> 
+							<h:outputText style="font-size:11px; color:red;" value=" *"/>
+						</h:panelGrid>
+						<h:selectOneMenu value="#{eixosEmergenciaForm.protocoloSepse.isnSintomaSepseEnf}" 
+			                 style="margin-right:10px; width:200px;">
+								<f:selectItem itemValue="0" itemLabel="Selecione"/>
+								<f:selectItem itemValue="1" itemLabel="Hipervolemia"/>
+								<f:selectItem itemValue="2" itemLabel="Cogestão Pulmomar"/>
+								<f:selectItem itemValue="3" itemLabel="Outros"/>
+							<a4j:support event="onchange" reRender="liberacao"/>
+						</h:selectOneMenu>
+						<h:panelGrid columns="2">
+							<h:outputLabel value="Justificativa" style="font-size:11px; font-weight: bold;"/> 
+							<h:outputText style="font-size:11px; color:red;" value=" *" rendered="#{eixosEmergenciaForm.protocoloSepse.isnSintomaSepseEnf == 3}"/>
+						</h:panelGrid>
+						<h:inputTextarea
+							value="#{eixosEmergenciaForm.justificativaRepoVolemica.dscJustificativaReposicaoVolemica}"
+							id="inputOutros" styleClass="campoTexto"
+							style="width:400px; height:60px;"
+							onkeyup="verificaTamanho('liberacao',this, 200, 'lblOutros');"
+							onblur="verificaTamanho('liberacao',this, 200, 'lblOutros');upper(this);" />
+						<br />
+						<label id="lblOutros" class="campoVazio2 campoTextoAtendMedic">(200
+							caracteres restantes)</label>
+					</fieldset>
+				</a4j:outputPanel>
+				<br/>
+				<h:outputText style="font-size:11px; margin-right:5px;" value="Coleta de Exames: "/> 
+				<h:outputText style="font-size:11px;" value="Hora: "/>
+ 				<h:inputText maxlength="5"
+				    onkeypress="javascript:return(formataHora(this,event))"
+				    onblur="tamanhoHora(this);"
+				    value="#{eixosEmergenciaForm.protocoloSepse.horaColetaExame}"
+				    style="width:50px" /> <h:outputText style="font-size:11px; color:red;" value=" *"/> 
+			 </fieldset>
+				</h:panelGroup> 
+		<div style="clear:both"/>		          
+	    </h:panelGroup>	 
+	    <h:panelGroup layout="block" styleClass="linhaFormulario textoConfirmacao" rendered="#{eixosEmergenciaForm.isnAcoes==7}" >
+	    	<label>CONFIRMAR A MUDANÇA DE LEITO?</label><br/>
+	        <label>PACIENTE: #{eixosEmergenciaForm.leito.paciente }</label><br/>
+	        <label>DE: #{eixosEmergenciaForm.leito.dscLeito }</label>
+	        <span style="width: 20px">&bnsp;</span>
+	        <label>PARA: #{eixosEmergenciaForm.leitoDestino.dscLeito }</label><br/>
+	    </h:panelGroup>	 
+	    <h:panelGroup layout="block" styleClass="linhaFormulario textoConfirmacao" rendered="#{eixosEmergenciaForm.isnAcoes==9}" >
+	    	<label>PERMUTAR OS LEITOS?</label><br/>
+	        <label>PACIENTE: #{eixosEmergenciaForm.leito.paciente} LEITO: #{eixosEmergenciaForm.leito.dscLeito }</label><br/>	        
+	        <label>PACIENTE: #{eixosEmergenciaForm.leitoDestino.paciente}</label><br/>
+	    </h:panelGroup>	 
+	    <h:panelGroup layout="block" styleClass="linhaFormulario  textoConfirmacao"  rendered="#{eixosEmergenciaForm.isnAcoes==4}">
+	        <label>CONFIRMA A TRANSFERÊNCIA?</label><br/>
+	        <label>#{eixosEmergenciaForm.leito.paciente }</label><br/>
+	    </h:panelGroup>	 
+	    <h:panelGroup layout="block" styleClass="linhaFormulario  textoConfirmacao" rendered="#{eixosEmergenciaForm.isnAcoes==3}">
+	    	<label>CONFIRMA A INTERDIÇÃO DO LEITO?</label><br/>
+	        <label>LEITO: #{eixosEmergenciaForm.leito.dscLeito }</label><br/>
+	    </h:panelGroup>
+	    <h:panelGroup layout="block" styleClass="linhaFormulario textoConfirmacao" rendered="#{eixosEmergenciaForm.isnAcoes==2}">
+	    	<label>CANCELAR A TRANSFERÊNCIA?</label><br/>
+	        <label>#{eixosEmergenciaForm.leito.paciente }</label><br/>
+	    </h:panelGroup>	 
+	    <h:panelGroup layout="block" styleClass="linhaFormulario textoConfirmacao" rendered="#{eixosEmergenciaForm.isnAcoes==5}">
+	          <label>INTERDIÇÃO DO LEITO</label><br />
+	          <label>Motivo da Interdição <span style="color: red">*</span>:</label><br />
+		      <h:inputTextarea id="motivoInterdicao" value="#{eixosEmergenciaForm.motivoInterdicao}" style="width: 550px" />
+	    </h:panelGroup>	
+	    <h:panelGroup layout="block" styleClass="linhaFormulario textoConfirmacao" rendered="#{eixosEmergenciaForm.isnAcoes==6}">
+	          <label>DESEJA DESFAZER A INTERDIÇÃO DO LEITO?</label><br/>
+	          <label>MOTIVO: #{eixosEmergenciaForm.leito.paciente }</label><br/>
+	    </h:panelGroup>
+	    <h:panelGroup layout="block" styleClass="linhaFormulario textoConfirmacao" rendered="#{eixosEmergenciaForm.isnAcoes==10}">
+	          <label>CONFIRMA O RETORNO DO PACIENTE?</label><br/>
+	          <label>MOTIVO: #{eixosEmergenciaForm.leito.paciente }</label><br/>
+	    </h:panelGroup>		
+	    
+		<hr></hr>
+		<div class="linhaFormulario textoConfirmacao">
+		    <div style="float: left; margin-right: 25px">		
+				<label class="label largura110" >Usuário/Conselho:</label>
+				<h:inputText value="#{eixosEmergenciaForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 90px"/>
+			</div>
+			<div style="float: left;">		
+				<label class="label largura110" >Senha/Assinatura:</label>
+				<h:inputSecret value="#{eixosEmergenciaForm.senhaAssinatura}" maxlength="20" styleClass="inputText" style="width: 90px"/>
+			</div>
+		</div>	
+		<br/>
+		<br/>		
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkLibera" value="OK" 
+							   action="#{eixosEmergenciaForm.alocarLeito}"
+							   oncomplete="this.disabled=false; avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelConfirmacao', false)" 
+							   reRender="dtEnfermarias,totaisEixo,dtTransferencia,tabelaPacientes"
+							   style="margin-right: 10px" 
+							   styleClass="botaoModal" 
+							   onclick="this.disabled=true"
+							   rendered="#{eixosEmergenciaForm.isnAcoes==1}">				
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnOkAcao" value="OK" 
+							   action="#{eixosEmergenciaForm.executarAcao}"
+							   oncomplete="this.disabled=false; avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelConfirmacao', false)" 
+							   reRender="dtEnfermarias,totaisEixo,dtTransferencia,tabelaPacientes,dtTransporte"
+							   style="margin-right: 10px" 
+							   styleClass="botaoModal" 
+							   onclick="this.disabled=true"
+							   rendered="#{eixosEmergenciaForm.isnAcoes==6 || eixosEmergenciaForm.isnAcoes==2 || eixosEmergenciaForm.isnAcoes==5 || eixosEmergenciaForm.isnAcoes==10}">				
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnPermutaLeito" value="Mudar" 
+			                   action="#{eixosEmergenciaForm.mudarLeito}"	                   
+			                   style="margin-right: 10px"
+			                   reRender="dtEnfermarias,totaisEixo,dtTransferencia"
+			                   styleClass="botaoModal"
+			                   onclick="this.disabled=true"
+			                   rendered="#{eixosEmergenciaForm.isnAcoes==7}"
+			                   oncomplete="this.disabled=false; avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelConfirmacao', false)">	                   				
+			</a4j:commandButton>	
+			
+			<a4j:commandButton id="btnConfirmaMudancaLeito" value="Permutar" 
+			                   action="#{eixosEmergenciaForm.permutarLeito}"
+			                   style="margin-right: 10px"
+			                   styleClass="botaoModal" 
+			                   reRender="dtEnfermarias,dtTransferencia,totaisClinica,dtExtras"
+			                   onclick="this.disabled=true"
+			                   rendered="#{eixosEmergenciaForm.isnAcoes==9}"
+			                   oncomplete="this.disabled=false; avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelConfirmacao', false)">				
+			</a4j:commandButton>
+						
+			<a4j:commandButton id="btnConfirmaTransferencia" value="Transferencia" 
+			                   action="#{eixosEmergenciaForm.confirmarTransferencia}"
+			                   style="margin-right: 10px"
+			                   styleClass="botaoModal"
+			                   reRender="dtEnfermarias,dtTransferencia,totaisEixo"
+			                   onclick="this.disabled=true"
+			                   rendered="#{eixosEmergenciaForm.isnAcoes==4}"
+			                   oncomplete="this.disabled=false; avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelConfirmacao', false)">				
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnCancelLibera"  value="Cancelar"  styleClass="botaoModal">
+				<rich:componentControl for="panelConfirmacao" attachTo="btnCancelLibera" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		</div>
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+
+<!--********************* MODAL PANEL TRANSFERENCIA  ************************-->
+<rich:modalPanel id="panelTransferencia" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->
+	<f:facet name="header">
+		<h:outputText value="TRANSFERÊNCIA"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="hidelink" />
+			<rich:componentControl for="panelTransferencia" attachTo="hidelink" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Transferencia">
+		<div class="dadosPaciente geralCampos">
+		    <div class="col400">
+		       	<label style="width: 60px; display: inline-block">Paciente: </label>
+				<h:outputText value="#{eixosEmergenciaForm.leito.paciente}" style="font-weight: bold" />
+			</div>
+			<div class="col150">
+				<label>N° Atendimento: </label>
+				<h:outputText value="#{eixosEmergenciaForm.leito.prontuario}" style="font-weight: bold"/>
+			</div>
+			<div class="col400">
+				<label style="width: 60px; display: inline-block">Mãe: </label>
+				<h:outputText value="#{eixosEmergenciaForm.leito.nmMae}" style="font-weight: bold"/>
+			</div>
+			<div class="col150">
+			    <div style="float: left; margin-right: 10px">
+					<label>Idade: </label>
+					<h:outputText value="#{eixosEmergenciaForm.leito.idade}"/>
+				</div>
+				<div>
+					<label>Sexo: </label>
+					<h:outputText value="#{eixosEmergenciaForm.leito.sexo}" />
+				</div>
+			</div>
+		</div>
+		<div class="geralCampos">
+		    <div class="linhaFormulario">		    
+				<label class="label largura100">Eixo de Destino:</label>
+				<h:selectOneMenu id="destinoTransf" value="#{eixosEmergenciaForm.isnEixoTransf}" 
+			                 style="width: 150px; font-size:1.1em; margin-bottom: 8px">
+					<f:selectItems value="#{eixosEmergenciaForm.lstEixosDestino}" />
+				</h:selectOneMenu>			
+            </div>
+            <div class="linhaFormulario">
+				<label class="label largura100">Observações:</label>
+				<h:inputTextarea id="obsTransf" value="#{eixosEmergenciaForm.strObs}" styleClass="campoObservacao" 
+				                 onkeyup="limitarTamanhoCampo(this,200)"/>
+			</div>	
+			<hr></hr>
+			<div class="linhaFormulario">
+			    <div style="float: left; margin-right: 20px">		
+					<label>Usuário/Conselho:</label>
+					<h:inputText value="#{eixosEmergenciaForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 90px"/>
+				</div>
+				<div style="float: left;">		
+					<label>Senha/Assinatura:</label>
+					<h:inputSecret value="#{eixosEmergenciaForm.senhaAssinatura}" maxlength="20" styleClass="inputText" style="width: 90px"/>
+				</div>
+			</div>				
+		</div>
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkTransf"
+							   value="OK" 
+							   action="#{eixosEmergenciaForm.transferirPaciente}"
+							   onclick="this.disabled=true"
+							   oncomplete="this.disabled=false; avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelTransferencia', false)"
+							   reRender="dtEnfermarias,dtTransferencia,totaisEixo"
+							   style="margin-right: 10px" 
+							   styleClass="botaoModal">				
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnCancelTransf" value="Cancelar" styleClass="botaoModal">
+				<rich:componentControl for="panelTransferencia" attachTo="btnCancelTransf" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		</div>
+		<!-- FIM CAMPOS DE BUSCA -->
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+
+<rich:modalPanel id="panelInternacao" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+	<!-- BARRA DE TITULO MODAL-->	
+	<f:facet name="header">
+		<h:outputText value="INTERNAÇÃO"></h:outputText>		
+	</f:facet>
+
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="closeInternacao" />
+			<rich:componentControl for="panelInternacao" attachTo="closeInternacao" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	
+	<!-- FIM DA BARRA DE TITULO MODAL-->
+
+	<!-- CAMPOS DE BUSCA -->
+	<h:form id="Internacao">	      
+		<div class="dadosPaciente geralCampos">
+		    <div class="col400">
+			       	<label style="width: 60px; display: inline-block">Paciente: </label>
+					<h:outputText value="#{eixosEmergenciaForm.leito.paciente}" style="font-weight: bold" />
+				</div>
+				<div class="col150">
+					<label>Nº atendimento: </label>
+					<h:outputText value="#{eixosEmergenciaForm.leito.prontuario}" style="font-weight: bold" />
+				</div>
+				<div class="col410">
+					<label>Data entrada: </label>
+					<h:outputText value="#{eixosEmergenciaForm.paciente.datCadastro}" style="font-weight: bold">
+				       <f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>
+					<h:outputText value=" #{eixosEmergenciaForm.paciente.horChegada}" style="font-weight: bold"/>
+				</div>
+				<div class="col150">
+				    <div style="float: left; margin-right: 10px">
+						<label>Idade: </label>
+						<h:outputText value="#{eixosEmergenciaForm.leito.idade}" style="font-weight: bold"/>
+					</div>
+					<div>
+						<label>Sexo: </label>
+						<h:outputText value="#{eixosEmergenciaForm.leito.sexo}" style="font-weight: bold"/>
+					</div>
+				</div>
+		</div>
+		<div class="geralCampos">		    		    
+		    <h:panelGroup styleClass="linhaFormulario" layout="block">		    
+				<label class="label largura100">Observações:</label>
+				<h:inputTextarea id="obsInterna" value="#{eixosEmergenciaForm.strObs}" styleClass="campoObservacao" 
+				                 onkeyup="limitarTamanhoCampo(this,200)"/>				
+			</h:panelGroup>
+			
+			<hr></hr>
+			<div class="linhaFormulario" >
+			    <div style="float: left; margin-right: 40px">		
+					<label>Usuário/Conselho:</label>
+					<h:inputText value="#{eixosEmergenciaForm.usuarioCoren}" maxlength="20" styleClass="inputText" style="width: 90px"/>
+				</div>
+				<div style="float: left;">		
+					<label>Senha/Assinatura:</label>
+					<h:inputSecret value="#{eixosEmergenciaForm.senhaAssinatura}" maxlength="20" styleClass="inputText" style="width: 90px"/>
+				</div>
+			</div>		
+		</div>
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkAlta" value="OK" 
+							   action="#{eixosEmergenciaForm.internarPaciente}"
+							   oncomplete="this.disabled=false; avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelInternacao', false)" 
+							   reRender="dtEnfermarias,totaisEixo"
+							   style="margin-right: 10px" 
+							   styleClass="botaoModal"
+							   onclick="this.disabled=true" >				
+			</a4j:commandButton>			
+			<a4j:commandButton id="btnCancelAlta"  value="Cancelar"  styleClass="botaoModal">
+				<rich:componentControl for="panelInternacao" attachTo="btnCancelAlta" operation="hide" event="onclick" />
+			</a4j:commandButton>
+		</div>
+	</h:form>
+	<!-- FIM CONTEUDO MODAL -->
+</rich:modalPanel>
+   
+<h:form id="formEixos" style="margin:0; padding:0;">
+<a4j:status id="statusPanel"  
+           onstart="Richfaces.showModalPanel('panelStatus');" 
+           onstop="#{rich:component('panelStatus')}.hide()" >
+</a4j:status> 
+<a4j:poll enabled="true" interval="100000" action="#{eixosEmergenciaForm.atualizarLista}" 
+          reRender="dtEnfermarias,dtTransferencia,tabelaPacientes,totaisEixo" >
+</a4j:poll>
+<link rel="stylesheet" type="text/css" href="CSS/layout.css" />
+
+<div style="margin:0 auto 0 auto; width:1124px;">   
+	<!--INICIO SELECAO DE CLINICA -->
+	<rich:dragIndicator id="indicator" />
+	
+	<div class="cabecalhoEixo">
+	    <div style="float: left; height:48px; padding: 0; margin:5px 0 0 0;">
+	    	<h:graphicImage value="images/paciente/logo_paciente.png" style="height:38px; vertical-align: middle; border:0"></h:graphicImage>
+	    	<h:graphicImage value="images/paciente/#{templateForm.logoUpa}" style="height:38px; vertical-align: middle;" ></h:graphicImage>	        
+	    </div>
+	    <div class="cabecalhoEixoTopo">
+	    	<div class="topoCol1" style="padding-left: 15px;padding-top: 15px;">
+	    		<h4>LEITOS DA EMERGÊNCIA</h4>
+	    	</div>
+	    	<div class="topoCol1">
+	        	<label>| Usuário: </label>
+	        	<label>#{sessionScope.loginUsuario.dscLogin}</label>
+	    	</div>
+	    	<div class="topoCol2">
+	        	<!--<a4j:commandButton id="btnPEP" value="PEP"
+	        	                 onclick="telaPEP(#{eixosEmergenciaForm.isnEixoSelecionado},#{FuncUtil.loginUsuario.isnUsuario})"   
+	        	                 styleClass="topoBotao">
+	        	</a4j:commandButton>-->
+	        	<a4j:commandButton id="btnPrincipal" value="PÁGINA INICIAL" style="margin-top:-7px;"
+	        	                 onclick="window.location='#{request.contextPath}/paginaPrincipal.jsf'"   
+	        	                 styleClass="botaoModal100">
+	        	</a4j:commandButton>
+	    	</div>
+	    	<div id="divSepse" style="float:left;" >
+	            <a style="display:none" id="linkSepse" href="http://www.isgh.org.br/intranet/index.php?option=com_content&amp;view=article&amp;id=1823&amp;Itemid=726" target="_blank"></a>
+				<h:commandLink onclick="document.getElementById('linkSepse').click();">
+			    		<h:graphicImage value="IMG/Sepse.png" width="70" height="30" style="margin: 6px 10px 0 0; border:0;"  ></h:graphicImage>		
+				</h:commandLink>
+        	</div>
+	    </div>
+	</div>
+	<div class="colEixoLeitos" >
+	<div class="selecaoEixo">    
+	    <h:panelGroup layout="block">	    	
+			<table>
+			<tr>
+				<td nowrap="nowrap">
+					<label>Selecione o Eixo da Emergência: </label>
+				</td>
+				<td>
+					<h:selectOneMenu id="selEixo" 
+							value="#{eixosEmergenciaForm.isnEixoSelecionado}" 
+							style="width: 200px; font-size: 12px">
+						<f:selectItems value="#{eixosEmergenciaForm.sliEixos}" />
+						<a4j:support id="sptEixo"
+								action="#{eixosEmergenciaForm.atualizarLista()}" 
+								event="onchange"
+								status="statusPanel"
+								reRender="dtEnfermarias,dtTransferencia,totaisEixo,aviso,tabelaPacientes, dtTransporte" 
+								ajaxSingle="true" />
+					</h:selectOneMenu>
+				</td>
+				<td>				
+			       	<a4j:commandButton id="btnRefresh" 
+			       	                 image="IMG/atualizar.gif" 	
+			       	                 alt="Atualizar os leitos"       	                 
+				       	             action="#{eixosEmergenciaForm.atualizarLista}"
+				       	             reRender="dtEnfermarias,dtTransferencia,totaisEixo,aviso,tabelaPacientes"		       	             
+		    	                 	 style="margin-left: 10px">
+			       	</a4j:commandButton>
+				</td>
+			</tr>
+			</table>
+		</h:panelGroup>
+		<h:panelGroup id="totaisEixo" styleClass="containerLegendas" layout="block">
+			<div>
+				<h:graphicImage url="IMG/thumbDesocupado.gif" style="vertical-align: middle"/>
+				<label>Livres (<b>#{eixosEmergenciaForm.totaisEixo[0]}</b>)</label>				
+			</div>
+			<div>
+				<h:graphicImage url="IMG/thumbOcupado.gif" style="vertical-align: middle" />
+				<label>Ocupados (<b>#{(eixosEmergenciaForm.totaisEixo[1]-eixosEmergenciaForm.totalLimiteTempo)}</b>)</label>				
+			</div>	
+			<div>
+				<h:graphicImage url="IMG/thumbOcupadoBlink2.gif" style="vertical-align: top"/>
+				<label>Ocupados <b>#{eixosEmergenciaForm.tempoEnfermaria}</b> <br/>NO EIXO (<b>#{eixosEmergenciaForm.totalLimiteTempo}</b>)</label>				
+			</div>
+			<div>
+				<h:graphicImage url="IMG/thumbPacienteAlta.gif" style="vertical-align: middle" />
+				<label>Pacientes em Alta (<b>#{eixosEmergenciaForm.totaisEixo[2]}</b>)</label>				
+			</div>
+			<div>
+				<h:graphicImage url="IMG/thumbTransferido.gif" style="vertical-align: middle" />
+				<label>Transferência (<b>#{eixosEmergenciaForm.totaisEixo[3]}</b>)</label>				
+			</div>
+			<div style="text-align:center; display:none;">
+			    <label>HORAS PERMANENCIA EIXO <b>#{eixosEmergenciaForm.tempoEnfermaria}</b> NO EIXO:</label>
+			    <label><b>#{eixosEmergenciaForm.totalLimiteTempo}</b></label>
+			</div>					
+		</h:panelGroup>
+		<br style="clear:both;"/>
+	</div>	
+	
+	<!--INICIO DATAGRID ENFERMARIA -->	
+	<h:panelGroup id="dtEnfermarias" styleClass="areaEixo" layout="block">
+		<a4j:repeat value="#{eixosEmergenciaForm.clinica.enfermaria}" var="enfermaria">
+	    	<h:panelGroup layout="block">	      		    
+	          	<h4 class="cabAreaEixo">#{enfermaria.dscEnfermaria}</h4>	          
+	          	<div class="corpoAreaEixo">	          	
+	          			<a4j:repeat value="#{enfermaria.leito}" var="leito">	              
+	                		<a4j:outputPanel layout="block" styleClass="leitoEixo">	                    
+	          					<rich:dragSupport id="imgLeito" dragIndicator="indicator" 
+	          					              dragType="#{leito.status}"
+	          				                  dragValue="#{leito}">         
+									<rich:dndParam name="label" value="#{leito.paciente}" />
+									<h:graphicImage url="#{leito.url}" width="40" rendered="#{leito.status=='O'}" style="cursor:pointer">
+										<a4j:support event="ondblclick" action="#{emergenciaForm.irParaAtendimento}" oncomplete="validaAtendimentoMedico('#{emergenciaForm.mensagem}')" >
+											<f:setPropertyActionListener target="#{emergenciaForm.isnInternacao}" value="#{leito.isnInternacao}" />
+											<f:setPropertyActionListener target="#{emergenciaForm.origemTelaParaAtendimento}" value="1" />
+											<f:setPropertyActionListener value="atendimentoAba" target="#{templateForm.tabAmbulatorio}"/>
+										</a4j:support>
+									</h:graphicImage>
+									<h:graphicImage url="#{leito.url}" width="40" rendered="#{leito.status!='O'}"/> 
+								</rich:dragSupport>
+								<br/>
+	                			<h:outputLabel value="#{leito.dscLeito}" ></h:outputLabel>
+								<rich:toolTip direction="top-right" layout="block" styleClass="tooltip" 
+				  						rendered="#{leito.status!='D'}">
+									<f:facet name="defaultContent">
+										<strong>Aguarde...</strong>
+									</f:facet>
+									<h:panelGroup layout="block" rendered="#{leito.status=='O' || leito.status=='T' || leito.status=='S'}" >
+										<div>
+											<label>Paciente:</label>
+											<h:outputText value="#{leito.paciente}" style="font-weight: bold" />
+										</div>										
+										<div >
+											<label>Mãe:</label>
+											<h:outputText value="#{leito.nmMae}" style="font-weight: bold" />
+										</div>	
+										<div style="border-bottom: solid 1px #bbb; margin-bottom: 4px; margin-top: 4px" />									
+										<div>
+											<div style="float: left; width: 140px">
+				    							<span>No.Atend.: </span> 
+				    							<h:outputText value="#{leito.isnInternacao}" style="font-weight: bold"/>								    
+											</div>							
+											<div style="float: left; width: 80px">
+												<span>Idade: </span>
+												<h:outputText value="#{leito.idade}" style="font-weight: bold"/>
+											</div>
+											<div style="float: left; width: 80px">
+												<span>Sexo: </span>											
+												<h:outputText value="#{leito.sexo}" style="font-weight: bold" />
+											</div>
+										</div>
+										<div>
+											<span>Tempo: </span>
+											<h:outputText value="#{leito.permanencia}" style="font-weight: bold" />
+										</div>
+										<div>
+										</div>
+										<div style="display:#{leito.flgAltaMedica == 'S'?'':'none'}">
+											<span style="font-weight: bold">Alta Solicitada por #{leito.dscUsuarioAltaMedica}</span>
+										</div>
+									</h:panelGroup>	
+									<h:panelGroup layout="block" rendered="#{leito.status=='I'}">
+										<div>	
+											<span>Data:</span>											
+											<h:outputText value="#{leito.prontuario}" style="font-weight: bold"/>
+										</div>
+										<div>
+				    						<span>Motivo:</span>  
+				    						<span>#{leito.paciente}</span>								    
+										</div>
+									</h:panelGroup>									
+								</rich:toolTip>	
+								<rich:dropSupport dropListener="#{eixosEmergenciaForm.obterDadosLeito}" 
+								    dropValue="#{leito}"
+									acceptedTypes="O,T,P,TL"								
+									oncomplete="avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelConfirmacao', true)"
+									reRender="dtEnfermarias,dtTransferencia,totaisEixo,panelConfirmacao">
+								</rich:dropSupport> 
+							</a4j:outputPanel>
+	          			</a4j:repeat>
+	          		</div>
+	      		</h:panelGroup>	      
+			</a4j:repeat>
+			<h:panelGroup id="aviso" style="font-size: 10px; font-family:arial; margin-top: 5px">
+				<h:outputText rendered="#{eixosEmergenciaForm.isnEixoSelecionado!=0}">* Dois cliques para acessar o <b>ATENDIMENTO</b> do paciente.</h:outputText>
+			</h:panelGroup>	
+		</h:panelGroup>		
+	   	<div>
+	   	<!--AREA DE TRANSFERENCIA -->
+			<h:panelGroup id="dtTransferencia" layout="block" styleClass="containerEixo" style="margin-right: 5px">		    
+		    	<h4 class="cabContainerEixo">Área de Transferência</h4>		  
+		    	<div class="corpoContainerEixo">  		    
+					<a4j:repeat value="#{eixosEmergenciaForm.lstTransferencia}" var="leitoTransf">
+				   		<a4j:outputPanel layout="block">
+					 		<rich:dragSupport dragIndicator="indicator" 
+					 		                  dragType="#{leitoTransf.status}" 
+									          dragValue="#{leitoTransf}">								
+								<div style="float: left; margin-right: 3px">							
+									<h:graphicImage url="IMG/thumbTransferido.gif"></h:graphicImage>
+								</div>
+								<div>
+									<h:outputLabel value="#{leitoTransf.paciente} - #{leitoTransf.unidadeTransferencia}" />									
+								</div>
+							</rich:dragSupport>
+						</a4j:outputPanel>			     
+					</a4j:repeat>
+				</div>			
+				<rich:dropSupport id="dropTransferencia"
+								  dropListener="#{eixosEmergenciaForm.obterDadosLeito}"
+								  dropValue="#{leito}" 
+								  acceptedTypes="O,P"
+								  oncomplete="avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelTransferencia', true)"
+								  reRender="dtTransferencia,panelTransferencia">
+				</rich:dropSupport>
+			</h:panelGroup>
+		
+			<!--INICO AREA DE ALTA -->
+			<div class="containerEixo" style="margin-right: 5px"> 
+				<a4j:outputPanel style="margin-bottom: 10px; height: 85px" layout="block">
+					<h:graphicImage url="IMG/altaObitoEixo.png"></h:graphicImage>
+					<rich:dropSupport id="dropAlta"				
+									  dropListener="#{eixosEmergenciaForm.obterDadosLeito}"
+									  acceptedTypes="O,P"						
+									  oncomplete="avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelAlta', true)"
+									  reRender="dtEnfermarias,panelAlta">				
+					</rich:dropSupport>
+				</a4j:outputPanel>		 			
+								
+				<!--INICIO AREA DE ACÕES -->		
+				<a4j:outputPanel style="height: 75px" layout="block">
+					<h:graphicImage url="IMG/acoesEixo.png"></h:graphicImage>
+					<rich:dropSupport id="dropAcoes"
+									  oncomplete="avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelConfirmacao', true)"
+									  dropListener="#{eixosEmergenciaForm.obterDadosLeito}"						 
+									  acceptedTypes="T,S"
+									  reRender="dtEnfermarias,panelConfirmacao">					
+					</rich:dropSupport>		
+				</a4j:outputPanel>
+			</div>
+			
+			<h:panelGroup id="dtTransporte" layout="block" styleClass="containerEixo" >
+				<h2 class="cabContainerEixo">Pacientes em Trânsito</h2>	
+				<div class="corpoContainerEixo">
+		    		<div class="leitosTransferencia">  		    
+						<a4j:repeat value="#{eixosEmergenciaForm.lstTransito}" var="leitoTransporte">
+			   				<a4j:outputPanel styleClass="areaLeito" layout="block">
+					 			<rich:dragSupport dragIndicator="indicator"
+												  dragType="#{leitoTransporte.status}" 
+												  dragValue="#{leitoTransporte}">
+									<rich:dndParam name="label" value="#{leitoTransporte.paciente}" />							
+									<h:graphicImage url="IMG/ambulance.png" width="16" style="vertical-align: middle; margin-right: 3px" />
+									<h:outputLabel value="#{leitoTransporte.paciente}"/>
+								</rich:dragSupport>
+		
+								<rich:toolTip direction="top-right" layout="block" styleClass="tooltip">
+									<f:facet name="defaultContent">
+										<strong>Aguarde...</strong>
+									</f:facet>
+									<div>
+										<label style="font-weight: bold; ">Paciente: </label>
+										<h:outputText value="#{leitoTransporte.paciente}"/>
+									</div>
+									<div>
+							    		<label style="font-weight: bold; ">Dt Saída: </label>  
+							    		<h:outputText value="#{leitoTransporte.pacienteTransporte.datSaida}" />
+							    		<h:outputText value=" #{leitoTransporte.pacienteTransporte.horSaida}"/>								    
+									</div>							
+									<div>
+										<label style="font-weight: bold; ">Hospital: </label>
+										<h:outputText value="#{leitoTransporte.pacienteTransporte.referencia.dscReferencia}" rendered="#{not empty leitoTransporte.pacienteTransporte.referencia.dscReferencia}" />
+									</div>
+									<div>
+										<label style="font-weight: bold; ">Motivo: </label>											
+										<h:outputText value="#{leitoTransporte.pacienteTransporte.dscMotivo}" />
+									</div>
+									<div>
+										<label style="font-weight: bold; ">Observação: </label>											
+										<h:outputText value="#{leitoTransporte.pacienteTransporte.dscObservacao}" />
+									</div>																	
+								</rich:toolTip>				
+							</a4j:outputPanel>			     
+						</a4j:repeat>
+					</div>			
+					<rich:dropSupport id="dropTransporte"
+									dropListener="#{eixosEmergenciaForm.pegaDadosTransporte}"
+									dropValue="#{leito}" 
+									acceptedTypes="O"
+									oncomplete="avisosValidacao(#{eixosEmergenciaForm.valorAvisoValidacao}, 'panelTransporte', true)"
+									reRender="dtTransferencia,panelTransporte">
+					</rich:dropSupport>
+				</div>
+			</h:panelGroup>
+		</div>		
+		</div>
+		<div class="colEixoLista">
+			<rich:extendedDataTable id="tabelaPacientes"
+					                 value="#{eixosEmergenciaForm.lstPacientesEmergencia}" 
+					                 var="paciente"
+					                 width="340px" 
+					                 height="618px"                 
+					                 noDataLabel="** Lista Vazia **">           
+				<rich:column headerClass="cabListaPaciente" width="35">
+			    	<f:facet name="header">
+			    		<h:outputText value="Risco" /> 
+			    	</f:facet>
+			    	<rich:dragSupport dragIndicator="indicator"  dragValue="#{paciente}" dragType="P">
+			    	<rich:dndParam name="label" value="#{paciente.dscNome}" />						
+						<center>
+							<h:graphicImage url="IMG/#{eixosEmergenciaForm.imagensRiscos[paciente.isnRisco]}" style="border:0;cursor:pointer;" title="Dois cliques para acessar o ATENDIMENTO do paciente." >
+								<a4j:support event="ondblclick" action="#{emergenciaForm.irParaAtendimento}" >
+									<f:setPropertyActionListener target="#{emergenciaForm.isnInternacao}" value="#{paciente.isnInternacao}" />
+									<f:setPropertyActionListener target="#{emergenciaForm.origemTelaParaAtendimento}" value="1" />
+									<f:setPropertyActionListener value="atendimentoAba" target="#{templateForm.tabAmbulatorio}"/>
+								</a4j:support>			    				    							
+							</h:graphicImage>
+						</center>					
+					</rich:dragSupport>	
+				</rich:column>			
+				<rich:column headerClass="cabListaPaciente" width="171">
+					<f:facet name="header">
+			    		<h:outputText value="Nome Paciente" /> 
+			    	</f:facet>
+		    		<h:graphicImage url="IMG/thumbPacienteAlta.gif" style="vertical-align: middle; margin-right:10px" rendered="#{paciente.flgAltaMedica == 'S'}" />
+					<h:graphicImage id="imgSepse" url="IMG/risco_sepse.png" title="Paciente com registro de SEPSE." 
+					style="vertical-align: middle; margin-right:5px" rendered="#{paciente.existeSepse == true}" />
+		    		<h:outputText value="#{paciente.dscNome}" title="#{paciente.dscNome}" style="font-size: 11px" />				
+				</rich:column>
+				<rich:column headerClass="cabListaPaciente" width="45">
+					<f:facet name="header">
+			    		<h:outputText value="N°" /> 
+			    	</f:facet>
+			    	<center>
+			    		<h:outputText value="#{paciente.isnInternacao}" />
+			    	</center>					
+				</rich:column>
+				<rich:column headerClass="cabListaPaciente" width="45">
+			    	<f:facet name="header">
+			    		<h:outputText value="T.E" /> 
+			    	</f:facet>
+			    	<center>
+						<h:outputText value="#{paciente.tempoRisco}" />
+					</center>
+				</rich:column>
+				<rich:column headerClass="cabListaPaciente align-center" width="45">
+			    	<f:facet name="header">
+			    		<h:outputText value="Imp" /> 
+			    	</f:facet>
+						<a4j:commandLink id="atendimento" action="#{emergenciaForm.validarRelatorioGeral}" title="IDENTIFICAÇÃO DO PACIENTE"
+										   oncomplete="if (validarMsg('#{emergenciaForm.mensagem}')){ document.getElementById(this.id.substring(0, this.id.lastIndexOf(':')) + ':atendimentoBtn').click(); }">
+<!-- 							<div style="text-align:center; margin:0 auto"> -->
+							    <h:graphicImage id="imgAtendimento" url="IMG/impressora.png" style="border:0;" />
+<!-- 							</div>											    -->
+							<f:setPropertyActionListener value="#{paciente.isnInternacao}" target="#{emergenciaForm.isnInternacao}" />
+						</a4j:commandLink>				           															
+						<t:commandLink id="atendimentoBtn" action="#{emergenciaForm.relatorio}" style="display:none;" target="_blank"/>
+				</rich:column>											
+			</rich:extendedDataTable>		
+		</div>
+		<br style="clear: both"/>
+		<div class="rodapeEixo">
+	    	<div class="rodapeCol">
+		        <label>Sistema Vita Paciente</label>
+		    </div>
+	    	<div class="rodapeCol" style="text-align: right">
+	        	<label>#{FuncUtil.nomeHospital}</label>
+	    	</div>
+		</div>	
+	</div>	
+
+</h:form>
+
+    <script>
+    <!--
+    function checkBirthDate(obj, choosenDate) {
+		var now = new Date();
+    	var diff = now.getTime() - choosenDate.getTime();
+        if (diff < 0) {
+        	 alert("Data do óbito não pode ser maior que a data atual!");
+        	 #{rich:component('datObito')}.resetSelectedDate();
+        }
+        
+        return false; 
+    }
+    
+    function verificaTamanho(form, campo, tamMax, resposta)
+	{
+		var strLen;
+		strLen = 0;
+		if(campo.value.length > 0)
+		{
+			strLen = strLen + campo.value.length;
+		}
+		if (strLen == 1)
+	   	{
+		   	if(campo.value.substring(0,1) == " ")
+			{
+		       	campo.value = "";
+				strLen = strLen - 1;
+			}
+	   	}
+		if (strLen > tamMax)
+		{
+			campo.value = campo.value.substring(0,tamMax);
+			strLen = strLen - 1;
+			return;
+		}
+		if(resposta != null)
+		{	
+			if(document.forms[form].elements[resposta] != null)
+			{
+				document.forms[form].elements[resposta].value = (tamMax - strLen);
+			}
+			else
+			{
+				document.getElementById(resposta).innerHTML = '(' + (tamMax - strLen) + ' caracteres restantes)';
+			}
+		}
+	}
+
+    function formataHora(campo,teclapres) {
+    	var tecla = teclapres.keyCode;
+    	vr = campo.value;
+    	vr = vr.replace( ".", "" );
+    	vr = vr.replace( ":", "" );
+    	vr = vr.replace( ",", "" );
+    	vr = vr.replace( "/", "" );
+    	tam = vr.length + 1;
+    	if ( tecla != 9 && tecla != 8 ) {
+    		if ( tam > 2 && tam < 5 ) campo.value = vr.substr( 0, tam - 2 ) + ':' + vr.substr( tam - 2, tam );
+    	}
+    }	
+    
+	function tamanhoHora(hora){ 
+		if (hora.value.length > 0){
+			var digits = "0123456789:";
+			var campo_temp;
+			for ( var i = 0; i < hora.value.length; i++) {
+				campo_temp = hora.value.substring(i, i + 1);
+				if (digits.indexOf(campo_temp) == -1) {
+					alert("Hora informada incorreta.");
+					hora.focus();
+					hora.value = "";
+					return false;
+				}
+			}
+			
+			if (hora.value.length < 5){ 
+				alert("Hora informada incorreta.");
+				hora.focus();
+				hora.value = "";
+				return false;
+			}
+			var cont = 0;
+			
+		    for(var j = 0; j < hora.value.length; j++){
+		        if(hora.value.charAt(j) == ":"){
+		            cont++; 
+		        }
+		    }
+		    
+		    if (cont > 1){
+				alert("Hora informada incorreta.");
+				hora.focus();
+				hora.value = "";
+				return false;
+			}
+		    
+			if (hora.value.length == 5){ 
+				if (! verificarHoraDigitada2(hora.value) ) {
+					alert("Hora informada incorreta.");							
+					hora.value = '';
+					hora.focus();
+				} 
+			} 
+		}
+		return true;
+	}
+	
+	function verificarHoraDigitada2(hora){ 
+		var hrs = hora.substring(0,2); 
+		var min = hora.substring(3,5);
+		var isValida = true; 
+
+		if ((hrs < 0 ) || (hrs > 23) || ( min < 0) ||( min > 59)){ 
+			isValida = false; 
+		} 				
+
+		if (hora == "") { 
+			isValida = false; 
+		} 
+		
+	    return isValida;	
+	} 
+	
+	function validarMsg(msg)
+	{
+		if (msg != '')
+		{
+			alert(msg);
+			return false;
+		}
+		return true;
+	}	
+	
+	//-->
+	</script>
+	<script type="text/javascript" src="SCRIPTS/sessaounica.js"></script>
+</body>
+</html>

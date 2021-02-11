@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subRelTotalObito" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DATA_INICIAL" class="java.sql.Timestamp"/>
+	<parameter name="DATA_FINAL" class="java.sql.Timestamp"/>
+	<parameter name="MAX_PERIODO" class="java.lang.Float"/>
+	<parameter name="MIN_PERIODO" class="java.lang.Float"/>
+	<parameter name="WHERE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select il.dat_obito_info,
+to_char((cast( il.dat_obito_info as timestamp ) - cast( i.dat_cadastro || ' ' || i.hor_chegada || ':00' as timestamp )), 'DD HH24:MI:SS') as permanencia,
+    substring(to_char((cast( il.dat_obito_info as timestamp ) - cast( i.dat_cadastro || ' ' || i.hor_chegada || ':00' as timestamp )), 'DD HH24:MI:SS'),1,3) as dias, num_prontuario, dsc_nome
+	from medpoint.t_internacao i
+	inner join (select * from medpoint.t_internacao_leito where isn_internacao_leito in ( select il.isn_internacao_leito from medpoint.t_internacao_leito il,
+			   (select isn_internacao, max(isn_internacao_leito) as isn_internacao_leito from medpoint.t_internacao_leito group by isn_internacao) leito
+				where il.isn_internacao_leito = leito.isn_internacao_leito)) as il on il.isn_internacao = i.isn_internacao
+inner join medpoint.t_paciente p on p.isn_paciente = i.isn_paciente
+where il.dat_obito_info between $P{DATA_INICIAL} and $P{DATA_FINAL} and il.isn_destino = 4
+AND extract (epoch from age(cast(il.dat_obito_info as timestamp), cast(i.dat_cadastro || ' ' || i.hor_chegada || ':00' as timestamp))) $P!{WHERE}
+ORDER BY p.dsc_nome ASC]]>
+	</queryString>
+	<field name="permanencia" class="java.lang.String"/>
+	<field name="dias" class="java.lang.Long"/>
+	<field name="num_prontuario" class="java.lang.String"/>
+	<field name="dsc_nome" class="java.lang.String"/>
+	<field name="dat_obito_info" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="21">
+			<staticText>
+				<reportElement x="309" y="0" width="75" height="20"/>
+				<box leftPadding="4">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pront.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="0" width="106" height="20"/>
+				<box leftPadding="4">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Permanencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="490" y="0" width="65" height="20"/>
+				<box leftPadding="4">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[QTD. Dias]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="221" height="20"/>
+				<box leftPadding="4">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome do Paciente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="221" y="0" width="88" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dt. Óbito info.]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="21">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="221" height="20"/>
+				<box leftPadding="4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="384" y="0" width="106" height="20"/>
+				<box leftPadding="4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{permanencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="490" y="0" width="65" height="20"/>
+				<box leftPadding="4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{dias}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="309" y="0" width="75" height="20"/>
+				<box leftPadding="4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_prontuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="221" y="0" width="88" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{dat_obito_info}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

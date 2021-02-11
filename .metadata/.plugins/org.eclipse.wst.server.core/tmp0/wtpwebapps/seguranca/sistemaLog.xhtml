@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a4j="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:t="http://myfaces.apache.org/tomahawk"
+				xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+				template="crud_template.xhtml">
+	
+	<ui:param name="crudBean" value="#{sistemaForm}" />
+	
+	<ui:define name="requiredFieldsMessage">
+		<h:outputText value="#{bundle.todosCamposObrigatorios}" rendered="#{crudBean.updating}"/>
+		<h:outputText value="#{bundle.peloMenosUmCamposObrigatorio}" rendered="#{crudBean.searching}"/>
+	</ui:define>
+	
+	<!-- KEEPALIVE -->
+	<a4j:keepAlive beanName="sistemaForm"></a4j:keepAlive>
+	
+	<ui:define name="content">
+		<!-- Painel de Visualização -->		
+		<h:panelGroup id="panelGroupDeVisualizacao" style="height:100%;width:100%;" rendered="#{crudBean.viewing}">
+			<f:subview id="viewVisualizacao">
+				<table class="tabela">
+					<tr>
+						<td class="tdCor" width="200px">Código </td>
+						<td class="tdBranco">
+							<h:outputText value="#{crudBean.entity.isnSistema}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Descrição</td>
+						<td class="tdBranco">
+							<h:outputText value="#{crudBean.entity.dscSistema}"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="tdCor" width="200px">Sigla</td>
+						<td class="tdBranco">
+							<h:outputText value="#{crudBean.entity.sglSistema}"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="tdCor" width="200px">Versão</td>
+						<td class="tdBranco">
+							<h:outputText value="#{crudBean.entity.dscVersao}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Usuário de Inclusão </td>
+						<td class="tdBranco">
+							<h:outputText value="#{crudBean.entity.usuarioBean.dscUsuario}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Data de Inclusão </td>
+						<td class="tdBranco">
+							<h:outputText value="#{crudBean.entity.datCadastro}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="tdCor" width="200px">Ativo </td>
+						<td class="tdBranco">
+							<h:outputText value="SIM" rendered="#{crudBean.entity.flgAtivo == 'S'}"/>
+						<h:outputText value="NÃO" rendered="#{crudBean.entity.flgAtivo == 'N'}"/>
+						</td>
+					</tr>
+				</table>
+			</f:subview>			
+		</h:panelGroup>				
+	</ui:define>
+	
+	
+	<ui:define name="list">
+	<!-- Painel de resultado da busca-->
+		<h:panelGroup id="panelGroupDeListagem" style="height:100%;width:100%;" rendered="#{crudBean.viewing}">
+			<f:subview id="viewListagem">
+				<rich:dataTable id="tblData" 
+									 		value="#{crudBean.searchResult}" 
+									 		binding="#{crudBean.tblData}" 
+									 		var="rst" 
+									 		style="width: 100%;" 
+									 		rowClasses="par,impar" >
+								<f:facet name="header">
+									<rich:columnGroup>
+										<rich:column colspan="7">
+											HISTÓRICO
+										</rich:column>
+										<rich:column style="width: 35%; text-align: center;" breakBefore="true">
+											Descrição
+										</rich:column>
+										<rich:column style="width: 10%; text-align: center;">
+											Sigla
+										</rich:column>
+										<rich:column style="width: 10%; text-align: center;">
+											Versão
+										</rich:column>
+										<rich:column style="width: 5%; text-align: center;">
+											Ativo
+										</rich:column>
+										<rich:column style="width: 30%; text-align: center;">
+											Usuário de Inclusão
+										</rich:column>
+										<rich:column style="width: 10%; text-align: center;">
+											Data de Inclusão <a4j:commandLink id="fvs" action="#{crudBean.visualizarLog}">
+										teste										
+									</a4j:commandLink>
+										</rich:column>
+									</rich:columnGroup>						
+								</f:facet>
+								
+								<rich:column style="text-align: left;">
+									<h:outputText value="#{rst.dscSistema}" />
+									<a4j:commandLink id="vs" action="#{crudBean.visualizarLog}">
+										teste										
+									</a4j:commandLink>
+								</rich:column>
+								<rich:column style="text-align: left;">
+									<h:outputText value="#{rst.sglSistema}" />
+								</rich:column>
+								<rich:column style="text-align: left;">
+									<h:outputText value="#{rst.dscVersao}" />
+								</rich:column>
+								<rich:column style="text-align: left;">
+									<h:outputText value="SIM" rendered="#{rst.flgAtivo == 'S'}"/>
+									<h:outputText value="NÃO" rendered="#{rst.flgAtivo == 'N'}"/>
+								</rich:column>
+								<rich:column style="text-align: center;">
+									<h:outputText value="#{rst.usuarioBean.dscUsuario}" />
+								</rich:column>
+								<rich:column style="text-align: center;">
+									<h:outputText value="#{rst.datCadastro}" />
+								</rich:column>
+							</rich:dataTable>
+			</f:subview>
+		</h:panelGroup>
+	</ui:define>		
+</ui:composition>

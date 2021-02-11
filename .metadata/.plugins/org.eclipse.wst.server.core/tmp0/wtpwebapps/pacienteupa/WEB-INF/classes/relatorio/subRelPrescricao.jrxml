@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subRel" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p1" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT u.dsc_usuario,
+       u.num_conselho,
+       pu.dsc_prescricao,
+       pu.dat_prescricao
+FROM medpoint.t_prescricao_upa pu
+INNER JOIN seguranca.t_usuario u ON pu.isn_usuario = u.isn_usuario
+WHERE pu.ordem = (SELECT max(ordem) FROM medpoint.t_prescricao_upa WHERE isn_internacao = $P{p1})
+  AND pu.isn_internacao = $P{p1} AND pu.flg_ativo = 'S']]>
+	</queryString>
+	<field name="dsc_usuario" class="java.lang.String"/>
+	<field name="num_conselho" class="java.lang.String"/>
+	<field name="dsc_prescricao" class="java.lang.String"/>
+	<field name="dat_prescricao" class="java.sql.Timestamp"/>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="17" width="410" height="16"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prescrição]]></text>
+			</staticText>
+			<line>
+				<reportElement x="413" y="17" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="0" y="16" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="554" y="17" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="0" y="17" width="1" height="16"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="1" width="553" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="SansSerif" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[PRESCRIÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="17" width="140" height="16"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Horário:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="554" y="0" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="413" y="0" width="1" height="15"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="0" width="411" height="15"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="0.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_prescricao}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="0" y="15" width="555" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="81">
+			<rectangle>
+				<reportElement x="0" y="3" width="555" height="76"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="182" y="28" width="100" height="15"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Observação]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="467" y="32" width="10" height="10"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="1" y="3" width="554" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ENCAMINHAMENTO - CONDUTA FINAL]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="17" y="28" width="10" height="10"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="323" y="31" width="10" height="10"/>
+			</rectangle>
+			<line>
+				<reportElement x="17" y="61" width="183" height="1"/>
+			</line>
+			<rectangle>
+				<reportElement x="167" y="30" width="10" height="10"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="34" y="29" width="68" height="15"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Alta. Conduta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="337" y="29" width="100" height="15"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Referência para:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="483" y="31" width="31" height="12"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Óbito]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

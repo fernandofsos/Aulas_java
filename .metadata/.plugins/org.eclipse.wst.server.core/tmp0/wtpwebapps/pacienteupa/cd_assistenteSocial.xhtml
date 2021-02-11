@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<link rel="stylesheet" type="text/css" href="CSS/layoutCsPaciente.css" />
+	</ui:define>
+	<ui:define name="conteudo">
+
+<a4j:keepAlive beanName="assistenteSocialForm" />
+
+		<!-- INICIO DO MODAL ANOTAÇÃO -->
+		<rich:modalPanel id="panelAnotacao" autosized="true" width="50" height="50" resizeable="false" headerClass="headerPanel3">
+					
+					<f:facet name="header">
+			            <h:outputText value="ANOTAÇÃO"></h:outputText>            
+			        </f:facet>
+					
+			        <f:facet name="controls">
+			            <h:panelGroup>
+			                <h:graphicImage value="IMG/fechar.png" id="fecharAnotacao" />
+			                <rich:componentControl for="panelAnotacao" attachTo="fecharAnotacao" operation="hide" event="onclick" />
+			            </h:panelGroup>
+			        </f:facet>		
+		
+					<h:form id="formularioAnotacao">
+		        		<h:panelGrid  width="100%">
+			        		<h:panelGrid width="100%" columns="3">
+			        			<h:panelGroup>
+			        				<h:outputText value="Categoria:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="20" />
+									<h:selectOneMenu id="idCategoria" value="#{assistenteSocialForm.isnAsCategoria}" >
+										<f:selectItems value="#{assistenteSocialForm.sliCategoria}" />
+									</h:selectOneMenu>			        				
+			        			</h:panelGroup>
+			        		</h:panelGrid>
+			        		<br />
+			        		<h:panelGrid width="100%" columns="2">
+			        			<h:panelGroup>
+			        			<!-- 
+			        				<rich:editor id="editor" theme="simple" width="800" height="200" value="#{assistenteSocialForm.dscAnotacao}">
+			        				</rich:editor>
+			        			 -->
+			        			 
+						        	<h:outputText value="Anotação:" styleClass="campoVazio2 campoTextoAtendMedic" /> <br />
+									<h:inputTextarea value="#{assistenteSocialForm.dscAnotacao}" id="idAnotacao" style="width: 700px; text-transform:uppercase; height: 100px;" onkeyup="verificaTamanho('formularioAnotacao',this, 1000, 'lblAnotacao');" onblur="upper(this);" />
+			        				<label id="lblAnotacao" class="campoVazio2 campoTextoAtendMedic">(1000 caracteres restantes)</label>	
+			        			 
+			                     </h:panelGroup>
+			        		</h:panelGrid>
+		        		</h:panelGrid>
+		        		<center>
+			        		<a4j:commandButton oncomplete="avisosValidacao(#{assistenteSocialForm.avisoUsuario}, 'panelAnotacao');" 
+														   id="inserirAnotacao"														  
+														   value="Confirmar"
+														   styleClass="botaoModal"
+														   actionListener="#{assistenteSocialForm.inserirAnotacao}"
+														   reRender="formularioAnotacao, formularioSocial:tblAnotacao">
+							 </a4j:commandButton>						
+		        		</center>
+					</h:form>
+					
+		</rich:modalPanel>			
+		<!-- FIM DO MODAL RECEITURARIO -->	
+
+		<!-- INICIO DO MODAL DECLARAÇÃO -->
+		<rich:modalPanel id="panelDeclaracao" autosized="true" width="738" height="258" resizeable="false" headerClass="headerPanel3">
+					
+					<f:facet name="header">
+			            <h:outputText value="DECLARAÇÃO"></h:outputText>            
+			        </f:facet>
+					
+			        <f:facet name="controls">
+			            <h:panelGroup>
+			                <h:graphicImage value="IMG/fechar.png" id="fecharDeclaracao" />
+			                <rich:componentControl for="panelDeclaracao" attachTo="fecharDeclaracao" operation="hide" event="onclick" />
+			            </h:panelGroup>
+			        </f:facet>		
+		
+					<h:form id="formularioDeclaracao">
+		        		<h:panelGrid  width="100%">
+			        		<h:panelGrid width="100%" columns="3">
+			        			<h:panelGroup>
+									<h:outputText value="Tipo de Declaração:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="40"/>			        			
+			        				<h:selectOneMenu id="isnDeclaracaoTipoId" value="#{assistenteSocialForm.objDeclaracao.isnAsDeclaracaoTipo}">
+				        				<f:selectItems value="#{assistenteSocialForm.sliDeclaracaoTipo}" />
+				        				<a4j:support  event="onchange" reRender="formularioDeclaracao" actionListener="#{assistenteSocialForm.mudarDeclaracaoTipo}" />
+			        				</h:selectOneMenu>
+			        			</h:panelGroup>
+			        		</h:panelGrid>
+			        		<!-- GRID ACOMPANHAMENTO - INICIO -->
+			        		<h:panelGrid width="100%" columns="1" rendered="#{assistenteSocialForm.objDeclaracao.isnAsDeclaracaoTipo == 1}">
+			        			<h:panelGroup>
+			        				<h:outputText value="Nome Acompanhante:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="30" />
+			        				<h:inputText value="#{assistenteSocialForm.objDeclaracao.dscNomeAcompanhante}" style="text-transform:uppercase;"  onblur="upper(this);" maxlength="100" size="60" />
+			        			</h:panelGroup>
+			        			<h:panelGroup styleClass="font16">
+			        					<h:outputText value="Data Acompanhamento:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        					<rich:spacer width="14" />
+			        					<rich:calendar id="datAcompanhamentoId" value="#{assistenteSocialForm.objDeclaracao.datComparecimento}" showWeeksBar="false" datePattern="dd/MM/yyyy" enableManualInput="false" oninputkeypress="return formataData(event, this);"  maxlength="10" styleClass="font16" />
+			        			</h:panelGroup>
+			        			<h:panelGroup>
+			        				<h:outputText value="Período:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="111" />
+			        				<h:inputText value="#{assistenteSocialForm.objDeclaracao.dscPeriodo}" style="text-transform:uppercase;"  onblur="upper(this);" maxlength="20" size="20" />
+			        			</h:panelGroup>
+			        		</h:panelGrid>
+			        		<!-- GRID ACOMPANHAMENTO - FIM -->
+			        		<!-- GRID COMPARECIMENTO - INICIO -->
+			        		<h:panelGrid width="100%" columns="1" rendered="#{assistenteSocialForm.objDeclaracao.isnAsDeclaracaoTipo == 2}">
+			        			<h:panelGroup>
+			        				<h:outputText value="Nº Identidade:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="85" />
+			        				<h:inputText value="#{assistenteSocialForm.objDeclaracao.numRg}" style="text-transform:uppercase;"  onblur="upper(this);" maxlength="20" size="20" onkeypress="return soNumero(event, this)" />
+			        			</h:panelGroup>
+			        			<h:panelGroup styleClass="font16">
+			        					<h:outputText value="Data Comparecimento:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        					<rich:spacer width="23" />
+			        					<rich:calendar id="datComparecimentoId" value="#{assistenteSocialForm.objDeclaracao.datComparecimento}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="false" oninputkeypress="return formataData(event, this);"  maxlength="10" styleClass="font16" />
+			        			</h:panelGroup>
+			        			<h:panelGroup>
+			        				<h:outputText value="Período:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="114" />
+			        				<h:inputText value="#{assistenteSocialForm.objDeclaracao.dscPeriodo}" style="text-transform:uppercase;"  onblur="upper(this);" maxlength="20" size="20" />
+			        			</h:panelGroup>
+			        		</h:panelGrid>
+			        		<!-- GRID COMPARECIMENTO - FIM -->
+			        		<!-- GRID ENCAMINHAMENTO - INICIO -->
+			        		<h:panelGrid width="100%" columns="1" rendered="#{assistenteSocialForm.objDeclaracao.isnAsDeclaracaoTipo == 3}">
+			        			<h:panelGroup>
+			        				<h:outputText value="Nº Identidade:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="84" />
+			        				<h:inputText value="#{assistenteSocialForm.objDeclaracao.numRg}" style="text-transform:uppercase;"  onblur="upper(this);" maxlength="20" size="20" onkeypress="return soNumero(event, this)" />
+			        			</h:panelGroup>
+			        			<h:panelGroup>
+			        				<h:outputText value="Nº CPF:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="129" />
+			        				<h:inputText value="#{assistenteSocialForm.objDeclaracao.numCpf}" style="text-transform:uppercase;"  onblur="upper(this);" maxlength="14" size="14" onkeypress="return formataCPF(event, this)" />
+			        			</h:panelGroup>
+			        			<h:panelGroup>
+			        				<h:outputText value="Serviço:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="116" />
+			        				<h:inputText value="#{assistenteSocialForm.objDeclaracao.dscServico}" style="text-transform:uppercase;"  onblur="upper(this);" maxlength="100" size="60" />
+			        			</h:panelGroup>
+			        			<h:panelGroup>
+			        				<h:outputText value="Município:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<rich:spacer width="106" />
+									<h:selectOneMenu id="idMunicipio" value="#{assistenteSocialForm.objDeclaracao.isnMunicipio}" >
+										<f:selectItems value="#{assistenteSocialForm.sliMunicipio}" />
+									</h:selectOneMenu>			        				
+			        			</h:panelGroup>
+			        			<h:panelGroup>
+			        				<h:outputText value="Objetivo:" styleClass="campoVazio2 campoTextoAtendMedic" />
+			        				<br />
+									<h:inputTextarea value="#{assistenteSocialForm.objDeclaracao.dscObjetivo}" id="idServico" style="width: 700px; text-transform:uppercase; height: 100px;" onkeyup="verificaTamanho('formularioDeclaracao',this, 500, 'lblServico');" onblur="upper(this);" />
+			        				<label id="lblServico" class="campoVazio2 campoTextoAtendMedic">(500 caracteres restantes)</label>			        				
+			        			</h:panelGroup>
+			        		</h:panelGrid>
+			        		<!-- GRID ENCAMINHAMENTO - FIM -->
+		        		</h:panelGrid>
+		        		<center>
+			        		<a4j:commandButton oncomplete="validaAnotacao('#{assistenteSocialForm.mensagemAlerta}');" 
+														   id="inserirDeclaracao"														  
+														   value="Confirmar"
+														   styleClass="botaoModal"
+														   actionListener="#{assistenteSocialForm.inserirDeclaracao}"
+														   reRender="formularioDeclaracao, formularioSocial:tblDeclaracao">
+							 </a4j:commandButton>						
+		        		</center>
+					</h:form>
+					
+		</rich:modalPanel>			
+		<!-- FIM DO MODAL DECLARAÇÃO -->	
+
+		<!-- DADOS PACIENTE - INICIO -->
+		 <rich:modalPanel id="panPaciente" autosized="false" width="600" height="400" resizeable="true" headerClass="headerPanel3">
+			
+	    	<f:facet name="header">
+				<h:panelGroup>
+	       			<h:outputText value="DADOS DO PACIENTE"></h:outputText>
+	       		</h:panelGroup>
+	    	</f:facet>
+	    	<f:facet name="controls">
+	    	 	<h:panelGroup>
+	        		<h:graphicImage value="IMG/fechar.png" id="fechaPanel"/>
+	        		<rich:componentControl for="panPaciente" attachTo="fechaPanel" operation="hide" event="onclick" />
+	        	</h:panelGroup>
+	    	</f:facet>
+	    	<div>
+	    		<ui:include src="panelDadosPaciente.xhtml"/>
+	    	</div> 
+	   	</rich:modalPanel>
+		<!-- DADOS PACIENTE - FIM  -->
+		
+			
+<h:form id="formularioSocial">
+	<div style="text-align: center">
+		<div id="geral">
+			<div class="tituloPagina">SERVIÇO SOCIAL</div>
+			
+			<h:panelGrid styleClass="quadroAtendimento" style="padding: 0px 0px 0px 0px; margin-top:0px; width:100%" columns="2">
+				<h:panelGroup layout="block">
+		   			<h:outputLabel value="Paciente:" /><br /><br />
+          			<a4j:commandLink styleClass="link campoVazio2 campoTextoAtendMedic" 
+          							 oncomplete="#{rich:component('panPaciente')}.show();" 
+          							 value="#{assistenteSocialForm.objPaciente.numProntuario} - #{assistenteSocialForm.objPaciente.dscNome}" 
+          							 action="#{farmaciaForm.popularDadosPacienteGeral}" 
+          							 reRender="panPaciente">
+          				<f:setPropertyActionListener target="#{farmaciaForm.isnPaciente}" value="#{assistenteSocialForm.objPaciente.isnPaciente}" />
+          			</a4j:commandLink>		   			
+		   		</h:panelGroup>			
+				<h:panelGroup layout="block">
+					<h:outputLabel value="Nascimento:" /><br />
+					<h:outputLabel value="#{assistenteSocialForm.objPaciente.datNascimento}" styleClass="campoVazio2 campoTextoAtendMedic" />
+				</h:panelGroup>	
+		   		<h:panelGroup layout="block">
+		   			<h:outputLabel value="Naturalidade:" /><br />
+		   			<h:outputLabel value="#{assistenteSocialForm.objPaciente.dscNaturalidade}" styleClass="campoVazio2 campoTextoAtendMedic" />
+		   		</h:panelGroup>						
+		   		<h:panelGroup layout="block">
+		   			<h:outputLabel value="Mãe:" /><br />
+		   			<h:outputLabel value="#{assistenteSocialForm.objPaciente.dscMae}" styleClass="campoVazio2 campoTextoAtendMedic" />
+		   		</h:panelGroup>						
+			</h:panelGrid>
+		</div>
+	</div>
+	
+	<br />
+	
+	<div style="text-align:center"> 
+ 		<rich:tabPanel style="width:100%" switchType="client">
+ 		<!-- ABA ANOTAÇÕES - INICIO -->
+      		<rich:tab label="ANOTAÇÕES" >
+        		<h:panelGrid id="anotacoes"  width="100%">
+					<h:panelGrid>
+						<a4j:commandButton value="Nova Anotação" 
+						                   actionListener="#{assistenteSocialForm.abrirPanelAnotacao}"						                   
+										   oncomplete="avisosValidacao(#{assistenteSocialForm.avisoUsuario}, 'panelAnotacao');"										   										    
+										   styleClass="botaoModal"
+										   reRender="formularioSocial" />        	
+					</h:panelGrid>
+					<h:panelGrid width="100%">
+						<rich:dataTable id="tblAnotacao"
+										onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+						           		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										value="#{assistenteSocialForm.listaAnotacao}" 
+										var="rst" 
+										rows="5"
+										style="width:100%;"
+										reRender="rolagemAnotacao">
+										
+								<f:facet name="header">
+									<rich:columnGroup>
+										<rich:column style="text-align: center;width: 10%;">
+											Data Cadastro
+										</rich:column>
+										<rich:column style="text-align: center;width: 60%;">
+											Anotação
+										</rich:column>
+										<rich:column style="text-align: center;width: 15%;">
+											Categoria
+										</rich:column>
+										<rich:column style="text-align: center;width: 15%;">
+											Profissional
+										</rich:column>
+									</rich:columnGroup>
+								</f:facet>	
+								
+								<rich:column style="text-align: center;">
+									<h:outputText value="#{rst.datCadastro}" converter="ConversorDeDataHora" />
+								</rich:column>									
+								<rich:column style="text-align: left;">
+									<h:outputText value="#{rst.dscAnotacao}" />
+								</rich:column>
+								<rich:column style="text-align: left;">
+									<h:outputText value="#{rst.categoriaBean.dscAsCategoria}"/>
+								</rich:column>
+								<rich:column style="text-align: center;">
+									<h:outputText value="#{rst.usuarioBean.dscUsuario}"/>
+								</rich:column>								
+											
+								<f:facet name="footer">
+									<rich:datascroller id="rolagemAnotacao" ajaxSingle="false" />
+								</f:facet>
+						</rich:dataTable>				
+					</h:panelGrid>        		
+        		</h:panelGrid>      		
+      		</rich:tab>
+      		<!-- ABA ANOTAÇÕES - FIM -->
+      		
+      		<!-- ABA DECLARAÇOES - INICIO -->
+      		<rich:tab label="DECLARAÇÕES" >
+        		<h:panelGrid  width="100%">
+					<h:panelGrid>
+						<a4j:commandButton value="Nova Declaração" 
+						                   actionListener="#{assistenteSocialForm.abrirPanelDeclaracao}"
+										   oncomplete="avisosValidacao(#{assistenteSocialForm.avisoUsuario}, 'panelDeclaracao');" 
+										   styleClass="botaoModal"
+										   reRender="formularioSocial, panelDeclaracao" />        	
+					</h:panelGrid>
+					<h:panelGrid width="100%">
+						<rich:dataTable id="tblDeclaracao"
+										onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+						           		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										value="#{assistenteSocialForm.listaDeclaracao}" 
+										var="rst" 
+										rows="5"
+										style="width:100%;"
+										reRender="rolagemDeclaracao">
+										
+								<f:facet name="header">
+									<rich:columnGroup>
+										<rich:column style="text-align: center;">
+											Data Cadastro
+										</rich:column>
+										<rich:column style="text-align: center;">
+											Paciente/Acompanhante
+										</rich:column>
+										<rich:column style="text-align: center;">
+											Período
+										</rich:column>
+										<rich:column style="text-align: center;">
+											Tipo Declaração
+										</rich:column>
+										<rich:column style="text-align: center;">
+											Profissional
+										</rich:column>
+										<rich:column style="text-align: center;">
+										</rich:column>
+									</rich:columnGroup>
+								</f:facet>	
+								
+								<rich:column style="text-align: center;">
+									<h:outputText value="#{rst.datCadastro}" converter="ConversorDeDataHora" />
+								</rich:column>									
+								<rich:column style="text-align: center;">
+									<h:outputText value="#{rst.dscNomeAcompanhante}" rendered="#{rst.isnAsDeclaracaoTipo == 1}" />
+									<h:outputText value="#{rst.pacienteBean.dscNome}" rendered="#{rst.isnAsDeclaracaoTipo == 2 or rst.isnAsDeclaracaoTipo == 3}" />
+								</rich:column>
+								<rich:column style="text-align: center;">
+									<h:outputText value="#{rst.dscPeriodo}" rendered="#{rst.isnAsDeclaracaoTipo == 1 or rst.isnAsDeclaracaoTipo == 2}" />
+								</rich:column>
+								<rich:column style="text-align: center;">
+									<h:outputText value="#{rst.declaracaoTipoBean.dscDescricao}" />
+								</rich:column>								
+								<rich:column style="text-align: center;">
+									<h:outputText value="#{rst.usuarioBean.dscUsuario}"/>
+								</rich:column>
+								<rich:column style="text-align: center;">
+									<t:commandLink id="atendimento" action="#{assistenteSocialForm.relatorioDeclaracao}" target="_blank" title="IMPRIMIR DECLARAÇÃO">
+										<h:graphicImage id="imgAtendimento" url="IMG/impressora.png" style="border:0;" />
+										<f:setPropertyActionListener value="#{rst}" target="#{assistenteSocialForm.objDeclaracao}" />							
+									</t:commandLink>
+								</rich:column>	
+											
+								<f:facet name="footer">
+									<rich:datascroller id="rolagemDeclaracao" ajaxSingle="false" />
+								</f:facet>
+						</rich:dataTable>				
+					</h:panelGrid>        		
+        		</h:panelGrid>            		
+      		</rich:tab>
+      		<!-- ABA DECLARAÇOES - FIM -->
+      	</rich:tabPanel>
+	</div>      
+	
+	<br />
+	
+	<div id="botoes" style="text-align:center; width:100%;" >
+  		
+  	    <h:commandButton id="btnVoltar" 
+				  	     value="Voltar"
+				  	     styleClass="botaoModal100"
+				  	     action="cd_assistenteSocial_para_cs_assistenteSocial" >		  			
+  		</h:commandButton>
+  		
+	</div>
+</h:form>	
+<script>
+
+function avisosValidacao(erro, panel) {
+	if (erro == 4) {
+	   	alert("Usuário sem permissão.");
+	} else if (erro == 5) {
+	   	alert("O Campo Categoria é obrigatório.");
+	} else if (erro == 6) {
+	   	alert("O Campo Anotação é obrigatório.");
+	} else if (erro == 7) {
+	   	alert("O Campo Anotação é maior que o suportado no nosos banco de dados, Por favor diminuir.");
+	} else if (erro == 8) {
+       	Richfaces.showModalPanel(panel);
+	} else if (erro == 9) {       	
+		//Richfaces.hideModalPanel(panel);
+		alert('Anotação gravada com sucesso.');
+		Richfaces.hideModalPanel(panel);
+       	//document.getElementById('panelAnotacaoContentDiv').style.display = 'none';
+       	//document.getElementById('panelAnotacaoDiv').style.display = 'none';
+	} else if (erro == 9999) {
+		alert('Aconteceu um erro inesperado, por favor entre em contato com o NTI.');
+	}
+}
+
+function validaAnotacao(msg)
+{
+	if(msg != '')
+	{
+		if(msg == 'OK')
+		{
+			alert('A Declaração foi gravada com Sucesso.');
+	       	document.getElementById('panelDeclaracaoContentDiv').style.display = 'none';
+	       	document.getElementById('panelDeclaracaoDiv').style.display = 'none';
+		}
+		else
+		{
+			alert(msg);
+		}
+	}
+}
+</script>
+
+</ui:define>
+</ui:composition>
+</html>

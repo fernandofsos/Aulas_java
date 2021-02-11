@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:a4j="http://richfaces.org/a4j"
+		xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="conteudo">
+	<a4j:keepAlive beanName="cid10Form"></a4j:keepAlive>
+			
+	<!-- FORM -->
+	<h:form>
+		<div class="cabAreaPesquisa">CID 10</div>
+		<h:panelGroup styleClass="areaPesquisa" layout="block" id="filtros" > 
+    		<div class="col180">         	
+        		<label>Pesquisar:</label><br/>
+				<h:inputText id="inputPesquisa" 
+				             value="#{cid10Form.valorPesquisa}"
+				             styleClass="campoTexto"  
+				             style="width: 170px;" /><br/>
+				<a4j:commandLink action="#{cid10Form.buscar()}" 
+				                 value="Listar Apenas os Relevantes" 
+				                 reRender="dtCid10,totalRegs,ddpGrupos,ddpCategorias"
+				                 styleClass="linkGeral">
+					<f:setPropertyActionListener target="#{cid10Form.tipoBusca}" value="#{1}"/>
+				</a4j:commandLink><br/>
+				<a4j:commandLink action="#{cid10Form.buscar()}" 
+				                 value="Listar com Pesquisa Adicional" 
+				                 reRender="dtCid10,totalRegs,ddpGrupos,ddpCategorias"
+				                 styleClass="linkGeral">
+					<f:setPropertyActionListener target="#{cid10Form.tipoBusca}" value="#{2}"/>
+				</a4j:commandLink>				 				       
+			</div>	
+			<div class="col70" >
+	            <rich:spacer height="12px"/><br/>
+	            <a4j:commandButton image="IMG/pesquisa.gif" 
+	           	        id="btnPesquisa" 
+	           	        action="#{cid10Form.buscar}" 
+		    			oncomplete="avisosPesquisa(#{cid10Form.erroCid10})"
+		    			reRender="dtCid10,totalRegs,ddpGrupos,ddpCategorias" >
+		    		<f:setPropertyActionListener target="#{cid10Form.tipoBusca}" value="#{0}"/>	
+		    	</a4j:commandButton>
+		    	<rich:hotKey key="return" selector="#inputPesquisa" 
+		    	             handler="#{rich:element('btnPesquisa')}.click()"/>		    		             		
+		    </div>
+	        <div class="col390" >
+	            <label>Categorias:</label><br/>
+	           	<h:selectOneMenu id="ddpCategorias" 
+					             value="#{cid10Form.isnCategoria}" 
+					             style="width:390px;" styleClass="selectItens">
+					<f:selectItems value="#{cid10Form.sliCategoriasCid}" />
+					<a4j:support action="#{cid10Form.listarGruposPorCategoria}"
+						         event="onchange"						              
+						         ajaxSingle="true"
+						         reRender="ddpGrupos,dtCid10,totalRegs"/>
+				</h:selectOneMenu><br></br>
+				<label>Grupo:</label><br/>
+	           	<h:selectOneMenu id="ddpGrupos" 
+					             value="#{cid10Form.isnGrupo}" 
+					             style="width:390px;" styleClass="selectItens">
+					<f:selectItems value="#{cid10Form.sliGruposCid}" />
+					<a4j:support action="#{cid10Form.listarCid10}"
+						         event="onchange"						              
+						         ajaxSingle="true"
+						         reRender="dtCid10,totalRegs"/>
+				</h:selectOneMenu>	
+		    </div>	
+		    <div class="col130" style="text-align: right">
+	       	   	<label>Resultado:</label><br/>
+			    <h:outputText styleClass="totalizador2" value="#{cid10Form.totalRegistros}" id="totalRegs"/> 
+	        </div>
+    	</h:panelGroup>
+    	
+		<!-- DATATABLE -->
+		<rich:dataTable 
+			id="dtCid10" 
+			onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+			value="#{cid10Form.lstCid10}" 
+			var="cid10"
+			rows="40"
+			rowKeyVar="linha" 
+			style="width: 100%; font-size: 12px"
+			reRender="ds">	
+					
+			<f:facet name="header">
+				<rich:columnGroup>
+					<h:column >
+						<h:outputText value="Sel." />
+					</h:column>					
+					<h:column>
+						<h:outputText value="Código" />
+					</h:column>
+					<h:column>
+						<h:outputText value="Descrição" />
+					</h:column>		
+					<h:column>
+						<h:outputText value="Categoria/Grupo" />
+					</h:column>
+					<h:column rendered="#{cid10Form.tipoBusca==2}">
+						<h:outputText value="Pesquisa Adicional" />
+					</h:column>						
+					<h:column>
+						<h:outputText value="---" />
+					</h:column>
+				</rich:columnGroup>
+			</f:facet>
+			
+			<rich:column width="5%">
+				<center>
+					<a4j:commandLink id="selecionar" action="csCid10FromCdCid10">						                   
+						<h:graphicImage id="imgSel02" url="IMG/selecionar.png" style="border:0;" />
+						<f:setPropertyActionListener value="#{cid10}" target="#{cid10Form.objCid10}" />							
+					</a4j:commandLink>
+				</center>
+			</rich:column>
+				
+			<rich:column width="8%" style="text-align: center; font-size: 12px">
+				<h:outputText value="#{cid10.codCid10}" />
+			</rich:column>
+				
+			<rich:column style="font-size: 11px">
+				<h:outputText value="#{cid10.dscCid10}" />
+			</rich:column>
+						
+			<rich:column>
+				<h:outputText value="#{cid10.cid10Grupo.cid10Categoria.dscCid10Categoria}" />
+			</rich:column>
+						
+			<rich:column rendered="#{cid10Form.tipoBusca==2}">
+				<h:outputText value="#{cid10.dscAtalho}" />
+			</rich:column>
+			
+			<rich:column>
+			    <h:graphicImage id="imgFav" url="#{(cid10.flgFavorito=='S')?'IMG/star_yellow.png':'IMG/star_grey.png'}" style="border:0;" />				
+			</rich:column>
+			<!-- RODAPE DA TABELA -->	
+			<f:facet name="footer">
+		       	<rich:datascroller fastControls="auto"  maxPages="5" id="ds" ajaxSingle="false" />
+		    </f:facet>
+		</rich:dataTable>
+		<br/><br/><br/>
+	</h:form>
+</ui:define>
+</ui:composition>
+</html>

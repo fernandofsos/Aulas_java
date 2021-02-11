@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="headHtml">
+ 
+	</ui:define>
+	<ui:define name="conteudo">
+	<a4j:keepAlive beanName="marcacaoForm" />
+	
+	<rich:modalPanel id="panelStatus" autosized="true">  
+ 		<h:panelGrid columns="2"> 
+ 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+ 			<h:outputText value="Carregando..." />
+ 		</h:panelGrid> 
+	</rich:modalPanel>
+	
+	
+	
+	<!-- MODAL PANEL DE PROFISSIONAL -->
+	
+	<rich:modalPanel id="panProfissional" autosized="false" width="900" height="500" resizeable="false"
+		                 headerClass="headerPanel3">
+		<!-- BARRA DE TITULO MODAL-->
+    	<f:facet name="header">
+			<h:panelGroup>
+       			<h:outputText value="Pesquisa de Profissional"></h:outputText>
+       		</h:panelGroup>
+    	</f:facet>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanel"/>
+        		<rich:componentControl for="panProfissional" attachTo="fechaPanel" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+    	
+    	<h:form id="formProfissional">
+    		<fieldset style="background-color: #F5F5F5">
+                		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 15%;">     
+	       				<label class="font12" ><b>Nome:</b></label>
+	       			</div>
+	       			<div class="colLeft largura220">
+	       				<h:inputText value="#{marcacaoForm.nmUsuario}" maxlength="50" styleClass="campoTexto largura200" onblur="this.value.toUpperCase();" style="width: 450px;" id="nmProfissional"/>
+	       			</div>	       			       
+	    		</div>
+	    		<div style="height: 30px">
+				    <div class="colLeft" style="width: 15%;">     
+	       				<label class="font12"><b>Especialidade:</b></label>
+	       			</div>
+	       			<div class="col190">
+	       				<h:selectOneMenu id="espProfissional" 
+											 style="width: 180px"
+											 value="#{marcacaoForm.isnEspecialidade}">
+								<f:selectItems var="o" itemValue="o.isnEspecialidade" itemLabel="o.dscEspecialidade" value="#{marcacaoForm.lstEsp}" />
+							</h:selectOneMenu>
+	       			</div>       			   
+	    		</div>
+	    		<div style="height: 20px">
+				    <div class="colLeft" style="width: 100%;">     
+	       				<a4j:commandButton style="width: 80px; height: 20px;" oncomplete="validaMarcacao('#{marcacaoForm.msgMarcacao}');" id="pesquisar" value="Pesquisar" actionListener="#{marcacaoForm.pesquisar}" reRender="formProfissional"/>
+	       			</div>
+	    		</div>
+    		</fieldset>
+    		
+    		
+    		<div>
+			<rich:dataTable id="tabelaProfissional"
+					onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+					value="#{marcacaoForm.listUsrEsp}" 
+					var="listaProfissional" 
+					rows="10"
+					rowKeyVar="linha" 
+					style="width: 100%; cursor: pointer;">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column>
+							<h:outputText width="5%"/>
+						</h:column>
+						<h:column>
+							<h:outputText width="20%" value="Nome" />
+						</h:column>
+						<h:column>
+							<h:outputText width="30%" value="Especialidade" />
+						</h:column>
+						<h:column>
+							<h:outputText width="45%" value="Escalas" />
+						</h:column>
+					</rich:columnGroup>
+				</f:facet>
+				
+				<rich:column align="center" width="5%" sortable="true">
+					<a4j:commandLink action="#{marcacaoForm.retornarProfissionalPesquisa}" reRender="prof, pnProfissional" oncomplete="#{rich:component('panProfissional')}.hide()">
+						<h:graphicImage id="imgSelecionar" url="IMG/selecionar.png" style="border:0;" />
+						<f:setPropertyActionListener value="#{listaProfissional}" target="#{marcacaoForm.objUsuarioEspecialidade}"/>						
+					</a4j:commandLink>
+				</rich:column>
+				
+				<rich:column width="65%" sortable="true">
+					<h:outputText value="#{listaProfissional.usuarioBean.dscUsuario}" />
+				</rich:column>
+				
+				<rich:column width="30%" sortable="true">
+					<h:outputText value="#{listaProfissional.especialidadeBean.dscEspecialidade}" />
+				</rich:column>
+
+				<rich:column width="30%" sortable="true">
+					<h:selectOneMenu id="escDisp" style="width:150px;"
+								  value="#{marcacaoForm.isnAux}">
+					<f:selectItems var="o" itemValue="o.isnEscala" itemLabel="o.strEscala" value="#{listaProfissional.listaEscalasDisponiveis}" />					
+				</h:selectOneMenu>
+				</rich:column>
+				
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+		</div>
+		
+		<script>
+			function validaMarcacao(msg)
+			{
+				if(msg != '')
+				{
+					alert(msg);
+				}
+			}			
+		</script>
+		
+    	</h:form>
+    	
+ 	</rich:modalPanel>	
+	<!-- FINAL DO MODAL PANEL DE PROFISSIONAL -->
+	
+	
+	
+	<h:form id="csMarcacao" >
+		<div id="geral">
+		   	<label class="cabAreaPesquisa">PESQUISAR MARCAÇÃO</label>  	 
+			<div class="areaPesquisa">   
+        		<fieldset>
+        			<div style="height: 30px;">
+					    <div class="colLeft" style="width: 15%;">     
+		       				<label class="font12" ><b>Protocolo: <font color="red">*</font> </b></label>
+		       			</div>
+		       			<div class="colLeft largura220">
+							<h:inputText value="#{marcacaoForm.objMarcacao.isnMarcacao}" onkeypress="return soNumero(event, this)" id="isnMarcacao" onblur="upper(this);" maxlength="5" style="width:55px; height:16px; text-transform:uppercase;"/>
+		       			</div>	       			       
+	    			</div>
+	    			
+	    			<h:panelGroup id="prof" layout="block">
+	    			<div style="height: 30px;">
+					    <div class="colLeft" style="width: 15%;">     
+		       				<label class="font12" ><b>Profissional: </b></label>
+		       			</div>
+		       			<div class="colLeft" style="width: 48%;">
+							<h:inputText value="#{marcacaoForm.nmUsuario}" disabled="true" id="profissional" onblur="upper(this);" maxlength="5" style="width:355px; height:16px; text-transform:uppercase;"/>
+							<h:inputHidden value="#{marcacaoForm.objMarcacao.isnUsuarioProfissional}" />
+		       			</div>
+		       			<div style="float: left; margin-top:-3px "><a4j:commandButton image="IMG/pesquisa.gif" 
+        													   immediate="true"
+        			                                                  id="btnProfissional"
+											           		      action="#{marcacaoForm.abrirProfissional}"
+											           		      oncomplete="Richfaces.showModalPanel('panProfissional');"
+												    		    reRender="panProfissional" /></div>
+	    			</div>
+	    			
+	    			<div style="height: 30px;">
+					    <div class="colLeft" style="width: 15%;">     
+		       				<label class="font12" ><b>Especialidade: </b></label>
+		       			</div>
+		       			<div class="colLeft largura220">
+							<h:inputText value="#{marcacaoForm.nmEspecialidade}" disabled="true" id="especialidade" onblur="upper(this);" maxlength="5" style="width:410px; height:16px; text-transform:uppercase;"/>
+							<h:inputHidden value="#{marcacaoForm.objMarcacao.isnEspecialidade}" />
+		       			</div>
+	    			</div>
+	    			
+	    			<div style="height: 30px;">
+					    <div class="colLeft" style="width: 15%;">     
+		       				<label class="font12" ><b>Escala: <font color="red">*</font> </b></label>
+		       			</div>
+		       			<div class="colLeft largura220">
+							<h:selectOneMenu id="tpEscala"
+										  value="#{marcacaoForm.objMarcacao.isnEscala}">
+							 	<f:selectItems var="o" itemValue="o.isnEscala" itemLabel="o.strEscala" value="#{marcacaoForm.listEscala}" />								
+							</h:selectOneMenu>
+		       			</div>
+	    			</div>
+	    			</h:panelGroup>
+	    			<div style="height: 30px;">
+					    <div class="colLeft" style="width: 15%;">     
+		       				<label class="font12" ><b>Paciente: <font color="red">*</font></b></label>
+		       			</div>
+		       			<div class="colLeft largura220">
+							<h:inputText value="#{marcacaoForm.objMarcacao.dscNome}" id="paciente" onblur="upper(this);" maxlength="100" style="width:410px; height:16px; text-transform:uppercase;"/>
+		       			</div>
+	    			</div>
+	    			
+	    			<div style="height: 30px;">
+					    <div class="colLeft" style="width: 15%;">     
+		       				<label class="font12" ><b>Consulta: </b></label>
+		       			</div>
+		       			<div class="colLeft largura220">
+							<h:selectOneMenu id="tpConsulta"											 
+											 value="#{marcacaoForm.objMarcacao.isnTipoConsulta}">
+								<f:selectItems var="o" itemValue="o.isnTipoConsulta" itemLabel="o.dscTipoConsulta" value="#{marcacaoForm.lstTpCns}" />
+							</h:selectOneMenu>
+		       			</div>
+	    			</div>
+	    			
+	    			<div style="height: 30px;">
+					    <div class="colLeft" style="width: 15%;">     
+		       				<label class="font12" ><b>Dt. da Escala: <font color="red">*</font></b></label>
+		       			</div>
+		       			<div class="colLeft" style="height: 30px;">
+							<rich:calendar id="datInicial" value="#{marcacaoForm.datInicial}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)" />
+	       						<font size="1"><h:outputText value=" a "/></font>
+	       					<rich:calendar id="datFinal" value="#{marcacaoForm.datFinal}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)" />
+		       			</div>
+	    			</div>
+	    			
+	    		</fieldset> 
+	    		<div style="height: 30px;">
+					    <div class="colLeft" style="width: 100%;">     
+		       				<label class="font10" >Pelo menos um dos campos com  <font color="red">*</font> é obrigatório!</label>
+		       			</div>
+	    			</div>
+	    		
+	    		<div>
+		    		<a4j:commandButton id="btnPesquisar"
+			  	    					value="Pesquisar"
+									   action="#{marcacaoForm.pesquisarMarcacao}"								  
+								   oncomplete="validaMarcacao('#{marcacaoForm.msgMarcacao}');"
+								   styleClass="botaoModal100"
+										style="margin-right: 10px;"
+										reRender="csMarcacao">									
+					</a4j:commandButton>
+		    			
+	        		<a4j:commandButton id="btnNovo"
+			  	    					value="Novo"
+			  	    					action="#{marcacaoForm.cancelar}"
+									   onclick="window.location = '/paciente/cd_marcacao.jsf';"
+								   styleClass="botaoModal100"
+										style="margin-right: 10px;"
+										reRender="csMarcacao">									
+					</a4j:commandButton>
+				</div>
+				
+				<br/>
+				
+				<div>
+					<rich:dataTable id="tblDataMarcacao"
+							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"					
+							value="#{marcacaoForm.listMarcacoes}" 
+							var="rst" 
+							rows="8"
+							binding="#{marcacaoForm.tblDataMarcacao}" 
+							rowKeyVar="linha"
+							rendered="#{not empty marcacaoForm.listMarcacoes}"
+							style="width: 100%; cursor: pointer;">
+						<f:facet name="header">
+							<rich:columnGroup>														
+								<h:column>
+									<h:outputText width="5%" value="Prot." />
+								</h:column>
+								<h:column>
+									<h:outputText value="Paciente" />
+								</h:column>								
+								<h:column>
+									<h:outputText value="Profissional" />
+								</h:column>
+								<h:column>
+									<h:outputText value="Especialidade" />
+								</h:column>
+								<h:column>
+									<h:outputText value="Escala" />
+								</h:column>
+								
+								<h:column>
+									<h:outputText value="Situação" />
+								</h:column>
+								
+								<h:column>
+									<h:outputText width="2%" />
+								</h:column>
+								
+								<h:column>
+									<h:outputText width="2%" />
+								</h:column>
+								
+								<h:column>
+									<h:outputText width="2%" />
+								</h:column>
+								
+								<h:column>
+									<h:outputText width="2%" />
+								</h:column>
+							</rich:columnGroup>
+						</f:facet>
+						
+						<rich:column sortable="true">
+							<h:outputText value="#{rst.isnMarcacao}" />
+						</rich:column>						
+						<rich:column sortable="true">
+							<h:outputText value="#{rst.dscNome}" />
+						</rich:column>		
+						<rich:column sortable="true">
+							<h:outputText value="#{rst.usuarioProfissional.dscUsuario}" />
+						</rich:column>
+						<rich:column sortable="true">
+							<h:outputText value="#{rst.especialidadeBean.dscEspecialidade}" />
+						</rich:column>
+						<rich:column sortable="true">
+							<h:outputText value="#{rst.escalaBean.datEscala}" />
+						</rich:column>
+						<rich:column sortable="true">
+							<h:outputText value="#{rst.marcacaoSituacaoBean.dscMarcacaoSituacao}" />
+						</rich:column>
+						
+						<rich:column sortable="true" style="text-align: center;">
+							<a4j:commandLink action="#{marcacaoForm.visualizar}" title="VISUALIZAR MARCAÇÃO" reRender="panVisualizacao" oncomplete="#{rich:component('panVisualizacao')}.show()">
+								<h:graphicImage id="imgVis" url="IMG/visualizar.gif" style="border:0; width: 12px; height: 12px; text-align: center;" />
+								<f:setPropertyActionListener value="#{rst.isnMarcacao}" target="#{marcacaoForm.isnMarcacao}" />								
+							</a4j:commandLink>
+						</rich:column>
+						
+						<rich:column sortable="true" style="text-align: center;">
+							<a4j:commandLink action="#{marcacaoForm.verObservacoes}" title="VISUALIZAR OBSERVAÇÕES" reRender="csMarcacao, panObservacoes" oncomplete="#{rich:component('panObservacoes')}.show()">
+								<h:graphicImage id="imgObs" url="IMG/observacoes.jpg" style="border:0; width: 12px; height: 12px; text-align: center;" />
+								<f:setPropertyActionListener value="#{rst.isnMarcacao}" target="#{marcacaoForm.isnMarcacao}" />
+								<f:setPropertyActionListener value="#{rst.dscNome}" target="#{marcacaoForm.nmPaciente}" />
+							</a4j:commandLink>
+						</rich:column>
+						
+						<rich:column sortable="true" style="text-align: center;">
+							<h:commandLink action="#{marcacaoForm.preparaAlterar}" title="ALTERAR">
+								<h:graphicImage id="imgAlterar" url="IMG/icone_alterar.gif" style="border:0; width: 12px; height: 12px; text-align: center;" />	
+								<f:setPropertyActionListener value="#{rst.isnMarcacao}" target="#{marcacaoForm.isnMarcacao}" />							
+							</h:commandLink>
+						</rich:column>
+						
+						<rich:column sortable="true" style="text-align: center;">
+							<a4j:commandLink action="#{marcacaoForm.excluir}" title="CANCELAR" onclick="if (!confirm('Deseja realmente cancelar esta marcacao?')) return false;" oncomplete="validaMarcacao('#{marcacaoForm.msgMarcacao}');" rendered="#{rst.isnMarcacaoSituacao != 6}" reRender="csMarcacao">
+								<h:graphicImage id="imgExcluir" url="IMG/icone_excluir.gif" style="border:0; width: 12px; height: 12px; text-align: center;" />								
+							</a4j:commandLink>						
+						</rich:column>
+			
+						<f:facet name="footer">
+							<rich:datascroller id="ds" ajaxSingle="false" />
+						</f:facet>
+					</rich:dataTable>
+				</div>
+				
+					
+        	</div>
+       	</div>  
+       	
+       	<a4j:status id="statusPanel"
+			   onstart="Richfaces.showModalPanel('panelStatus');" 
+			    onstop="#{rich:component('panelStatus')}.hide()">
+		</a4j:status>   
+	</h:form>
+	
+	
+	
+	<!-- MODAL PANEL DE OBSERVAÇÕES -->
+	
+	<rich:modalPanel id="panObservacoes" autosized="false" width="900" height="500" resizeable="false"
+		                 headerClass="headerPanel3">
+		<!-- BARRA DE TITULO MODAL-->
+    	<f:facet name="header">
+			<h:panelGroup>
+       			<h:outputText value="Observações da Marcação"></h:outputText>
+       		</h:panelGroup>
+    	</f:facet>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanelObs"/>
+        		<rich:componentControl for="panObservacoes" attachTo="fechaPanelObs" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+    	
+    	<h:form id="formProfissionalObs">
+    		<fieldset style="background-color: #F5F5F5">                		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 15%;">     
+	       				<label class="font12" ><b>Protocolo:</b></label>
+	       			</div>
+	       			<div class="colLeft largura220">
+	       				<h:outputText value="#{marcacaoForm.isnMarcacao}" />
+	       			</div>	       			       
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 15%;">     
+	       				<label class="font12" ><b>Paciente:</b></label>
+	       			</div>
+	       			<div class="colLeft largura220">
+	       				<h:outputText value="#{marcacaoForm.nmPaciente}" />
+	       			</div>	       			       
+	    		</div>	    			    		
+    		</fieldset>
+    		
+    		
+    		<div>
+			<rich:dataTable id="tabelaObservacoes"
+					onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+					value="#{marcacaoForm.listObservacoes}" 
+					var="rst" 
+					rows="10"
+					rowKeyVar="linha" 
+					style="width: 100%; cursor: pointer;">
+				<f:facet name="header">
+					<rich:columnGroup>						
+						<h:column>
+							<h:outputText value="Descrição" />
+						</h:column>
+						<h:column>
+							<h:outputText value="Data de Cadastro" />
+						</h:column>
+						<h:column>
+							<h:outputText value="Usuario de Cadastro" />
+						</h:column>
+					</rich:columnGroup>
+				</f:facet>
+												
+				<rich:column sortable="true" style="width:40%" title="#{rst.dscMarcacaoObs}">
+					<h:outputText value="#{rst.dscMarcacaoObsTitulo}" />
+				</rich:column>
+				
+				<rich:column sortable="true"  title="#{rst.dscMarcacaoObs}">
+					<h:outputText value="#{rst.usuarioBean.dscUsuario}"/>
+				</rich:column>
+
+				<rich:column sortable="true"  style="text-align: center; width: 20%"  title="#{rst.dscMarcacaoObs}">
+					<h:outputText value="#{rst.datCadastro}" converter="ConversorDeDataHora"/>
+				</rich:column>
+				
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+		</div>
+						
+    	</h:form>
+    	
+ 	</rich:modalPanel>	
+	<!-- FINAL DO MODAL PANEL DE OBSERVAÇÕES -->
+	
+	
+	<!-- MODAL PANEL DE VISUALIZAÇÃO -->	
+	<rich:modalPanel id="panVisualizacao" autosized="false" width="900" height="540" resizeable="false"
+		                 headerClass="headerPanel3">
+		<!-- BARRA DE TITULO MODAL-->
+    	<f:facet name="header">
+			<h:panelGroup>
+       			<h:outputText value="Visualizar Marcação"></h:outputText>
+       		</h:panelGroup>
+    	</f:facet>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanelVsl"/>
+        		<rich:componentControl for="panVisualizacao" attachTo="fechaPanelVsl" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+    	
+    	<h:form id="formProfissionalVsl">
+    		<fieldset style="background-color: #F5F5F5">   		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Protocolo:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.isnMarcacao}" />
+	       			</div>	       			       
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Paciente:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.dscNome}" />
+	       			</div>	       			       
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Contato:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.dscContato}" />
+	       			</div>	       			       
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Observação:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.dscObs}" />
+	       			</div>	       			       
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Profissional:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.usuarioProfissional.dscUsuario}" />
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Especialidade:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.especialidadeBean.dscEspecialidade}" />
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Escala:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.nmEscala}" />
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Tipo de Consulta:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.tipoConsultaBean.dscTipoConsulta}" />
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Situação:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.marcacaoSituacaoBean.dscMarcacaoSituacao}" />
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Prioritário:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="SIM" rendered="#{marcacaoForm.objMarcacao.flgPrioritario == 'S'}"/>
+						<h:outputText value="NÃO" rendered="#{marcacaoForm.objMarcacao.flgPrioritario == 'N'}"/>
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Obs Prioritário:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.dscPrioritario}" />
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Presente:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="SIM" rendered="#{marcacaoForm.objMarcacao.flgPresente == 'S'}"/>
+						<h:outputText value="NÃO" rendered="#{marcacaoForm.objMarcacao.flgPresente == 'N'}"/>
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Chegada:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.horChegada}" converter="ConversorDeDataHora"/>						
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>TAP:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="SIM" rendered="#{marcacaoForm.objMarcacao.flgTap == 'S'}"/>
+						<h:outputText value="NÃO" rendered="#{marcacaoForm.objMarcacao.flgTap == 'N'}"/>						
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Ultima Alteração:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.datCadastro}" converter="ConversorDeDataHora"/>						
+	       			</div>
+	    		</div>
+	    		
+	    		<div style="height: 30px;">
+				    <div class="colLeft" style="width: 17%;">     
+	       				<label class="font12" ><b>Usuário de Alteração:</b></label>
+	       			</div>
+	       			<div class="colLeft ">
+	       				<h:outputText value="#{marcacaoForm.objMarcacao.usuarioBean.dscUsuario}" />						
+	       			</div>
+	    		</div>
+	    		
+    		</fieldset>			
+    	</h:form>
+    	
+ 	</rich:modalPanel>	
+	<!-- FINAL DO MODAL PANEL DE VISUALIZAÇÃO -->
+	
+	
+	
+	</ui:define>
+	
+</ui:composition>
+
+</html>

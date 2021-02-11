@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">	
+    <ui:define name="headHtml">
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="pragma" content="no-cache" />	
+	</ui:define>  
+	<ui:define name="conteudo">
+		<a4j:keepAlive beanName="ambulatorioForm" />
+	
+<h:form id="cdEmergenciExame" >
+	<label class="tituloPagina">ATENDIMENTO DE AMBULATÓRIO</label>
+    <div class="quadroPaciente">			
+		<div class="col390">
+			<label>Nome do Paciente:</label><br />
+		   	<h:outputText id="nmPaciente" value="#{emergenciaExameForm.objPaciente.dscNome}" 
+	   		              styleClass="campoVazio col380" ></h:outputText>
+		</div>
+		<div class="col390">
+			<label>Nome da Mãe:</label><br />
+		   	<h:outputText id="nmMae" value="#{emergenciaExameForm.objPaciente.dscMae}" 
+		   		        styleClass="campoVazio col380" ></h:outputText>
+		</div>	
+		<div class="col390" style="margin-right: 10px">
+			<div class="col70" style="margin-right: 10px">				
+				<label>Sexo:</label><br />
+				<h:outputText value="#{emergenciaExameForm.objPaciente.sexo.dscSexo}" styleClass="campoVazio col70" />
+			</div>
+			<div class="col220" style="margin-right: 10px">
+			    <label>Data Nascimento:</label><br />						
+				<h:outputText value="#{emergenciaExameForm.objPaciente.idade}" styleClass="campoVazio col220" />								
+			</div>
+			<div class="col70">
+			    <label>Prontuario:</label><br />
+				<h:outputText value="#{emergenciaExameForm.objPaciente.numProntuario} " styleClass="campoVazio col70" />
+			</div>
+		</div>
+    </div>
+    <div class="quadroEdicaoU">      	  
+    	<div class="col450"  style="margin-right: 10px"> 
+        	<label>Situação Familiar:</label>
+            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+			<h:selectOneMenu id="dropDownSituacao" 
+							value="#{emergenciaExameForm.objInternacao.situacaoFamiliar.isnSituacaoFamiliar}"
+							style="width: 435px">
+				<f:selectItems value="#{emergenciaExameForm.sliSituacaoFamilia}" />
+			</h:selectOneMenu>			   
+        </div>
+        <div class="col300">
+            <label>Escolaridade:</label>
+            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+			<h:selectOneMenu id="dropDownEscolaridade" 
+							value="#{emergenciaExameForm.objInternacao.escolaridade.isnEscolariade}"
+							style="width: 300px">
+				<f:selectItems value="#{emergenciaExameForm.sliEscolaridade}" />
+			</h:selectOneMenu>			   
+        </div>
+        <div class="col385" style="margin-right: 10px"> 
+        	<label>Religião:</label>
+            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+			<h:inputText id="inputReligiao" style="width: 365px; text-transform:uppercase;"				  	       
+				       value="#{emergenciaExameForm.objInternacao.dscReligiao}"
+				       maxlength="30" />			  		       
+        </div>
+        <div class="col385">
+        	<label>Ocupação:</label>
+            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+			<h:selectOneMenu id="dropDownOcupacao" 
+						   value="#{emergenciaExameForm.objInternacao.ocupacao.isnOcupacao}"
+						   style="width: 365px" >
+			<f:selectItems value="#{emergenciaExameForm.sliOcupacao}"/>
+			</h:selectOneMenu>			  
+        </div>
+    </div>
+    <div class="quadroEdicaoU">          
+        <div class="col420">
+            <label>Endereço</label>
+            <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+			<h:inputText id="inputEndereco" 
+				     	value="#{emergenciaExameForm.objInternacao.dscEndereco}"					     
+				     	style="width: 390px;text-transform:uppercase;" />
+        </div>
+        <div class="col320">
+            <label>Complemento</label><br />
+			<h:inputText id="inputComplemento" value="#{emergenciaExameForm.objInternacao.dscComplemento}"							 
+						style="width: 310px;text-transform:uppercase;" />
+        </div>
+        <br style="clear: both"/>         
+        <div class="col420">
+        	<div style="width: 270px; float: left">  
+            	<label>Bairro:</label>
+                <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+				<h:inputText id="inputBairro" 
+					 	value="#{emergenciaExameForm.objInternacao.dscBairro}"
+					 	maxlength="60"					 
+					 	style="width: 230px;text-transform:uppercase;" />				 
+			</div>              
+			<div style="width: 130px; float: left">
+                <label>CEP:</label>
+                <h:outputText value="*" style="color:red;font-weight: bold;" /><br />
+				<h:inputText id="inputCep" 				     	
+		             	value="#{emergenciaExameForm.objInternacao.numCep}"
+		             	maxlength="9"
+		             	onkeydown="formataCEP(this);"		             	
+		             	style="width: 110px" />	   			 	
+            </div>
+        </div>                
+        <div class="col320">
+			<div style="width: 260px; float: left">	
+            	<label>Cidade:</label>
+                <h:outputLabel style="color:red;font-weight: bold;" value=" * " /><br />
+				<h:selectOneMenu id="dropDownMunicipio" style="width: 240px"  
+				                 value="#{emergenciaExameForm.objInternacao.municipio.isnMunicipio}" >
+					<a4j:support id="sptMun" reRender="outputUf01"
+					             action="#{emergenciaExameForm.buscarUf}"
+					             event="onchange" 
+					             ajaxSingle="true"/>
+					<f:selectItems value="#{emergenciaExameForm.sliMunicipio}" />
+				</h:selectOneMenu>				  
+            </div>    
+            <div style="width: 60px; float: left">
+                <label>UF:</label><br />
+				<h:outputText id="outputUf01" value="#{emergenciaExameForm.strUf}" styleClass="campoVazio" style="width: 50px"/>
+            </div>
+        </div> 
+    </div>
+    <div class="quadroEdicaoU">
+        <div class="col385">
+                <label><b>Telefone 1</b></label>
+	            <div>
+	                <label style="width: 100px">DDD, Tipo, Nº:</label>
+					<h:inputText id="inputDDDFixo1" value="#{emergenciaExameForm.objInternacao.numDdd1}"
+					      		   maxlength="2"  style="width: 30px" />
+	 				<label></label>
+	 				  	              
+					<h:selectOneMenu id="dropDownTipoTelefone1" 
+			                         value="#{emergenciaExameForm.objInternacao.tipoTelefone1.isnTipoTelefone}">
+				 		  <f:selectItems value="#{emergenciaExameForm.sliTipoTelefone}" />
+			     	</h:selectOneMenu>
+			     	<label></label>
+				      
+					<h:inputText id="inputTelefoneFixo1" 	    	         	
+	        	      		value="#{emergenciaExameForm.objInternacao.numTelefone1}"
+					 		maxlength="8"					 	
+					 		style="width: 109px"/>
+    				  
+	            </div>     
+	            <div>
+	                <label style="width: 100px">Contato:</label>
+					<h:inputText id="inputContato1"  value="#{emergenciaExameForm.objInternacao.dscTelefone1Contato}"
+						 maxlength="15" style="width: 260px"/>
+	            </div>         
+            </div>
+            <div class="col385">
+                <label><b>Telefone 2</b></label>
+	        	<div>
+	            	<label style="width: 100px">DDD, Tipo, Nº:</label>
+	    			<h:inputText id="inputDDDCelular2"  value="#{emergenciaExameForm.objInternacao.numDdd2}"
+						 		  maxlength="2" style="width: 30px"/>
+	              	<label></label>                
+					  
+					<h:selectOneMenu id="dropDownTipoTelefone2" 
+			                         value="#{emergenciaExameForm.objInternacao.tipoTelefone2.isnTipoTelefone}">
+				 		<f:selectItems value="#{emergenciaExameForm.sliTipoTelefone}" />
+			     	</h:selectOneMenu>             
+                    <label></label>
+                      					
+			 		<h:inputText id="inputTelefoneCelular2" styleClass="inputs"	    	      		    
+		       		       value="#{emergenciaExameForm.objInternacao.numTelefone2}"
+						   maxlength="8"					    
+					 	   style="width: 109px"/>
+					  	   
+	            </div>     
+	            <div>
+	                <label style="width: 100px">Contato:</label>
+			 		<h:inputText id="inputContato2" styleClass="inputs"		   	      	   
+		       					value="#{emergenciaExameForm.objInternacao.dscTelefone2Contato}"
+					   			maxlength="15" style="width: 260px"/>
+	            </div>         
+            </div>
+    </div>	  
+	<div class="quadroEdicaoU">		
+        <div>
+        	<h:selectBooleanCheckbox id="flgAcidenteTrabalho" value="#{emergenciaExameForm.flgAcidTrabalho}">
+				<f:selectItems value="#{emergenciaExameForm.flgAcidTrabalho}"/>
+			</h:selectBooleanCheckbox>
+			<label><b>ACIDENTE DE TRABALHO</b></label><br/>
+        </div> 
+        <div>
+          	<h:selectBooleanCheckbox id="flgplanoSaude" value="#{emergenciaExameForm.flgPlanoSaude}">
+				<f:selectItems value="#{emergenciaExameForm.flgPlanoSaude}"/>
+			</h:selectBooleanCheckbox>
+			<label><b>PLANO DE SAÚDE</b></label><br/>
+        </div>                  
+	</div>	
+	<div class="quadroEdicaoU">        
+    	<div class="col385">
+        	<label><b>CONDIÇÕES EM QUE O PACIENTE CHEGOU</b></label><br />                 
+   			<h:selectOneRadio id="radioCondPaciente" value="#{emergenciaExameForm.objInternacao.flgSemAndar}">
+				<f:selectItem id="condPaciente1" itemLabel="Deambulando"     itemValue="1" />
+				<f:selectItem id="condPaciente2" itemLabel="Cadeira de Roda" itemValue="2" />
+				<f:selectItem id="condPaciente3" itemLabel="Maca"            itemValue="3" />
+			</h:selectOneRadio>
+		</div>		
+	</div> 	
+    <div class="quadroEdicaoU">        
+		<div class="col385" style="margin-right: 10px">
+			<label>Observação:</label><br />
+		    <h:inputTextarea id="inputAreaObsInternacaoLeito" 
+	   	       		       	   style="text-transform:uppercase; width: 380px"
+	           			   	   value="#{emergenciaExameForm.objInternacao.dscObs}" 
+			   			   	   maxlength="500" />
+        </div>
+        <div class="col385">
+            <div style="float: left; margin-right: 10px">
+            	<label>Regulação:</label><br />
+ 				<h:selectOneMenu id="dropDownRegulacao" 
+            	             value="#{emergenciaExameForm.objInternacaoLeito.regulacao.isnRegulacao}"            	                         	                          	                         	              
+            	             onchange="mostrarNumeroRegulacao()">
+					<f:selectItems value="#{emergenciaExameForm.sliRegulacao}" />
+ 				</h:selectOneMenu>
+  				<h:outputLabel style="color:red;" value="*" />
+  			</div>
+  			<div style="float: left">       
+  			    <div id="panNumRegulacao" style="visibility:hidden">
+  					<label>Numero da Regulação</label><br />
+					<h:inputText id="inputNumRegulacao" styleClass="inputs"				     
+		            	 value="#{emergenciaExameForm.objInternacaoLeito.numRegulacao}"
+		             	 maxlength="50" style="width: 200px; text-transform:uppercase;"/>
+		        	<h:outputLabel style="color:red;" value="*" />
+		        </div>    
+		    </div>                            
+       	</div>        	    
+    </div>
+    <div style="font-size: 0.65em; margin: 8px 0 8px 0; font-weight: bold">
+		<h:outputText value="Cadastrado por: " />
+	    <h:outputText value="#{emergenciaExameForm.nomeUsuario}" />
+	</div>
+    <div style="margin-top: 10px; text-align: center">            
+   		<a4j:commandButton id="btnGrava" 
+		 	    image="IMG/botaoGravar.gif"						  	    		  	    				
+				action="#{emergenciaExameForm.gravar}"
+				onclick="this.disabled=true"
+				oncomplete="this.disabled=false;avisoErros(#{emergenciaExameForm.erroInternacao},#{emergenciaExameForm.isnInternacao},'#{emergenciaExameForm.nomeUsuario}','#{emergenciaExameForm.enderecoRelatorios}')" 
+				style='margin-right: 10px' >
+		</a4j:commandButton>
+		  				
+		<h:commandButton id="btnCancelar" 
+		  	    image="IMG/botaoCancelar.gif"
+				style='margin-right: 10px' 
+				action="#{emergenciaExameForm.cancelar}" 
+				immediate="true">
+			<f:setPropertyActionListener value="#{emergenciaExameForm.objPaciente}" 
+		  		                             target="#{geralForm.objPaciente}"/>			
+		</h:commandButton>
+		  	
+		<a4j:commandButton id="btnExcluir" 
+	  	   		image="IMG/botaoExcluir.gif"
+	  	   		onclick="if (! confirm('Confirma a exclusão?') ) { return false }"		      			  	    		
+	  	        oncomplete="avisoErros(#{emergenciaExameForm.erroInternacao})"	  	    		
+	  	   		action="#{emergenciaExameForm.excluir}" 	    		 
+	  	   		rendered="#{emergenciaExameForm.objInternacao.ativa}">
+	  	</a4j:commandButton>
+	  		
+	  	<a4j:commandButton id="imprimirEtiqueta" 
+	  	        action="#{emergenciaExameForm.imprimirEtiqueta}"
+	  	        style="visibility: hidden"
+	  	        ajaxSingle="true" />			
+	</div>
+	<br/><br/><br/>		
+	<script>
+    	mostrarNumeroRegulacao();
+    	    	
+    	function mostrarNumeroRegulacao() {
+        	var item = document.getElementById("cdEmergenciExame:dropDownRegulacao");
+	    	if (item.value == 2 || item.value == 3) { 
+		    	document.getElementById("panNumRegulacao").style.visibility = "visible";
+	    	} else {
+	    		document.getElementById("panNumRegulacao").style.visibility = "hidden";
+	    	}			    	    
+	    }
+
+    	function validarLeito(erro) {
+        	if (erro==31) {
+            	alert("Leito selecionado não é compativel com o sexo do paciente.");
+        	} else {
+            	Richfaces.hideModalPanel("panelLeito");
+        	}
+    	}
+    	
+    	function avisoErros(erro, internacao,dscUsuario,server) {        			    
+		    if (erro == 3) {
+			    alert("Usuário sem permissão.");
+			    return false;
+		    } else if (erro == 2) {			    
+		    	alert("Não é possível excluir a internação. Internação possui movimentação/prescrição.");
+			    return false;
+		    } else if (erro == 10) {
+		    	alert("Campo Situação Familiar é obrigatório!");
+		    	document.getElementById("cdInternacao:dropDownSituacao").focus();
+		    } else if (erro == 11) {
+		    	alert("Campo Escolaridade é obrigatório!");       
+		    	document.getElementById("cdInternacao:dropDownEscolaridade").focus();
+		    } else if (erro == 12) {
+		    	alert("Campo Ocupação é obrigatório!");		
+		    	document.getElementById("cdInternacao:dropDownOcupacao").focus();   	        
+		    } else if (erro == 13) {
+		    	alert("Campo Cidade é obrigatório!");
+		    	document.getElementById("cdInternacao:dropDownMunicipio").focus();		    			    	        
+		    } else if (erro == 14) {
+		    	alert("Campo 'Admitido por' é obrigatório!");
+		    	document.getElementById("cdInternacao:dropDownProfissional").focus();		    			    	        
+		    } else if (erro == 15) {
+		    	alert("Campo Referência é obrigatório!");
+		    	document.getElementById("cdInternacao:dropDownReferencia").focus();		    			    	        
+		    } else if (erro == 16) {
+		    	alert("Campo Regulação é obrigatório!");
+		    	document.getElementById("cdInternacao:dropDownRegulacao").focus();
+		    } else if (erro == 17) {
+		    	alert("Campo Diagnostico inicial (CID10) é obrigatório!");
+		    } else if (erro == 18) {
+		    	alert("Campo Leito da Internação é obrigatório!");
+		    } else if (erro == 19) {
+		    	alert("Informe o Numero da Regulação!");
+		    } else if (erro == 20) {
+		    	alert("Campo Sexo do Acompanhante é obrigatório!");
+		    	document.getElementById("cdInternacao:dropDownSexoResp").focus();
+		    } else if (erro == 21) {
+		    	alert("Campo Parentesco do Acompanhante é obrigatório!");
+		    	document.getElementById("cdInternacao:dropDownParentesco").focus();
+		    } else if (erro == 22) {
+		    	alert("Endereço do Acompanhante esta incompleto!");
+		    	document.getElementById("cdInternacao:inputEndResp").focus();
+		    } else if (erro == 23) {
+		    	alert("ATENÇÃO: Leito já foi ocupado, escolha outro!");
+		    } else if (erro == 24) {
+		    	alert("ATENÇÃO: Paciente já possui uma internação em aberto!");
+		    } else if (erro == 25) {
+		    	alert("ATENÇÃO: Houve problema de gravação, contate o NTI!");		    	
+		    } else if (erro == 26) {
+		    	alert("Campo Religião é obrigatório!");
+		    	document.getElementById("cdInternacao:inputReligiao").focus();	
+		    } else if (erro == 27) {
+		    	alert("Campo Endereço é obrigatório!");
+		    	document.getElementById("cdInternacao:inputEndereco").focus();
+		    } else if (erro == 28) {
+		    	alert("Campo Bairro é obrigatório!");
+		    	document.getElementById("cdInternacao:inputBairro").focus();
+		    } else if (erro == 29) {
+		    	alert("Campo Número do CEP é obrigatório!");	
+		    	document.getElementById("cdInternacao:inputCep").focus();
+		    } else {			   
+			  		    			    
+			    if (confirm("Deseja imprimir a Termo da Emergência?")) {
+			       window.open(server+"/relatorios/EmergenciaExame?p1="+internacao+"&amp;p2="+dscUsuario,"relatorio","width=800,height=600;left=0");
+			    }
+			    
+			    var item = document.getElementById("cdEmergenciExame:btnCancelar");
+			    item.click();
+		    }
+	    }   	 
+	</script>	  							
+</h:form>
+</ui:define>
+</ui:composition>
+</html>

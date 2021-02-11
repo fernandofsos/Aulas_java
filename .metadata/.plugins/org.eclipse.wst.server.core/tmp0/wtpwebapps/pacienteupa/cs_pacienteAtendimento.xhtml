@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:rich="http://richfaces.org/rich">
+	  
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<title>SISTEMA DE PACIENTE - Pesquisar Paciente</title>	
+</ui:define>
+<ui:define name="conteudo">
+<a4j:keepAlive beanName="pacienteAtendimentoForm" />
+<a4j:keepAlive beanName="internacaoTransForm" />
+
+<a4j:status id="statusPanel"
+	   onstart="Richfaces.showModalPanel('panelStatus');" 
+	   onstop="#{rich:component('panelStatus')}.hide()">
+</a4j:status>   
+		
+<rich:modalPanel id="panelStatus" autosized="true">  
+	<h:panelGrid columns="2"> 
+		<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+		<h:outputText value="Carregando..." />
+	</h:panelGrid> 
+</rich:modalPanel>
+
+<a4j:form id="formulario">
+   	    	  
+   	  <div class="cabAreaPesquisa">PACIENTES ATENDIMENTO</div>	  
+	    <div class="areaPesquisa" style="height:80px;">	              
+	       <div class="col220" style="margin-top: 8px">	       
+	           <label>Pesquisar:</label><br/>	           
+	           <h:inputText id="inputPesquisa" 
+	                        value="#{pacienteAtendimentoForm.filtroLista}"
+	                        styleClass="campoTexto" style="width:210px"/>
+	       </div>
+	       <div class="col170" style="margin-top: 8px">
+		       <rich:spacer height="18px"/><br/>             
+	           <h:selectOneMenu value="#{pacienteAtendimentoForm.campoPesquisa}"
+	                            styleClass="selectItens"
+	                            style="width:160px">
+	           		<f:selectItem itemLabel="Nome/Prontuario" itemValue="1"/>
+	           		<f:selectItem itemLabel="Nome Clinica" itemValue="2"/>
+	           		<f:selectItem itemLabel="Nome Mãe" itemValue="3"/>
+	           		<f:selectItem itemLabel="Nome Acompanhante" itemValue="4"/>
+	           		<f:selectItem itemLabel="Nome Social" itemValue="5"/>
+	           </h:selectOneMenu>
+	       </div>     
+	       <div class="col180" style="margin-top: 8px">
+	           <rich:spacer height="12px"/><br/>
+	           <a4j:commandButton id="btnPesquisa" 
+				           		  image="IMG/pesquisa.gif"
+				           		  alt="Pesquisar" 
+				                  action="#{pacienteAtendimentoForm.filtrarInternados}"  
+					    		  oncomplete="avisosPesquisa(#{pacienteAtendimentoForm.erroPesquisa})"
+					    		  reRender="tabelaPaciente,totalPesq" 
+					    		  style="margin-right: 8px"/>
+		     		
+		       <a4j:commandButton id="btnRefresh" 
+						       	  image="IMG/atualizar.gif"
+						       	  alt="Desfazer a pesquisa" 
+					              action="#{pacienteAtendimentoForm.relerLista}"
+						    	  reRender="tabelaPaciente,totalPesq,totalGeral,inputPesquisa" />
+		    			
+		       <rich:hotKey key="return" selector="#inputPesquisa" 
+		    		             handler="#{rich:element('btnPesquisa')}.click()"/>			
+		   		           
+	       </div>
+	       <div class="col100" style="text-align: right">    
+	           <label>Pesquisados:</label><br/>
+	           <h:outputText id="totalPesq" 
+	                         value="#{pacienteAtendimentoForm.totalPesquisados}" 
+	                         styleClass="totalizador2" />	          
+	       </div>
+	             
+	    </div>
+		
+		<div style="margin-bottom:30px">
+			<rich:dataTable id="tabelaPaciente"
+							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							value="#{pacienteAtendimentoForm.lstPacienteAtendimento}"
+							var="internado" 					
+							rows="30"					 
+							style="width: 100%"										 
+							reRender="ds,totalGeral">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column>
+							<h:outputText value="Sel" /> <!-- 60 -->
+						</h:column>
+						<h:column>
+							<h:outputText value="Risco" /> <!-- 60 -->
+						</h:column>
+						<h:column>
+							<h:outputText value="Prontuário" /> <!-- 60 -->
+						</h:column>
+						<h:column>
+							<h:outputText value="Paciente" /> <!-- 60 -->
+						</h:column>						
+						<h:column>
+							<h:outputText value="Nome da Mãe" /> <!-- 5 -->
+						</h:column>						
+						<h:column>
+							<h:outputText value="Clínica/Leito" /> <!-- 5 -->
+						</h:column>
+						<h:column>
+							<h:outputText value="Horas Leito" /> <!-- 5 -->
+						</h:column>
+						<h:column>
+							<h:outputText value="Horas Hospital" /> <!-- 3 -->
+						</h:column>	
+						<h:column>
+							<h:outputText value="Atend." /> <!-- 3 -->
+						</h:column>
+						<h:column>
+							<h:outputText value="Trans." /> <!-- 3 -->
+						</h:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column width="3%" sortBy="#{internado.isnRisco}">
+					<center>
+					 	<h:graphicImage url="IMG/#{pacienteAtendimentoForm.imagensRiscos[internado.isnRisco]}" style="border:0;cursor:pointer;" title="Dois cliques para acessar o ATENDIMENTO do paciente." rendered="#{pacienteAtendimentoForm.permissaoParaAtendimento}">
+					 		<a4j:support event="ondblclick" action="#{emergenciaForm.irParaAtendimento}" reRender="@all">
+					 			<f:setPropertyActionListener target="#{emergenciaForm.isnInternacao}" value="#{internado.isnInternacao}" />
+					 			<f:setPropertyActionListener target="#{emergenciaForm.flgRiscoQueda}" value="#{internado.flgRiscoQueda}" />
+					 			<f:setPropertyActionListener target="#{emergenciaForm.origemTelaParaAtendimento}" value="2" />
+					 			<f:setPropertyActionListener target="#{templateForm.tabAmbulatorio}" value="atendimentoAba" />
+					 		</a4j:support>
+					 	</h:graphicImage>
+					 	<h:graphicImage url="IMG/#{pacienteAtendimentoForm.imagensRiscos[internado.isnRisco]}" style="border:0;cursor:pointer;" title="Dois cliques para acessar o ATENDIMENTO do paciente." rendered="#{!pacienteAtendimentoForm.permissaoParaAtendimento}">
+					 		<a4j:support event="ondblclick" oncomplete="alert('Usuário sem permissão.');"/>
+					 	</h:graphicImage>
+					</center>
+				</rich:column>
+				
+				<rich:column width="5%" sortBy="#{internado.flgAlergia}">
+					<center>
+						<div style="display:#{internado.flgAlergia == 'S'?'':'none'}">
+							<h:outputText value="Alergia" style="color:blue; font-size:11px"/>
+						</div>
+						<div style="display:#{internado.flgRiscoQueda == 'S'?'':'none'}">
+							<h:outputText value="Queda" rendered="#{internado.flgRiscoQueda == 'S'}" style="color:red; font-size:11px"/>
+						</div>
+					</center>
+				</rich:column>
+				
+				<rich:column width="5%" sortBy="#{internado.numProntuario}">
+					<center>
+						<h:outputText value="#{internado.numProntuario}" />
+					</center>
+				</rich:column>
+				
+				<!-- NOME -->
+				<rich:column width="30%" sortBy="#{internado.dscPaciente}" >
+					<h:outputText value="#{internado.dscPaciente} " />
+					<h:graphicImage id="imgDocFoto" url="IMG/imgDocFoto.png" title="Cadastro de Documento sem Foto" style="margin:0 0 0 4px; border:0; vertical-align:middle" rendered="#{internado.flgDocFoto eq 'N'}" />
+				</rich:column>
+								
+				<!-- NOME DA MÃE -->
+				<rich:column width="30%" sortBy="#{internado.dscMae}">
+					<h:outputText value="#{internado.dscMae} " />
+				</rich:column>
+				
+				<!-- CLINICA, ENFERMARIA, LEITO -->
+				<rich:column width="14%" sortBy="#{internado.dscClinica}" >
+					<center>
+						<h:outputText value="#{internado.dscClinica} / #{internado.dscLeito}"></h:outputText>
+					</center>
+				</rich:column>				
+				
+				<!-- HORAS LEITO -->
+				<rich:column width="6%" sortBy="#{internado.horaLeito}" >
+					<center>
+						<h:outputText value="#{internado.horaLeito}" />
+					</center>	
+				</rich:column>
+				
+				<!-- HORAS HOSPITAL -->
+				<rich:column width="6%" sortBy="#{internado.horaHospital}" >
+					<center>
+						<h:outputText value="#{internado.horaHospital}" />
+					</center>	
+				</rich:column>
+				
+				<!-- SELECIONE -->
+				<rich:column width="3%">
+					<center>
+						<t:commandLink id="atendimento" action="#{emergenciaForm.relatorio}" target="blank" title="IMPRIMIR GUIA DO PACIENTE">
+							<h:graphicImage id="imgAtendimento" url="IMG/impressora.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{internado.isnInternacao}" target="#{emergenciaForm.isnInternacao}" />							
+						</t:commandLink>
+					</center>
+				</rich:column>
+				
+				<rich:column width="3%">
+					<center>
+						<a4j:commandLink style="border:white; width: 12px; height: 12px;" rendered="#{internado.intTrans > 0}" title="IMPRIMIR INTERNAÇÃO TRANSFERÊNCIA" action="#{internacaoTransForm.verificaRelatorio}" oncomplete="abrirRelatorio('#{internacaoTransForm.msgRelatorio}','#{internado.isnInternacao}');">
+							<h:graphicImage id="imgTransf" url="IMG/impressora.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{internado.isnInternacao}" target="#{internacaoTransForm.isnInternacao}" />
+						</a4j:commandLink>
+					</center>
+				</rich:column>
+				
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+				
+			</rich:dataTable>
+		</div>
+
+	<script type="text/javascript">     
+		function avisosPesquisa(erro) {
+			if (erro == 2) {
+				alert("Não há pacientes cadastrados que atendam a esta pesquisa.");
+			}
+		}
+
+		function abrirRelatorio(msg, isnInternacao) {
+			if (msg == 'EMPTY') {
+				alert("Não existe transferência(s) para este paciente!");
+			} else {
+				window.open('cd_internacaoTrans.jsf?paramRel=relISGH_' + isnInternacao);
+			}
+		}
+
+		function validar(msg) {
+			if (msg != '') {
+				alert(msg);
+			}
+		}
+	</script>
+		
+</a4j:form>	
+</ui:define>
+</ui:composition>
+</html>

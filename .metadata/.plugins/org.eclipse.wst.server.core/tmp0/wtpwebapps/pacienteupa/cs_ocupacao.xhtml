@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich" >
+
+<ui:composition template="template.xhtml">
+<ui:define name="conteudo">
+	<a4j:keepAlive beanName="ocupacaoForm" />
+	<!-- PAINEL DE EDIÇÂO -->
+	<rich:modalPanel id="panelEdicao" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+		<f:facet name="header">
+			<h:outputText value="#{(ocupacaoForm.novoRegistro)?'Novo Registro':'Alterar/Excluir Registro'}"></h:outputText>		
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="fecha" />
+				<rich:componentControl for="panelEdicao" attachTo="fecha" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form id="Edicao">
+			<div class="geralCampos" style="height: 60px">
+		    	<label>DESCRIÇÃO:</label>
+				<h:inputText value="#{ocupacaoForm.dscOcupacao}" styleClass="campoTexto" maxlength="50" 
+				             style="width: 550px"/>
+			</div>
+			<div style="text-align: center; margin-top: 10px">
+				<a4j:commandButton id="btnOk" value="OK" 
+						   action="#{ocupacaoForm.salvar()}"
+						   oncomplete="this.disabled=false; avisosValidacao(#{ocupacaoForm.codigoErro})" 
+						   reRender="dtOcupacao,totalRegs"
+						   style="margin-right: 10px" 
+						   styleClass="botaoModal"
+						   onclick="this.disabled=true" >				
+				</a4j:commandButton>			
+				
+				<a4j:commandButton id="btnCancel"  
+				                   value="Cancelar" 
+				                   styleClass="botaoModal"
+				                   style="margin-right: 10px">
+					<rich:componentControl for="panelEdicao" attachTo="btnCancel" operation="hide" event="onclick" />
+				</a4j:commandButton>
+				
+				<a4j:commandButton id="btnExcluir" value="Excluir" 
+						   action="#{ocupacaoForm.excluir()}"
+						   onclick="if (!confirm('Confirma a Exclusão?')) return false"
+						   oncomplete="this.disabled=false; avisosValidacao(#{ocupacaoForm.codigoErro})" 
+						   reRender="dtOcupacao,totalRegs"						    
+						   styleClass="botaoModal"						    
+						   rendered="#{! ocupacaoForm.novoRegistro}">						   				
+				</a4j:commandButton>
+			</div>
+		</h:form>	
+	</rich:modalPanel>
+	
+	<!-- FIM CONTEUDO MODAL -->
+	<h:form>
+		<div class="cabAreaPesquisa">OCUPAÇÕES</div>		
+    	<div class="areaPesquisa">    	        	     
+           	<div class="colLeft">
+           		<div class="col250">         	
+        			<label>Pesquisar:</label><br/>
+					<h:inputText id="inputPesquisa" 
+					             value="#{ocupacaoForm.valorPesquisa}"
+					             styleClass="campoTexto"  
+					             style="width: 240px;" />
+				</div>					
+	        	<div class="col70">
+	               	<rich:spacer height="12px"/><br/>
+	        		<a4j:commandButton image="IMG/pesquisa.gif" id="btnPesquisa" 
+	           		        action="#{ocupacaoForm.buscar()}" 
+		    				oncomplete="avisosValidacao(#{ocupacaoForm.codigoErro})"		    				
+		    				reRender="dtOcupacao,totalRegs" />
+		    		<rich:hotKey key="return" selector="#inputPesquisa" 
+		    	             handler="#{rich:element('btnPesquisa')}.click()"/>		
+		    	</div>	
+		    	<div class="col200" style="text-align: center;">
+			   		<label>Resultado:</label>
+			   		<h:outputText class="totalizador2" value="#{ocupacaoForm.totalRegistros}" id="totalRegs"/> 
+				</div>
+			</div>
+			<div class="col250" style="text-align: right">	    	
+				<a4j:commandButton value="Novo Registro" 
+				                   oncomplete="Richfaces.showModalPanel('panelEdicao')" 
+				                   reRender="panelEdicao"
+				                   styleClass="botaoNovoItem"
+				                   ajaxSingle="true">
+				    <f:setPropertyActionListener value="#{''}" target="#{ocupacaoForm.dscOcupacao}" />                      
+					<f:setPropertyActionListener value="#{true}" target="#{ocupacaoForm.novoRegistro}" />
+				</a4j:commandButton>
+			</div>		
+			<br style="clear: both;"/>		
+    	</div>
+    	
+    	<div style="margin-bottom: 60px">	
+	   		<rich:dataTable id="dtOcupacao" 
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				value="#{ocupacaoForm.lstOcupacao}" 
+				var="ocupacao"
+				width="100%"
+				reRender="ds"
+				rows="40" >
+			
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column><h:outputText value="Sel"/></h:column>
+						<h:column><h:outputText value="Descrição" /></h:column>
+					</rich:columnGroup>
+				</f:facet>
+			
+				<rich:column style="text-align: center">
+					<a4j:commandLink oncomplete="Richfaces.showModalPanel('panelEdicao')" 
+					                 reRender="panelEdicao"
+					                 ajaxSingle="true">			
+					    <h:graphicImage id="imgSel" url="IMG/selecionar.png" style="border:0;" />
+					    <f:setPropertyActionListener value="#{ocupacao}"	
+						                             target="#{ocupacaoForm.objOcupacao}" />
+						<f:setPropertyActionListener value="#{ocupacao.dscOcupacao}"	
+						                             target="#{ocupacaoForm.dscOcupacao}" />
+						<f:setPropertyActionListener value="#{false}" 
+													 target="#{ocupacaoForm.novoRegistro}"/>		
+					</a4j:commandLink>
+				</rich:column>
+				
+				<rich:column>					
+					<h:outputText value="#{ocupacao.dscOcupacao}" />
+				</rich:column>			
+				
+				<f:facet name="footer">
+	        		<rich:datascroller fastControls="auto" id="ds" ajaxSingle="false" />
+	        	</f:facet>
+			</rich:dataTable>
+		</div>
+	</h:form>
+	<script type="text/javascript">
+		function avisosValidacao(erro) {
+			if (erro==0) {
+				Richfaces.hideModalPanel("panelEdicao");
+			} else if (erro==1) {
+				alert("Campo descrição precisar ser preenchido!");				
+			} else if (erro==2) {
+				alert("Ocupação já cadastrada!");
+			} else if (erro==3) {
+				alert("Usuário sem permissão!");
+			} else if (erro==4) {
+				alert("Erro ao excluir. Verifique se a Ocupação foi usada em algum cadastro!");
+			} else if (erro==5) {
+				alert("Não foi possivel gravar no banco de dados!");
+			}		 		
+		}
+
+		function confirmarExclusao() {
+			if (confirm("Confirma a exclusão?")) {				
+				return true;
+			} else {
+				return false;
+			} 
+		}
+	</script>
+</ui:define>
+</ui:composition>
+</html>

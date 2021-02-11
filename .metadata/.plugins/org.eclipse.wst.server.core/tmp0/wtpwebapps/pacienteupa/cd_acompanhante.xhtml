@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="headHtml">
+    	<!-- cd_acompanhante.xhtml -->
+		<script type="text/javascript" src="SCRIPTS/maskbrphone.js"></script>
+	</ui:define>	
+	<ui:define name="conteudo">
+	<a4j:keepAlive beanName="acompanhanteForm" />
+	<a4j:keepAlive beanName="chaveBolsaForm"/>
+	<!-- MODAL PANEL HISTORICO MOVIMENTAÇÃO -->
+	<rich:modalPanel id="panel2" autosized="true" width="750" resizeable="false" >
+			<!-- BARRA DE TITULO MODAL-->
+    		<f:facet name="header">
+				<h:panelGroup>
+        			<h:outputText value="Histórico de entrada saída de acompanhante"></h:outputText>
+        		</h:panelGroup>
+    		</f:facet>
+
+    		<f:facet name="controls">
+    			<h:panelGroup>
+            		<h:graphicImage value="IMG/fechar.png" styleClass="hidelink" id="hidelink2" />
+            		<rich:componentControl for="panel2" attachTo="hidelink2" operation="hide" event="onclick" />
+        		</h:panelGroup>
+    		</f:facet>
+		    <!-- FIM DA BARRA DE TITULO MODAL-->
+	      
+    		<!-- CAMPOS DE BUSCA -->			 
+			<h:form id="formMov">
+				<h:outputText id="nome" value="#{acompanhanteForm.objAcompanhante.nomAcompanhante}" style="font-size: 12px"/>
+								
+				<!-- INICIO DA TABELA -->
+				<rich:dataTable id="tabelaMov"
+							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+			            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							value="#{acompanhanteForm.lstAcompanhanteMov}" 
+							var="lstMov" 
+							rows="10" 
+							rowKeyVar="linha" 
+							style="width:100%;" 
+							reRender="ds">							
+				<f:facet name="header">							
+					<rich:columnGroup>
+						<h:column><h:outputText value="Data Entrada" /></h:column>
+						<h:column><h:outputText value="Hora Entrada" /></h:column>
+						<h:column><h:outputText value="Data Saída" /></h:column>
+						<h:column><h:outputText value="Hora Saída" /></h:column>
+					</rich:columnGroup>
+				</f:facet>
+							
+				<rich:column width="25%">
+				<center>
+					<h:outputText value="#{lstMov.datEntrada}" >
+					     <f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</center>	
+				</rich:column>
+														
+				<rich:column >
+				<center>
+					<h:outputText value="#{lstMov.horEntrada}" />
+				</center>	
+				</rich:column>
+							
+				<rich:column >
+				<center>
+					<h:outputText value="#{lstMov.datSaida}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</center>	
+				</rich:column>
+				
+				<rich:column >
+				<center>
+					<h:outputText value="#{lstMov.horSaida}" />
+				</center>
+				</rich:column>
+													
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+		</h:form>
+		<!-- FIM CONTEUDO MODAL -->
+ 	</rich:modalPanel>	
+	<!-- FINAL DO MODAL PANEL DE INTERNACAO DE PACIENTE -->   
+
+	<!-- MODAL PANEL CHAVE-->
+	<rich:modalPanel id="panelChave" autosized="true" width="250" resizeable="false" >
+			<!-- BARRA DE TITULO MODAL-->
+    		<f:facet name="header">
+				<h:panelGroup>
+        			<h:outputText value="Lista de Chaves desocupadas"></h:outputText>
+        		</h:panelGroup>
+    		</f:facet>
+
+    		<f:facet name="controls">
+    			<h:panelGroup>
+            		<h:graphicImage value="IMG/fechar.png" styleClass="hidelink" id="hidelink3" />
+            		<rich:componentControl for="panelChave" attachTo="hidelink3" operation="hide" event="onclick" />
+        		</h:panelGroup>
+    		</f:facet>
+		    <!-- FIM DA BARRA DE TITULO MODAL-->
+	      
+    		<!-- CAMPOS DE BUSCA -->			 
+			<h:form id="formChave">
+				
+       			<div class="col220">
+       				<label style="margin-right:8px;font-size:12px" > CHAVE: </label>
+					<h:inputText id="nmaPaciente" value="#{acompanhanteForm.strChave}" style="margin-right: 8px; width: 120px;font-size:12px"/>
+					<a4j:commandButton image="IMG/buscar.png" 
+									   action="#{acompanhanteForm.buscaChave}" 
+	    	                   		   reRender="tabelaChave" />		    	
+				</div>			
+			
+				<!-- INICIO DA TABELA -->
+				<rich:dataTable id="tabelaChave"
+							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+			            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							value="#{acompanhanteForm.lstChave}" 
+							var="lstChave" 
+							rows="10" 
+							rowKeyVar="linha" 
+							style="width:100%;" 
+							reRender="ds">							
+				<f:facet name="header">							
+					<rich:columnGroup>
+						<h:column><h:outputText value="Selecione" /></h:column>
+						<h:column><h:outputText value="Descricao Chave" /></h:column>
+					</rich:columnGroup>
+				</f:facet>
+						
+				<rich:column width="5%">
+					<center>
+						<a4j:commandLink id="selecionarChave" styleClass="primeiro" reRender="mostraChave" action="#{acompanhanteForm.gravaChave}">
+							<h:graphicImage id="imgSelecionar02" url="IMG/selecionar.png" style="border:0;" />	
+							<f:setPropertyActionListener value="#{lstChave}" target="#{acompanhanteForm.objChave}"/>
+							<rich:componentControl for="panelChave" attachTo="selecionarChave" operation="hide" event="onclick" />
+						</a4j:commandLink>
+					</center>
+				</rich:column>
+																	
+				<rich:column >
+					<h:outputText value="#{lstChave.dscChave}"  />	
+				</rich:column>
+					
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+		</h:form>
+		<!-- FIM CONTEUDO MODAL -->
+ 	</rich:modalPanel>	
+	<!-- FINAL DO MODAL PANEL CHAVE -->   
+
+	<!-- MODAL PANEL BOLSA-->
+	<rich:modalPanel id="panelBolsa" autosized="true" width="250" resizeable="false" >
+			<!-- BARRA DE TITULO MODAL-->
+    		<f:facet name="header">
+				<h:panelGroup>
+        			<h:outputText value="Lista de bolsa desocupadas"></h:outputText>
+        		</h:panelGroup>
+    		</f:facet>
+
+    		<f:facet name="controls">
+    			<h:panelGroup>
+            		<h:graphicImage value="IMG/fechar.png" styleClass="hidelink" id="hidelink4" />
+            		<rich:componentControl for="panelBolsa" attachTo="hidelink4" operation="hide" event="onclick" />
+        		</h:panelGroup>
+    		</f:facet>
+		    <!-- FIM DA BARRA DE TITULO MODAL-->
+	      
+    		<!-- CAMPOS DE BUSCA -->			 
+			<h:form id="formBolsa">
+       			<div class="col220">
+       				<label style="margin-right:8px;font-size:12px" > BOLSA: </label>
+					<h:inputText id="nmaPaciente" value="#{acompanhanteForm.strBolsa}" style="margin-right: 8px; width: 120px;font-size:12px"/>
+					<a4j:commandButton image="IMG/buscar.png" 
+									   action="#{acompanhanteForm.buscaBolsa}" 
+	    	                   		   reRender="tabelaBolsa" />		    	
+				</div>			
+					
+				<!-- INICIO DA TABELA -->
+				<rich:dataTable id="tabelaBolsa"
+							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+			            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							value="#{acompanhanteForm.lstBolsa}" 
+							var="lstBolsa" 
+							rows="10" 
+							rowKeyVar="linha" 
+							style="width:100%;" 
+							reRender="ds">							
+				<f:facet name="header">							
+					<rich:columnGroup>
+						<h:column><h:outputText value="Selecione" /></h:column>
+						<h:column><h:outputText value="Descricao bolsa" /></h:column>
+					</rich:columnGroup>
+				</f:facet>
+						
+				<rich:column width="5%">
+					<center>
+						<a4j:commandLink id="selecionarBolsa" styleClass="primeiro" reRender="mostraBolsa"  action="#{acompanhanteForm.gravaBolsa}">
+							<h:graphicImage id="imgSelecionar02" url="IMG/selecionar.png" style="border:0;" />	
+							<f:setPropertyActionListener value="#{lstBolsa}" target="#{acompanhanteForm.objBolsa}"/>
+							<rich:componentControl for="panelBolsa" attachTo="selecionarBolsa" operation="hide" event="onclick" />
+						</a4j:commandLink>
+					</center>
+				</rich:column>
+																	
+				<rich:column >
+					<h:outputText value="#{lstBolsa.dscBolsa}"  />
+				</rich:column>
+					
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+		</h:form>
+		<!-- FIM CONTEUDO MODAL -->
+ 	</rich:modalPanel>	
+	<!-- FINAL DO MODAL PANEL BOLSA -->
+	   
+	<h:form id="cdInternacao" >
+   	<div style="margin-bottom: 55px">
+   	    <label class="tituloPagina">DADOS DO PACIENTE</label>	
+    	<div class="quadroPaciente">			
+			<div class="col390">
+				<label>Nome do Paciente:</label><br />
+			   	<h:outputText id="nmPaciente" value="#{acompanhanteForm.objPaciente.dscNome}" 
+			   		              styleClass="campoVazio col385" ></h:outputText>
+			</div>
+			<div class="col390">
+				<label>Nome da Mãe:</label><br />
+			   	<h:outputText id="nmMae" value="#{acompanhanteForm.objPaciente.dscMae}" 
+			   		        styleClass="campoVazio col385" ></h:outputText>
+			</div>	
+			<div class="col390">
+				<div class="col70" style="margin-right: 12px">				
+					<label>Sexo:</label><br />
+					<h:outputText value="#{acompanhanteForm.objPaciente.sexo.dscSexo}" styleClass="campoVazio col70" />
+				</div>
+				<div class="col220" style="margin-right: 13px">
+				    <label>Data Nascimento:</label><br />						
+					<h:outputText value="#{acompanhanteForm.objPaciente.idade}" styleClass="campoVazio col220" />								
+				</div>
+				<div class="col70">
+				    <label>Prontuario:</label><br />
+					<h:outputText value="#{acompanhanteForm.objPaciente.numProntuario} " styleClass="campoVazio col70" />
+				</div>
+			</div>			
+			<div class="col390">
+				<div class="col300" style="margin-right: 8px">
+					<label>Leito:</label><br />
+					<h:outputText value="#{acompanhanteForm.objPaciente.leitoAtual}" styleClass="campoVazio col300" />
+				</div>
+			   	<div class="col70">
+			   	    <rich:spacer height="18" style="display:block"/>
+			   	    <div class="col70 campoVazio">
+		        		<h:graphicImage value="IMG/iconeCCIH.png" alt="CCIH" rendered="#{acompanhanteForm.objPaciente.flgVre=='S'}"/>
+		        	</div>
+		     	</div>
+			</div>								
+       </div>
+       <br/>          		    		
+	   <h3 class="subTitulo">LISTA DE ACOMPANHANTES</h3>   		
+   	   <rich:dataTable	id="tabelaAcompanhantes"
+						onRowMouseOver="setCorLinha(this,true)"
+		            	onRowMouseOut="setCorLinha(this,false)"
+						value="#{acompanhanteForm.lstAcompanhante}" 
+						var="lstAcompanhante" 
+						rows="10"
+						style="width: 800px" 
+						reRender="ds">							
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column><h:outputText value="Troca" /></h:column>
+						<h:column><h:outputText value="Histórico" /></h:column>
+						<h:column><h:outputText value="Acompanhante" /></h:column>
+						<h:column><h:outputText value="Sexo" /></h:column>
+						<h:column><h:outputText value="Parentesco" /></h:column>
+						<h:column><h:outputText value="Município" /></h:column>
+					</rich:columnGroup>
+				</f:facet>
+							
+				<rich:column>
+					<center>
+						<a4j:commandLink id="mov01" 
+						                 reRender="tabelaAcompanhantes"
+						                 onclick="if (! confirm('Confirma a saida/entrada acompanhante.')) return false" 
+						                 action="#{acompanhanteForm.movAcompanhante}" 
+						                 oncomplete="validacaoAcompanhante(#{acompanhanteForm.erroAcompanhante})"
+						                 title="Movimentar acompanhante">
+							<h:graphicImage id="imgSelecionar01" url="IMG/movAcompanhante.png" style="border:0;" />	
+							<f:setPropertyActionListener value="#{lstAcompanhante}" target="#{acompanhanteForm.objAcompanhante}"/>							
+						</a4j:commandLink>
+					</center>
+				</rich:column>
+				
+				<rich:column styleClass="#{lstAcompanhante.flgPresente=='S'?'backAcompanhante':''}">
+					<center>
+						<a4j:commandLink  id="mov" 
+						                  action="#{acompanhanteForm.buscaHistorico}"
+						                  reRender="tabelaMov,nome"
+						                  title="Lista histórico de movimentações" ajaxSingle="true" >
+							<h:graphicImage id="movImg02" url="IMG/historico.png" style="border:0;" />	
+							<f:setPropertyActionListener value="#{lstAcompanhante}" target="#{acompanhanteForm.objAcompanhante}"/>
+							<rich:componentControl for="panel2" attachTo="mov" operation="show" event="onclick" />
+						</a4j:commandLink>						
+					</center>
+				</rich:column>
+														
+				<rich:column styleClass="#{lstAcompanhante.flgPresente=='S'?'backAcompanhante':''}">
+					<a4j:commandLink value="#{lstAcompanhante.nomAcompanhante}" id="linkAcompanhante" 
+					                 reRender="grupAcompanhante"  
+					                 ajaxSingle="true"  >
+						<f:setPropertyActionListener value="#{lstAcompanhante}" 
+						             target="#{acompanhanteForm.objAcompanhante}"/>
+					</a4j:commandLink>					
+					<h:graphicImage url="IMG/hospital.png" style="border:0;margin-left: 10px" 
+					               rendered="#{lstAcompanhante.flgPresente=='S'}"/>
+				</rich:column>
+							
+				<rich:column styleClass="#{lstAcompanhante.flgPresente=='S'?'backAcompanhante':''}">
+				<center>
+					<h:outputText value="#{lstAcompanhante.sexo.dscSexo}" />
+				</center>	
+				</rich:column>
+								
+				<rich:column styleClass="#{lstAcompanhante.flgPresente=='S'?'backAcompanhante':''}">
+					    <h:outputText value="#{lstAcompanhante.parentesco.dscParentesco}" />
+				</rich:column>
+								
+				<rich:column styleClass="#{lstAcompanhante.flgPresente=='S'?'backAcompanhante':''}">
+					<h:outputText value="#{lstAcompanhante.municipio.dscMunicipio}" />
+				</rich:column>
+															
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+			<label style="font-size: 10px; font-weight: bold">* Icone do hospital - Acompanhante ativo.</label>
+			<br/>
+			<div class="quadroEdicao">
+			    <div class="col120">              
+		            <label>Procura Chave:</label><br />
+		            <a4j:commandLink id="cmdChave"  
+		               				 reRender="panelChave"	
+		                             action="#{acompanhanteForm.verificaChave}"
+		                             image="IMG/buscar.png"		                            
+		                             oncomplete="mostrarPanel(#{acompanhanteForm.mostraChave})" >
+							<h:graphicImage id="imgbuscaChave" url="IMG/buscar.png" style="border:0;" />		                                     
+					</a4j:commandLink>										  
+					<h:outputText id="mostraChave" 
+					              value="#{acompanhanteForm.objChave.dscChave}" 
+					              style="font-weight: 700; margin-left: 5px"  />
+				</div>
+				<div class="col190">    
+					<label>Procura Bolsa:</label><br />
+			        <a4j:commandLink id="cmdBolsa" 
+			                		 reRender="panelBolsa"	
+			                         action="#{acompanhanteForm.verificaBolsa}" 
+			                         oncomplete="mostrarPanelBolsa(#{acompanhanteForm.mostraBolsa})">
+					   <h:graphicImage id="imgbuscaBolsa" url="IMG/buscar.png" style="border:0;" />
+					</a4j:commandLink>				  
+					<h:outputText id="mostraBolsa" value="#{acompanhanteForm.objBolsa.dscBolsa}" 
+					              style="font-weight: 700;margin-left: 5px"  />				  
+              	</div>
+              	<div class="col190">
+              		<h:commandButton id="btnVoltar" 
+				  	    value="VOLTAR"	
+				  	    styleClass="botaoModal100 botaoExcluir" 	  				 
+		  				action="#{acompanhanteForm.voltar}" 
+		  				immediate="true">
+		  				<f:setPropertyActionListener value="#{acompanhanteForm.objPaciente}" target="#{geralForm.objPaciente}"/>		
+		  	    	</h:commandButton>  
+		  	    </div>   
+			</div>
+			<br/>
+   	  		<h3 class="subTitulo">CADASTRO DO ACOMPANHANTE</h3>   	  		
+			<h:panelGroup id="grupAcompanhante" layout="block">
+				<div class="quadroEdicao">				
+					<div class="col390">
+						<label>Responsável:</label><br />
+						<h:inputText id="inputResponsavel" 
+						    styleClass="campoTexto"
+							style="width: 375px"
+							value="#{acompanhanteForm.objAcompanhante.nomAcompanhante}"
+							maxlength="60" />
+					</div>
+					<div class="col390">
+						<div class="col180">
+							<label>Parentesco</label><br />
+							<h:selectOneMenu id="dropDownParentesco"
+								value="#{acompanhanteForm.objAcompanhante.parentesco.isnParentesco}"
+								styleClass="selectItens"
+								style="width: 170px">
+								<f:selectItems value="#{acompanhanteForm.sliParentesco}" />
+							</h:selectOneMenu>
+						</div>
+						<div class="col180">
+							<label>Sexo:</label><br />
+							<h:selectOneMenu id="dropDownSexoResp"
+								value="#{acompanhanteForm.objAcompanhante.sexo.isnSexo}"
+								styleClass="selectItens"
+								style="width: 160px">
+								<f:selectItems value="#{acompanhanteForm.sliSexo}" />
+							</h:selectOneMenu>
+						</div>
+					</div>				
+				</div>
+				<div class="quadroEdicaoU">
+					<div class="col420">
+						<label>Endereço:</label><br />
+						<h:inputText id="inputEndResp"
+							 value="#{acompanhanteForm.objAcompanhante.dscEndereco}"
+							 maxlength="80"
+							 styleClass="campoTexto"							  
+							 style="width: 400px;" />
+					</div>
+					<div class="col320">
+						<label>Complemento:</label><br />
+						<h:inputText id="inputCompresp"
+							value="#{acompanhanteForm.objAcompanhante.dscComplemento}"
+							maxlength="50"
+							styleClass="campoTexto"							 
+							style="width: 300px;" />
+					</div>
+					<div class="col420">
+						<div style="width: 270px; float: left"><label>Bairro:</label><br />
+							<h:inputText id="inputBairroResp"
+								value="#{acompanhanteForm.objAcompanhante.dscBairro}"
+								maxlength="30"
+								styleClass="campoTexto"								 
+								style="width: 260px;" />
+						</div>
+						<div style="width: 130px; float: left">
+							<label>CEP:</label><br />
+							<h:inputText id="inputCepResp"
+								value="#{acompanhanteForm.objAcompanhante.numCep}" 
+								maxlength="9"
+								styleClass="campoTexto"
+								onkeydown="formataCEP(this);" 
+								style="width: 110px" />
+						</div>
+					</div>
+					<div class="col320">
+						<div class="col70">
+							<label>UF:</label><br />
+			    			<h:selectOneMenu id="ddpUFResp" style="width: 60px"  
+				                     value="#{acompanhanteForm.isnUf}" 
+				                     styleClass="selectItens">
+								<a4j:support action="#{acompanhanteForm.lerMunicipios}"
+						             event="onchange"						              
+						             ajaxSingle="true"
+						             reRender="ddpMunicipioResp" />
+								<f:selectItems value="#{acompanhanteForm.sliUf}" />
+			  				</h:selectOneMenu>
+						</div>
+        				<div class="col250">
+           					<label>Cidade:</label><br />
+							<h:selectOneMenu id="ddpMunicipioResp"		                      
+			                	 value="#{acompanhanteForm.objAcompanhante.municipio.isnMunicipio}" 
+			                	 style="width: 240px" 
+			                	 styleClass="selectItens" >					
+								<f:selectItems value="#{acompanhanteForm.sliMunicipio}" />
+							</h:selectOneMenu>          
+						</div>			
+					</div>
+				</div>				
+				<div class="quadroEdicaoU">
+					<div class="col390">
+						<label><b>Telefone 1</b></label>
+						<div>
+						    <label style="width: 100px">DDD, Tipo, Nº:</label>
+						    <h:selectOneMenu
+								id="dropDownTipoTelefone1Acomp"
+								value="#{acompanhanteForm.objAcompanhante.isnTipoTelefone1.isnTipoTelefone}">
+								<f:selectItems value="#{acompanhanteForm.sliTipoTelefone}" />
+							</h:selectOneMenu>
+							<label style="margin-right: 5px"></label>							
+							<h:inputText
+								id="input_xUfResp"
+								value="#{acompanhanteForm.objAcompanhante.numDdd1}"
+								styleClass="campoTexto"
+								style="width: 30px"
+								maxlength="3" />	
+							<label style="margin-right: 5px"></label>							
+							<h:inputText id="inputTelefoneFixoResp1"
+								value="#{acompanhanteForm.objAcompanhante.numTelefone1}"
+								styleClass="celular campoTexto"
+								style="width: 109px" 
+								maxlength="10"/>
+						</div>
+						<div>
+							<label style="width: 100px">Contato:</label> 
+							<h:inputText id="inputContatoRep1" 
+							    style="width: 260px"
+								value="#{acompanhanteForm.objAcompanhante.dscContato1}"
+								styleClass="campoTexto"/>
+						</div>
+					</div>
+					<div class="col385">
+						<label><b>Telefone 2</b></label>
+						<div>
+						    <label style="width: 100px">DDD, Tipo, Nº:</label>
+							<h:selectOneMenu id="dropDownTipoTelefone2Acomp"
+											value="#{acompanhanteForm.objAcompanhante.isnTipoTelefone2.isnTipoTelefone}">
+								<f:selectItems value="#{acompanhanteForm.sliTipoTelefone}" />
+							</h:selectOneMenu>							
+							<h:inputText id="inputDDDResp2" 
+										 value="#{acompanhanteForm.objAcompanhante.numDdd2}"
+										 style="width: 30px" 
+										 maxlength="3"
+										 styleClass="campoTexto"/>							
+							<h:inputText id="inputTelResp2" 
+							             value="#{acompanhanteForm.objAcompanhante.numTelefone2}"
+										 style="width: 109px" 
+										 maxlength="10"
+										 styleClass="celular campoTexto"/>
+						</div>
+						<div>
+							<label style="width: 100px">Contato:</label>
+							<h:inputText id="inputContatoRep2"
+										 value="#{acompanhanteForm.objAcompanhante.dscContato2}"
+										 style="width: 260px;" 
+										 styleClass="campoTexto"/>
+						</div>
+					</div>
+				</div>				
+				<div class="quadroEdicaoU">
+					<div class="col385">
+						<label>CPF</label><br />
+						<h:inputText id="inputCpf"
+							value="#{acompanhanteForm.objAcompanhante.numCpf}" 
+							maxlength="14"
+							onkeyup="formataCPF(this);"
+							styleClass="campoTexto"	 
+							style="width: 260px">
+							<f:validator validatorId="ValidadorCPF" />
+						</h:inputText>
+						<br/>
+						<label>RG</label><br />
+						<h:inputText id="inputRg" 	
+						             style="width: 260px;"
+						             styleClass="campoTexto" 
+									 value="#{acompanhanteForm.objAcompanhante.numRg}" maxlength="14" />
+					</div>					
+					<div class="col385">
+						<label>OBSERVAÇÕES COMPLEMENTARES</label><br />
+						<h:inputTextarea id="inputOBS"
+						                 styleClass="campoTexto" 
+						                 style="width: 350px; height: 50px"
+										 value="#{acompanhanteForm.objAcompanhante.dscObs}" />
+					</div>
+				</div>
+				<div class="quadroEdicaoU">	
+				    <div class="col385">
+                 		<label><b>ALIMENTAÇÃO</b></label><br />
+			     		<h:selectOneRadio id="radioAlimentacao" 
+			     					 value="#{acompanhanteForm.objAcompanhante.fglAlimentacao}" 
+			     					  disabled="#{acompanhanteForm.verificaUsuario}" >
+			 		 			<f:selectItem id="AlimSim" itemLabel="Sim" itemValue="S" />
+			 		 			<f:selectItem id="AlimNao" itemLabel="Não" itemValue="N" />
+   			 	       	</h:selectOneRadio>	
+              		</div>				   
+				    <div class="col385">
+						<label>JUSTIFICATIVA</label><br />
+						<h:inputTextarea id="inputJustificativa" 
+						                 disabled="#{acompanhanteForm.verificaUsuario}"
+						                 styleClass="campoTexto"
+						                 style="width: 350px; height: 30px"
+										 value="#{acompanhanteForm.objAcompanhante.dscJustificativa}" />
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<div style="margin-top: 10px; text-align: center">
+   				<a4j:commandButton id="btnGrava"
+   				        value="Gravar"
+				  	    action="#{acompanhanteForm.gravarAcompanhante}"
+				  	    styleClass="botaoModal100"
+				  	    style='margin-right: 10px'
+				  	    onclick="this.disabled=true"
+				  	    oncomplete="this.disabled=false;validacaoAcompanhante(#{acompanhanteForm.erroAcompanhante})"
+				  	    reRender="tabelaAcompanhantes,grupAcompanhante" />
+					  	    		  				
+				<a4j:commandButton id="btnCancelar"
+				        value="Cancelar"
+				        styleClass="botaoModal100"
+		  				style='margin-right: 10px' 
+		  				action="#{acompanhanteForm.cancelar}"
+		  				reRender="grupAcompanhante">		  					
+		  	    </a4j:commandButton>		  	   
+		  	   	  	   
+		  	   
+			</div>
+		</div>
+		<script type="text/javascript">
+	    	var corOriginal;		
+             
+			function mostrarPanel(erro) {			   
+			    if (erro == 2) {
+			      alert("Chave já associada");
+		          return false;
+		   		} else {
+		   		   Richfaces.showModalPanel('panelChave');
+		   		}
+			}	
+			 
+			function mostrarPanelBolsa(erro) {			   
+			    if (erro == 2) {
+			      alert("Bolsa já associada");
+		          return false;
+		   		} else {
+		   		   Richfaces.showModalPanel('panelBolsa');
+		   		}
+			}	
+				
+			function  setCorLinha(linha, over) {		   
+		   		if (over) {
+		      		corOriginal = linha.style.backgroundColor;
+		   	  		linha.style.backgroundColor = '#F1F1F1';
+		   		} else {
+		      		linha.style.backgroundColor = corOriginal;
+		   		}
+			}
+
+			function validacaoAcompanhante(erro) {
+			   if (erro==1) {
+			     alert("Já existe um acompanhante dentro do hospital para este paciente");
+			   } else if (erro==2) {
+			     alert("");
+			   } else if (erro==3) {
+			     alert("Usuário sem permissão");
+			   } else if (erro==4) {
+			     alert("Nome do acompanhante é obrigatório");			     
+			   } else if (erro==5) {
+			     alert("Sexo é obrigatório");
+			   } else if (erro==6) {
+			     alert("Parentesco é obrigatório");
+			   } else if (erro==7) {
+			     alert("Endereço é obrigatório");
+			   } else if (erro==8) {
+			     alert("Bairro é obrigatório");
+			   } else if (erro==9) {
+			     alert("CEP é obrigatório");
+			   } else if (erro==10) {
+			     alert("Municipio é obrigatório");
+			   } else if (erro==11) {
+			     alert("Campo justificativa da alimentação é obrigatório");
+			   } else if (erro==12) {
+			     alert("Campo Tipo de Telefone 1 é obrigatório");
+			   } else if (erro==13) {
+			     alert("Campo Tipo de Telefone 2 é obrigatório");
+			   } else if (erro==14) {
+			     alert("Campo Nº do Telefone 1 deve conter 9 dígitos");
+			   } else if (erro==15) {
+			     alert("Campo Nº do Telefone 2 deve conter 9 dígitos");
+			   } else if (erro==16) {
+			     alert("Campo Nº do Telefone 1 deve conter pelo menos 8 dígitos");
+			   } else if (erro==17) {
+			     alert("Campo Nº do Telefone 2 deve conter pelo menos 8 dígitos");
+			   } else {
+			     alert("Acompanhante cadastrado/atualizado com sucesso!");
+			   }
+			}
+			
+			jQuery(function(){ 	
+	    		jQuery('.celular').maskbrphone();			
+			});
+		</script>	
+	</h:form>
+</ui:define>
+</ui:composition>
+</html>

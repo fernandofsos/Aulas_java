@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;sessaounica.js&apos; to &apos;SCRIPTS&apos;&#x0A;- Original project: &apos;pacienteupa&apos;&#x0A;- Destination element: &apos;SCRIPTS&apos;&#x0A;- Original element: &apos;sessaounica.js&apos;" description="Copy file" element1="WebContent/SCRIPTS/sessaounica.js" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1612981101087" target="/pacienteupa/WebContent/SCRIPTS" units="0" version="1.0"/>
+</session>

@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:a4j="http://richfaces.org/a4j"
+	  xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:rich="http://richfaces.org/rich">
+	  
+<ui:composition template="template.xhtml">
+<ui:define name="headHtml">
+	<!-- cs_relatorioRiscoAud.xhtml -->
+	<title>SISTEMA DE PACIENTE</title>
+	<style>
+	.radio label {
+		font-size:12px;
+		font-weight:bold;
+		text-align:center;
+	}
+	</style>
+</ui:define>
+<ui:define name="conteudo">
+<a4j:keepAlive beanName="classificacaoRiscoAudForm" />
+
+
+<rich:modalPanel id="panelStatus" autosized="true" >  
+	<h:panelGrid columns="2"> 
+		<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+		<h:outputText value="Carregando..." />
+	</h:panelGrid> 
+</rich:modalPanel> 
+
+<a4j:status id="status" 
+              onstart="#{rich:component('panelStatus')}.show()" 
+              onstop="#{rich:component('panelStatus')}.hide()" >
+</a4j:status>
+
+
+<rich:modalPanel id="panProfissional" autosized="false" width="900" height="500" resizeable="false" headerClass="headerPanel3">
+	<f:facet name="header">
+		<h:panelGroup>
+			<h:outputText value="Pesquisa de Profissional" />
+		</h:panelGroup>
+	</f:facet>
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="IMG/fechar.png" id="fechaPanel" />
+			<rich:componentControl for="panProfissional" attachTo="fechaPanel" operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	<h:form id="formProfissional">
+		<fieldset style="background-color: #F5F5F5">
+			<div style="height: 30px;">
+				<div class="colLeft" style="width: 15%;">
+					<label class="font10"><b>Nome:</b></label>
+				</div>
+				<div class="colLeft largura220">
+					<h:inputText value="#{classificacaoRiscoAudForm.nmUsuario}" maxlength="50"
+						styleClass="campoTexto largura200"
+						onblur="this.value.toUpperCase();" style="width: 450px;"
+						id="nmProfissional" onkeypress="return enter(event);" />
+				</div>
+			</div>
+			<div style="height: 20px">
+				<div class="colLeft" style="width: 100%;">
+					<a4j:commandButton style="width: 80px; height: 20px;"
+										oncomplete="validaMarcacao('#{classificacaoRiscoAudForm.mensagem}');"
+										id="Pesquisar" value="PESQUISAR"
+										action="#{classificacaoRiscoAudForm.pesquisarProfissional}"
+										reRender="formProfissional" />
+				</div>
+			</div>
+		</fieldset>
+		<div>
+			<rich:dataTable id="tabelaProfissional"
+							onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+							value="#{classificacaoRiscoAudForm.listaUsuario}" var="rst" rows="10"
+							rowKeyVar="linha" style="width: 100%; cursor: pointer;">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column>
+							<h:outputText width="5%" />
+						</h:column>
+						<h:column>
+							<h:outputText width="20%" value="Nome" />
+						</h:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column align="center" width="5%" sortable="true">
+					<a4j:commandLink reRender="pnProfissional" oncomplete="#{rich:component('panProfissional')}.hide()">
+						<h:graphicImage id="imgSelecionar" url="IMG/selecionar.png" style="border:0;" />
+						<f:setPropertyActionListener value="#{rst}" target="#{classificacaoRiscoAudForm.objUsuario}" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column width="65%" sortable="true">
+					<h:outputText value="#{rst.dscUsuario}" />
+				</rich:column>
+				<f:facet name="footer">
+					<rich:datascroller id="ds" ajaxSingle="false" />
+				</f:facet>
+			</rich:dataTable>
+		</div>
+		<script>
+			function validaMarcacao(msg) {
+				var n = msg.search('sucesso!');
+				if (msg != '') {
+					if (n == -1) {
+						alert(msg);
+						return false;
+					} else {
+						alert(msg);
+						return true;
+					}
+				} else {
+					return true;
+				}
+			}
+
+			function enter(e) {
+				var keycode;
+				if (window.event) {
+					keycode = window.event.keyCode;
+				} else {
+					keycode = e.which;
+				}
+				if (keycode == 13) {
+					alert('Não é possível utilizar a tecla Enter');
+					return false;
+				}
+			}
+		</script>
+	</h:form>
+</rich:modalPanel>
+
+<rich:modalPanel id="panelAutorizar" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+	<f:facet name="header">            
+		<h:outputText value="Autenticação de senha" />            
+	</f:facet>
+	<h:form id="formAssinatura">
+		<div class="geralCampos">
+			<div class="linhaFormulario">
+			    <div style="float: left; margin-right: 40px">		
+					<label>Usuário/Conselho:</label>
+					<h:inputText value="#{classificacaoRiscoAudForm.usuario}" maxlength="20" styleClass="campoTexto" style="width: 90px" />
+				</div>
+				<div style="float: left;">		
+					<label>Senha/Assinatura:</label>
+					<h:inputSecret value="#{classificacaoRiscoAudForm.senha}" maxlength="20" styleClass="campoTexto" style="width: 90px" />
+				</div>
+			</div>
+		</div>	
+		<div class="linhaSeparadora" />
+		<div style="text-align: center; margin-top: 10px">
+			<a4j:commandButton id="btnOkRisco" value="OK" 
+							   action="#{classificacaoRiscoAudForm.salvarAuditoria}"				    
+							   reRender="formulario"
+							   style="margin-right: 10px" 
+							   styleClass="botaoModal"
+							   oncomplete="this.disabled=false; validarAuditoria(#{classificacaoRiscoAudForm.avisoValidacao}, 'panelAutorizar', false);">
+			</a4j:commandButton>
+			
+			<a4j:commandButton id="btnCancelRisco"  value="Cancelar"  styleClass="botaoModal" onclick="Richfaces.hideModalPanel('panelAutorizar');">
+				
+			</a4j:commandButton>
+		</div>
+    </h:form>	
+</rich:modalPanel>
+
+<h:form id="formulario">
+	<div>
+   	    <div class="cabAreaPesquisa">AUDITORIA PROTOCOLO MANCHESTER</div>	  
+	    <div class="areaPesquisa">
+	    	<div>
+	       		<h:selectOneRadio value="#{classificacaoRiscoAudForm.tipoPesquisa}">
+                    <f:selectItem itemLabel="AUDITORIA" itemValue="1" />
+                    <f:selectItem itemLabel="RELATÓRIO" itemValue="2" />
+                    <a4j:support event="onclick" reRender="formulario" action="#{classificacaoRiscoAudForm.limpar}" />
+                </h:selectOneRadio>
+	       	</div>
+	       	<br style="clear: both;"/>
+			<div>
+				<h:outputLabel value="Profissional:" /><br/>
+				<h:panelGroup id="pnProfissional">
+					<h:panelGrid columns="3" cellpadding="0" cellspacing="0">
+						<h:inputText value="#{classificacaoRiscoAudForm.objUsuario.dscUsuario}" disabled="true" id="profissional" style="width:300px; text-transform:uppercase;"/>
+						<a4j:commandButton image="IMG/pesquisa.gif" id="btnProfissional" 
+											action="#{classificacaoRiscoAudForm.abrirProfissional}"
+											oncomplete="Richfaces.showModalPanel('panProfissional'); focoProfissional();"
+											reRender="panProfissional" >
+						</a4j:commandButton>					
+						<a4j:commandButton image="/images/icons/delete.png" 
+					           		       action="#{classificacaoRiscoAudForm.limparProfissional}"
+					           		       onclick="limpaProfissional()" style="margin-left:5px"
+						    		       reRender="profissional" title="Clique para cancelar seleção de Profissional" />
+					</h:panelGrid>
+				</h:panelGroup>				
+			</div>
+			<div>
+				<h:outputLabel value="Mês:" for="selMes" /><br/>
+				<h:selectOneMenu value="#{classificacaoRiscoAudForm.mes}" 
+            	                 styleClass="selectItens" style="margin-right:10px" id="selMes">
+            	     <f:selectItems value="#{classificacaoRiscoAudForm.sliMeses}"/>                			     
+            	</h:selectOneMenu>
+			</div>
+			<div>
+				<h:outputLabel value="Ano:" for="selAno" /><br/>
+				<h:selectOneMenu value="#{classificacaoRiscoAudForm.ano}" 
+            	                 styleClass="selectItens" style="margin-right:10px" id="selAno">
+            	     <f:selectItems value="#{classificacaoRiscoAudForm.sliAnos}"/>                			     
+            	</h:selectOneMenu>
+			</div>
+			<div>
+				<a4j:commandButton action="#{classificacaoRiscoAudForm.pesquisarClassificacaoRisco}" 
+									value="Pesquisar" rendered="#{classificacaoRiscoAudForm.tipoPesquisa == 1}"
+									styleClass="botaoModal" 
+									style="margin-top:5px; margin-bottom:10px; margin-left:60px" 
+									oncomplete="validarPesquisa('#{classificacaoRiscoAudForm.mensagem}')" reRender="formulario,formulario:tblAuditoria,formulario:btnAuditoria" />
+				<a4j:commandButton action="#{classificacaoRiscoAudForm.chamadaRelatorio}" 
+									value="Gerar Relatório" rendered="#{classificacaoRiscoAudForm.tipoPesquisa == 2}" 
+									styleClass="botaoModal" 
+									style="margin-top:5px; margin-left:60px" 
+									oncomplete="validarPesquisa('#{classificacaoRiscoAudForm.mensagem}')" reRender="formulario,formulario:tblAuditoria,formulario:btnAuditoria" />
+				<a4j:commandButton id="btnImprimirGeral" value="Imprimir" styleClass="botaoModal"
+								   title="Imprimir"
+								   action="#{classificacaoRiscoAudForm.imprimirRelatorio}" 
+								   style="margin-left:10px"
+								   oncomplete="window.open('#{classificacaoRiscoAudForm.urlRelatorio}', '_tab');"
+				     			   rendered="#{classificacaoRiscoAudForm.relatorio and not empty classificacaoRiscoAudForm.listAuditoriaRiscoVo and classificacaoRiscoAudForm.tipoPesquisa == 2}"/>
+			</div>
+	       	<br style="clear:both;"/>
+ 		</div>
+	</div>
+	
+	<div style="#{classificacaoRiscoAudForm.tipoPesquisa == 1?'':'display:none'}">
+		<rich:dataTable id="tblAuditoria0" 
+				 		value="#{classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem1}" 
+				 		var="rst" 
+				 		style="width: 100%;" rowKeyVar="index" rendered="#{not empty classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem1}">
+			<f:facet name="header">
+				<rich:columnGroup>
+					<rich:column colspan="8">
+						<h:outputText value="Primeira Auditoria" />
+					</rich:column>
+					<rich:column breakBefore="true">
+						
+					</rich:column>										
+					<rich:column>
+						Queixa
+					</rich:column>
+					<rich:column>
+						Prontuário
+					</rich:column>
+					<rich:column style="width:10%">
+						Idade
+					</rich:column>
+					<rich:column>
+						Fluxograma
+					</rich:column>
+					<rich:column>
+						Discriminador
+					</rich:column>
+					<rich:column>
+						Parâmetros
+					</rich:column>
+					<rich:column>
+						Risco
+					</rich:column>
+				</rich:columnGroup>						
+			</f:facet>
+			<rich:columnGroup>									
+				<rich:column style="text-align:center; font-weight:bold; white-space:nowrap">
+					<h:outputText value="CLASSIFICAÇÃO " />
+					<h:outputText value="#{index + 1}" /><br/>
+					(<h:outputText value="#{rst.datRegistro}" >
+						<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>)
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{rst.dscQueixa}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{rst.internacao.pacientePepBean.numProntuario}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{rst.idade}" />
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.fluxograma.dscFluxograma}" /><hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgFluxograma}" style="font-weight:bold; font-size:1.1em" />
+					</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.dscDiscriminador}" /><hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgDiscriminador}" style="font-weight:bold; font-size:1.1em" />
+		 	       	</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="Sato02:#{rst.dscSato2} " rendered="#{not empty rst.dscSato2}" />
+					<h:outputText value="Glassgow:#{rst.dscGlassgow} " rendered="#{not empty rst.dscGlassgow}" />
+					<h:outputText value="Temp.:#{rst.dscTemperatura} " rendered="#{not empty rst.dscTemperatura}" />
+					<h:outputText value="Glicemia:#{rst.dscGlicemia} " rendered="#{not empty rst.dscGlicemia}" />
+					<h:outputText value="Régua:#{rst.dscReguaDor} " rendered="#{not empty rst.dscReguaDor}" />
+					<h:outputText value="Pulso/FC:#{rst.dscFc} " rendered="#{not empty rst.dscFc}" />
+					<hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgParametros}" style="font-weight:bold; font-size:1.1em" />
+		 	       	</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.risco.dscRisco}" /><hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgRisco}" style="font-weight:bold; font-size:1.1em" />
+		 	       	</div>
+				</rich:column>
+			</rich:columnGroup>
+			<f:facet name="footer">
+				<rich:columnGroup>
+					<rich:column colspan="8">
+						<h:outputText value="Auditado por " />
+						<h:outputText value="#{classificacaoRiscoAudForm.dscUsuarioCadastro1} em " />
+						<h:outputText value="#{classificacaoRiscoAudForm.datCadastro1}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>
+					</rich:column>
+				</rich:columnGroup>						
+			</f:facet>
+		</rich:dataTable>
+		
+		
+		<rich:dataTable id="tblAuditoria1" 
+				 		value="#{classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem2}" 
+				 		var="rst" 
+				 		style="width: 100%;" rowKeyVar="index" rendered="#{not empty classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem2}">
+			<f:facet name="header">
+				<rich:columnGroup>
+					<rich:column colspan="8">
+						<h:outputText value="Segunda Auditoria" />
+					</rich:column>
+					<rich:column breakBefore="true">
+						
+					</rich:column>										
+					<rich:column>
+						Queixa
+					</rich:column>
+					<rich:column>
+						Prontuário
+					</rich:column>
+					<rich:column style="width:10%">
+						Idade
+					</rich:column>
+					<rich:column>
+						Fluxograma
+					</rich:column>
+					<rich:column>
+						Discriminador
+					</rich:column>
+					<rich:column>
+						Parâmetros
+					</rich:column>
+					<rich:column>
+						Risco
+					</rich:column>
+				</rich:columnGroup>						
+			</f:facet>
+			<rich:columnGroup>									
+				<rich:column style="text-align:center; font-weight:bold; white-space:nowrap">
+					<h:outputText value="CLASSIFICAÇÃO " />
+					<h:outputText value="#{index + 1}" /><br/>
+					(<h:outputText value="#{rst.datRegistro}" >
+						<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>)
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{rst.dscQueixa}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{rst.internacao.pacientePepBean.numProntuario}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{rst.idade}" />
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.fluxograma.dscFluxograma}" /><hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgFluxograma}" style="font-weight:bold; font-size:1.1em" />
+					</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.dscDiscriminador}" /><hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgDiscriminador}" style="font-weight:bold; font-size:1.1em" />
+		 	       	</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="Sato02:#{rst.dscSato2} " rendered="#{not empty rst.dscSato2}" />
+					<h:outputText value="Glassgow:#{rst.dscGlassgow} " rendered="#{not empty rst.dscGlassgow}" />
+					<h:outputText value="Temp.:#{rst.dscTemperatura} " rendered="#{not empty rst.dscTemperatura}" />
+					<h:outputText value="Glicemia:#{rst.dscGlicemia} " rendered="#{not empty rst.dscGlicemia}" />
+					<h:outputText value="Régua:#{rst.dscReguaDor} " rendered="#{not empty rst.dscReguaDor}" />
+					<h:outputText value="Pulso/FC:#{rst.dscFc} " rendered="#{not empty rst.dscFc}" />
+					<hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgParametros}" style="font-weight:bold; font-size:1.1em" />
+		 	       	</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.risco.dscRisco}" /><hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgRisco}" style="font-weight:bold; font-size:1.1em" />
+		 	       	</div>
+				</rich:column>
+			</rich:columnGroup>
+			<f:facet name="footer">
+				<rich:columnGroup>
+					<rich:column colspan="8">
+						<h:outputText value="Auditado por " />
+						<h:outputText value="#{classificacaoRiscoAudForm.dscUsuarioCadastro2} em " />
+						<h:outputText value="#{classificacaoRiscoAudForm.datCadastro2}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>
+					</rich:column>
+				</rich:columnGroup>
+			</f:facet>
+		</rich:dataTable>
+		
+		
+		
+		<rich:dataTable id="tblAuditoria2" 
+				 		value="#{classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem3}" 
+				 		var="rst" 
+				 		style="width: 100%;" rowKeyVar="index" rendered="#{not empty classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem3}">
+			<f:facet name="header">
+				<rich:columnGroup>
+					<rich:column colspan="8">
+						<h:outputText value="Auditoria de Conciliação" />
+					</rich:column>
+					<rich:column breakBefore="true">
+						
+					</rich:column>										
+					<rich:column>
+						Queixa
+					</rich:column>
+					<rich:column>
+						Prontuário
+					</rich:column>
+					<rich:column style="width:10%">
+						Idade
+					</rich:column>
+					<rich:column>
+						Fluxograma
+					</rich:column>
+					<rich:column>
+						Discriminador
+					</rich:column>
+					<rich:column>
+						Parâmetros
+					</rich:column>
+					<rich:column>
+						Risco
+					</rich:column>
+				</rich:columnGroup>						
+			</f:facet>
+			<rich:columnGroup>									
+				<rich:column style="text-align:center; font-weight:bold; white-space:nowrap">
+					<h:outputText value="CLASSIFICAÇÃO " />
+					<h:outputText value="#{index + 1}" /><br/>
+					(<h:outputText value="#{rst.datRegistro}" >
+						<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>)
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{rst.dscQueixa}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{rst.internacao.pacientePepBean.numProntuario}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{rst.idade}" />
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.fluxograma.dscFluxograma}" /><hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgFluxograma}" style="font-weight:bold; font-size:1.1em" />
+					</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.dscDiscriminador}" /><hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgDiscriminador}" style="font-weight:bold; font-size:1.1em" />
+		 	       	</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="Sato02:#{rst.dscSato2} " rendered="#{not empty rst.dscSato2}" />
+					<h:outputText value="Glassgow:#{rst.dscGlassgow} " rendered="#{not empty rst.dscGlassgow}" />
+					<h:outputText value="Temp.:#{rst.dscTemperatura} " rendered="#{not empty rst.dscTemperatura}" />
+					<h:outputText value="Glicemia:#{rst.dscGlicemia} " rendered="#{not empty rst.dscGlicemia}" />
+					<h:outputText value="Régua:#{rst.dscReguaDor} " rendered="#{not empty rst.dscReguaDor}" />
+					<h:outputText value="Pulso/FC:#{rst.dscFc} " rendered="#{not empty rst.dscFc}" />
+					<hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgParametros}" style="font-weight:bold; font-size:1.1em" />
+		 	       	</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.risco.dscRisco}" /><hr/>
+					<div align="center">
+						<h:outputText value="#{rst.flgRisco}" style="font-weight:bold; font-size:1.1em" />
+		 	       	</div>
+				</rich:column>
+			</rich:columnGroup>
+			<f:facet name="footer">
+				<rich:columnGroup>
+					<rich:column colspan="8">
+						<h:outputText value="Auditado por " />
+						<h:outputText value="#{classificacaoRiscoAudForm.dscUsuarioCadastro3} em " />
+						<h:outputText value="#{classificacaoRiscoAudForm.datCadastro3}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>
+					</rich:column>
+				</rich:columnGroup>
+			</f:facet>
+		</rich:dataTable>
+	
+	
+	
+	
+		<rich:dataTable id="tblAuditoria" 
+				 		value="#{classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem}" 
+				 		var="rst" 
+				 		style="width: 100%;" rowKeyVar="index" rendered="#{not empty classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem}">
+			<f:facet name="header">
+				<rich:columnGroup>
+					<rich:column colspan="8">
+						<h:outputText value="#{classificacaoRiscoAudForm.tituloTabela}" />
+					</rich:column>
+					<rich:column breakBefore="true">
+						
+					</rich:column>										
+					<rich:column>
+						Queixa
+					</rich:column>
+					<rich:column>
+						Prontuário
+					</rich:column>
+					<rich:column style="width:10%">
+						Idade
+					</rich:column>
+					<rich:column>
+						Fluxograma
+					</rich:column>
+					<rich:column>
+						Discriminador
+					</rich:column>
+					<rich:column>
+						Parâmetros
+					</rich:column>
+					<rich:column>
+						Risco
+					</rich:column>
+				</rich:columnGroup>						
+			</f:facet>
+			<rich:columnGroup>									
+				<rich:column style="text-align:center; font-weight:bold; white-space:nowrap">
+					<h:outputText value="CLASSIFICAÇÃO " />
+					<h:outputText value="#{index + 1}" /><br/>
+					(<h:outputText value="#{rst.datRegistro}" >
+						<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>)
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{rst.dscQueixa}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{rst.internacao.pacientePepBean.numProntuario}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{rst.idade}" />
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.dscFluxograma}" /><hr/>
+					<div align="center">
+						<h:selectOneRadio value="#{rst.flgFluxograma}" styleClass="radio">
+			 				<f:selectItem itemLabel="C" itemValue="C" />
+			 				<f:selectItem itemLabel="E" itemValue="E" />
+			 	       	</h:selectOneRadio>					
+					</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.dscDiscriminador}" /><hr/>
+					<div align="center">
+						<h:selectOneRadio value="#{rst.flgDiscriminador}" styleClass="radio">
+			 				<f:selectItem itemLabel="C" itemValue="C" />
+			 				<f:selectItem itemLabel="E" itemValue="E" />
+			 	       	</h:selectOneRadio>
+		 	       	</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="Sato02:#{rst.dscSato2} " rendered="#{not empty rst.dscSato2}" />
+					<h:outputText value="Glassgow:#{rst.dscGlassgow} " rendered="#{not empty rst.dscGlassgow}" />
+					<h:outputText value="Temp.:#{rst.dscTemperatura} " rendered="#{not empty rst.dscTemperatura}" />
+					<h:outputText value="Glicemia:#{rst.dscGlicemia} " rendered="#{not empty rst.dscGlicemia}" />
+					<h:outputText value="Régua:#{rst.dscReguaDor} " rendered="#{not empty rst.dscReguaDor}" />
+					<h:outputText value="Pulso/FC:#{rst.dscFc} " rendered="#{not empty rst.dscFc}" />
+					<hr/>
+					<div align="center">
+						<h:selectOneRadio value="#{rst.flgParametros}" styleClass="radio">
+			 				<f:selectItem itemLabel="C" itemValue="C" />
+			 				<f:selectItem itemLabel="E" itemValue="E" />
+			 	       	</h:selectOneRadio>
+		 	       	</div>
+				</rich:column>
+				<rich:column style="text-align:center; min-width:80px">
+					<h:outputText value="#{rst.dscRisco}" /><hr/>
+					<div align="center">
+						<h:selectOneRadio value="#{rst.flgRisco}" styleClass="radio">
+			 				<f:selectItem itemLabel="C" itemValue="C" />
+			 				<f:selectItem itemLabel="E" itemValue="E" />
+			 	       	</h:selectOneRadio>
+		 	       	</div>
+				</rich:column>
+			</rich:columnGroup>
+			<f:facet name="footer">
+				<rich:columnGroup>
+					<rich:column colspan="8">
+						<h:outputText value="Foram realizadas " />
+						<h:outputText value="#{classificacaoRiscoAudForm.totalClassificacoes}" />
+						<h:outputText value=" classificações por #{classificacaoRiscoAudForm.objUsuario.dscUsuario} em " />
+						<h:outputText value="#{classificacaoRiscoAudForm.hmonths[classificacaoRiscoAudForm.mes]} de #{classificacaoRiscoAudForm.ano}" />
+					</rich:column>
+				</rich:columnGroup>						
+			</f:facet>
+		</rich:dataTable>
+		<div>
+			<h:outputText value="Legendas: C = CERTO / E = ERRADO" rendered="#{not empty classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem}" style="font-size:10px" />
+		</div>
+		<div align="center">
+			<a4j:commandButton action="#{classificacaoRiscoAudForm.validarAuditoria}" 
+								value="Salvar" id="btnAuditoria" 
+								styleClass="botaoModal" 
+								style="margin-top:5px; margin-bottom:10px;" 
+								oncomplete="validarAuditoria(#{classificacaoRiscoAudForm.avisoValidacao}, 'panelAutorizar', true)" 
+								rendered="#{not empty classificacaoRiscoAudForm.lstClassificacaoRiscoAudItem}" 
+								reRender="formulario:tblAuditoria,formAssinatura" />
+		</div>
+	</div>
+	<div style="#{(classificacaoRiscoAudForm.tipoPesquisa == 2 and classificacaoRiscoAudForm.relatorio)?'':'display:none;'}">
+		
+		
+		
+		<rich:dataTable width="100%" var="cla" value="#{classificacaoRiscoAudForm.listAuditoriaRiscoVo}" rendered="#{not empty classificacaoRiscoAudForm.listAuditoriaRiscoVo}">
+	        <f:facet name="header">
+	            <rich:columnGroup>
+	            	<rich:column colspan="6">
+		    			<h:outputText value="Auditorias" />
+					</rich:column>
+	                <rich:column colspan="6" breakBefore="true">
+	                    <h:outputText value="Classificador" />
+	                </rich:column>
+	                <rich:column breakBefore="true">
+	                    <h:outputText value="Auditor" />
+	                </rich:column>
+	                <rich:column>
+	                    <h:outputText value="Total de Classificações" />
+	                </rich:column>
+	                <rich:column>
+	                    <h:outputText value="Total de Classificações" /><br/>
+	                    <h:outputText value="Corretas" />
+	                </rich:column>
+	                <rich:column>
+	                    <h:outputText value="Percentual de Classificações" /><br/>
+	                    <h:outputText value="Corretas" />
+	                </rich:column>
+	                <rich:column>
+	                    <h:outputText value="Total de Classificações" /><br/>
+	                    <h:outputText value="Incorretas" />
+	                </rich:column>
+	                <rich:column>
+	                    <h:outputText value="Percentual de Classificações" /><br/>
+	                    <h:outputText value="Incorretas" />
+	                </rich:column>
+	            </rich:columnGroup>
+	        </f:facet>
+	        <rich:column colspan="6" styleClass="fonte13 fonteNegrito" style="background-color:#e5eefd">
+				<h:outputText value="#{cla.dscClassificador}" />
+			</rich:column>
+	        <rich:subTable var="aud" value="#{cla.subItens}" rowKeyVar="index">
+	            <rich:column styleClass="fonte13">
+					<h:outputText value="#{aud.dscAuditor}" />
+					<h:outputText value="#{aud.datCadastro}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+					</h:outputText>
+	            	<h:outputText value=" (Primeira)" rendered="#{index == 0}" />
+	            	<h:outputText value=" (Segunda)" rendered="#{index == 1}" />
+	            	<h:outputText value=" (Conciliação)" rendered="#{index == 2}" />
+	            </rich:column>
+	            <rich:column styleClass="fonte13 textoCentralizado">
+	                <h:outputText value="5" />
+	            </rich:column>
+	           	<rich:column styleClass="fonte13 textoCentralizado">
+	                <h:outputText value="#{aud.totalCertos}">
+	                	<f:convertNumber pattern="#0" />
+	                </h:outputText>
+	            </rich:column>
+	            <rich:column styleClass="fonte13 textoCentralizado">
+	                <h:outputText value="#{aud.percentualCertos}">
+	                	<f:convertNumber type="percent" />
+	                </h:outputText>
+	            </rich:column>
+	            <rich:column styleClass="fonte13 textoCentralizado">
+	                <h:outputText value="#{aud.totalErrados}" />
+	            </rich:column>
+	            <rich:column styleClass="fonte13 textoCentralizado">
+	                <h:outputText value="#{aud.percentualErrados}">
+	                	<f:convertNumber type="percent" />
+	                </h:outputText>
+	            </rich:column>
+	        </rich:subTable>	        
+	    </rich:dataTable>
+		
+		<br/>
+		
+		
+		
+		
+	</div>
+	<script type="text/javascript">     
+		function validarPesquisa(msg) {
+			if (msg != '') {
+				alert(msg);
+			}
+		}
+		
+		function validarAuditoria(erro, panel, show) {
+			if (erro == 1) {
+				alert("Usuário/Conselho e/ou Senha/Assinatura inválidos.");					
+		    	return false;
+			} else if (erro == 2) {
+				alert("Todos os itens devem ser preenchidos.");					
+		    	return false;
+			} else if (erro == 3) {
+				alert("Profissional já auditado nesse mês!");					
+		    	return false;
+			} else if (erro == 4) {
+				alert("Somente auditores têm permissão para salvar uma auditoria!");					
+		    	return false;
+			} else if (erro == 5) {
+				alert("Erro ao gravar no banco de dados. Contate o NTI!");
+		    	return false;
+			} else if (erro == 6) { 
+				alert("Não é permitido auditar suas próprias classificações!");
+				return false;
+			} else if (erro == 7) {
+				alert("O auditor da segunda ou terceira auditoria deve ser diferente do(s) auditor(es) da(s) auditoria(s) anterior(es)!");
+				return false;
+			} else {
+				if (show) {
+		        	Richfaces.showModalPanel(panel);
+		    	} else {
+		    		//alert("Auditoria salva com sucesso!");
+		    		Richfaces.hideModalPanel(panel);
+		    	}
+			}
+		}
+		
+		var profissionalInput = document.getElementById('formulario:profissional');
+    	function limpaProfissional() {
+    		profissionalInput.value = '';
+		}
+		
+		function focoProfissional() {
+			document.getElementById('formProfissional:nmProfissional').focus();
+		}
+	</script>
+		
+</h:form>	
+</ui:define>
+</ui:composition>
+</html>

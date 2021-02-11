@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich" >
+
+<ui:composition template="template.xhtml">
+
+<ui:define name="headHtml">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+</ui:define>
+
+<ui:define name="conteudo">
+	<a4j:keepAlive beanName="referenciaForm" />
+	
+	<h:panelGrid columns="2">
+		<h:outputText value="Cadastro de Referência" style="line-height: normal; color: #0080FF; text-transform: uppercase; font-style: italic; font-size: 12px; font-family: Verdana, Arial, Sans-Serif"></h:outputText>
+	</h:panelGrid>
+	
+	<h:form>		
+			<!-- DESCRICAO REFERENCIA -->
+		<h:panelGroup id="pnlDscLeito" style="margin-bottom: 30px">
+			<h:outputText value="Descrição Referencia:" style="font-size: 11px; font-family: Verdana" ></h:outputText>
+			<br />
+			<h:inputText 
+				value="#{referenciaForm.objReferencia.dscReferencia}"
+				size="80" 
+				required="true"
+				requiredMessage="Descrição Referência: Campo Obrigatório."
+				style="width:339px; font-size: 13px; font-family: Verdana; height:15px" 
+				maxlength="50" >
+			</h:inputText>
+	    </h:panelGroup>
+	    
+    	<h:panelGrid columns="4" >				
+			<h:commandButton id="Inserir" value="Inserir" action="#{referenciaForm.inserir}" ></h:commandButton>
+			<h:commandButton id="Alterar" value="Alterar" action="#{referenciaForm.alterar}" ></h:commandButton>
+			<h:commandButton id="Excluir" value="Excluir" actionListener="#{referenciaForm.excluir}" ></h:commandButton>					
+			<h:commandButton id="consulta" value="consulta" 
+						action="cdReferenciaFromCsReferencia" immediate="true" 
+						actionListener="#{referenciaForm.limpar}" ></h:commandButton>					
+		</h:panelGrid>
+	</h:form>
+
+</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,987 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RelAtendimento" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="291"/>
+	<property name="ireport.y" value="316"/>
+	<parameter name="p1" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\projeto_java\\workspace\\pacienteupa\\WebContent\\RELATORIOS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CAMINHO_SUB_REPORT" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG" class="java.lang.String"/>
+	<parameter name="CAMINHO_IMG2" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select distinct(i.isn_internacao),p.num_prontuario,p.dsc_nome,p.num_rg,p.num_rg,p.dsc_orgao_emissao_rg,p.num_cep,
+       i.dat_cadastro, p.dat_nascimento,i.isn_internacao,
+       s.dsc_sexo,i.dsc_endereco,i.dsc_endereco,p.dsc_mae,i.dsc_bairro,
+       i.num_ddd_1,i.num_telefone_1,ir.dsc_queixa,f.dsc_fluxograma,
+       ir.dsc_discriminador,ir.dsc_sato2,ir.dsc_glassgow,ir.dsc_glicemia,ir.dsc_regua_dor,ir.dsc_fc,ir.dsc_temperatura,
+       ri.dsc_risco,u.dsc_usuario,ir.hor_registro,ia.dsc_atendimento,ia.dsc_pa,ir.dsc_peso,
+       ia.flg_acidente,ia.flg_agressao,ia.hipoteses_diagnostico,ia.comorbidade, ia.isn_internacao_atendimento,
+       dm.dsc_destino_medico,uia.dsc_usuario as profissional,uia.num_conselho,
+       (select vlr_parametro from medpoint.t_parametro where isn_parametro = 10) as endereco_completo,
+       (select vlr_parametro from medpoint.t_parametro where isn_parametro = 13) as dsc_unidade
+       from medpoint.t_internacao i
+	    inner join medpoint.t_paciente p on i.isn_paciente = p.isn_paciente
+	    inner join medpoint.t_sexo s on p.isn_sexo = s.isn_sexo
+            inner join medpoint.t_internacao_leito il on i.isn_internacao = i.isn_internacao
+            inner join (select * from medpoint.t_internacao_risco where
+            isn_internacao_risco =(select max(isn_internacao_risco)from medpoint.t_internacao_risco where isn_internacao = $P{p1}))
+            ir on i.isn_internacao = ir.isn_internacao
+	    inner join medpoint.t_fluxograma f on ir.isn_fluxograma = f.isn_fluxograma
+	    inner join medpoint.t_risco ri on ir.isn_risco = ri.isn_risco
+	    inner join seguranca.t_usuario u on ir.isn_usuario = u.isn_usuario
+	    inner join (select * from medpoint.t_internacao_atendimento where
+            isn_internacao_atendimento =(select max(isn_internacao_atendimento) from medpoint.t_internacao_atendimento where isn_internacao = $P{p1}))
+            ia on ia.isn_internacao = ir.isn_internacao
+	    inner join seguranca.t_usuario uia on ia.isn_profissional = uia.isn_usuario
+            left join medpoint.t_destino_medico dm on ia.isn_clinica_destino = dm.isn_destino_medico
+            where il.dat_alta is null]]>
+	</queryString>
+	<field name="isn_internacao" class="java.lang.Integer"/>
+	<field name="num_prontuario" class="java.lang.String"/>
+	<field name="dsc_nome" class="java.lang.String"/>
+	<field name="num_rg" class="java.lang.String"/>
+	<field name="dsc_orgao_emissao_rg" class="java.lang.String"/>
+	<field name="num_cep" class="java.lang.String"/>
+	<field name="dat_cadastro" class="java.sql.Date"/>
+	<field name="dat_nascimento" class="java.sql.Date"/>
+	<field name="dsc_sexo" class="java.lang.String"/>
+	<field name="dsc_endereco" class="java.lang.String"/>
+	<field name="dsc_mae" class="java.lang.String"/>
+	<field name="dsc_bairro" class="java.lang.String"/>
+	<field name="num_ddd_1" class="java.lang.String"/>
+	<field name="num_telefone_1" class="java.lang.String"/>
+	<field name="dsc_queixa" class="java.lang.String"/>
+	<field name="dsc_fluxograma" class="java.lang.String"/>
+	<field name="dsc_discriminador" class="java.lang.String"/>
+	<field name="dsc_sato2" class="java.lang.String"/>
+	<field name="dsc_glassgow" class="java.lang.String"/>
+	<field name="dsc_glicemia" class="java.lang.String"/>
+	<field name="dsc_regua_dor" class="java.lang.String"/>
+	<field name="dsc_fc" class="java.lang.String"/>
+	<field name="dsc_temperatura" class="java.lang.String"/>
+	<field name="dsc_risco" class="java.lang.String"/>
+	<field name="dsc_usuario" class="java.lang.String"/>
+	<field name="hor_registro" class="java.lang.String"/>
+	<field name="dsc_atendimento" class="java.lang.String"/>
+	<field name="dsc_pa" class="java.lang.String"/>
+	<field name="dsc_peso" class="java.lang.String"/>
+	<field name="flg_acidente" class="java.lang.String"/>
+	<field name="flg_agressao" class="java.lang.String"/>
+	<field name="hipoteses_diagnostico" class="java.lang.String"/>
+	<field name="comorbidade" class="java.lang.String"/>
+	<field name="isn_internacao_atendimento" class="java.lang.Integer"/>
+	<field name="dsc_destino_medico" class="java.lang.String"/>
+	<field name="profissional" class="java.lang.String"/>
+	<field name="num_conselho" class="java.lang.String"/>
+	<field name="endereco_completo" class="java.lang.String"/>
+	<field name="dsc_unidade" class="java.lang.String"/>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="65" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="64" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="14" width="290" height="17"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE SAÚDE E GESTÃO HOSPITALAR - ISGH ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="290" height="17"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDADE DE PRONTO ATENDIMENTO - UPA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="46" width="290" height="17"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORGANIZAÇÃO SOCIAL SAÚDE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="216" y="0" width="100" height="15"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="433" y="0" width="121" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="316" y="0" width="110" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{CAMINHO_IMG2}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="316" y="47" width="238" height="17"/>
+				<box leftPadding="4"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_unidade}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="281" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="73" width="552" height="19"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CLASSIFICAÇÃO DE RISCO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="21" width="36" height="12"/>
+				<box leftPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="1" width="552" height="20"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICAÇÃO DO PACIENTE / CADASTRO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="38" y="21" width="278" height="12"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="316" y="21" width="56" height="12"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prontuário:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="433" y="21" width="55" height="12"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Admissão:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="34" width="76" height="12"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Nasc:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="34" width="29" height="12"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sexo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="216" y="34" width="68" height="12"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_sexo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="63" y="47" width="207" height="12"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_endereco}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="446" y="47" width="108" height="12"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_bairro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="389" y="59" width="26" height="14"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_ddd_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="60" width="139" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_telefone_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="284" y="34" width="55" height="12"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Identidade:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="34" width="36" height="12"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Orgão:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="47" width="61" height="12"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="47" width="25" height="12"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="47" width="35" height="12"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="145" width="552" height="22"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ATENDIMENTO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="68" y="60" width="271" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_mae}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="295" y="47" width="116" height="12"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_cep}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="60" width="66" height="13"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome Mãe:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="339" y="60" width="50" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefone:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="92" width="49" height="13"/>
+				<box leftPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Queixa:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="117" width="47" height="13"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sato02:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="131" width="42" height="14"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Risco:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="488" y="21" width="66" height="12"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_cadastro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="374" y="21" width="59" height="12"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_prontuario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="105" width="66" height="12"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fluxograma:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="339" y="105" width="86" height="12"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Discriminador:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="117" width="42" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Régua:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="169" y="117" width="31" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Temp:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="78" y="117" width="50" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Glasgow:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="117" width="46" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Glicemia:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="117" width="48" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pulso/FC:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="216" y="130" width="68" height="15"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Classificador:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="483" y="130" width="39" height="15"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Horário:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="182" width="221" height="12"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HDA/Exame Físico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="247" width="50" height="14"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Acidente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="151" y="247" width="54" height="14"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agressão:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="258" y="247" width="31" height="14"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Risco:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="346" y="247" width="24" height="14"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[P.A:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="460" y="247" width="34" height="14"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="261" width="113" height="13"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hipótese Diagnóstico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="378" y="261" width="68" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Comorbidade:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="2" y="195" width="552" height="52"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_atendimento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="295" y="117" width="45" height="13"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_glicemia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="128" y="117" width="41" height="13"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_glassgow}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="382" y="117" width="33" height="13"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_regua_dor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="51" y="92" width="503" height="13"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_queixa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="68" y="105" width="271" height="12"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_fluxograma}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="105" width="129" height="12"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_discriminador}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="49" y="117" width="29" height="13"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_sato2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="494" y="248" width="60" height="13"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_peso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="205" y="248" width="53" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{flg_agressao}.equalsIgnoreCase("N") ? "Não" : "Sim"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="115" y="261" width="263" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{hipoteses_diagnostico}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="446" y="261" width="108" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{comorbidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="44" y="131" width="172" height="14"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_risco}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="284" y="131" width="199" height="14"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="522" y="130" width="32" height="15"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{hor_registro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="223" y="181" width="26" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Eixo:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="249" y="181" width="305" height="13"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_destino_medico}.equalsIgnoreCase("ALTA APÓS MEDICAÇÃO") ? "MEDICAÇÃO (ALTA APÓS MEDICAÇÃO)" : $F{dsc_destino_medico}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="168" width="61" height="13"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Médico(a):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="168" width="31" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CRM:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="63" y="168" width="243" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{profissional}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="337" y="168" width="52" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_conselho}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="78" y="34" width="109" height="12"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_nascimento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="370" y="248" width="90" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_pa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="463" y="117" width="91" height="13"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_fc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="289" y="248" width="57" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_risco}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="496" y="34" width="58" height="12"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_orgao_emissao_rg}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="52" y="248" width="99" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{flg_acidente}.equalsIgnoreCase("S") ? "Sim" : "Não"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="339" y="34" width="121" height="12"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{num_rg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="389" y="168" width="84" height="13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº Atendimento:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="473" y="168" width="81" height="13"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{isn_internacao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="117" width="49" height="13"/>
+				<box leftPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_temperatura}.toString()]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="11">
+			<subreport isUsingCache="false">
+				<reportElement positionType="Float" mode="Opaque" x="-20" y="0" width="543" height="10"/>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$P{p1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "subRelExames.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="10">
+			<subreport>
+				<reportElement positionType="Float" x="-20" y="0" width="543" height="10"/>
+				<subreportParameter name="p1">
+					<subreportParameterExpression><![CDATA[$P{p1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{CAMINHO_SUB_REPORT} + "subRelPrescricao.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="34">
+			<staticText>
+				<reportElement x="0" y="18" width="555" height="14"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Unidade mantida com recursos públicos, provenientes de seus impostos e contribuições sociais.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-20" y="3" width="593" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{endereco_completo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="17" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="2" width="555" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:t="http://myfaces.apache.org/tomahawk">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="headHtml" />
+	<ui:define name="conteudo">
+		<a4j:keepAlive beanName="exameDetalhadoForm" />
+		
+		<rich:modalPanel id="panelStatus" autosized="true">  
+	 		<h:panelGrid columns="2"> 
+	 			<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px"/> 
+	 			<h:outputText value="Carregando..." />
+	 		</h:panelGrid> 
+		</rich:modalPanel>
+		
+		
+		<h:form id="csExameDetalhado" >
+			
+			<div id="geral">
+		   		<label class="cabAreaPesquisa">GERAL EXAMES</label>  	 
+				<div class="areaPesquisa">				
+					<fieldset>
+						<legend><b>Dados da Solicitação</b></legend>
+						<table>
+							<tr>
+								<td class="fonte10" width="12%">Prontuário</td>
+								<td class="fonte10"><h:inputText value="#{exameDetalhadoForm.exameSolicitacao.filtro.numProntuario}" onkeypress="return soNumero(event, this)" id="numProntuario" maxlength="10" style="width:70px; height:16px;"/> </td>
+							</tr>
+							<tr>
+								<td class="fonte10">Médico</td>
+								<td class="fonte10">
+									<h:panelGroup id="panMedicos">
+										<h:inputText value="#{exameDetalhadoForm.strMedico}" id="strMedico" maxlength="50" style="width:150px; height:17px; text-transform:uppercase;" onblur="upper(this);" />  
+										<span style="width: 11px"><a4j:commandButton image="IMG/imgFiltrar.gif" action="#{exameDetalhadoForm.popularLstMedicos}" reRender="panMedicos" /></span> 
+										<h:selectOneMenu id="isnMedico" 
+												 	  style="width: 450px"
+												      value="#{exameDetalhadoForm.objMedico}" converter="simpleIndexConverter">
+												<f:selectItems var="o" itemValue="o" itemLabel="o.dscUsuario" value="#{exameDetalhadoForm.lstMedicos}" />
+										</h:selectOneMenu>
+									</h:panelGroup>
+								</td>
+							</tr>
+							<tr>
+								<td class="fonte10">Exame</td>
+								<td class="fonte10">
+									<h:panelGroup id="panExames">
+										<h:inputText value="#{exameDetalhadoForm.strExame}" id="strExame" maxlength="50" style="width:150px; height:17px; text-transform:uppercase;" onblur="upper(this);" />  
+										<span style="width: 11px"><a4j:commandButton image="IMG/imgFiltrar.gif" action="#{exameDetalhadoForm.popularLstExames}" reRender="panExames" /></span> 
+										<h:selectOneMenu id="isnExame" 
+												 	  style="width: 450px"
+												      value="#{exameDetalhadoForm.objExame}" converter="simpleIndexConverter">
+												<f:selectItems var="o" itemValue="o" itemLabel="o.dscExame" value="#{exameDetalhadoForm.lstExames}" />
+										</h:selectOneMenu>
+									</h:panelGroup>
+								</td>
+							</tr>
+							<tr>
+								<td class="fonte10">Usuário Baixa</td>
+								<td class="fonte10">
+									<h:panelGroup id="panUsuarios">
+										<h:inputText value="#{exameDetalhadoForm.strUsuarioBaixa}" id="strUsuarioBaixa" maxlength="50" style="width:150px; height:17px; text-transform:uppercase;" onblur="upper(this);" />  
+										<span style="width: 11px"><a4j:commandButton image="IMG/imgFiltrar.gif" action="#{exameDetalhadoForm.popularLstUsuarios}" reRender="panUsuarios" /></span> 
+										<h:selectOneMenu id="isnUsuarios" 
+												 	  style="width: 450px"
+												      value="#{exameDetalhadoForm.objUsuarioBaixa}" converter="simpleIndexConverter">
+												<f:selectItems var="o" itemValue="o" itemLabel="o.dscUsuario" value="#{exameDetalhadoForm.lstUsuarios}" />
+										</h:selectOneMenu>
+									</h:panelGroup>
+								</td>
+							</tr>
+							<tr>
+								<td class="fonte10">Clínica</td>
+								<td class="fonte10">
+									<h:selectOneMenu id="isnClinica"
+											      value="#{exameDetalhadoForm.objClinica}" converter="simpleIndexConverter">
+											<f:selectItems var="o" itemValue="o" itemLabel="o.dscClinica" value="#{exameDetalhadoForm.lstClinicas}" />
+									</h:selectOneMenu>
+								</td>
+							</tr>
+							<tr>
+								<td class="fonte10">Agrupamento</td>
+								<td class="fonte10">
+									<h:selectOneMenu id="isnAgrupamento"
+											      value="#{exameDetalhadoForm.objAgrupamento}" converter="simpleIndexConverter">
+											<f:selectItems var="o" itemValue="o" itemLabel="o.dscExameAgrupamento" value="#{exameDetalhadoForm.lstAgrupamentos}" />
+									</h:selectOneMenu>
+								</td>
+							</tr>
+							<tr>
+								<td class="fonte10">Situação</td>
+								<td class="fonte10">
+									<h:selectOneMenu id="isnExameSituacao"
+											      value="#{exameDetalhadoForm.objExameSituacao}" converter="simpleIndexConverter">
+											<f:selectItems var="o" itemValue="o" itemLabel="o.dscExameSituacao" value="#{exameDetalhadoForm.lstExameSituacoes}" />
+									</h:selectOneMenu>
+								</td>
+							</tr>									
+						</table>
+					</fieldset>
+					
+					<fieldset>
+						<legend><b>Intervalo</b></legend>
+					
+						<table style="width: 100%;">
+							<tr>
+								<td class="fonte10" width="12%;">Realização <font color="red">*</font></td>
+								<td class="fonte16">
+									<rich:calendar id="datRealizacaoInicial" value="#{exameDetalhadoForm.datRealizacaoInicio}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)" maxlength="10"/>
+			       						<font size="1"><h:outputText value=" a "/></font>
+			       					<rich:calendar id="datRealizacaoFinal" value="#{exameDetalhadoForm.datRealizacaoFim}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)" maxlength="10"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="fonte10" width="12%">Solicitação <font color="red">*</font></td>
+								<td class="fonte16">
+									<rich:calendar id="datSolicitacaoInicial" value="#{exameDetalhadoForm.datSolicitacaoInicio}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)" maxlength="10" />
+			       						<font size="1"><h:outputText value=" a "/></font>
+			       					<rich:calendar id="datSolicitacaoFinal" value="#{exameDetalhadoForm.datSolicitacaoFim}" datePattern="dd/MM/yyyy" showWeeksBar="false" enableManualInput="true" oninputkeypress="return formataData(event, this)" maxlength="10" />
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+						<span style="font-size: 10px;">Obs: Pelo menos um dos campos com <font color="red">*</font> é obrigatório.</span>
+					<br/>
+					<div align="center">
+						<a4j:commandButton id="btnPesquisar"
+				  	    					value="Pesquisar"
+										   action="#{exameDetalhadoForm.pesquisarExameDetalhado}"
+									   oncomplete="validar('#{exameDetalhadoForm.mensagem}');"
+									   styleClass="botaoModal100"
+											style="margin-right: 10px;"
+										 reRender="csExameDetalhado,panConsultaDetalhada">									
+						</a4j:commandButton>
+					</div>		   
+	        	</div>
+        	</div>
+	        	       	
+	       	<a4j:status id="statusPanel"
+				   onstart="Richfaces.showModalPanel('panelStatus');" 
+				    onstop="#{rich:component('panelStatus')}.hide()">
+			</a4j:status>
+			 
+			<script>
+			function validar(msg)
+			{
+				if(msg != '')
+				{
+					alert(msg);
+				}
+				else
+				{
+					Richfaces.showModalPanel('panConsultaDetalhada');
+				}
+			}			
+			</script>
+		</h:form>
+		
+		
+		<!-- MODAL PANEL DE CONSULTA DETALHADA -->	
+		<rich:modalPanel id="panConsultaDetalhada" autosized="false" width="1200" height="650" resizeable="false" headerClass="headerPanel3">
+		
+		<!-- BARRA DE TITULO MODAL-->
+    	<f:facet name="header">
+			<h:panelGroup>
+       			<h:outputText value="RESULTADO DA CONSULTA GERAL DE EXAMES"></h:outputText>
+       		</h:panelGroup>
+    	</f:facet>
+    	<f:facet name="controls">
+    	 	<h:panelGroup>
+        		<h:graphicImage value="IMG/fechar.png" id="fechaPanelCons"/>
+        		<rich:componentControl for="panConsultaDetalhada" attachTo="fechaPanelCons" operation="hide" event="onclick" />
+        	</h:panelGroup>
+    	</f:facet>
+    	    	
+    	<h:form id="formConsultaDetalhadaExames">
+    		
+    		<fieldset>
+    			<legend style="font-size: 12px;"><b>Parâmetros de pesquisa</b></legend>
+    			<div style="font-size: 12px;">
+    				<h:outputText value="#{exameDetalhadoForm.strParametros}" />
+    			</div>
+    		</fieldset>
+    		
+    		<div align="right" style="font-size: 10px; ">
+    			<b>Foi(ram) encontrado(s) <h:outputText value=" #{exameDetalhadoForm.total}" /> registro(s).</b>
+    		</div>
+    		    	
+    		<br/>
+    		<div>
+				<rich:dataTable id="tabelaExamesDetalhado"
+						onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+						value="#{exameDetalhadoForm.listaExamesDetalhada}" 
+						var="rst" 
+						rows="18"
+						rowKeyVar="linha" 
+						style="width: 100%; cursor: pointer;"
+						reRender="ds">					
+					
+					<rich:column style="text-align: right; width: 5%;" sortBy="#{rst.internacaoPepBean.pacientePepBean.numProntuario}">
+						<f:facet name="header">
+							<h:outputText value="Prontuário"/>
+						</f:facet>
+						<h:outputText value="#{rst.internacaoPepBean.pacientePepBean.numProntuario}" />
+					</rich:column>
+					
+					<rich:column style="text-align: left; width: 38%;" sortBy="#{rst.internacaoPepBean.pacientePepBean.dscNome}">
+						<f:facet name="header">
+							<h:outputText value="Paciente" />
+						</f:facet>
+						<h:outputText value="#{rst.internacaoPepBean.pacientePepBean.dscNome}" />
+					</rich:column>
+	
+					<rich:column style="text-align: left; width: 37%;" sortBy="#{rst.examePepBean.dscExame}">
+						<f:facet name="header">
+							<h:outputText value="Exame" />
+						</f:facet>					
+						<h:outputText value="#{rst.examePepBean.dscExame}" />
+					</rich:column>
+					
+					<rich:column style="text-align: center; width: 10%;" sortBy="#{rst.datSolicitacao}">
+						<f:facet name="header">
+							<h:outputText value="Data de Solicitação"/>
+						</f:facet>
+						<h:outputText value="#{rst.datSolicitacao}" />
+					</rich:column>
+					
+					<rich:column style="text-align: center; width: 10%;" sortBy="#{rst.datRealizacao}">
+						<f:facet name="header">
+							<h:outputText value="Data de Realização" />
+						</f:facet>
+						<h:outputText value="#{rst.datRealizacao}" />
+					</rich:column>
+					
+					<f:facet name="footer">
+						<rich:datascroller id="ds" ajaxSingle="false" />
+					</f:facet>
+				</rich:dataTable>
+			</div>
+    	</h:form>
+    	
+ 	</rich:modalPanel>	
+		
+				
+	</ui:define>
+	
+</ui:composition>
+
+</html>

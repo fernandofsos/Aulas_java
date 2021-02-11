@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="headHtml">
+		<link rel="stylesheet" type="text/css" href="CSS/layoutCsPaciente.css" />
+	</ui:define>
+	
+	<ui:define name="conteudo">
+		<a4j:keepAlive beanName="prescricaoPadraoForm" />
+		<rich:modalPanel id="panelStatus" autosized="true">
+			<h:panelGrid columns="2">
+				<h:graphicImage url="IMG/ajax-loader.gif" style="border:0px" />
+				<h:outputText value="Carregando..." />
+			</h:panelGrid>
+		</rich:modalPanel>
+
+		<h:form id="formPesquisa">
+			<h:panelGroup layout="block" styleClass="cabAreaPesquisa">PRESCRIÇÃO PADRÃO</h:panelGroup>
+			<h:panelGroup lavout="block" styleClass="areaPesquisa">
+				<h:panelGrid columns="6">
+					<h:panelGrid columns="1">
+						<h:panelGroup layout="block">
+						Pesquisar Por tipo:<h:outputText value="*" style="color:red;font-weight:bold"/>
+					</h:panelGroup>
+						<h:panelGroup layout="block">
+							<h:selectOneMenu style="height: 20px;width: 240px;" value="#{prescricaoPadraoForm.isnPrescricaoPadrao}">
+								<f:selectItem itemLabel="Selecione" itemValue="0" noSelectionOption="true" />
+								<t:selectItems var="o" itemLabel="#{o.dscPrescricaoPadrao}" itemValue="#{o.isnPrescricaoPadrao}" value="#{prescricaoPadraoForm.listaPrescricaoPadrao}"/>
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<h:panelGroup layout="block">
+						<a4j:commandButton actionListener="#{prescricaoPadraoForm.pesquisar}" styleClass="botaoNovoItem" value="Pesquisar" reRender="tblResult"  oncomplete="validaIncluirItem(#{prescricaoPadraoForm.erro});"/>
+					</h:panelGroup>
+					<h:panelGroup layout="block">
+						<h:commandButton action="#{prescricaoPadraoForm.novaPrescricaoPadrao}" styleClass="botaoNovoItem" value="Nova Prescrição" reRender="tblResult"/>
+					</h:panelGroup>
+				</h:panelGrid>
+			</h:panelGroup>
+
+			<hr/>
+			
+			<h:panelGroup id="tblResult" layout="block">
+				<rich:dataTable id="tblData" 
+							   var="rst" 
+							 style="width:100%;"
+						      rows="20" 
+						  sortMode="single"
+						  value="#{prescricaoPadraoForm.listaPrescricaoPepItem}">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<rich:column>
+								<h:outputText value="Cód. Presc. Padrão" />
+							</rich:column>
+							<rich:column>
+								<h:outputText value="Prescrição Padrão" />
+							</rich:column>
+							<rich:column>
+								<h:outputText value="Tipo Presc." />
+							</rich:column>
+							<rich:column>Ações</rich:column>
+						</rich:columnGroup>
+					</f:facet>
+					<rich:column style="width: 3%;" >
+						<h:outputText value="#{rst.isnPrescricaoPadraoItem}" />
+					</rich:column>
+					<rich:column >
+						<h:outputText value="#{rst.dscPrescricaoPadrao}" escape="false"/>
+					</rich:column>
+					<rich:column style="width: 15%;">
+						<h:outputText value="#{rst.tipoPrescricao.dscTipoPrescricao}" />
+					</rich:column>
+					<rich:column style="text-align:center;width: 1%;">
+						<a4j:commandButton action="#{prescricaoPadraoForm.inativarItem(rst)}" 
+									   styleClass="botaoNovoItem" 
+									        value="Inativar" 
+									        reRender="tblResult"
+									      onclick="if(!confirm('Deseja inativar essa Prescrição Padrão?')) return false;" 
+						 			   oncomplete="validaIncluirItem(#{prescricaoPadraoForm.erro});"/>
+					</rich:column>
+					<f:facet name="footer">
+							<rich:datascroller id="ds" />
+					</f:facet>
+				</rich:dataTable>
+			</h:panelGroup>
+		</h:form>
+		<script>
+    	<!-- 
+		function validaIncluirItem(erro) {
+    		if(erro==1){
+    			alert("Os campos obrigatórios deverão ser preenchidos!");
+				return false;			
+    		}else if(erro==2){
+    			alert("Prescrição Inativada com Sucesso!");
+				return false;			
+    		}else if(erro==99){
+    			alert("Prescrição Padrão Salva com Sucesso!");
+    			window.location = "#{request.contextPath}/cs_prescricao_padrao.jsf"; 			
+   			}
+    		
+    	}
+    	
+    	//-->
+        </script>
+	</ui:define>
+</ui:composition>
+</html>

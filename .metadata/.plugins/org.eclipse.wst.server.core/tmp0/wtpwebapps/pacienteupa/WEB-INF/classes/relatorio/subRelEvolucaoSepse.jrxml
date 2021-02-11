@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subRelEvolucaoSepse" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="protocolo_sepse" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select  es.isn_evolucao_sepse, es.isn_protocolo_sepse, es.dsc_evolucao_sepse, es.dsc_pa, es.dsc_fc, es.dsc_fr, es.dsc_spo2, es.dsc_temp,
+es.isn_evolucao_sepse_sinais, es.flg_finalizado, es.flg_retira_sepse, es.dat_cadastro, es.isn_usuario, es.dsc_pa_final, ess.dsc_evolucao_sepse_sinais,
+u.dsc_usuario from medpoint.t_evolucao_sepse es
+left join medpoint.t_evolucao_sepse_sinais ess on ess.isn_evolucao_sepse_sinais = es.isn_evolucao_sepse_sinais
+left join seguranca.t_usuario u on u.isn_usuario = es.isn_usuario
+where isn_protocolo_sepse = $P{protocolo_sepse}::integer]]>
+	</queryString>
+	<field name="isn_evolucao_sepse" class="java.lang.Integer"/>
+	<field name="isn_protocolo_sepse" class="java.lang.Integer"/>
+	<field name="dsc_evolucao_sepse" class="java.lang.String"/>
+	<field name="dsc_pa" class="java.lang.String"/>
+	<field name="dsc_fc" class="java.lang.String"/>
+	<field name="dsc_fr" class="java.lang.String"/>
+	<field name="dsc_spo2" class="java.lang.String"/>
+	<field name="dsc_temp" class="java.lang.String"/>
+	<field name="isn_evolucao_sepse_sinais" class="java.lang.Integer"/>
+	<field name="flg_finalizado" class="java.lang.Boolean"/>
+	<field name="flg_retira_sepse" class="java.lang.Boolean"/>
+	<field name="dat_cadastro" class="java.sql.Timestamp"/>
+	<field name="isn_usuario" class="java.lang.Integer"/>
+	<field name="dsc_pa_final" class="java.lang.String"/>
+	<field name="dsc_evolucao_sepse_sinais" class="java.lang.String"/>
+	<field name="dsc_usuario" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="16" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="1" y="0" width="551" height="15" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Dados Acompanhamento]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="1" y="16" width="22" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PA:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="23" y="16" width="93" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_pa} + " X " + $F{dsc_pa_final} + " mmHg"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="1" y="0" width="80" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data / Horário:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="241" y="16" width="80" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_fr}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="322" y="16" width="35" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SPO2:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="219" y="16" width="22" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FR:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="303" y="1" width="250" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_evolucao_sepse_sinais}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="199" y="0" width="104" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paciente Apresenta:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="138" y="16" width="80" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_fc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="357" y="16" width="80" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_spo2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="437" y="16" width="36" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TEMP:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="473" y="16" width="80" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_temp}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="81" y="0" width="118" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{dat_cadastro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="116" y="16" width="22" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FC:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="1" y="31" width="70" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Profissional:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="71" y="31" width="482" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_usuario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1" y="46" width="49" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Evolução:]]></text>
+			</staticText>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1" y="0" width="538" height="12"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_evolucao_sepse}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

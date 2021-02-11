@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+<head>
+	<meta http-equiv="refresh" content="600;url=#{request.contextPath}/painelEletronico.jsf" />
+	<title>VITA - Painel Eletrônico (<h:outputText value="#{bundle.tituloAplicacao}" />)</title>
+	<script type="text/javascript" src="SCRIPTS/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="SCRIPTS/jquery-ui-1.10.3.custom.min.js"></script>
+	<script type="text/javascript" src="SCRIPTS/jquery-clock.js"></script>
+	<link rel="stylesheet" type="text/css" href="CSS/layoutPainelEletronico.css" />
+	
+	<script type="text/javascript">
+	<!--
+		$(function(){
+			$('#bg').hide();
+			$('#bottom').css({bottom:"-93px",top:"auto"});
+			$('#orange').hide();
+			$('#orange .qtd').hide();
+			$('#yellow').hide();
+			$('#yellow .qtd').hide();
+			$('#green').hide();
+			$('#green .qtd').hide();
+			$('#blue').hide();
+			$('#blue .qtd').hide();
+			$('#attended').hide();
+			$('#waiting').hide();
+			$('#severe').hide();
+			$('#left').hide();
+			$('#iconAtendidos').hide();
+			$('#txtAtendidos').hide();
+			$('#iconEspera').hide();
+			$('#txtEspera').hide();
+			$('#iconGraves').hide();
+			$('#txtGraves').hide();
+			//NUMEROS
+			$('#txt_qtd_pacientes').hide();
+			$('#txt_tempo_espera').hide();
+			$('#num_attended').hide();
+			$('#num_waiting').hide();
+			$('#num_severe').hide();
+
+			$('#bg').animate({
+					opacity: 'show'
+				}, {
+					duration: 2000,
+			    specialEasing: {
+			      	opacity: 'linear'
+			    },
+			    complete: function() {
+			    	$('#bottom').animate({
+							bottom: '0px',
+							top:'auto'
+						}, {
+							duration: 1000,
+					    specialEasing: {
+					      	bottom: 'linear'
+					    },
+					    complete: function() {
+					    	$('#left').animate({
+					    		opacity: 'show'
+								}, {
+									duration: 1000,
+							    specialEasing: {
+							    	opacity: 'linear'
+							    },
+							    complete: function() {
+								    animaSetas();
+							    }
+							});
+					    }
+					});
+			    }
+			});			
+			
+			function animaSetas(){
+				$('#orange').animate({
+						width: 'show'
+					}, {
+						duration: 500,
+				    specialEasing: {
+				      	width: 'linear'
+				    },
+				    complete: function() {
+				    	$('#yellow').animate({
+								width: 'show'
+							}, {
+								duration: 500,
+						    specialEasing: {
+						      	width: 'linear'
+						    },
+						    complete: function() {
+						    	$('#green').animate({
+										width: 'show'
+									}, {
+										duration: 500,
+								    specialEasing: {
+								      	width: 'linear'
+								    },
+								    complete: function() {
+								    	$('#blue').animate({
+												width: 'show'
+											}, {
+												duration: 500,
+										    specialEasing: {
+										      	width: 'linear'
+										    },
+										    complete: function() {
+										    	animaQtdPacientes();
+										    }
+										});
+								    }
+								});
+						    }
+						});
+				    }
+				});
+			}
+
+			function animaQtdPacientes(){
+				$('#txt_qtd_pacientes').animate({
+						width: 'show'
+					}, {
+						duration: 500,
+				    specialEasing: {
+				      	width: 'linear'
+				    },
+				    complete: function() {
+				    	$('#orange .qtd').toggle("clip",function(){ 
+				    		$('#yellow .qtd').toggle("clip",function(){ 
+				    			$('#green .qtd').toggle("clip",function(){ 
+				    				$('#blue .qtd').toggle("clip",function(){ 
+										animaTempoEspera();
+									});
+								});
+							});
+						});
+				    }
+				});
+			}
+
+			function animaTempoEspera(){
+				$('#txt_tempo_espera').animate({
+						width: 'show'
+					}, {
+						duration: 500,
+				    specialEasing: {
+				      	width: 'linear'
+				    },
+				    complete: function() {
+				    	$('.orange').animate({
+								top: 'auto',
+								bottom: 'show'
+							}, {
+								duration: 500,
+						    specialEasing: {
+						      	bottom: 'linear'
+						    },
+						    complete: function() {
+						    	$('.yellow').animate({
+										top: 'auto',
+										bottom: 'show'
+									}, {
+										duration: 500,
+								    specialEasing: {
+								      	bottom: 'linear'
+								    },
+								    complete: function() {
+								    	$('.green').animate({
+												top: 'auto',
+												bottom: 'show'
+											}, {
+												duration: 500,
+										    specialEasing: {
+										      	bottom: 'linear'
+										    },
+										    complete: function() {
+										    	$('.blue').animate({
+														top: 'auto',
+														bottom: 'show'
+													}, {
+														duration: 500,
+												    specialEasing: {
+												      	bottom: 'linear'
+												    },
+												    complete: function() {
+												    	animaRight();
+												    }
+												});
+										    }
+										});
+								    }
+								});
+						    }
+						});
+				    }
+				});
+			}
+
+			function animaRight(){
+				$('#attended').show('slide', {direction: 'right'}, 1000, function(){
+					$('#iconAtendidos').show('fade', function(){
+						$('#txtAtendidos').show('slide');
+						$('#num_attended').animate({
+							top: 'auto',
+							bottom: 'show'
+						}, {
+							duration: 500,
+					    specialEasing: {
+					      	bottom: 'linear'
+					    },
+					    complete: function() {
+							$('#waiting').show('slide', {direction: 'right'}, 1000, function(){
+								$('#iconEspera').show('fade', function(){
+									$('#txtEspera').show('slide');
+									$('#num_waiting').animate({
+											top: 'auto',
+											bottom: 'show'
+										}, {
+											duration: 500,
+									    specialEasing: {
+									      	bottom: 'linear'
+									    },
+									    complete: function() {
+											
+											$('#severe').show('slide', {direction: 'right'}, 1000, function(){
+												$('#iconGraves').show('fade', function(){
+													$('#txtGraves').show('slide');
+													$('#num_severe').animate({
+															top: 'auto',
+															bottom: 'show'
+														}, {
+															duration: 500,
+													    specialEasing: {
+													      	bottom: 'linear'
+													    },
+													    complete: function() {
+														}
+													});
+												});
+											});
+											
+									    }
+									});
+								});
+							});
+					    }});
+					});
+				});
+			}
+			$("#clock1").clock({"langSet":"pt","format":"24","calendar":"false"});
+		});
+	//-->
+	</script>
+</head>
+	
+<body>
+	<a4j:keepAlive beanName="painelEletronicoForm" />
+	<h:form id="formulario">
+		<div id="bg">
+			<div id="all">
+				<div id="left">
+					<div id="orange">
+						<div class="qtd"><h:outputText value="#{painelEletronicoForm.numAtendidosLaranja}" /></div>
+					</div>
+					<div id="yellow">
+						<div class="qtd"><h:outputText value="#{painelEletronicoForm.numAtendidosAmarelo}" /></div>
+					</div>
+					<div id="green">
+						<div class="qtd"><h:outputText value="#{painelEletronicoForm.numAtendidosVerde}" /></div>
+					</div>
+					<div id="blue">
+						<div class="qtd"><h:outputText value="#{painelEletronicoForm.numAtendidosAzul}" /></div>
+					</div>
+				</div>
+			</div>
+			<div id="bottom">
+				<table align="center">
+				<tr>
+					<td><h:outputText value="#{painelEletronicoForm.dataPorExtenso}" /></td>
+					<td><div id="clock1"></div></td>
+					<td> ]</td>
+				</tr>
+				</table>
+			</div>
+		</div>
+		<!-- INICIO AREA DE DIVs FLUTUANTES -->
+		<div id="txt_qtd_pacientes" class="flutuante">
+			<img src="IMG/painel_eletronico/txt_quantidade_pacientes.png" border="0"/>
+		</div>
+		<div id="txt_tempo_espera" class="flutuante">
+			<img src="IMG/painel_eletronico/txt_tempo_espera.png" border="0"/>
+		</div>
+		<div class="tempo orange"><h:outputText value="#{painelEletronicoForm.tempoMedioLaranja}" /></div>
+		<div class="tempo yellow"><h:outputText value="#{painelEletronicoForm.tempoMedioAmarelo}" /></div>
+		<div class="tempo green"><h:outputText value="#{painelEletronicoForm.tempoMedioVerde}" /></div>
+		<div class="tempo blue"><h:outputText value="#{painelEletronicoForm.tempoMedioAzul}" /></div>
+		<div id="attended">
+			<table>
+			<tr>
+				<td width="132" height="140"><img src="IMG/painel_eletronico/icon_pacientes_atendidos.png" id="iconAtendidos" border="0"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="bottom"><img src="IMG/painel_eletronico/txt_pacientes_atendidos.png" id="txtAtendidos" border="0"/></td>
+			</tr>
+			</table>	
+		</div>
+		<div id="waiting">
+			<table>
+			<tr>
+				<td width="132" height="140"><img src="IMG/painel_eletronico/icon_pacientes_espera.png" id="iconEspera" border="0"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="bottom"><img src="IMG/painel_eletronico/txt_pacientes_espera.png" id="txtEspera" border="0"/></td>
+			</tr>
+			</table>
+		</div> 
+		<div id="severe">
+			<table>
+			<tr>
+				<td width="132" height="140"><img src="IMG/painel_eletronico/icon_pacientes_graves.png" id="iconGraves" border="0"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="bottom"><img src="IMG/painel_eletronico/txt_pacientes_graves.png" id="txtGraves" border="0"/></td>
+			</tr>
+			</table>
+		</div>
+		<div id="num_attended" class="flutuante">
+			<h:outputText value="#{painelEletronicoForm.numAtendidosTotal}" />
+		</div>
+		<div id="num_waiting" class="flutuante">
+			<h:outputText value="#{painelEletronicoForm.numEspera}" />
+		</div> 
+		<div id="num_severe" class="flutuante">
+			<h:outputText value="#{painelEletronicoForm.numAtendidosVermelho}" />
+		</div>
+		<!-- FIM AREA DE DIVs FLUTUANTES -->
+	</h:form>
+</body>
+</html>

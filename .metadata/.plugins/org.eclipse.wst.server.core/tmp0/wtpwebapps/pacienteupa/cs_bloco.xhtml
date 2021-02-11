@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="template.xhtml">
+<ui:define name="conteudo">
+	<!-- KEEPALIVE -->
+	<a4j:keepAlive beanName="blocoForm"></a4j:keepAlive>
+	
+	<!-- PANEL DE EDIÇÃO BLOCO -->
+	<rich:modalPanel id="panelEdicaoBloco" autosized="true" width="400" resizeable="false" headerClass="headerPanel">
+		<f:facet name="header">
+			<h:outputText value="#{(blocoForm.novoBloco)?'Novo Bloco':'Alterar/Excluir Bloco'}"></h:outputText>		
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="fechaBk" />
+				<rich:componentControl for="panelEdicaoBloco" attachTo="fechaBk" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form id="EdicaoBloco">
+			<div class="geralCampos" style="height: 60px">
+		    	<label>DESCRIÇÃO:</label>
+				<h:inputText value="#{blocoForm.nomeBloco}" styleClass="campoTexto" 
+				             maxlength="30"  style="width: 350px"/>
+			</div>
+			<div style="text-align: center; margin-top: 10px">
+				<a4j:commandButton id="btnOk" value="OK" 
+						   action="#{blocoForm.salvarBloco()}"
+						   oncomplete="this.disabled=false; avisosValidacao(#{blocoForm.codigoErro},'panelEdicaoBloco')" 
+						   reRender="dtBlocos"
+						   style="margin-right: 10px" 
+						   styleClass="botaoModal"
+						   onclick="this.disabled=true" >				
+				</a4j:commandButton>			
+				
+				<a4j:commandButton id="btnCancel"  
+				                   value="Cancelar" 
+				                   styleClass="botaoModal"
+				                   style="margin-right: 10px">
+					<rich:componentControl for="panelEdicaoBloco" attachTo="btnCancel" operation="hide" event="onclick" />
+				</a4j:commandButton>
+				
+				<a4j:commandButton id="btnExcluir" value="Excluir" 
+						   action="#{blocoForm.excluirBloco()}"
+						   onclick="this.disabled=true; if (!confirm('Confirma a exclusão?')) return false"
+						   oncomplete="this.disabled=false; avisosValidacao(#{blocoForm.codigoErro},'panelEdicaoBloco')" 
+						   reRender="dtBlocos,totalRegs"						    
+						   styleClass="botaoModal"						    
+						   rendered="#{! blocoForm.novoBloco}">						   				
+				</a4j:commandButton>
+			</div>
+		</h:form>	
+	</rich:modalPanel>
+	
+	<!-- PANEL DE EDIÇÃO CLINICAO -->
+	<rich:modalPanel id="panelTransferencia" autosized="true" width="400" resizeable="false" headerClass="headerPanel">
+		<f:facet name="header">
+			<h:outputText value="Transferências entre Blocos"></h:outputText>		
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="fechaBk2" />
+				<rich:componentControl for="panelTransferencia" attachTo="fechaBk2" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form id="Transferencia">
+			<div class="geralCampos" style="height: 40px">
+		    	<label>DESCRIÇÃO:</label>
+				<h:inputText value="#{blocoForm.objBloco.dscBloco}" styleClass="campoTexto" 
+				             maxlength="30" style="width: 350px"/>				
+			</div>
+			<div class="geralCampos" >
+				<h:selectManyCheckbox value="#{blocoForm.blocosTransferencias}" layout="pageDirection">
+					<f:selectItems value="#{blocoForm.sliBlocos}"></f:selectItems>
+				</h:selectManyCheckbox>
+			</div>
+			<div style="text-align: center; margin-top: 10px">
+				<a4j:commandButton id="btnOk" value="OK" 
+						   action="#{blocoForm.gravarTransferencias()}"
+						   oncomplete="this.disabled=false; avisosValidacao(#{blocoForm.codigoErro},'panelTransferencia')"
+						   style="margin-right: 10px" 
+						   styleClass="botaoModal"
+						   onclick="this.disabled=true" >				
+				</a4j:commandButton>			
+				
+				<a4j:commandButton id="btnCancel"  
+				                   value="Cancelar" 
+				                   styleClass="botaoModal"
+				                   style="margin-right: 10px">
+					<rich:componentControl for="panelTransferencia" attachTo="btnCancel" operation="hide" event="onclick" />
+				</a4j:commandButton>				
+				
+			</div>
+		</h:form>	
+	</rich:modalPanel>
+	<!-- FORM -->
+	<h:form>
+	    <div class="cabAreaPesquisa">BLOCOS E CLINÍCAS</div>		
+		<div class="areaPesquisa">
+			<a4j:commandButton value="Novo Bloco" 
+				                   oncomplete="Richfaces.showModalPanel('panelEdicaoBloco')" 
+				                   reRender="panelEdicaoBloco"
+				                   styleClass="botaoNovoItem"
+				                   actionListener="#{blocoForm.preparaInserir}"
+				                   ajaxSingle="true">			                          
+				<f:setPropertyActionListener value="#{true}" target="#{blocoForm.novoBloco}" />
+			</a4j:commandButton>				
+		</div>
+		
+		<rich:dataTable id="dtBlocos" 
+			onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+           	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+			value="#{blocoForm.lstBloco}" var="bloco"
+			width="100%"
+			reRender="ds"
+			rows="30">
+			
+			<f:facet name="header">
+				<rich:columnGroup>
+					<h:column><h:outputText value="Sel"/></h:column>
+					<h:column><h:outputText value="Bloco" /></h:column>
+					<h:column><h:outputText value="---" /></h:column>								
+				</rich:columnGroup>
+			</f:facet>
+			
+			<rich:column style="text-align: center" width="10%">
+				<a4j:commandLink oncomplete="Richfaces.showModalPanel('panelEdicaoBloco')" 
+				                 reRender="panelEdicaoBloco"
+				                 ajaxSingle="true">			
+				    <h:graphicImage id="imgSel" url="IMG/selecionar.png" style="border:0;" />
+				    <f:setPropertyActionListener value="#{bloco}" target="#{blocoForm.objBloco}" />						
+				    <f:setPropertyActionListener value="#{bloco.dscBloco}" target="#{blocoForm.nomeBloco}" />						
+					<f:setPropertyActionListener value="#{false}" target="#{blocoForm.novoBloco}"/>	
+				</a4j:commandLink>
+			</rich:column>
+				
+			<rich:column width="80%">					
+				<h:outputText value="#{bloco.dscBloco}" />
+			</rich:column>
+					
+			<rich:column>	
+			<!-- 
+				<a4j:commandButton oncomplete="Richfaces.showModalPanel('panelTransferencia')" 
+				                   reRender="panelTransferencia"
+				                   value="Transferencia"
+				                   action="#{blocoForm.editarTransferencia()}"
+				                   ajaxSingle="true">
+				    <f:setPropertyActionListener value="#{bloco}" target="#{blocoForm.objBloco}" />
+				</a4j:commandButton>
+			 -->		    					
+			</rich:column>	
+		</rich:dataTable>        
+	</h:form>
+	<script type="text/javascript">
+		function avisosValidacao(erro,panel) {
+			if (erro==0) {
+				Richfaces.hideModalPanel(panel);				
+			} else if (erro==3) {
+				alert("Usuário sem permissão!");				
+			} else if (erro==5) {
+				alert("Não foi possivel gravar no banco de dados!");
+			} else if (erro==10) {
+				alert("Campo descrição precisar ser preenchido!");				
+			} else if (erro==11) {
+				alert("Bloco já cadastrada!");
+			} else if (erro==12) {
+				alert("Erro ao excluir. Verifique se a Bloco foi usada em algum cadastro!");
+			} else if (erro==20) {
+				alert("Nome da clínica precisar ser preenchido!");				
+			} else if (erro==21) {
+				alert("Clínica já cadastrada!");
+			} else if (erro==22) {
+				alert("Erro ao excluir. Verifique se a Clínica foi usada em algum cadastro!");	
+			}			 		
+		}
+		
+		function confirmarExclusao() {
+			if (confirm("Confirma a exclusão?")) {				
+				return true;
+			} else {
+				return false;
+			} 
+		}
+	</script>
+</ui:define>
+</ui:composition>
+</html>

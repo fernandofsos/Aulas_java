@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich" >
+
+<ui:composition template="template.xhtml">
+<ui:define name="conteudo">
+	<a4j:keepAlive beanName="registroOuvidoriaForm" />
+	
+	<script type="text/javascript">
+		function contarCaracteres(campo, tamMax, resposta){
+			var conta = tamMax - campo.value.length;
+			document.getElementById(resposta).innerHTML = "(" + conta + " caracteres restantes)";
+			if(campo.value.length >= tamMax){		
+				campo.value = campo.value.substr(0,tamMax);
+			}	
+		}
+	</script>
+	
+	<!-- PAINEL DE EDIÇÂO -->
+	<rich:modalPanel id="panelEdicao" autosized="true" width="600" resizeable="false" headerClass="headerPanel">
+		<f:facet name="header">
+			<h:outputText value="#{(registroOuvidoriaForm.novoRegistro)?'Novo Registro':'Incluir/Alterar Registro'}"></h:outputText>		
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="IMG/fechar.png" id="fecha" />
+				<rich:componentControl for="panelEdicao" attachTo="fecha" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form id="Edicao">
+			<div class="geralCampos" style="height: 550px">				
+				<label>TIPO:</label><h:outputLabel value=" *"/>
+				<br/>
+				<h:selectOneMenu id="selectOneMenuTipoOuvidoria" value="#{registroOuvidoriaForm.registro.tipoOuvidoria}" >				
+					<f:selectItems id="selectItemsLstTipoOuvidoria" value="#{registroOuvidoriaForm.lstTipoOuvidoria}" />
+				</h:selectOneMenu>				
+				<br/>			
+				
+				<a4j:outputPanel ajaxRendered="true">								
+					<h:panelGroup>				
+						<h:outputLabel value="RESPONSÁVEL: "/>				
+						<h:outputLabel id="labelRespons" value=" *" rendered="#{registroOuvidoriaForm.registro.flgSigilo == 'N'}"/>
+					</h:panelGroup>
+					<br/>						    	
+			    	<h:inputText styleClass="campoTexto" 
+			    				 maxlength="50" 
+								 value="#{registroOuvidoriaForm.registro.dscResponsavel}"/>
+					<br/>				
+				</a4j:outputPanel>
+				<br/>								
+				<br/>
+				
+				<br/>
+				<label>EMAIL:</label>
+		    	<br/>
+				<h:inputText value="#{registroOuvidoriaForm.registro.dscEmail}" styleClass="campoTexto" maxlength="100" 
+				             style="width: 550px"/>				
+				<br/>
+				<label>ENTIDADE:</label><h:outputLabel value=" *"/>
+				<br/>
+				<h:selectOneMenu value="#{registroOuvidoriaForm.isnEntidade}">
+					<f:selectItems value="#{registroOuvidoriaForm.lstEntidades}"/>
+					<a4j:support event="onchange" actionListener="#{registroOuvidoriaForm.carregarLstSetores}" reRender="lstSetores"/>					
+				</h:selectOneMenu>				
+				<br/>
+				<label>SETOR:</label><h:outputLabel value=" *"/>
+				<br/>
+				<h:selectOneMenu id="lstSetores" value="#{registroOuvidoriaForm.registro.codSetor}" >				
+					<f:selectItems value="#{registroOuvidoriaForm.lstSetores}" />
+				</h:selectOneMenu>				
+				<br/>
+		    	<label>REGISTRO:</label><h:outputLabel value=" *"/>
+		    	<br/>		    	
+				<h:inputTextarea value="#{registroOuvidoriaForm.registro.dscRegistro}" styleClass="campoTexto" maxlength="1000" 
+				            onkeyup="return contarCaracteres(this, 1000, 'lblObservacaoRe');" style="width: 550px; height: 100px"/>
+				<br/><label id="lblObservacaoRe" />				
+				<br/>			
+				
+				<label>SIGILO:</label>
+				<br/>
+				<h:selectOneMenu value="#{registroOuvidoriaForm.registro.flgSigilo}" style="margin-right: 8px" >
+                    <f:selectItem itemValue="S" itemLabel="SIM" />
+                    <f:selectItem itemValue="N" itemLabel="NÃO" />
+                    <a4j:support event="onchange" reRender="@this, labelRespons"/>                  	           			           		
+	           	</h:selectOneMenu>
+	           	<br/>
+	           	
+				<label>ATIVO:</label>
+				<br/>
+				<h:selectOneMenu value="#{registroOuvidoriaForm.registro.flgAtivo}" style="margin-right: 8px" >
+                    <f:selectItem itemValue="S" itemLabel="SIM" />
+                    <f:selectItem itemValue="N" itemLabel="NÃO" />                  	           			           		
+	           	</h:selectOneMenu>
+	           	<br/>
+	           	
+				<label>PROCEDIMENTO:</label>
+		    	<br/>
+		    	<h:inputTextarea styleClass="campoTexto" 
+						         style="width: 550px; height: 50px"
+						         maxlength="100" 
+								 value="#{registroOuvidoriaForm.registro.dscProcedimento}"
+								 onkeyup="return contarCaracteres(this, 100, 'lblObservacaoPro');"/>
+				<br /><label id="lblObservacaoPro" />
+				<br />
+				<h:outputLabel value="* Campos obrigatórios"/>				
+			</div>
+			<div style="text-align: center; margin-top: 10px">
+				<a4j:commandButton id="btnOk" value="OK" 
+						   action="#{registroOuvidoriaForm.salvar()}"
+						   oncomplete="this.disabled=false; avisosValidacao(#{registroOuvidoriaForm.codigoErro})" 
+						   reRender="dtRegistroOuvidoria,totalRegs"
+						   style="margin-right: 10px" 
+						   styleClass="botaoModal"
+						   onclick="this.disabled=true" >				
+				</a4j:commandButton>			
+				
+				<a4j:commandButton id="btnCancel"  
+				                   value="Cancelar" 
+				                   styleClass="botaoModal"	
+				                   action="#{registroOuvidoriaForm.buscar()}"	                   
+				                   style="margin-right: 10px">
+					<rich:componentControl for="panelEdicao" attachTo="btnCancel" operation="hide" event="onclick" />
+				    <f:setPropertyActionListener value="#{registroOuvidoriaForm.novoRegistroOuvidoria}" target="#{registroOuvidoriaForm.registro}" />
+				</a4j:commandButton>
+				
+				<a4j:commandButton id="btnExcluir" value="Excluir" 
+						   action="#{registroOuvidoriaForm.excluir()}"
+						   onclick="if (!confirm('Confirma a Exclusão?')) return false"
+						   oncomplete="this.disabled=false; avisosValidacao(#{registroOuvidoriaForm.codigoErro})" 
+						   reRender="dtRegistroOuvidoria,totalRegs"						    
+						   styleClass="botaoModal"						    
+						   rendered="false">						   				
+				</a4j:commandButton>
+			</div>
+		</h:form>	
+	</rich:modalPanel>
+	
+	<!-- FIM CONTEUDO MODAL -->
+	<h:form id="formOuvidoria">
+		<div class="cabAreaPesquisa">Registro de Ouvidoria</div>		
+    	<div class="areaPesquisa">    	        	     
+           	<div class="colLeft">
+           		<div class="areaPesquisa" style="border: 0px;">         	
+        			<label>Pesquisar:</label><br/>
+        			<h:panelGroup>
+						<h:inputText id="inputPesquisa" 
+						             value="#{registroOuvidoriaForm.valorPesquisa}"
+						             styleClass="campoTexto" 
+						             rendered="#{registroOuvidoriaForm.tipoPesquisa == 0}" 
+						             style="width: 240px;" />
+						
+						<h:panelGroup rendered="#{registroOuvidoriaForm.tipoPesquisa == 3}">
+							<label>TIPO:</label>					
+							<h:selectOneMenu id="selectOneMenuTipoOuvidoria" value="#{registroOuvidoriaForm.tipoOuvidoriaPesquisa}">				
+								<f:selectItems id="selectItemsLstTipoOuvidoria" value="#{registroOuvidoriaForm.lstTipoOuvidoria}" />
+							</h:selectOneMenu>
+						</h:panelGroup>			 
+							
+						<rich:calendar rendered="#{registroOuvidoriaForm.tipoPesquisa == 2}"		         	 
+				       		           value="#{registroOuvidoriaForm.dataInicial}"
+				       		           datePattern="dd/MM/yyyy" 
+				       		           cellWidth="24px" 
+				       		           cellHeight="22px" 
+				       		           style="width:200px" 
+				       		           showWeeksBar="false" 
+				       		           inputSize="10"  
+				       		           enableManualInput="true" 
+				       		           oninputkeypress="return formataData(event, this);" maxlength="10" showFooter="false" />
+						
+							<h:outputText value=" a " rendered="#{registroOuvidoriaForm.tipoPesquisa == 2}" style="font-size:12px;"/>				        
+				        					
+						<rich:calendar rendered="#{registroOuvidoriaForm.tipoPesquisa == 2}"      	 
+				       		           value="#{registroOuvidoriaForm.dataFinal}"
+				       		           datePattern="dd/MM/yyyy"
+				       		           cellWidth="24px" 
+				       		           cellHeight="22px" 
+				       		           style="width:200px" 
+				       		           showWeeksBar="false" 
+				       		           inputSize="10"  
+				       		           enableManualInput="true" 
+				       		           oninputkeypress="return formataData(event, this);" 
+				       		           maxlength="10"
+				       		           showFooter="false" />
+				       		           
+						<h:outputLabel value="#{registroOuvidoriaForm.dataInicial}" rendered="#{registroOuvidoriaForm.tipoPesquisa == 1}" >
+						    <f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputLabel>
+						<h:outputLabel value="#{registroOuvidoriaForm.dataFinal}" rendered="#{registroOuvidoriaForm.tipoPesquisa == 1}" >
+						    <f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputLabel>
+						
+						<h:inputText id="inputCod" 
+						             value="#{registroOuvidoriaForm.valorPesquisaCod}"
+						             styleClass="campoTexto"						              
+						             rendered="#{registroOuvidoriaForm.tipoPesquisa == 4}" 
+						             style="width: 100px;" />
+											 
+				    </h:panelGroup>				     
+				</div>		
+				<div>	
+					<br/>		
+					<h:selectOneMenu value="#{registroOuvidoriaForm.tipoPesquisa}" >	
+						<f:selectItem itemValue="0" itemLabel="DESCRICAO REGISTRO"/>	
+						<f:selectItem itemValue="1" itemLabel="RESUMO MÊS"/>	
+						<f:selectItem itemValue="2" itemLabel="RESUMO POR INTERVALO"/>
+						<f:selectItem itemValue="3" itemLabel="TIPO REGISTRO"/>
+						<f:selectItem itemValue="4" itemLabel="CÓD REGISTRO"/>
+						<a4j:support event="onchange" reRender="formOuvidoria,resultadoPesquisa" actionListener="#{registroOuvidoriaForm.changeTipoPesquisa}"/>
+					</h:selectOneMenu>	
+				</div>			
+	        	<div class="col70">
+	               	<rich:spacer height="12px"/><br/>
+	        		<a4j:commandButton image="IMG/pesquisa.gif" id="btnPesquisa" 
+	           		        action="#{registroOuvidoriaForm.buscar()}" 
+		    				oncomplete="avisosValidacao(#{registroOuvidoriaForm.codigoErro})"		    				
+		    				reRender="dtRegistroOuvidoria,totalRegs,panelConsultaResumo" />
+		    		<rich:hotKey key="return" selector="#inputPesquisa" 
+		    	             handler="#{rich:element('btnPesquisa')}.click()"/>		
+		    	</div>	
+		    	<a4j:outputPanel ajaxSingle="true">
+		    	<h:panelGroup id="resultadoPesquisa"  rendered="#{registroOuvidoriaForm.tipoPesquisa == 0}">
+		    	<div class="col200" style="text-align: center;">
+			   		<label style="font-size: medium;">Resultado:</label>
+			   		<h:outputText class="totalizador2" value="#{registroOuvidoriaForm.totalRegistros}" id="totalRegs"/> 
+				</div>
+				</h:panelGroup>
+				</a4j:outputPanel>
+			</div>
+			<div style="float: right">	    	
+				<a4j:commandButton value="NOVO REGISTRO DE OUVIDORIA" 
+				                   oncomplete="Richfaces.showModalPanel('panelEdicao')" 
+				                   reRender="panelEdicao"
+				                   styleClass="botaoNovoItem"
+				                   ajaxSingle="true">                     
+					<f:setPropertyActionListener value="#{true}" target="#{registroOuvidoriaForm.novoRegistro}" />
+					<f:setPropertyActionListener value="#{registroOuvidoriaForm.novoRegistroOuvidoria}" target="#{registroOuvidoriaForm.registro}" />
+				</a4j:commandButton>
+				<rich:spacer width="10"/>
+			</div>		
+			<br style="clear: both;"/>		
+    	</div>
+    	
+    	<div style="margin-bottom: 60px">	
+	   		<rich:dataTable id="dtRegistroOuvidoria" 
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				value="#{registroOuvidoriaForm.lstRegistroOuvidoria}" 
+				var="registro"
+				width="100%"
+				reRender="ds"
+				rendered="#{registroOuvidoriaForm.tipoPesquisa == 0 || registroOuvidoriaForm.tipoPesquisa == 3 || registroOuvidoriaForm.tipoPesquisa == 4}" 
+				rows="10" >
+			
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column><h:outputText value="Sel" /></rich:column>
+						<rich:column width="5%" ><h:outputText value="Cód."/></rich:column>
+						<rich:column><h:outputText value="Descrição"  /></rich:column>
+						<rich:column><h:outputText value="Ativo"/></rich:column>
+					</rich:columnGroup>
+				</f:facet>
+			
+				<rich:column style="text-align: center">
+					<a4j:commandLink oncomplete="Richfaces.showModalPanel('panelEdicao')" 
+					                 reRender="panelEdicao"
+					                 ajaxSingle="true">			
+					    <h:graphicImage id="imgSel" url="IMG/selecionar.png" style="border:0;" />
+					    <f:setPropertyActionListener value="#{registro}"	
+						                             target="#{registroOuvidoriaForm.registro}" />						
+						<f:setPropertyActionListener value="#{false}" 
+													 target="#{registroOuvidoriaForm.novoRegistro}"/>		
+					</a4j:commandLink>
+				</rich:column>
+				
+				<rich:column>
+					<h:outputText value="#{registro.isnRegistro}"/>
+				</rich:column>
+				
+				<rich:column>					
+					<h:outputText value="#{registro.dscRegistro}" />
+				</rich:column>			
+				
+				<rich:column>					
+					<h:outputText value="#{(registro.flgAtivo == 'S')?'SIM':'NÃO'}" />
+				</rich:column>	
+				
+				<f:facet name="footer">
+	        		<rich:datascroller fastControls="auto" id="ds" ajaxSingle="false" />
+	        	</f:facet>
+			</rich:dataTable>
+			
+			<h:panelGroup id="panelConsultaResumo" rendered="#{registroOuvidoriaForm.tipoPesquisa != 0 and registroOuvidoriaForm.tipoPesquisa != 3 and registroOuvidoriaForm.tipoPesquisa != 4}" >
+				<center>
+					<h:outputText value="Total de Mensagens: #{registroOuvidoriaForm.totalMensagens}" />
+				</center>
+				<br/>
+				<center>
+					<h:outputText value="Total por Classificacão: #{registroOuvidoriaForm.totalClassificacoes}" />
+				</center>
+				<br/>
+			
+				<rich:dataTable id="dtConsultaResumo" 
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+            	onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				value="#{registroOuvidoriaForm.lstResumoOuvidoria}"
+				var="registro"
+				width="100%"
+				reRender="ds"
+				rows="40" >
+			
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column><h:outputText value="Classificação" /></h:column>
+						<h:column><h:outputText value="Quantidade"  /></h:column>
+						<h:column><h:outputText value="Percentual"/></h:column>
+					</rich:columnGroup>
+				</f:facet>
+			
+				<rich:column>					
+					<h:outputText value="#{registro.dscClassificacao}" />
+				</rich:column>	
+				
+				<rich:column>					
+					<center><h:outputText value="#{registro.quantidade}" /></center>
+				</rich:column>			
+				
+				<rich:column>					
+					<center><h:outputText value="#{registro.percentual}" /></center>
+				</rich:column>	
+				
+				<f:facet name="footer">
+	        		<rich:datascroller fastControls="auto" id="ds" ajaxSingle="false" />
+	        	</f:facet>
+			</rich:dataTable>
+				
+			</h:panelGroup>
+		</div>
+	</h:form>
+	<script type="text/javascript">
+		function avisosValidacao(aviso) {
+			if (aviso==0) {
+				Richfaces.hideModalPanel("panelEdicao");							
+			} else if (aviso==2) {
+				alert("Registro de Ouvidoria já cadastrada!");
+			} else if (aviso==3) {
+				alert("Usuário sem permissão!");
+			} else if (aviso==4) {
+				alert("Erro ao excluir. Verifique se o Tipo de Ouvidoria foi usado em algum cadastro!");
+			} else if (aviso==5) {
+				alert("Não foi possivel gravar no banco de dados!");
+			} else if (aviso==6) {
+				alert("Erro ao realizar pesquisa!");
+			} else if (aviso==7) {
+				alert("Campo 'TIPO:' é obrigatório!");
+			} else if (aviso==8) {
+				alert("Campo 'RESPONSÁVEL:' é obrigatório!");
+			} else if (aviso==9) {
+				alert("Campo 'ENTIDADE:' é obrigatório!");
+			} else if (aviso==10) {
+				alert("Campo 'SETOR:' é obrigatório!");
+			} else if (aviso==11) {
+				alert("Campo 'REGISTRO:' é obrigatório!");
+			} else if (aviso==12) {
+				alert("Nenhum registro encontrado!");
+			} else if (aviso==13) {
+				alert("Registro salvo com sucesso!");
+				Richfaces.hideModalPanel("panelEdicao");
+			}
+		}
+
+	</script>
+</ui:define>
+</ui:composition>
+</html>

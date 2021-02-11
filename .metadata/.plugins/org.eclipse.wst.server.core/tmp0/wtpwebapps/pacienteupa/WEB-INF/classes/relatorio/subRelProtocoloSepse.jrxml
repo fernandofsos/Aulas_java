@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subRelProtocoloSepse" pageWidth="555" pageHeight="802" whenNoDataType="BlankPage" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p1" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\anderson.ws\\workspace\\pacienteupa_sepse\\src\\relatorio\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CAMINHO_SUB_REPORT" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select ps.*,
+(case when (position('1' in ir.cod_tela1) = 0 or position('1' in ir.cod_tela1) is null) then '' else '01 - Rebaixamento do nível de consciência <br/> ' end ||
+case when (position('2' in ir.cod_tela1) = 0 or position('1' in ir.cod_tela1) is null) then '' else '02 - Hipertermia (temperatura > 37,8°C) <br/> ' end ||
+case when (position('3' in ir.cod_tela1) = 0 or position('1' in ir.cod_tela1) is null) then '' else '03 - Taquipnéia (FR > 22 RPM) <br/> ' end ||
+case when (position('4' in ir.cod_tela1) = 0 or position('1' in ir.cod_tela1) is null) then '' else '04 - Taquicardia (Fc > 100bpm) <br/> ' end ||
+case when (position('5' in ir.cod_tela1) = 0 or position('1' in ir.cod_tela1) is null) then '' else '05 - Dessaturação (Sp02 < 92%) <br/> ' end ||
+case when (position('6' in ir.cod_tela1) = 0 or position('1' in ir.cod_tela1) is null) then '' else '06 - Hipotermia (temperatura < 35°C) <br/> ' end ||
+case when (position('7' in ir.cod_tela1) = 0 or position('1' in ir.cod_tela1) is null) then '' else '07 - Não apresenta sinais de SIRS <br/> ' end) as cod_tela,
+um.dsc_usuario as profissional_medico, ue.dsc_usuario as profissional_enfermagem, jrv.dsc_justificativa_reposicao_volemica
+from medpoint.t_protocolo_sepse ps
+left join (select * from medpoint.t_internacao_risco where
+isn_internacao_risco =(select max(isn_internacao_risco) from medpoint.t_internacao_risco where isn_internacao = $P{p1}::integer))
+ir on ir.isn_internacao = ps.isn_internacao
+left join seguranca.t_usuario um on um.isn_usuario = ps.isn_profissional
+left join seguranca.t_usuario ue on ue.isn_usuario = ps.isn_profissional_enfermagem
+left join medpoint.t_justificativa_reposicao_volemica jrv on jrv.isn_justificativa_reposicao_volemica = ps.isn_justificativa_reposicao_volemica_medica
+where ps.isn_internacao = $P{p1}::integer]]>
+	</queryString>
+	<field name="isn_protocolo_sepse" class="java.lang.Integer"/>
+	<field name="cod_tela1" class="java.lang.Integer"/>
+	<field name="cod_tela2" class="java.lang.Integer"/>
+	<field name="dsc_pa" class="java.lang.String"/>
+	<field name="peso" class="java.math.BigDecimal"/>
+	<field name="isn_produto" class="java.lang.Integer"/>
+	<field name="isn_exame" class="java.lang.Integer"/>
+	<field name="volume" class="java.math.BigDecimal"/>
+	<field name="dat_cadastro" class="java.sql.Timestamp"/>
+	<field name="isn_internacao" class="java.lang.Integer"/>
+	<field name="hora_atb" class="java.lang.String"/>
+	<field name="volume_reposicao" class="java.math.BigDecimal"/>
+	<field name="hora_reposicao" class="java.lang.String"/>
+	<field name="hora_coleta_exame" class="java.lang.String"/>
+	<field name="flg_sepse_grave" class="java.lang.String"/>
+	<field name="flg_choque_septico" class="java.lang.String"/>
+	<field name="dat_atb" class="java.sql.Timestamp"/>
+	<field name="isn_sintoma_sepse_enf" class="java.lang.Integer"/>
+	<field name="isn_justificativa_reposicao_volemica" class="java.lang.Integer"/>
+	<field name="isn_profissional_enfermagem" class="java.lang.Integer"/>
+	<field name="isn_justificativa_reposicao_volemica_medica" class="java.lang.Integer"/>
+	<field name="dat_inicio_atendimento" class="java.sql.Timestamp"/>
+	<field name="isn_profissional" class="java.lang.Integer"/>
+	<field name="isn_usuario" class="java.lang.Integer"/>
+	<field name="indicacao_reposicao_volemica" class="java.lang.Boolean"/>
+	<field name="suspeita_infeccao" class="java.lang.Boolean"/>
+	<field name="cod_tela" class="java.lang.String"/>
+	<field name="profissional_medico" class="java.lang.String"/>
+	<field name="profissional_enfermagem" class="java.lang.String"/>
+	<field name="dsc_justificativa_reposicao_volemica" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="1" y="15" width="114" height="14" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Suspeita de Infecção:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="115" y="15" width="440" height="14" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cod_tela}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="71" y="0" width="484" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{profissional_medico}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="70" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Médico:]]></text>
+			</staticText>
+		</band>
+		<band height="16">
+			<staticText>
+				<reportElement x="1" y="0" width="226" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paciente com sinais de alerta para Infecção:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="227" y="0" width="328" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cod_tela1}.equals("1") ? "01 - Infecção Respiratória" :
+($F{cod_tela1}.equals("2") ? "02 - Infecção Urinária" :
+    ($F{cod_tela1}.equals("3") ? "03 - Infecção Abd. Aguda" :
+        ($F{cod_tela1}.equals("4") ? "04 - Peles e Partes Moles" :
+            ($F{cod_tela1}.equals("5") ? "05 - S/ foco Definido" :
+                ($F{cod_tela1}.equals("6") ? "06 - Não tem história sugestiva de infecção" :
+                    ($F{cod_tela1}.equals("7") ? "07 - SNC" :
+                      ($F{cod_tela1}.equals("8") ? "08 - OUTROS" : "")
+                     )
+                 )
+             )
+         )
+     )
+ )]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="46">
+			<staticText>
+				<reportElement x="1" y="15" width="28" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PA:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement x="412" y="1" width="143" height="14"/>
+				<box>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dat_cadastro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="29" y="15" width="51" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_pa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="83" y="15" width="35" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="118" y="15" width="41" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{peso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="161" y="15" width="50" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Volume:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="211" y="15" width="44" height="15"/>
+				<box>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{volume}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="338" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paciente apresenta sinais de disfunção orgânica ou choque séptico:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="339" y="0" width="45" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cod_tela2}.equals("1") ? "01 - Sim" :
+  ($F{cod_tela2}.equals("2") ? "02 - Não":"")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="384" y="0" width="28" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="256" y="15" width="72" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sepse grave:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="328" y="15" width="42" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{flg_sepse_grave}.equals("S")?"Sim":"Não")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="371" y="15" width="88" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Choque Séptico:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="459" y="15" width="45" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{flg_choque_septico}.equals("S")?"Sim":"Não")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="30" width="114" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Justificativa (Volume):]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="115" y="30" width="440" height="15" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dsc_justificativa_reposicao_volemica}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="31">
+			<textField isBlankWhenNull="true">
+				<reportElement x="29" y="15" width="94" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{hora_atb}.equals(null)?"":"Hora: "+$F{hora_atb})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0" isBlankWhenNull="true">
+				<reportElement x="206" y="15" width="133" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{volume_reposicao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="15" width="28" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ATB:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="123" y="15" width="83" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Volume repos:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="343" y="15" width="116" height="15" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="0">
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Coleta de exames:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="459" y="15" width="96" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{hora_coleta_exame}.equals(null)?"":"Hora: "+$F{hora_coleta_exame})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="71" y="0" width="484" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{profissional_enfermagem}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="70" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Enfermagem:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>
